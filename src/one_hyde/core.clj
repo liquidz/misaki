@@ -15,8 +15,9 @@
 
 (def ^:dynamic *public* "public/")
 (def ^:dynamic *template* "template/")
-(def ^:dynamic *layouts* (str *template* "_layouts/"))
-(def ^:dynamic *posts* (str *template* "posts/"))
+(def ^:dynamic *posts* "posts/")
+(def ^:dynamic *layouts-dir* (str *template* "_layouts/"))
+(def ^:dynamic *posts-dir* (str *template* *posts*))
 
 ;;; OUTPUT
 (defn write-data [filename data]
@@ -27,18 +28,18 @@
 
 ;;; LAYOUTS
 (defn get-layout [layout-name]
-  (transform (slurp (str *layouts* layout-name ".clj"))))
+  (transform (slurp (str *layouts-dir* layout-name ".clj"))))
 
 (defn layout-file?
   [file]
-  (not= -1 (.indexOf (.getAbsolutePath file) *layouts*)))
+  (not= -1 (.indexOf (.getAbsolutePath file) *layouts-dir*)))
 
 
 ;;; POSTS
 (defn get-post-title
   "get post title"
   [file]
-  (->> (.getName file) (str *posts*) slurp parse-template-options :title))
+  (->> (.getName file) (str *posts-dir*) slurp parse-template-options :title))
 
 (defn get-post-url
   "generate post url from java.io.File"
@@ -46,9 +47,9 @@
   (str "/" *posts* (URLEncoder/encode (replace-extension file ".clj" ".html"))))
 
 (defn get-posts
-  "get posts data from *posts* directory"
+  "get posts data from *posts-dir* directory"
   []
-  (let [ls (filter #(has-extension? ".clj" %) (find-files *posts*))]
+  (let [ls (filter #(has-extension? ".clj" %) (find-files *posts-dir*))]
     (map #(hash-map
             :title (get-post-title %)
             :url   (get-post-url %)
