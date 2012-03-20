@@ -2,52 +2,64 @@
   "one-hyde: micro static blog library core"
   (:use
     [one-hyde util transform]
-    [hiccup.core :only [html]]
-    watchtower.core
-    )
+    [hiccup.core :only [html]])
   (:require
     html
     [clojure.string :as str]
     [clojure.java.io :as io])
-  (:import [java.net URLEncoder]))
+  (:import
+    [java.io File]
+    [java.net URLEncoder]))
 
 (declare parse-template-options)
 
-(def ^:dynamic *public* "public/")
-(def ^:dynamic *template* "template/")
-(def ^:dynamic *posts* "posts/")
-(def ^:dynamic *layouts-dir* (str *template* "_layouts/"))
-(def ^:dynamic *posts-dir* (str *template* *posts*))
+(def ^{:dynamic true, :doc "Public directory path. Compiled html is placed here."}
+  *public* "public/")
+(def ^{:dynamic true, :doc "Template directory path."}
+  *template* "template/")
+(def ^{:dynamic true, :doc "Posts placed directory name."}
+  *posts* "posts/")
+(def ^{:dynamic true, :doc "Layouts placed directory path."}
+  *layouts-dir* (str *template* "_layouts/"))
+(def ^{:dynamic true, :doc "Posts placed directory path."}
+  *posts-dir* (str *template* *posts*))
 
 ;;; OUTPUT
-(defn write-data [filename data]
+(defn write-data
+  "Write compiled data as specified filename.
+  If filepath is not exists, this function make directories."
+  [filename data]
   (let [filename (str *public* filename)]
     (make-directories filename)
     (with-open [w (io/writer filename)]
       (spit w data))))
 
 ;;; LAYOUTS
-(defn get-layout [layout-name]
+(defn get-layout
+  "Get layout function from layout name.
+  one-hyde.transform is used to convert S-exp from function."
+  [layout-name]
   (transform (slurp (str *layouts-dir* layout-name ".clj"))))
 
 (defn layout-file?
-  [file]
+  "Check whether file is layout file or not."
+  [#^File file]
   (not= -1 (.indexOf (.getAbsolutePath file) *layouts-dir*)))
 
 
 ;;; POSTS
 (defn get-post-title
-  "get post title"
-  [file]
+  "Get post title from post file(java.io.File)."
+  [#^File file]
   (->> (.getName file) (str *posts-dir*) slurp parse-template-options :title))
 
 (defn get-post-url
-  "generate post url from java.io.File"
-  [file]
+  "Generate post url from file(java.io.File)."
+  [#^File file]
   (str "/" *posts* (URLEncoder/encode (replace-extension file ".clj" ".html"))))
 
 (defn get-posts
-  "get posts data from *posts-dir* directory"
+  "Get posts data from *posts-dir* directory."
   []
   (let [ls (filter #(has-extension? ".clj" %) (find-files *posts-dir*))]
     (map #(hash-map
@@ -60,17 +72,21 @@
 (defn- sort-by-url [posts]
   (sort #(pos? (.compareTo (:url %) (:url %2))) posts))
 
-(defn file->template-name [file]
+(defn file->template-name
+  "Convert java.io.File to template name.
+
+  ex) File<aa/bb/cc/template/index.clj>
+      => template/index.clj"
+  [file]
   (last (str/split (.getAbsolutePath file) (re-pattern *template*))))
 
 (defn parse-template-options
   "Parse template options
 
   ex) template file
-    ; layout: default
-    ; title: hello, world
-    [:h1 \"hello world\"]
-  "
+      ; layout: default
+      ; title: hello, world
+      [:h1 \"hello world\"]"
   [data]
   (let [lines (map str/trim (str/split-lines data))
         options (take-while #(= 0 (.indexOf % ";")) lines)]
@@ -78,8 +94,10 @@
       (let [[k v] (str/split (str/replace-first opt #";\s*" "") #"\s*:\s*")]
         [(keyword k) v])))))
 
-(defn generate-html [filename]
-  (let [data (slurp (str *template* filename))
+(defn generate-html
+  "Generate HTML from template."
+  [tmpl-name]
+  (let [data (slurp (str *template* tmpl-name))
         options (parse-template-options data)
         site (assoc options :posts (sort-by-url (get-posts)))
         contents ((transform data) site)]
