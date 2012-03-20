@@ -1,6 +1,7 @@
 (defproject one-hyde "0.0.1-alpha"
   :description "Static site generator in Clojure inspired by Jekyll"
   :dependencies [[org.clojure/clojure "1.3.0"]
-                 [hiccup "0.3.6"]]
+                 [hiccup "0.3.6"]
+                 [watchtower "0.1.0"]]
   :dev-dependencies [[codox "0.4.1"]]
-  :main one-hyde.core)
+  :main one-hyde.server)

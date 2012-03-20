@@ -2,7 +2,9 @@
   "one-hyde: micro static blog library core"
   (:use
     [one-hyde util transform]
-    [hiccup.core :only [html]])
+    [hiccup.core :only [html]]
+    watchtower.core
+    )
   (:require
     html
     [clojure.string :as str]
@@ -57,7 +59,7 @@
 (defn- sort-by-url [posts]
   (sort #(pos? (.compareTo (:url %) (:url %2))) posts))
 
-(defn- file->template-name [file]
+(defn file->template-name [file]
   (last (str/split (.getAbsolutePath file) (re-pattern *template*))))
 
 (defn parse-template-options
@@ -96,8 +98,3 @@
 (defn compile-all-templates []
   (doseq [tmpl-name (map file->template-name (get-template-files))]
     (compile-template tmpl-name)))
-
-(defn -main []
-  ;(some println (get-post-list))
-  (compile-all-templates)
-  )
