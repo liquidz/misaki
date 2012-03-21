@@ -34,19 +34,6 @@
     (with-open [w (io/writer filename)]
       (spit w data))))
 
-;;; LAYOUTS
-(defn get-layout
-  "Get layout function from layout name.
-  one-hyde.transform is used to convert S-exp from function."
-  [layout-name]
-  (transform (slurp (str *layouts-dir* layout-name ".clj"))))
-
-(defn layout-file?
-  "Check whether file is layout file or not."
-  [#^File file]
-  (not= -1 (.indexOf (.getAbsolutePath file) *layouts-dir*)))
-
-
 ;;; POSTS
 (defn get-post-title
   "Get post title from post file(java.io.File)."
@@ -67,18 +54,9 @@
             :url   (get-post-url %)
             :date  (get-last-modified-date %)) ls)))
 
-;;; TEMPLATES
-
 (defn- sort-by-url [posts]
   (sort #(pos? (.compareTo (:url %) (:url %2))) posts))
-
-(defn file->template-name
-  "Convert java.io.File to template name.
-
-  ex) File<aa/bb/cc/template/index.clj>
-      => template/index.clj"
-  [file]
-  (last (str/split (.getAbsolutePath file) (re-pattern *template*))))
+;;;
 
 (defn parse-template-options
   "Parse template options
@@ -93,6 +71,51 @@
     (into {} (for [opt options]
       (let [[k v] (str/split (str/replace-first opt #";\s*" "") #"\s*:\s*")]
         [(keyword k) v])))))
+
+(defn make-site-data [options]
+  (assoc options :post (sort-by-url (get-posts))))
+
+;;; LAYOUTS
+;(defn apply-layout [site contents]
+;  (if (:layout site)
+;    ((get-layout (:layout options)) site contents)
+;    contents))
+
+(defn get-layout
+  "Get layout function from layout name.
+  one-hyde.transform is used to convert S-exp from function."
+  [layout-name]
+  (let [data (slurp (str *layouts-dir* layout-name ".clj"))
+        options (parse-template-options data)
+        this-layout (transform data)]
+    (if (:layout options)
+      (fn [site & contents]
+        (let [new-contents (this-layout site contents)]
+          ((get-layout (:layout options))
+             (merge site options)
+             new-contents)))
+      this-layout))
+  ;(transform (slurp (str *layouts-dir* layout-name ".clj")))
+  )
+
+(defn layout-file?
+  "Check whether file is layout file or not."
+  [#^File file]
+  (not= -1 (.indexOf (.getAbsolutePath file) *layouts-dir*)))
+
+
+
+;;; TEMPLATES
+
+
+(defn file->template-name
+  "Convert java.io.File to template name.
+
+  ex) File<aa/bb/cc/template/index.clj>
+      => template/index.clj"
+  [file]
+  (last (str/split (.getAbsolutePath file) (re-pattern *template*))))
+
 
 (defn generate-html
   "Generate HTML from template."

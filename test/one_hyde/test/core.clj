@@ -11,8 +11,8 @@
 (deftest transform-test
   (binding [*transformers* (atom [inc #(* 2 %)])]
     (is (= 4 (transform 1)))
-    (add-transformer! inc)
-    (is (= 12 (transform #(* 3 %)))))
+    (add-transformer! #(* 3 %))
+    (is (= 12 (transform 1))))
 
   (let [f (transform "(apply + site)")]
     ; f => (fn [site & contents] (list (apply + site)))
