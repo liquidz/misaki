@@ -41,7 +41,7 @@
   [parent-option layout-fn]
   (fn [site & contents]
     ((get-layout (:layout parent-option))
-       (merge site parent-option)
+       (merge parent-option site)
        (layout-fn site contents))))
 
 (defn get-layout
