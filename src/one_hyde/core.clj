@@ -11,6 +11,7 @@
     [java.io File]
     [java.net URLEncoder]))
 
+(declare get-layout)
 (declare parse-template-options)
 
 (def ^{:dynamic true, :doc "Public directory path. Compiled html is placed here."}
@@ -34,42 +35,23 @@
     (with-open [w (io/writer filename)]
       (spit w data))))
 
-;;;
-
-(defn parse-template-options
-  "Parse template options
-
-  ex) template file
-      ; layout: default
-      ; title: hello, world
-      [:h1 \"hello world\"]"
-  [data]
-  (let [lines (map str/trim (str/split-lines data))
-        options (take-while #(= 0 (.indexOf % ";")) lines)]
-    (into {} (for [opt options]
-      (let [[k v] (str/split (str/replace-first opt #";\s*" "") #"\s*:\s*")]
-        [(keyword k) v])))))
-
-(defn make-site-data [options]
-  (assoc options :post (sort-by-url (get-posts))))
-
 ;;; LAYOUTS
+(defn wrap-layout [parent-option layout-fn]
+  (fn [site & contents]
+    ((get-layout (:layout parent-option))
+       (merge site parent-option)
+       (layout-fn site contents))))
+
 (defn get-layout
   "Get layout function from layout name.
   one-hyde.transform is used to convert S-exp from function."
   [layout-name]
   (let [data (slurp (str *layouts-dir* layout-name ".clj"))
         options (parse-template-options data)
-        this-layout (transform data)]
+        layout-fn (transform data)]
     (if (:layout options)
-      (fn [site & contents]
-        (let [new-contents (this-layout site contents)]
-          ((get-layout (:layout options))
-             (merge site options)
-             new-contents)))
-      this-layout))
-  ;(transform (slurp (str *layouts-dir* layout-name ".clj")))
-  )
+      (wrap-layout options layout-fn)
+      layout-fn)))
 
 (defn layout-file?
   "Check whether file is layout file or not."
@@ -97,7 +79,6 @@
             :date  (get-last-modified-date %)) ls)))
 
 ;;; TEMPLATES
-
 (defn- sort-by-url [posts]
   (sort #(pos? (.compareTo (:url %) (:url %2))) posts))
 
@@ -109,6 +90,19 @@
   [file]
   (last (str/split (.getAbsolutePath file) (re-pattern *template*))))
 
+(defn parse-template-options
+  "Parse template options
+
+  ex) template file
+      ; layout: default
+      ; title: hello, world
+      [:h1 \"hello world\"]"
+  [data]
+  (let [lines (map str/trim (str/split-lines data))
+        options (take-while #(= 0 (.indexOf % ";")) lines)]
+    (into {} (for [opt options]
+      (let [[k v] (str/split (str/replace-first opt #";\s*" "") #"\s*:\s*")]
+        [(keyword k) v])))))
 
 (defn generate-html
   "Generate HTML from template."
@@ -126,10 +120,16 @@
           (find-files *template*)))
 
 (defn compile-template [tmpl-name]
-  (let [data (html (generate-html tmpl-name))
-        filename (replace-extension tmpl-name ".clj" ".html")]
-    (write-data filename data)))
+  (try
+    (let [data (html (generate-html tmpl-name))
+          filename (replace-extension tmpl-name ".clj" ".html")]
+      (write-data filename data)
+      true)
+    (catch Exception e false)))
 
 (defn compile-all-templates []
-  (doseq [tmpl-name (map file->template-name (get-template-files))]
-    (compile-template tmpl-name)))
+  (every? #(compile-template %)
+          (map file->template-name (get-template-files))))
+;  (doseq [tmpl-name (map file->template-name (get-template-files))]
+;    (compile-template tmpl-name)))
+

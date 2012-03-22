@@ -1,21 +1,32 @@
 (ns one-hyde.server
   (:use
+    one-hyde.core
     watchtower.core
     compojure.core
     [compojure.route :only [files]]
-    [ring.adapter.jetty :only [run-jetty]]
-    [one-hyde.core :only [*template* file->template-name compile-template]]))
+    [ring.adapter.jetty :only [run-jetty]]))
 
-(defn start-watcher []
+(defn print-result [result]
+  (print " ... ")
+  (if result
+    (println "\033[36mDONE\033[0m")
+    (println "\033[31mFAIL\033[0m")))
+
+(defn do-compile [#^java.io.File file]
+  (if (layout-file? file)
+    (do (print " * compiling all templates:")
+        (print-result (compile-all-templates)))
+    (do (print " * compiling:" (.getName file))
+        (print-result (compile-template (file->template-name file))))))
+
+(defn start-watcher
+  []
   (watcher
     [*template*]
     (rate 50)
     (file-filter ignore-dotfiles)
     (file-filter (extensions :clj))
-    (on-change #(doseq [file %]
-                  (println " * compiling: " (.getName file))
-                  (compile-template (file->template-name file))
-                  (println " * done")))))
+    (on-change #(doseq [file %] (do-compile file)))))
 
 (defroutes handler (files "/"))
 
