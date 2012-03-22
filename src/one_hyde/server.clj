@@ -22,7 +22,7 @@
 (defn start-watcher
   []
   (watcher
-    [*template*]
+    [*template-dir*]
     (rate 50)
     (file-filter ignore-dotfiles)
     (file-filter (extensions :clj))
@@ -30,8 +30,11 @@
 
 (defroutes handler (files "/"))
 
-(defn -main []
-  (let [port (Integer/parseInt (get (System/getenv) "PORT" "8080"))]
-    (start-watcher)
-    (run-jetty handler {:port port})))
+(defn -main [& [option]]
+  (case option
+    "compile" (compile-all-templates)
+
+    (let [port (Integer/parseInt (get (System/getenv) "PORT" "8080"))]
+      (start-watcher)
+      (run-jetty handler {:port port}))))
 
