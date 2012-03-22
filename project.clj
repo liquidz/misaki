@@ -1,4 +1,4 @@
-(defproject one-hyde "0.0.1-alpha"
+(defproject one-hyde "0.0.2-alpha"
   :description "Static site generator in Clojure inspired by Jekyll"
   :dependencies [[org.clojure/clojure "1.3.0"]
                  [hiccup "0.3.6"]
