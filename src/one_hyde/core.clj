@@ -15,28 +15,30 @@
 (declare parse-template-options)
 
 (def ^{:dynamic true, :doc "Public directory path. Compiled html is placed here."}
-  *public* "public/")
+  *public-dir* "public/")
 (def ^{:dynamic true, :doc "Template directory path."}
-  *template* "template/")
+  *template-dir* "template/")
 (def ^{:dynamic true, :doc "Posts placed directory name."}
   *posts* "posts/")
 (def ^{:dynamic true, :doc "Layouts placed directory path."}
-  *layouts-dir* (str *template* "_layouts/"))
+  *layouts-dir* (str *template-dir* "_layouts/"))
 (def ^{:dynamic true, :doc "Posts placed directory path."}
-  *posts-dir* (str *template* *posts*))
+  *posts-dir* (str *template-dir* *posts*))
 
 ;;; OUTPUT
 (defn write-data
   "Write compiled data as specified filename.
   If filepath is not exists, this function make directories."
   [filename data]
-  (let [filename (str *public* filename)]
+  (let [filename (str *public-dir* filename)]
     (make-directories filename)
     (with-open [w (io/writer filename)]
       (spit w data))))
 
 ;;; LAYOUTS
-(defn wrap-layout [parent-option layout-fn]
+(defn wrap-layout
+  "Wrap layout function with parent layout function"
+  [parent-option layout-fn]
   (fn [site & contents]
     ((get-layout (:layout parent-option))
        (merge site parent-option)
@@ -88,7 +90,8 @@
   ex) File<aa/bb/cc/template/index.clj>
       => template/index.clj"
   [file]
-  (last (str/split (.getAbsolutePath file) (re-pattern *template*))))
+  (last (str/split (.getAbsolutePath file)
+                   (re-pattern *template-dir*))))
 
 (defn parse-template-options
   "Parse template options
@@ -107,7 +110,7 @@
 (defn generate-html
   "Generate HTML from template."
   [tmpl-name]
-  (let [data (slurp (str *template* tmpl-name))
+  (let [data (slurp (str *template-dir* tmpl-name))
         options (parse-template-options data)
         site (assoc options :posts (sort-by-url (get-posts)))
         contents ((transform data) site)]
@@ -115,11 +118,17 @@
       ((get-layout (:layout options)) site contents)
       contents)))
 
-(defn get-template-files []
+(defn get-template-files
+  "get all template files(java.io.File) from *template-dir*"
+  []
   (remove #(or (.isDirectory %) (layout-file? %))
-          (find-files *template*)))
+          (find-files *template-dir*)))
 
-(defn compile-template [tmpl-name]
+;; COMPILE
+(defn compile-template
+  "Compile a specified template.
+  return true if compile is successed"
+  [tmpl-name]
   (try
     (let [data (html (generate-html tmpl-name))
           filename (replace-extension tmpl-name ".clj" ".html")]
@@ -127,9 +136,10 @@
       true)
     (catch Exception e false)))
 
-(defn compile-all-templates []
+(defn compile-all-templates
+  "Compile all template files.
+  return true if all compile is successed"
+  []
   (every? #(compile-template %)
           (map file->template-name (get-template-files))))
-;  (doseq [tmpl-name (map file->template-name (get-template-files))]
-;    (compile-template tmpl-name)))
 
