@@ -34,28 +34,6 @@
     (with-open [w (io/writer filename)]
       (spit w data))))
 
-;;; POSTS
-(defn get-post-title
-  "Get post title from post file(java.io.File)."
-  [#^File file]
-  (->> (.getName file) (str *posts-dir*) slurp parse-template-options :title))
-
-(defn get-post-url
-  "Generate post url from file(java.io.File)."
-  [#^File file]
-  (str "/" *posts* (URLEncoder/encode (replace-extension file ".clj" ".html"))))
-
-(defn get-posts
-  "Get posts data from *posts-dir* directory."
-  []
-  (let [ls (filter #(has-extension? ".clj" %) (find-files *posts-dir*))]
-    (map #(hash-map
-            :title (get-post-title %)
-            :url   (get-post-url %)
-            :date  (get-last-modified-date %)) ls)))
-
-(defn- sort-by-url [posts]
-  (sort #(pos? (.compareTo (:url %) (:url %2))) posts))
 ;;;
 
 (defn parse-template-options
@@ -76,11 +54,6 @@
   (assoc options :post (sort-by-url (get-posts))))
 
 ;;; LAYOUTS
-;(defn apply-layout [site contents]
-;  (if (:layout site)
-;    ((get-layout (:layout options)) site contents)
-;    contents))
-
 (defn get-layout
   "Get layout function from layout name.
   one-hyde.transform is used to convert S-exp from function."
@@ -103,10 +76,30 @@
   [#^File file]
   (not= -1 (.indexOf (.getAbsolutePath file) *layouts-dir*)))
 
+;;; POSTS
+(defn get-post-title
+  "Get post title from post file(java.io.File)."
+  [#^File file]
+  (->> (.getName file) (str *posts-dir*) slurp parse-template-options :title))
 
+(defn get-post-url
+  "Generate post url from file(java.io.File)."
+  [#^File file]
+  (str "/" *posts* (URLEncoder/encode (replace-extension file ".clj" ".html"))))
+
+(defn get-posts
+  "Get posts data from *posts-dir* directory."
+  []
+  (let [ls (filter #(has-extension? ".clj" %) (find-files *posts-dir*))]
+    (map #(hash-map
+            :title (get-post-title %)
+            :url   (get-post-url %)
+            :date  (get-last-modified-date %)) ls)))
 
 ;;; TEMPLATES
 
+(defn- sort-by-url [posts]
+  (sort #(pos? (.compareTo (:url %) (:url %2))) posts))
 
 (defn file->template-name
   "Convert java.io.File to template name.
