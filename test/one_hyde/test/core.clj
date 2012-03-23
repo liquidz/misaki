@@ -31,14 +31,16 @@
 
 ;;; TEMPLATES
 (deftest parse-template-options-test
-  (let [data ";layout:hello\n;title:world\ndummy:xxx"
-        option (parse-template-options data)]
-    (are [x y] (= x y)
-      "hello" (:layout option)
-      "world" (:title option))
-    (is (not (contains? option :dummy)))
-    )
-  )
+  (let [datas [";layout:hello\n;title:world\ndummy:xxx"
+               "; layout:hello\n;title:world\ndummy:xxx"
+               "; layout :hello\n;title:world\ndummy:xxx"
+               "; layout : hello\n;title:world\ndummy:xxx"]]
+    (doseq [data datas]
+      (let [option (parse-template-options data)]
+        (are [x y] (= x y)
+          "hello" (:layout option)
+          "world" (:title option))
+        (is (not (contains? option :dummy)))))))
 
 ;;; TRANSFORM
 (deftest transform-test
