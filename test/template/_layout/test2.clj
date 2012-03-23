@@ -1,0 +1,2 @@
+; layout: default
+[:p contents]
