@@ -1,6 +1,8 @@
 (ns one-hyde.test.core
   (:use one-hyde.core
-        one-hyde.transform)
+        one-hyde.transform
+        [hiccup.core :only [html]]
+        )
   (:use [clojure.test]))
 
 (deftest replace-me ;; FIXME: write
@@ -11,7 +13,7 @@
   `(binding [*public-dir* "test/public/"
              *template-dir* "test/template/"
              *posts* "test/posts/"
-             *layouts-dir* (str *template-dir* "_layouts/")
+             *layouts-dir* "test/template/_layouts/"
              *posts-dir* (str *template-dir* *posts*)]
     ~@body))
 
@@ -19,19 +21,18 @@
   (with-test-dir
     (testing "single layout"
       (let [f (get-layout "test1")]
-        (is (= '([:p "a"] [:p ("b" "c")]) (f {:title "a"} "b" "c")))))
+        (is (= "<p>a</p><p>bc</p>"
+               (html (f {:title "a"} "b" "c"))))))
 
     (testing "multiple layout"
       (let [f (get-layout "test2")]
-        (is (= '([:h1 "default"] [:p "a"] [:p ("b")])
-                (f {:title "a"} "b")))))
-    )
-  )
+        (is (= "<h1>default</h1><p>a</p><p>b</p>"
+               (html (f {:title "a"} "b"))))))))
 
 ;;; TEMPLATES
 (deftest parse-template-options-test
   (let [data ";layout:hello\n;title:world\ndummy:xxx"
-        option (parse-template-optionsa data)]
+        option (parse-template-options data)]
     (are [x y] (= x y)
       "hello" (:layout option)
       "world" (:title option))
