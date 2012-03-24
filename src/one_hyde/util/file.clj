@@ -5,21 +5,19 @@
     [clojure.string :as str])
   (:import [java.util Date]))
 
+; =find-files
 (defn find-files
   "find files recursively"
   [dir]
   (file-seq (io/file dir)))
 
+; has-extension?
 (defn has-extension?
   "check whether file has specified extension or not"
   [ext file]
   (.endsWith (.getName file) ext))
 
-(defn get-last-modified-date
-  "get last modified date from file"
-  [file]
-  (Date. (.lastModified file)))
-
+; =delete-extension
 (defn delete-extension
   "delete file extension"
   [x]
@@ -27,6 +25,7 @@
     (delete-extension (.getName x))
     (str/replace-first x #"\.[^.]+$" "")))
 
+; make-directories
 (defn make-directories
   "make directories which will place file"
   [filename]

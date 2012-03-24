@@ -3,8 +3,6 @@
   (:use
     one-hyde.transform
     [one-hyde.util file code]
-    ;one-hyde.util.file
-    ;one-hyde.util.code
     [hiccup.core :only [html]]
     [hiccup.page-helpers :only [html5 xhtml html4]])
   (:require
@@ -30,6 +28,7 @@
   *posts-dir* (str *template-dir* *posts*))
 
 ;;; OUTPUT
+; =write-data
 (defn write-data
   "Write compiled data as specified filename.
   If filepath is not exists, this function make directories."
@@ -40,6 +39,7 @@
       (spit w data))))
 
 ;;; LAYOUTS
+; =merge-meta-option-fn
 (defn merge-meta-option-fn
   "Wrap function to merge content's meta data(template option) with parent's option"
   [f parent-option]
@@ -48,6 +48,7 @@
       (f contents)
       (merge parent-option (meta contents)))))
 
+; =wrap-layout
 (defn wrap-layout
   "Wrap layout function with parent layout function"
   [parent-option layout-fn]
@@ -57,6 +58,7 @@
          (layout-fn contents)))
     parent-option))
 
+; =get-layout
 (defn get-layout
   "Get layout function from layout name.
   one-hyde.transform is used to convert S-exp from function."
@@ -68,35 +70,67 @@
       (wrap-layout options layout-fn)
       layout-fn)))
 
+; =layout-file?
 (defn layout-file?
   "Check whether file is layout file or not."
   [#^File file]
   (not= -1 (.indexOf (.getAbsolutePath file) *layouts-dir*)))
 
 ;;; POSTS
+; =get-post-title
 (defn get-post-title
   "Get post title from post file(java.io.File)."
   [#^File file]
   (->> (.getName file) (str *posts-dir*) slurp parse-template-options :title))
 
+; =get-post-url
 (defn get-post-url
   "Generate post url from file(java.io.File)."
   [#^File file]
   (str "/" *posts* (URLEncoder/encode (delete-extension file))))
 
+; =get-date
+(defn get-date
+  "Get date from filename
+  ex)
+      YYYY-MM-DD
+      YYYY-M-D
+      YYYY_MM_DD
+      YYYY_M_D"
+  [file]
+  (if (= java.io.File (class file))
+    (get-date (.getName file))
+    (nfirst (re-seq #"(\d{4})[-_](\d{1,2})[-_](\d{1,2})" file))))
+
+; =get-date-map
+(defn get-date-map
+  "Get date from filename, and return as a map"
+  [file]
+  (let [date (get-date file)]
+    {:date date
+     :date-str (if date (str/join "-" date))}))
+
+; =get-posts
 (defn get-posts
   "Get posts data from *posts-dir* directory."
   []
   (let [ls (filter #(has-extension? ".clj" %) (find-files *posts-dir*))]
-    (map #(hash-map
-            :title (get-post-title %)
-            :url   (get-post-url %)
-            :date  (get-last-modified-date %)) ls)))
+    (map #(let [date (get-date %)]
+            (merge
+              (hash-map
+                :title (get-post-title %)
+                :url   (get-post-url %))
+              (get-date-map %)))
+         ls)))
 
 ;;; TEMPLATES
-(defn- sort-by-url [posts]
-  (sort #(pos? (.compareTo (:url %) (:url %2))) posts))
+; =sort-by-date
+(defn- sort-by-date [posts]
+  (sort #(pos? (.compareTo (apply str (:date %))
+                           (apply str (:date %2))))
+        posts))
 
+; =file->template-name
 (defn file->template-name
   "Convert java.io.File to template name.
 
@@ -106,6 +140,7 @@
   (last (str/split (.getAbsolutePath file)
                    (re-pattern *template-dir*))))
 
+; =parse-template-options
 (defn parse-template-options
   "Parse template options
 
@@ -120,18 +155,22 @@
       (let [[k v] (str/split (str/replace-first opt #";\s*" "") #"\s*:\s*")]
         [(keyword k) v])))))
 
+; =generate-html
 (defn generate-html
   "Generate HTML from template."
   [tmpl-name]
   (let [data (slurp (str *template-dir* tmpl-name))
         options (parse-template-options data)
-        site (assoc options :posts (sort-by-url (get-posts)))
+        site (merge options
+                    (get-date-map tmpl-name)
+                    {:posts (sort-by-date (get-posts))})
         contents ((merge-meta-option-fn (transform data) site)
                     (with-meta '("") site))]
     (if (:layout options)
       ((get-layout (:layout options)) contents)
       contents)))
 
+; =get-template-files
 (defn get-template-files
   "get all template files(java.io.File) from *template-dir*"
   []
@@ -139,6 +178,7 @@
           (find-files *template-dir*)))
 
 ;; COMPILE
+; =get-compile-fn
 (defn get-compile-fn
   "Get hiccup functon to compile sexp"
   [fmt]
@@ -148,6 +188,7 @@
     "html4" #(html4 %)
     #(html %)))
 
+; =compile-template
 (defn compile-template
   "Compile a specified template.
   return true if compile is successed"
@@ -158,8 +199,9 @@
           filename (delete-extension tmpl-name)]
       (write-data filename (f contents))
       true)
-  (catch Exception e false)))
+  (catch Exception _ false)))
 
+; =compile-all-templates
 (defn compile-all-templates
   "Compile all template files.
   return true if all compile is successed"

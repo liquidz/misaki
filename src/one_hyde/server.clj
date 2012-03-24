@@ -7,6 +7,7 @@
     [compojure.route :only [files]]
     [ring.adapter.jetty :only [run-jetty]]))
 
+; =print-result
 (defn print-result
   "Print compile result"
   [result]
@@ -15,6 +16,7 @@
     (println "\033[36mDONE\033[0m")
     (println "\033[31mFAIL\033[0m")))
 
+; =do-compile
 (defn do-compile
   "Compile templte file and print status"
   [#^java.io.File file]
@@ -24,6 +26,7 @@
     (do (print " * compiling:" (.getName file))
         (print-result (compile-template (file->template-name file))))))
 
+; =start-watcher
 (defn start-watcher
   "Start watchtower watcher to compile changed templates"
   []
@@ -36,6 +39,7 @@
 
 (defroutes handler (files "/"))
 
+; =main
 (defn -main
   "main"
   [& [option]]
