@@ -7,14 +7,14 @@
     [compojure.route :only [files]]
     [ring.adapter.jetty :only [run-jetty]]))
 
+(defn- blue [s] (str "\033[36m" s "\033[0m"))
+(defn- red  [s] (str "\033[31m" s "\033[0m"))
+
 ; =print-result
 (defn print-result
   "Print compile result"
   [result]
-  (print " ... ")
-  (if result
-    (println "\033[36mDONE\033[0m")
-    (println "\033[31mFAIL\033[0m")))
+  (println " ..." (if result (blue "DONE") (red "FAIL"))))
 
 ; =do-compile
 (defn do-compile
