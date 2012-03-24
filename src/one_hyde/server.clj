@@ -2,10 +2,10 @@
   (:use
     one-hyde.core
     watchtower.core
-;    hiccup.page-helpers
     [compojure.core :only [defroutes]]
     [compojure.route :only [files]]
-    [ring.adapter.jetty :only [run-jetty]]))
+    [ring.adapter.jetty :only [run-jetty]])
+  )
 
 (defn- blue [s] (str "\033[36m" s "\033[0m"))
 (defn- red  [s] (str "\033[31m" s "\033[0m"))

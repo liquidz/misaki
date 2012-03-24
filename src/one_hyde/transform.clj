@@ -13,7 +13,8 @@
   [sexp]
   `(fn [~'contents]
      (let [~'site (meta ~'contents)]
-       ~sexp)))
+       ; remove defn result in template
+       (remove var? ~sexp))))
 
 ; =*transformers*
 (def ^{:dynamic true

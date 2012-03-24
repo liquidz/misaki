@@ -3,10 +3,12 @@
   (:use
     one-hyde.transform
     [one-hyde.util file code]
+    [clj-time.core :only [date-time after?]]
     [hiccup.core :only [html]]
     [hiccup.page-helpers :only [html5 xhtml html4]])
   (:require
     html
+    conv
     [clojure.string :as str]
     [clojure.java.io :as io])
   (:import
@@ -92,43 +94,33 @@
 ; =get-date
 (defn get-date
   "Get date from filename
-  ex)
-      YYYY-MM-DD
+  ex) YYYY-MM-DD
       YYYY-M-D
       YYYY_MM_DD
       YYYY_M_D"
-  [file]
-  (if (= java.io.File (class file))
-    (get-date (.getName file))
-    (nfirst (re-seq #"(\d{4})[-_](\d{1,2})[-_](\d{1,2})" file))))
-
-; =get-date-map
-(defn get-date-map
-  "Get date from filename, and return as a map"
-  [file]
-  (let [date (get-date file)]
-    {:date date
-     :date-str (if date (str/join "-" date))}))
+  [#^File file]
+  (let [[y m d] (nfirst (re-seq #"(\d{4})[-_](\d{1,2})[-_](\d{1,2})" (.getName file)))]
+    (if (and y m d)
+      (date-time (Integer/parseInt y)
+                 (Integer/parseInt m)
+                 (Integer/parseInt d))
+      (last-modified-date file))))
 
 ; =get-posts
 (defn get-posts
   "Get posts data from *posts-dir* directory."
   []
   (let [ls (filter #(has-extension? ".clj" %) (find-files *posts-dir*))]
-    (map #(let [date (get-date %)]
-            (merge
-              (hash-map
-                :title (get-post-title %)
-                :url   (get-post-url %))
-              (get-date-map %)))
+    (map #(hash-map
+            :title (get-post-title %)
+            :url   (get-post-url %)
+            :date  (get-date %))
          ls)))
 
 ;;; TEMPLATES
 ; =sort-by-date
 (defn- sort-by-date [posts]
-  (sort #(pos? (.compareTo (apply str (:date %))
-                           (apply str (:date %2))))
-        posts))
+  (sort #(after? (:date %) (:date %2)) posts))
 
 ; =file->template-name
 (defn file->template-name
@@ -152,18 +144,19 @@
   (let [lines (map str/trim (str/split-lines data))
         options (take-while #(= 0 (.indexOf % ";")) lines)]
     (into {} (for [opt options]
-      (let [[k v] (str/split (str/replace-first opt #";\s*" "") #"\s*:\s*")]
-        [(keyword k) v])))))
+      (let [[k & v] (str/split (str/replace-first opt #";\s*" "") #"\s*:\s*")]
+        [(keyword k) (str/join ":" v)])))))
 
 ; =generate-html
 (defn generate-html
   "Generate HTML from template."
   [tmpl-name]
-  (let [data (slurp (str *template-dir* tmpl-name))
+  (let [filename (str *template-dir* tmpl-name)
+        data (slurp filename)
         options (parse-template-options data)
-        site (merge options
-                    (get-date-map tmpl-name)
-                    {:posts (sort-by-date (get-posts))})
+        site (assoc options
+                    :posts (sort-by-date (get-posts))
+                    :date (get-date (io/file filename)))
         contents ((merge-meta-option-fn (transform data) site)
                     (with-meta '("") site))]
     (if (:layout options)
@@ -199,7 +192,7 @@
           filename (delete-extension tmpl-name)]
       (write-data filename (f contents))
       true)
-  (catch Exception _ false)))
+  (catch Exception e (.printStackTrace e) false)))
 
 ; =compile-all-templates
 (defn compile-all-templates

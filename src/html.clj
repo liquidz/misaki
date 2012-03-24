@@ -1,6 +1,15 @@
 (ns html
   (:require [hiccup.page-helpers :as page]))
 
+(defn- tag? [x]
+  (and (vector? x) (keyword? (first x))))
+
+(defn- name*
+  "(name :a/b)  => \"b\"
+   (name* :a/b) => \"a/b\""
+  [k]
+  (apply str (rest (str k))))
+
 (defn js [& args]
   (apply page/include-js args))
 
@@ -10,8 +19,19 @@
 
 (defn ul
   ([ls] (ul identity ls))
-  ([f ls] [:ul (map (fn [x] [:li (f x)]) ls)]))
+  ([f ls] [:ul (map (fn [x]
+                      (if (and (tag? x) (= :ul (first x)))
+                        (f x)
+                        [:li (f x)])) ls)]))
 
+
+(defn dl
+  [x]
+  (if (map? x) (dl (mapcat identity x))
+    [:dl
+     (map (fn [[dt dd]]
+            (list [:dt (name* dt)] [:dd dd]))
+          (partition 2 x))]))
 
 
 (defn img

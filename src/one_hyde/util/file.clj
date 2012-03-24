@@ -1,9 +1,12 @@
 (ns one-hyde.util.file
   "one-hyde: file control utility"
+  (:use
+    [clj-time.coerce :only [from-long]])
   (:require
     [clojure.java.io :as io]
     [clojure.string :as str])
-  (:import [java.util Date]))
+  ;(:import [java.io File])
+  )
 
 ; =find-files
 (defn find-files
@@ -24,6 +27,12 @@
   (if (= java.io.File (class x))
     (delete-extension (.getName x))
     (str/replace-first x #"\.[^.]+$" "")))
+
+; =last-modified-date
+(defn last-modified-date
+  "Get last modified date from java.io.File"
+  [#^java.io.File file]
+  (from-long (.lastModified file)))
 
 ; make-directories
 (defn make-directories

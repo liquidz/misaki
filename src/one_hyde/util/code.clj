@@ -1,7 +1,14 @@
 (ns one-hyde.util.code
   "one-hyde: here document utility
 
-  cf. http://d.hatena.ne.jp/nokturnalmortum/20100527/1274961805")
+  cf. http://d.hatena.ne.jp/nokturnalmortum/20100527/1274961805"
+  (:use one-hyde.config))
+
+(defn get-code-type [s]
+  (let [key (keyword s)
+        config (load-config)
+        type (get (:code-highlight config) key)]
+    (if type (str " " type) "")))
 
 (defn dispatch-reader-macro [ch fun]
   (let [dm (.get (doto (.getDeclaredField clojure.lang.LispReader "dispatchMacros")
@@ -22,8 +29,9 @@
       (drop (count end)) reverse (map char) (apply str))))
 
 (defn here-code [reader ch]
-  (let [end (read-until reader "\n")]
-    [:pre {:class "prettyprint"}
+  (let [end (read-until reader "\n")
+        type (get-code-type end)]
+    [:pre {:class (str "prettyprint" type)}
     (read-until reader (apply str "\n" end))]))
 
 (dispatch-reader-macro \- here-code)
