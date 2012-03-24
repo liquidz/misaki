@@ -2,7 +2,8 @@
   (:use
     one-hyde.core
     watchtower.core
-    compojure.core
+;    hiccup.page-helpers
+    [compojure.core :only [defroutes]]
     [compojure.route :only [files]]
     [ring.adapter.jetty :only [run-jetty]]))
 

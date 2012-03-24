@@ -5,7 +5,8 @@
     [one-hyde.util file code]
     ;one-hyde.util.file
     ;one-hyde.util.code
-    [hiccup.core :only [html]])
+    [hiccup.core :only [html]]
+    [hiccup.page-helpers :only [html5 xhtml html4]])
   (:require
     html
     [clojure.string :as str]
@@ -138,15 +139,24 @@
           (find-files *template-dir*)))
 
 ;; COMPILE
+(defn get-compile-fn
+  "Get hiccup functon to compile sexp"
+  [fmt]
+  (case fmt
+    "html5" #(html5 %)
+    "xhtml" #(xhtml %)
+    "html4" #(html4 %)
+    #(html %)))
+
 (defn compile-template
   "Compile a specified template.
   return true if compile is successed"
   [tmpl-name]
   (try
     (let [contents (generate-html tmpl-name)
-          data (html contents)
+          f (get-compile-fn (-> contents meta :format))
           filename (replace-extension tmpl-name ".clj" ".html")]
-      (write-data filename data)
+      (write-data filename (f contents))
       true)
   (catch Exception e false)))
 
