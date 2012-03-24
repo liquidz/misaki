@@ -36,13 +36,21 @@
       (spit w data))))
 
 ;;; LAYOUTS
+(defn wrap-meta-fn
+  ([f parent-option]
+   (fn [site contents]
+     (with-meta (f site contents) (merge parent-option site)))))
+
 (defn wrap-layout
   "Wrap layout function with parent layout function"
   [parent-option layout-fn]
-  (fn [site & contents]
-    ((get-layout (:layout parent-option))
-       (merge parent-option site)
-       (layout-fn site contents))))
+  (wrap-meta-fn
+    (fn [site contents]
+      ((get-layout (:layout parent-option))
+         (merge parent-option site)
+         (layout-fn site contents)))
+    parent-option
+    ))
 
 (defn get-layout
   "Get layout function from layout name.
@@ -50,7 +58,8 @@
   [layout-name]
   (let [data (slurp (str *layouts-dir* layout-name ".clj"))
         options (parse-template-options data)
-        layout-fn (transform data)]
+        layout-fn (wrap-meta-fn (transform data) options)]
+        ;layout-fn (transform data)]
     (if (:layout options)
       (wrap-layout options layout-fn)
       layout-fn)))
@@ -113,7 +122,7 @@
   (let [data (slurp (str *template-dir* tmpl-name))
         options (parse-template-options data)
         site (assoc options :posts (sort-by-url (get-posts)))
-        contents ((transform data) site)]
+        contents ((wrap-meta-fn (transform data) site) site "")]
     (if (:layout options)
       ((get-layout (:layout options)) site contents)
       contents)))
@@ -130,11 +139,12 @@
   return true if compile is successed"
   [tmpl-name]
   (try
-    (let [data (html (generate-html tmpl-name))
+    (let [contents (generate-html tmpl-name)
+          data (html contents)
           filename (replace-extension tmpl-name ".clj" ".html")]
       (write-data filename data)
       true)
-    (catch Exception e false)))
+  (catch Exception e false)))
 
 (defn compile-all-templates
   "Compile all template files.

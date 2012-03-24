@@ -1,15 +1,23 @@
 (ns one-hyde.transform
   "one-hyde: data transform functions")
 
-(defn wrap-function
-  "wrap slurped data with function"
+(defn _wrap-function [slurped-data]
+  (str "(fn [site contents] (list \n" slurped-data "\n))"))
+
+(defn- wrap-list
+  "wrap slurped data as a list"
   [slurped-data]
-  (str "(fn [site & contents] (list \n" slurped-data "\n))"))
+  (str "(list " slurped-data " )"))
+
+(defn- wrap-function
+  "wrap s-exp as a template function"
+  [sexp]
+  `(fn [~'site ~'contents] ~sexp))
 
 (def ^{:dynamic true
        :doc "transform functions"}
   *transformers*
-  (atom [wrap-function read-string eval]))
+  (atom [wrap-list read-string wrap-function eval]))
 
 (defn add-transformer!
   "add transform function to *transformers*"

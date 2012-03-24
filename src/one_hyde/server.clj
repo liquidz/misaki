@@ -31,6 +31,7 @@
 (defroutes handler (files "/"))
 
 (defn -main [& [option]]
+;  (println (generate-html "index.clj"))
   (case option
     "compile" (compile-all-templates)
 

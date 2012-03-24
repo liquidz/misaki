@@ -22,7 +22,7 @@
     (testing "single layout"
       (let [f (get-layout "test1")]
         (is (= "<p>a</p><p>bc</p>"
-               (html (f {:title "a"} "b" "c"))))))
+               (html (f {:title "a"} '("b" "c")))))))
 
     (testing "multiple layout"
       (let [f (get-layout "test2")]
@@ -49,6 +49,19 @@
     (add-transformer! #(* 3 %))
     (is (= 12 (transform 1))))
 
-  (let [f (transform "(apply + site)")]
+  (let [f (transform "(apply + (vals site))")]
     ; f => (fn [site & contents] (list (apply + site)))
-    (is (= '(6) (f [1 2 3])))))
+    (is (= '(6) (f {:a 1 :b 2 :c 3} nil)))))
+
+
+;;; format
+(deftest template-format-test
+  (with-test-dir
+    (let [m (meta (generate-html "no_format.clj"))]
+      (is (= "html5" (:format m))))
+
+    (let [m (meta (generate-html "with_format.clj"))]
+      (is (= "xhtml" (:format m))))
+
+    (let [m (meta (generate-html "with_layout_format.clj"))]
+    (is (= "html4" (:format m))))))
