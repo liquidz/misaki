@@ -1,5 +1,5 @@
-(ns one-hyde.util
-  "one-hyde: utility functions"
+(ns one-hyde.util.file
+  "one-hyde: file control utility"
   (:require
     [clojure.java.io :as io]
     [clojure.string :as str])
@@ -35,5 +35,4 @@
       (let [name (str/join "/" (take (inc n) paths))
             file (io/file name)]
         (if-not (.exists file) (.mkdir file))))))
-
 

@@ -1,7 +1,10 @@
 (ns one-hyde.core
   "one-hyde: micro static blog library core"
   (:use
-    [one-hyde util transform]
+    one-hyde.transform
+    [one-hyde.util file code]
+    ;one-hyde.util.file
+    ;one-hyde.util.code
     [hiccup.core :only [html]])
   (:require
     html
@@ -122,7 +125,8 @@
   (let [data (slurp (str *template-dir* tmpl-name))
         options (parse-template-options data)
         site (assoc options :posts (sort-by-url (get-posts)))
-        contents (with-meta ((transform data) "") site)]
+        contents ((merge-meta-option-fn (transform data) site)
+                    (with-meta '("") site))]
     (if (:layout options)
       ((get-layout (:layout options)) contents)
       contents)))
