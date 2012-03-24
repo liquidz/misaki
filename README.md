@@ -1,4 +1,4 @@
-# one-hyde
+# 1hyde
 
 Static site generator in Clojure inspired by Jekyll
 
