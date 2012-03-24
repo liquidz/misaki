@@ -82,7 +82,7 @@
 (defn get-post-url
   "Generate post url from file(java.io.File)."
   [#^File file]
-  (str "/" *posts* (URLEncoder/encode (replace-extension file ".clj" ".html"))))
+  (str "/" *posts* (URLEncoder/encode (delete-extension file))))
 
 (defn get-posts
   "Get posts data from *posts-dir* directory."
@@ -155,7 +155,7 @@
   (try
     (let [contents (generate-html tmpl-name)
           f (get-compile-fn (-> contents meta :format))
-          filename (replace-extension tmpl-name ".clj" ".html")]
+          filename (delete-extension tmpl-name)]
       (write-data filename (f contents))
       true)
   (catch Exception e false)))

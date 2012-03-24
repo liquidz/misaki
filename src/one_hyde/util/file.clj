@@ -20,12 +20,12 @@
   [file]
   (Date. (.lastModified file)))
 
-(defn replace-extension
-  "replace file extension"
-  [x from to]
+(defn delete-extension
+  "delete file extension"
+  [x]
   (if (= java.io.File (class x))
-    (replace-extension (.getName x) from to)
-    (str/replace-first x (re-pattern (str "\\" from "$")) to)))
+    (delete-extension (.getName x))
+    (str/replace-first x #"\.[^.]+$" "")))
 
 (defn make-directories
   "make directories which will place file"
