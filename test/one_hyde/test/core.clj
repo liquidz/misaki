@@ -22,12 +22,13 @@
     (testing "single layout"
       (let [f (get-layout "test1")]
         (is (= "<p>a</p><p>bc</p>"
-               (html (f {:title "a"} '("b" "c")))))))
+               ;(html (f {:title "a"} '("b" "c")))))))
+               (html (f (with-meta '("b" "c") {:title "a"})))))))
 
     (testing "multiple layout"
       (let [f (get-layout "test2")]
         (is (= "<h1>default</h1><p>a</p><p>b</p>"
-               (html (f {:title "a"} "b"))))))))
+               (html (f (with-meta '("b") {:title "a"})))))))))
 
 ;;; TEMPLATES
 (deftest parse-template-options-test
@@ -51,7 +52,7 @@
 
   (let [f (transform "(apply + (vals site))")]
     ; f => (fn [site & contents] (list (apply + site)))
-    (is (= '(6) (f {:a 1 :b 2 :c 3} nil)))))
+    (is (= '(6) (f (with-meta '("") {:a 1 :b 2 :c 3}))))))
 
 
 ;;; format

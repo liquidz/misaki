@@ -12,7 +12,9 @@
 (defn- wrap-function
   "wrap s-exp as a template function"
   [sexp]
-  `(fn [~'site ~'contents] ~sexp))
+  `(fn [~'contents]
+     (let [~'site (meta ~'contents)]
+       ~sexp)))
 
 (def ^{:dynamic true
        :doc "transform functions"}

@@ -36,21 +36,22 @@
       (spit w data))))
 
 ;;; LAYOUTS
-(defn wrap-meta-fn
-  ([f parent-option]
-   (fn [site contents]
-     (with-meta (f site contents) (merge parent-option site)))))
+(defn merge-meta-option-fn
+  "Wrap function to merge content's meta data(template option) with parent's option"
+  [f parent-option]
+  (fn [contents]
+    (with-meta
+      (f contents)
+      (merge parent-option (meta contents)))))
 
 (defn wrap-layout
   "Wrap layout function with parent layout function"
   [parent-option layout-fn]
-  (wrap-meta-fn
-    (fn [site contents]
+  (merge-meta-option-fn
+    (fn [contents]
       ((get-layout (:layout parent-option))
-         (merge parent-option site)
-         (layout-fn site contents)))
-    parent-option
-    ))
+         (layout-fn contents)))
+    parent-option))
 
 (defn get-layout
   "Get layout function from layout name.
@@ -58,8 +59,7 @@
   [layout-name]
   (let [data (slurp (str *layouts-dir* layout-name ".clj"))
         options (parse-template-options data)
-        layout-fn (wrap-meta-fn (transform data) options)]
-        ;layout-fn (transform data)]
+        layout-fn (merge-meta-option-fn (transform data) options)]
     (if (:layout options)
       (wrap-layout options layout-fn)
       layout-fn)))
@@ -116,15 +116,17 @@
       (let [[k v] (str/split (str/replace-first opt #";\s*" "") #"\s*:\s*")]
         [(keyword k) v])))))
 
+(def empty-data '(""))
+
 (defn generate-html
   "Generate HTML from template."
   [tmpl-name]
   (let [data (slurp (str *template-dir* tmpl-name))
         options (parse-template-options data)
         site (assoc options :posts (sort-by-url (get-posts)))
-        contents ((wrap-meta-fn (transform data) site) site "")]
+        contents (with-meta ((transform data) "") site)]
     (if (:layout options)
-      ((get-layout (:layout options)) site contents)
+      ((get-layout (:layout options)) contents)
       contents)))
 
 (defn get-template-files
