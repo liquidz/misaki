@@ -1,15 +1,12 @@
 (ns one-hyde.transform
   "one-hyde: data transform functions")
 
-(defn _wrap-function [slurped-data]
-  (str "(fn [site contents] (list \n" slurped-data "\n))"))
-
-(defn- wrap-list
+(defn wrap-list
   "wrap slurped data as a list"
   [slurped-data]
   (str "(list " slurped-data " )"))
 
-(defn- wrap-function
+(defn wrap-function
   "wrap s-exp as a template function"
   [sexp]
   `(fn [~'contents]

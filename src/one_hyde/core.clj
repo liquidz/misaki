@@ -116,8 +116,6 @@
       (let [[k v] (str/split (str/replace-first opt #";\s*" "") #"\s*:\s*")]
         [(keyword k) v])))))
 
-(def empty-data '(""))
-
 (defn generate-html
   "Generate HTML from template."
   [tmpl-name]

@@ -6,13 +6,17 @@
     [compojure.route :only [files]]
     [ring.adapter.jetty :only [run-jetty]]))
 
-(defn print-result [result]
+(defn print-result
+  "Print compile result"
+  [result]
   (print " ... ")
   (if result
     (println "\033[36mDONE\033[0m")
     (println "\033[31mFAIL\033[0m")))
 
-(defn do-compile [#^java.io.File file]
+(defn do-compile
+  "Compile templte file and print status"
+  [#^java.io.File file]
   (if (layout-file? file)
     (do (print " * compiling all templates:")
         (print-result (compile-all-templates)))
@@ -20,6 +24,7 @@
         (print-result (compile-template (file->template-name file))))))
 
 (defn start-watcher
+  "Start watchtower watcher to compile changed templates"
   []
   (watcher
     [*template-dir*]
@@ -30,8 +35,9 @@
 
 (defroutes handler (files "/"))
 
-(defn -main [& [option]]
-;  (println (generate-html "index.clj"))
+(defn -main
+  "main"
+  [& [option]]
   (case option
     "compile" (compile-all-templates)
 
