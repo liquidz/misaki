@@ -1,7 +1,8 @@
 (ns one-hyde.core
   "one-hyde: micro static blog library core"
   (:use
-    one-hyde.transform
+    [one-hyde transform config]
+;    one-hyde.transform
     [one-hyde.util file code]
     [clj-time.core :only [date-time after?]]
     [hiccup.core :only [html]]
@@ -19,17 +20,6 @@
 (declare parse-template-options)
 (declare generate-html)
 (declare file->template-name)
-
-(def ^{:dynamic true, :doc "Public directory path. Compiled html is placed here."}
-  *public-dir* "public/")
-(def ^{:dynamic true, :doc "Template directory path."}
-  *template-dir* "template/")
-(def ^{:dynamic true, :doc "Posts placed directory name."}
-  *posts* "posts/")
-(def ^{:dynamic true, :doc "Layouts placed directory path."}
-  *layouts-dir* (str *template-dir* "_layouts/"))
-(def ^{:dynamic true, :doc "Posts placed directory path."}
-  *posts-dir* (str *template-dir* *posts*))
 
 ;;; OUTPUT
 ; =write-data

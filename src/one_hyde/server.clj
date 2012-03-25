@@ -1,6 +1,6 @@
 (ns one-hyde.server
   (:use
-    one-hyde.core
+    [one-hyde core config]
     watchtower.core
     [compojure.core :only [defroutes]]
     [compojure.route :only [files]]

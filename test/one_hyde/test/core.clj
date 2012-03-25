@@ -1,8 +1,6 @@
 (ns one-hyde.test.core
-  (:use one-hyde.core
-        one-hyde.transform
-        [hiccup.core :only [html]]
-        )
+  (:use [one-hyde core transform config]
+        [hiccup.core :only [html]])
   (:use [clojure.test]))
 
 (deftest replace-me ;; FIXME: write
