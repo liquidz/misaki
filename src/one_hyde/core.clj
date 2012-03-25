@@ -17,6 +17,8 @@
 
 (declare get-layout)
 (declare parse-template-options)
+(declare generate-html)
+(declare file->template-name)
 
 (def ^{:dynamic true, :doc "Public directory path. Compiled html is placed here."}
   *public-dir* "public/")
@@ -104,15 +106,32 @@
       (apply date-time (map #(Integer/parseInt %) date))
       (last-modified-date file))))
 
+(defn get-content
+  "Get post content without layout"
+  [#^File file]
+  (html (generate-html (file->template-name file)
+                       :allow-layout? false)))
+
+(defn get-escaped-content
+  "Get escaped post content without layout"
+  [#^File file]
+  (-> (get-content file)
+    (str/replace #"&" "&amp;")
+    (str/replace #"\"" "&quot;")
+    (str/replace #"<" "&lt;")
+    (str/replace #">" "&gt;")))
+
 ; =get-posts
 (defn get-posts
   "Get posts data from *posts-dir* directory."
   []
   (let [ls (filter #(has-extension? ".clj" %) (find-files *posts-dir*))]
     (map #(hash-map
+            :file  %
             :title (get-post-title %)
             :url   (get-post-url %)
-            :date  (get-date %))
+            :date  (get-date %)
+            :lazy-content (delay (get-content %)))
          ls)))
 
 ;;; TEMPLATES
@@ -148,7 +167,7 @@
 ; =generate-html
 (defn generate-html
   "Generate HTML from template."
-  [tmpl-name]
+  [tmpl-name & {:keys [allow-layout?] :or {allow-layout? true}}]
   (let [filename (str *template-dir* tmpl-name)
         data (slurp filename)
         options (parse-template-options data)
@@ -157,7 +176,7 @@
                     :date (get-date (io/file filename)))
         contents ((merge-meta-option-fn (transform data) site)
                     (with-meta '("") site))]
-    (if (:layout options)
+    (if (and allow-layout? (:layout options))
       ((get-layout (:layout options)) contents)
       contents)))
 
@@ -190,7 +209,7 @@
           filename (delete-extension tmpl-name)]
       (write-data filename (f contents))
       true)
-  (catch Exception e (.printStackTrace e) false)))
+  (catch Exception _ false)))
 
 ; =compile-all-templates
 (defn compile-all-templates
