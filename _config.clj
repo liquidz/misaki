@@ -2,7 +2,7 @@
  ;directories
  :public-dir   "public/"
  :template-dir "template/"
- :posts        "posts/"
+ :posts        "_posts/"
  :layouts      "_layouts/"
 
  ;highlight setting

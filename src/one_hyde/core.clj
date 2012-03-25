@@ -4,7 +4,7 @@
     [one-hyde transform config]
 ;    one-hyde.transform
     [one-hyde.util file code]
-    [clj-time.core :only [date-time after?]]
+    [clj-time.core :only [date-time after? month day year]]
     [hiccup.core :only [html]]
     [hiccup.page-helpers :only [html5 xhtml html4]])
   (:require
@@ -20,6 +20,10 @@
 (declare parse-template-options)
 (declare generate-html)
 (declare file->template-name)
+(declare make-output-filename)
+
+(def ^:dynamic *post-filename-regexp*
+  #"(\d{4})[-_](\d{1,2})[-_](\d{1,2})[-_](.+)$")
 
 ;;; LAYOUTS
 ; =merge-meta-option-fn
@@ -70,7 +74,7 @@
 (defn get-post-url
   "Generate post url from file(java.io.File)."
   [#^File file]
-  (str "/" *posts* (URLEncoder/encode (delete-extension file))))
+  (str "/" (make-output-filename (str *posts* (.getName file)))))
 
 ; =get-date
 (defn get-date
@@ -80,17 +84,21 @@
       YYYY_MM_DD
       YYYY_M_D"
   [#^File file]
-  (let [date (nfirst (re-seq #"(\d{4})[-_](\d{1,2})[-_](\d{1,2})" (.getName file)))]
+  (let [date (nfirst (re-seq *post-filename-regexp* (.getName file)))]
     (if date
-      (apply date-time (map #(Integer/parseInt %) date))
+      (apply date-time (map #(Integer/parseInt %)
+                            ; last => filename
+                            (drop-last date)))
       (last-modified-date file))))
 
+; =get-content
 (defn get-content
   "Get post content without layout"
   [#^File file]
   (html (generate-html (file->template-name file)
                        :allow-layout? false)))
 
+; =get-escaped-content
 (defn get-escaped-content
   "Get escaped post content without layout"
   [#^File file]
@@ -113,6 +121,11 @@
             :lazy-content (delay (get-content %)))
          ls)))
 
+(defn post-file?
+  "Check whether file is post file or not."
+  [#^File file]
+  (not= -1 (.indexOf (.getAbsolutePath file) *posts-dir*)))
+
 ;;; TEMPLATES
 ; =sort-by-date
 (defn- sort-by-date [posts]
@@ -127,6 +140,12 @@
   [file]
   (last (str/split (.getAbsolutePath file)
                    (re-pattern *template-dir*))))
+
+; =template-name->file
+(defn template-name->file
+  "Convert template name to java.io.File"
+  [tmpl-name]
+  (io/file (str *template-dir* tmpl-name)))
 
 ; =parse-template-options
 (defn parse-template-options
@@ -177,6 +196,18 @@
     "html4" #(html4 %)
     #(html %)))
 
+; =make-output-filename
+(defn make-output-filename
+  "Make output filename from template name"
+  [tmpl-name]
+  (let [file (template-name->file tmpl-name)
+        date (get-date file)]
+    (if (post-file? file)
+      (format "%04d/%02d/%s" (year date) (month date)
+              (delete-extension
+                (last (first (re-seq *post-filename-regexp* tmpl-name)))))
+      (delete-extension tmpl-name))))
+
 ; =compile-template
 (defn compile-template
   "Compile a specified template.
@@ -184,10 +215,10 @@
   [tmpl-name]
   (try
     (let [contents (generate-html tmpl-name)
-          f (get-compile-fn (-> contents meta :format))
-          filename (delete-extension tmpl-name)]
-      (write-data (str *public-dir* filename)
-                  (f contents))
+          f (get-compile-fn (-> contents meta :format))]
+      (write-data
+        (str *public-dir* (make-output-filename tmpl-name))
+        (f contents))
       true)
   (catch Exception _ false)))
 
