@@ -99,11 +99,9 @@
       YYYY_MM_DD
       YYYY_M_D"
   [#^File file]
-  (let [[y m d] (nfirst (re-seq #"(\d{4})[-_](\d{1,2})[-_](\d{1,2})" (.getName file)))]
-    (if (and y m d)
-      (date-time (Integer/parseInt y)
-                 (Integer/parseInt m)
-                 (Integer/parseInt d))
+  (let [date (nfirst (re-seq #"(\d{4})[-_](\d{1,2})[-_](\d{1,2})" (.getName file)))]
+    (if date
+      (apply date-time (map #(Integer/parseInt %) date))
       (last-modified-date file))))
 
 ; =get-posts

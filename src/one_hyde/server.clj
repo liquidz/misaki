@@ -5,6 +5,10 @@
     [compojure.core :only [defroutes]]
     [compojure.route :only [files]]
     [ring.adapter.jetty :only [run-jetty]])
+
+  (require
+    [clj-time.core :as t]
+    [clj-time.format :as f])
   )
 
 (defn- blue [s] (str "\033[36m" s "\033[0m"))
@@ -43,6 +47,9 @@
 (defn -main
   "main"
   [& [option]]
+  #_(doseq [s ["2012-03-19" "2012-3-19" "hoge" "2012-1-1"]]
+    (println
+      (f/parse (f/formatter "YYYY-MM-dd") s)))
   (case option
     "compile" (compile-all-templates)
 
