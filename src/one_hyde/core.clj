@@ -21,17 +21,6 @@
 (declare generate-html)
 (declare file->template-name)
 
-;;; OUTPUT
-; =write-data
-(defn write-data
-  "Write compiled data as specified filename.
-  If filepath is not exists, this function make directories."
-  [filename data]
-  (let [filename (str *public-dir* filename)]
-    (make-directories filename)
-    (with-open [w (io/writer filename)]
-      (spit w data))))
-
 ;;; LAYOUTS
 ; =merge-meta-option-fn
 (defn merge-meta-option-fn
@@ -197,7 +186,8 @@
     (let [contents (generate-html tmpl-name)
           f (get-compile-fn (-> contents meta :format))
           filename (delete-extension tmpl-name)]
-      (write-data filename (f contents))
+      (write-data (str *public-dir* filename)
+                  (f contents))
       true)
   (catch Exception _ false)))
 

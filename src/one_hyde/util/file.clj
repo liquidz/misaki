@@ -44,3 +44,11 @@
             file (io/file name)]
         (if-not (.exists file) (.mkdir file))))))
 
+; =write-data
+(defn write-data
+  "Write compiled data as specified filename.
+  If filepath is not exists, this function make directories."
+  [filename data]
+  (make-directories filename)
+  (with-open [w (io/writer filename)]
+    (spit w data)))
