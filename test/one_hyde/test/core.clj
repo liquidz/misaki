@@ -64,3 +64,13 @@
 
     (let [m (meta (generate-html "with_layout_format.clj"))]
     (is (= "html4" (:format m))))))
+
+;;; generate
+(deftest generate-html-test
+  ;(= ""  (html (generate-html "gen_test.clj")))
+  (is true)
+  )
+
+(deftest compile-template-test
+  (is true)
+  )
