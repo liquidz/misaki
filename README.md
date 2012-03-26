@@ -6,16 +6,16 @@
 
 ## Usage
 
- - run sample
+### run sample
 
 ```bash
 git clone git://github.com/liquidz/one-hyde.git
 cd one-hyde
 lein run sample
 ```
-http://localhost:8080
+[http://localhost:8080](http://localhost:8080)
 
- - make your blog
+### make your blog
 
 ```bash
 cp -pir sample your-blog
@@ -23,7 +23,7 @@ vi your-blog/template/index.html.clj
 lein run your-blog
 ```
 
-### Directory
+## Directory
 
  * template/_layout
 
