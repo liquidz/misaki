@@ -21,3 +21,12 @@
           (t/month date))
      (.toString date "yyyy")]))
 
+(defn year [date]
+  (t/year date))
+
+(defn month [date]
+  (format "%02d" (t/month date)))
+
+(defn day [date]
+  (format "%02d" (t/day date)))
+
