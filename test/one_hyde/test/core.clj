@@ -4,16 +4,10 @@
   (:use [clojure.test])
   (:require [clojure.java.io :as io]))
 
-(deftest replace-me ;; FIXME: write
-  (is true))
-
 ;;; LAYOUT
 (defmacro with-test-dir [& body]
-  `(binding [*public-dir* "test/public/"
-             *template-dir* "test/template/"
-             *layouts-dir* "test/template/_layouts/"
-             *posts-dir* "test/template/posts/"]
-    ~@body))
+  `(binding [*base-dir* "./test/"]
+     (with-config ~@body)))
 
 (deftest get-layout-test
   (with-test-dir
@@ -74,7 +68,7 @@
   (with-test-dir
     (let [tmpl "gen_test.html.clj"
           res (compile-template tmpl)
-          file (io/file (str *public-dir* (make-output-filename tmpl)))]
+          file (io/file (str *base-dir* *public-dir* (make-output-filename tmpl)))]
       (is res)
       (is (.exists file))
       (.delete file))))

@@ -6,17 +6,21 @@
 
 ## Usage
 
+ - run sample
+
 ```bash
 git clone git://github.com/liquidz/one-hyde.git
 cd one-hyde
-lein run
-open http://localhost:8080
+lein run sample
 ```
+http://localhost:8080
 
-If you want to only compile templates, run following command.
+ - make your blog
 
 ```bash
-lein run compile
+cp -pir sample your-blog
+vi your-blog/template/index.html.clj
+lein run your-blog
 ```
 
 ### Directory

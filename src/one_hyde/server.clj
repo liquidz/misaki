@@ -2,7 +2,7 @@
   (:use
     [one-hyde core config]
     watchtower.core
-    [compojure.core :only [defroutes]]
+    [compojure.core :only [routes]]
     [compojure.route :only [files]]
     [ring.adapter.jetty :only [run-jetty]])
 
@@ -28,29 +28,32 @@
     (do (print " * compiling all templates:")
         (print-result (compile-all-templates)))
     (do (print " * compiling:" (.getName file))
-        (print-result (compile-template (file->template-name file))))))
+        (print-result (compile-template
+                        (file->template-name file))))))
 
 ; =start-watcher
 (defn start-watcher
   "Start watchtower watcher to compile changed templates"
   []
   (watcher
-    [*template-dir*]
+    [(str *base-dir* *template-dir*)]
     (rate 50)
     (file-filter ignore-dotfiles)
     (file-filter (extensions :clj))
     (on-change #(doseq [file %] (do-compile file)))))
 
-(defroutes handler (files "/"))
+(defn- add-path-slash [path]
+  (if path (if (.endsWith path "/") path (str path "/"))))
 
 ; =main
 (defn -main
   "main"
-  [& [option]]
-  (case option
-    "compile" (compile-all-templates)
-
-    (let [port (Integer/parseInt (get (System/getenv) "PORT" "8080"))]
-      (start-watcher)
-      (run-jetty handler {:port port}))))
+  [& [dir]]
+  (binding [*base-dir* (str "./" (add-path-slash dir))]
+    (with-config
+      (let [port (Integer/parseInt (get (System/getenv) "PORT" "8080"))]
+        (start-watcher)
+        (run-jetty
+          (routes (files "/" {:root (str *base-dir* "public")}))
+          {:port port})))))
 
