@@ -1,7 +1,8 @@
 (ns one-hyde.test.core
   (:use [one-hyde core transform config]
         [hiccup.core :only [html]])
-  (:use [clojure.test]))
+  (:use [clojure.test])
+  (:require [clojure.java.io :as io]))
 
 (deftest replace-me ;; FIXME: write
   (is true))
@@ -10,9 +11,8 @@
 (defmacro with-test-dir [& body]
   `(binding [*public-dir* "test/public/"
              *template-dir* "test/template/"
-             *posts* "test/posts/"
              *layouts-dir* "test/template/_layouts/"
-             *posts-dir* (str *template-dir* *posts*)]
+             *posts-dir* "test/template/posts/"]
     ~@body))
 
 (deftest get-layout-test
@@ -20,12 +20,11 @@
     (testing "single layout"
       (let [f (get-layout "test1")]
         (is (= "<p>a</p><p>bc</p>"
-               ;(html (f {:title "a"} '("b" "c")))))))
                (html (f (with-meta '("b" "c") {:title "a"})))))))
 
     (testing "multiple layout"
       (let [f (get-layout "test2")]
-        (is (= "<h1>default</h1><p>a</p><p>b</p>"
+        (is (= "<head><title>a</title></head><body><p>b</p></body>"
                (html (f (with-meta '("b") {:title "a"})))))))))
 
 ;;; TEMPLATES
@@ -56,21 +55,26 @@
 ;;; format
 (deftest template-format-test
   (with-test-dir
-    (let [m (meta (generate-html "no_format.clj"))]
+    (let [m (meta (generate-html "no_format.html.clj"))]
       (is (= "html5" (:format m))))
 
-    (let [m (meta (generate-html "with_format.clj"))]
+    (let [m (meta (generate-html "with_format.html.clj"))]
       (is (= "xhtml" (:format m))))
 
-    (let [m (meta (generate-html "with_layout_format.clj"))]
+    (let [m (meta (generate-html "with_layout_format.html.clj"))]
     (is (= "html4" (:format m))))))
 
 ;;; generate
 (deftest generate-html-test
-  ;(= ""  (html (generate-html "gen_test.clj")))
-  (is true)
-  )
+  (with-test-dir
+    (= "<html><head><title>hello</title></head><body><h1>hello</h1><p>world</p></body></html>"
+       (html (generate-html "gen_test.html.clj")))))
 
 (deftest compile-template-test
-  (is true)
-  )
+  (with-test-dir
+    (let [tmpl "gen_test.html.clj"
+          res (compile-template tmpl)
+          file (io/file (str *public-dir* (make-output-filename tmpl)))]
+      (is res)
+      (is (.exists file))
+      (.delete file))))
