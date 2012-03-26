@@ -47,9 +47,6 @@
 (defn -main
   "main"
   [& [option]]
-  #_(doseq [s ["2012-03-19" "2012-3-19" "hoge" "2012-1-1"]]
-    (println
-      (f/parse (f/formatter "YYYY-MM-dd") s)))
   (case option
     "compile" (compile-all-templates)
 
