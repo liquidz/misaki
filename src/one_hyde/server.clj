@@ -36,7 +36,7 @@
   "Start watchtower watcher to compile changed templates"
   []
   (watcher
-    [(str *base-dir* *template-dir*)]
+    [*template-dir*]
     (rate 50)
     (file-filter ignore-dotfiles)
     (file-filter (extensions :clj))

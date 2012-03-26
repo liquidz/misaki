@@ -20,12 +20,14 @@
 
 (defmacro with-config [& body]
   `(let [config# (load-config)]
-     (binding [*public-dir*   (:public-dir config#)
-               *template-dir* (:template-dir config#)
+     (binding [*public-dir*   (str *base-dir* (:public-dir config#))
+               *template-dir* (str *base-dir* (:template-dir config#))
                *posts*        (:posts config#)
-               *layouts-dir*  (str (:template-dir config#)
+               *layouts-dir*  (str *base-dir*
+                                   (:template-dir config#)
                                    (:layouts config#))
-               *posts-dir*    (str (:template-dir config#)
+               *posts-dir*    (str *base-dir*
+                                   (:template-dir config#)
                                    (:posts config#))]
        ~@body)))
 

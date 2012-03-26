@@ -50,7 +50,7 @@
   "Get layout function from layout name.
   one-hyde.transform is used to convert S-exp from function."
   [layout-name]
-  (let [data (slurp (str *base-dir* *layouts-dir* layout-name ".clj"))
+  (let [data (slurp (str *layouts-dir* layout-name ".clj"))
         options (parse-template-options data)
         layout-fn (merge-meta-option-fn (transform data) options)]
     (if (:layout options)
@@ -68,7 +68,7 @@
 (defn get-post-title
   "Get post title from post file(java.io.File)."
   [#^File file]
-  (->> (.getName file) (str *base-dir* *posts-dir*) slurp parse-template-options :title))
+  (->> (.getName file) (str *posts-dir*) slurp parse-template-options :title))
 
 ; =get-post-url
 (defn get-post-url
@@ -112,7 +112,7 @@
 (defn get-posts
   "Get posts data from *posts-dir* directory."
   []
-  (let [ls (filter #(has-extension? ".clj" %) (find-files (str *base-dir* *posts-dir*)))]
+  (let [ls (filter #(has-extension? ".clj" %) (find-files *posts-dir*))]
     (map #(hash-map
             :file  %
             :title (get-post-title %)
@@ -145,7 +145,7 @@
 (defn template-name->file
   "Convert template name to java.io.File"
   [tmpl-name]
-  (io/file (str *base-dir* *template-dir* tmpl-name)))
+  (io/file (str *template-dir* tmpl-name)))
 
 ; =parse-template-options
 (defn parse-template-options
@@ -166,7 +166,7 @@
 (defn generate-html
   "Generate HTML from template."
   [tmpl-name & {:keys [allow-layout?] :or {allow-layout? true}}]
-  (let [filename (str *base-dir* *template-dir* tmpl-name)
+  (let [filename (str *template-dir* tmpl-name)
         data (slurp filename)
         options (parse-template-options data)
         site (assoc options
@@ -183,7 +183,7 @@
   "get all template files(java.io.File) from *template-dir*"
   []
   (remove #(or (.isDirectory %) (layout-file? %))
-          (find-files (str *base-dir* *template-dir*))))
+          (find-files *template-dir*)))
 
 ;; COMPILE
 ; =get-compile-fn
@@ -217,10 +217,10 @@
     (let [contents (generate-html tmpl-name)
           f (get-compile-fn (-> contents meta :format))]
       (write-data
-        (str *base-dir* *public-dir* (make-output-filename tmpl-name))
+        (str *public-dir* (make-output-filename tmpl-name))
         (f contents))
       true)
-    (catch Exception _ false)))
+    (catch Exception e (.printStackTrace e) false)))
 
 ; =compile-all-templates
 (defn compile-all-templates
