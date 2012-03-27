@@ -5,21 +5,24 @@
   (:require [clojure.java.io :as io]))
 
 ;;; LAYOUT
-(defmacro with-test-dir [& body]
-  `(binding [*base-dir* "./test/"]
+(defmacro with-test-data [& body]
+  `(binding [*base-dir* "./test/"
+             *this-option* (atom {})]
      (with-config ~@body)))
 
 (deftest get-layout-test
-  (with-test-dir
+  (with-test-data
+    (merge-option! {:title "a"})
+
     (testing "single layout"
       (let [f (get-layout "test1")]
         (is (= "<p>a</p><p>bc</p>"
-               (html (f (with-meta '("b" "c") {:title "a"})))))))
+               (html (f '("b" "c")))))))
 
     (testing "multiple layout"
       (let [f (get-layout "test2")]
         (is (= "<head><title>a</title></head><body><p>b</p></body>"
-               (html (f (with-meta '("b") {:title "a"})))))))))
+               (html (f '("b")))))))))
 
 ;;; TEMPLATES
 (deftest parse-template-options-test
@@ -41,31 +44,36 @@
     (add-transformer! #(* 3 %))
     (is (= 12 (transform 1))))
 
-  (let [f (transform "(apply + (vals site))")]
-    ; f => (fn [site & contents] (list (apply + site)))
-    (is (= '(6) (f (with-meta '("") {:a 1 :b 2 :c 3}))))))
+  (with-test-data
+    (merge-option! {:a 1 :b 2 :c 3})
+
+    (let [f (transform "(apply + (vals site))")]
+      ; f => (fn [site & contents] (list (apply + site)))
+      (is (= '(6) (f '("")))))))
 
 
 ;;; format
 (deftest template-format-test
-  (with-test-dir
-    (let [m (meta (generate-html "no_format.html.clj"))]
-      (is (= "html5" (:format m))))
+  (with-test-data
+    (generate-html "no_format.html.clj")
+    (is (= "html5" (:format @*this-option*))))
 
-    (let [m (meta (generate-html "with_format.html.clj"))]
-      (is (= "xhtml" (:format m))))
+  (with-test-data
+    (generate-html "with_format.html.clj")
+    (is (= "xhtml" (:format @*this-option*))))
 
-    (let [m (meta (generate-html "with_layout_format.html.clj"))]
-    (is (= "html4" (:format m))))))
+  (with-test-data
+    (generate-html "with_layout_format.html.clj")
+    (is (= "html4" (:format @*this-option*)))))
 
 ;;; generate
 (deftest generate-html-test
-  (with-test-dir
+  (with-test-data
     (= "<html><head><title>hello</title></head><body><h1>hello</h1><p>world</p></body></html>"
        (html (generate-html "gen_test.html.clj")))))
 
 (deftest compile-template-test
-  (with-test-dir
+  (with-test-data
     (let [tmpl "gen_test.html.clj"
           res (compile-template tmpl)
           file (io/file (str *public-dir* (make-output-filename tmpl)))]

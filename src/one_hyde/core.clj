@@ -2,7 +2,6 @@
   "one-hyde: micro static blog library core"
   (:use
     [one-hyde transform config]
-;    one-hyde.transform
     [one-hyde.util file code]
     [clj-time.core :only [date-time after? month day year]]
     [hiccup.core :only [html]]
@@ -16,34 +15,34 @@
     [java.io File]
     [java.net URLEncoder]))
 
-(declare get-layout)
-(declare parse-template-options)
 (declare generate-html)
-(declare file->template-name)
 (declare make-output-filename)
 
+(declare ^{:dynamic true, :doc "Template and layout option in generating template"}
+         *this-option*)
 (def ^:dynamic *post-filename-regexp*
   #"(\d{4})[-_](\d{1,2})[-_](\d{1,2})[-_](.+)$")
 
-;;; LAYOUTS
-; =merge-meta-option-fn
-(defn merge-meta-option-fn
-  "Wrap function to merge content's meta data(template option) with parent's option"
-  [f parent-option]
-  (fn [contents]
-    (with-meta
-      (f contents)
-      (merge parent-option (meta contents)))))
+; =merge-option!
+(defn merge-option!
+  "Merge option to current template option (DESTRUCTIVE)"
+  [opt]
+  (swap! *this-option* #(merge %2 %) opt))
 
-; =wrap-layout
-(defn wrap-layout
-  "Wrap layout function with parent layout function"
-  [parent-option layout-fn]
-  (merge-meta-option-fn
-    (fn [contents]
-      ((get-layout (:layout parent-option))
-         (layout-fn contents)))
-    parent-option))
+; =parse-template-options
+(defn parse-template-options
+  "Parse template options
+
+  ex) template file
+      ; layout: default
+      ; title: hello, world
+      [:h1 \"hello world\"]"
+  [data]
+  (let [lines (map str/trim (str/split-lines data))
+        options (take-while #(= 0 (.indexOf % ";")) lines)]
+    (into {} (for [opt options]
+      (let [[k & v] (str/split (str/replace-first opt #";\s*" "") #"\s*:\s*")]
+        [(keyword k) (str/join ":" v)])))))
 
 ; =get-layout
 (defn get-layout
@@ -52,9 +51,11 @@
   [layout-name]
   (let [data (slurp (str *layouts-dir* layout-name ".clj"))
         options (parse-template-options data)
-        layout-fn (merge-meta-option-fn (transform data) options)]
+        layout-fn (transform data)]
+    (merge-option! options)
     (if (:layout options)
-      (wrap-layout options layout-fn)
+      (fn [contents]
+        ((get-layout (:layout options)) (layout-fn contents)))
       layout-fn)))
 
 ; =layout-file?
@@ -131,36 +132,7 @@
 (defn- sort-by-date [posts]
   (sort #(after? (:date %) (:date %2)) posts))
 
-; =file->template-name
-(defn file->template-name
-  "Convert java.io.File to template name.
 
-  ex) File<aa/bb/cc/template/index.clj>
-      => template/index.clj"
-  [file]
-  (last (str/split (.getAbsolutePath file)
-                   (re-pattern *template-dir*))))
-
-; =template-name->file
-(defn template-name->file
-  "Convert template name to java.io.File"
-  [tmpl-name]
-  (io/file (str *template-dir* tmpl-name)))
-
-; =parse-template-options
-(defn parse-template-options
-  "Parse template options
-
-  ex) template file
-      ; layout: default
-      ; title: hello, world
-      [:h1 \"hello world\"]"
-  [data]
-  (let [lines (map str/trim (str/split-lines data))
-        options (take-while #(= 0 (.indexOf % ";")) lines)]
-    (into {} (for [opt options]
-      (let [[k & v] (str/split (str/replace-first opt #";\s*" "") #"\s*:\s*")]
-        [(keyword k) (str/join ":" v)])))))
 
 ; =generate-html
 (defn generate-html
@@ -168,15 +140,14 @@
   [tmpl-name & {:keys [allow-layout?] :or {allow-layout? true}}]
   (let [filename (str *template-dir* tmpl-name)
         data (slurp filename)
-        options (parse-template-options data)
-        site (assoc options
-                    :posts (sort-by-date (get-posts))
-                    :date (get-date (io/file filename)))
-        contents ((merge-meta-option-fn (transform data) site)
-                    (with-meta '("") site))]
-    (if (and allow-layout? (:layout options))
-      ((get-layout (:layout options)) contents)
-      contents)))
+        options (parse-template-options data)]
+    ; set initial option
+    (merge-option!  (assoc options :posts (sort-by-date (get-posts))
+                                   :date (get-date (io/file filename))))
+    (let [contents ((transform data) "")]
+      (if (and allow-layout? (:layout options))
+        ((get-layout (:layout options)) contents)
+        contents))))
 
 ; =get-template-files
 (defn get-template-files
@@ -214,12 +185,13 @@
   return true if compile is successed"
   [tmpl-name]
   (try
-    (let [contents (generate-html tmpl-name)
-          f (get-compile-fn (-> contents meta :format))]
-      (write-data
-        (str *public-dir* (make-output-filename tmpl-name))
-        (f contents))
-      true)
+    (binding [*this-option* (atom {})]
+      (let [contents ((get-compile-fn (:format @*this-option*))
+                        (generate-html tmpl-name))]
+        (write-data
+          (str *public-dir* (make-output-filename tmpl-name))
+          contents)
+        true))
     (catch Exception e (.printStackTrace e) false)))
 
 ; =compile-all-templates
