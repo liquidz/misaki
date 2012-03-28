@@ -12,7 +12,7 @@
   "wrap s-exp as a template function"
   [sexp]
   `(fn [~'contents]
-     (let [~'site ~'@one-hyde.core/*this-option*]
+     (let [~'site (meta ~'contents)]
        ; remove defn result in template
        (remove var? ~sexp))))
 

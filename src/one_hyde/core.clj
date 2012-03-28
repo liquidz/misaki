@@ -18,16 +18,8 @@
 (declare generate-html)
 (declare make-output-filename)
 
-(declare ^{:dynamic true, :doc "Template and layout option in generating template"}
-         *this-option*)
 (def ^:dynamic *post-filename-regexp*
   #"(\d{4})[-_](\d{1,2})[-_](\d{1,2})[-_](.+)$")
-
-; =merge-option!
-(defn merge-option!
-  "Merge option to current template option (DESTRUCTIVE)"
-  [opt]
-  (swap! *this-option* #(merge %2 %) opt))
 
 ; =parse-template-options
 (defn parse-template-options
@@ -44,18 +36,36 @@
       (let [[k & v] (str/split (str/replace-first opt #";\s*" "") #"\s*:\s*")]
         [(keyword k) (str/join ":" v)])))))
 
+; =load-template
+(defn load-template
+  "Load template file, and transform to function.
+  Template options are contained as meta data."
+  [filename]
+  (let [data (slurp filename)
+        option (parse-template-options data)]
+    (with-meta (transform data) option)))
+
+; =apply-template
+(defn apply-template
+  "Apply contents data to template function."
+  [f contents]
+  (let [option (merge (meta f) (meta contents))
+        contents (with-meta contents option)]
+    (with-meta (f contents) option)))
+
 ; =get-layout
 (defn get-layout
   "Get layout function from layout name.
   one-hyde.transform is used to convert S-exp from function."
   [layout-name]
-  (let [data (slurp (str *layouts-dir* layout-name ".clj"))
-        options (parse-template-options data)
-        layout-fn (transform data)]
-    (merge-option! options)
-    (if (:layout options)
-      (fn [contents]
-        ((get-layout (:layout options)) (layout-fn contents)))
+  (let [layout-fn (load-template (str *layouts-dir* layout-name ".clj"))
+        option (meta layout-fn)]
+    (if (:layout option)
+      (with-meta
+        (fn [contents]
+          (apply-template (-> option :layout get-layout)
+                      (apply-template layout-fn contents)))
+        option)
       layout-fn)))
 
 ; =layout-file?
@@ -122,6 +132,7 @@
             :lazy-content (delay (get-content %)))
          ls)))
 
+; =post-file?
 (defn post-file?
   "Check whether file is post file or not."
   [#^File file]
@@ -132,22 +143,19 @@
 (defn- sort-by-date [posts]
   (sort #(after? (:date %) (:date %2)) posts))
 
-
-
 ; =generate-html
 (defn generate-html
   "Generate HTML from template."
   [tmpl-name & {:keys [allow-layout?] :or {allow-layout? true}}]
   (let [filename (str *template-dir* tmpl-name)
-        data (slurp filename)
-        options (parse-template-options data)]
-    ; set initial option
-    (merge-option!  (assoc options :posts (sort-by-date (get-posts))
-                                   :date (get-date (io/file filename))))
-    (let [contents ((transform data) "")]
-      (if (and allow-layout? (:layout options))
-        ((get-layout (:layout options)) contents)
-        contents))))
+        tmpl-fn (load-template filename)
+        empty-data (with-meta '("") {:posts (sort-by-date (get-posts))
+                                     :date  (get-date (io/file filename))})
+        contents (apply-template tmpl-fn empty-data)]
+
+    (if (and allow-layout? (-> tmpl-fn meta :layout))
+      (apply-template (-> tmpl-fn meta :layout get-layout) contents)
+      contents)))
 
 ; =get-template-files
 (defn get-template-files
@@ -185,13 +193,12 @@
   return true if compile is successed"
   [tmpl-name]
   (try
-    (binding [*this-option* (atom {})]
-      (let [contents ((get-compile-fn (:format @*this-option*))
-                        (generate-html tmpl-name))]
+      (let [data (generate-html tmpl-name)
+            compile-fn (-> data meta :format get-compile-fn)]
         (write-data
           (str *public-dir* (make-output-filename tmpl-name))
-          contents)
-        true))
+          (compile-fn data))
+        true)
     (catch Exception e (.printStackTrace e) false)))
 
 ; =compile-all-templates

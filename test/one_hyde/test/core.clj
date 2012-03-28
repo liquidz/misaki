@@ -6,23 +6,20 @@
 
 ;;; LAYOUT
 (defmacro with-test-data [& body]
-  `(binding [*base-dir* "./test/"
-             *this-option* (atom {})]
+  `(binding [*base-dir* "./test/"]
      (with-config ~@body)))
 
 (deftest get-layout-test
   (with-test-data
-    (merge-option! {:title "a"})
-
     (testing "single layout"
       (let [f (get-layout "test1")]
         (is (= "<p>a</p><p>bc</p>"
-               (html (f '("b" "c")))))))
+               (html (apply-template f (with-meta '("b" "c") {:title "a"})))))))
 
     (testing "multiple layout"
       (let [f (get-layout "test2")]
         (is (= "<head><title>a</title></head><body><p>b</p></body>"
-               (html (f '("b")))))))))
+               (html (apply-template f (with-meta '("b") {:title "a"})))))))))
 
 ;;; TEMPLATES
 (deftest parse-template-options-test
@@ -44,27 +41,19 @@
     (add-transformer! #(* 3 %))
     (is (= 12 (transform 1))))
 
-  (with-test-data
-    (merge-option! {:a 1 :b 2 :c 3})
-
-    (let [f (transform "(apply + (vals site))")]
-      ; f => (fn [site & contents] (list (apply + site)))
-      (is (= '(6) (f '("")))))))
+  (let [f (transform "(apply + (vals site))")]
+    ; f => (fn [site & contents] (list (apply + site)))
+    (is (= '(6) (apply-template f (with-meta '("") {:a 1 :b 2 :c 3}))))))
 
 
 ;;; format
 (deftest template-format-test
   (with-test-data
-    (generate-html "no_format.html.clj")
-    (is (= "html5" (:format @*this-option*))))
+    (is (= "html5" (-> "no_format.html.clj" generate-html meta :format)))
 
-  (with-test-data
-    (generate-html "with_format.html.clj")
-    (is (= "xhtml" (:format @*this-option*))))
+    (is (= "xhtml" (-> "with_format.html.clj" generate-html meta :format)))
 
-  (with-test-data
-    (generate-html "with_layout_format.html.clj")
-    (is (= "html4" (:format @*this-option*)))))
+    (is (= "html4" (-> "with_layout_format.html.clj" generate-html meta :format)))))
 
 ;;; generate
 (deftest generate-html-test
