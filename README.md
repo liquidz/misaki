@@ -1,12 +1,27 @@
 # 1hyde
 
-1hyde is a [Jekyll](https://github.com/mojombo/jekyll) inspired static site generator written by Clojure.
+1hyde is a [Jekyll](https://github.com/mojombo/jekyll) inspired static site generator in Clojure.
 
 **WARNING:** 1hyde is still alpha version.
 
-## Usage
+## Example template
 
-### run sample
+```clojure
+; layout: default
+; title : sample tempalte
+
+; you can define function
+(defn h1 [s] [:h1 s])
+
+(h1 (:title site))
+[:p "Welcome to 1hyde world!"]
+
+#-CLJ
+(println "google-code-prettify highlight!")
+CLJ
+```
+
+## Run sample
 
 ```bash
 git clone git://github.com/liquidz/one-hyde.git
@@ -15,7 +30,7 @@ lein run sample
 ```
 [http://localhost:8080](http://localhost:8080)
 
-### make your blog
+## Make your blog
 
 ```bash
 cp -pir sample your-blog
@@ -41,6 +56,9 @@ lein run your-blog
 
     1hyde configuration file. Above directory names are defined in this file.
 
+## Document
+
+[Wiki](https://github.com/liquidz/one-hyde/wiki)
 
 ## License
 

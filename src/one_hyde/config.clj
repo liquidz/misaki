@@ -1,5 +1,5 @@
 (ns one-hyde.config
-  "one-hyde: control configuration"
+  "1hyde: configuration"
   (:require [clojure.string :as str]
             [clojure.java.io :as io]))
 

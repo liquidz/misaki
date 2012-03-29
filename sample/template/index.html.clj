@@ -8,7 +8,7 @@
 (defn page-header [s]
   [:div {:class "page-header"} (h1 s)])
 
-; template is based on hiccup
+; template is compiled with hiccup
 
 [:header
  (h1 "1hyde")
@@ -36,7 +36,7 @@
 (defn page-header [s]
   [:div {:class "page-header"} (h1 s)])
 
-; template is based on hiccup
+; template is compiled with hiccup
 
 [:header
  (h1 "1hyde")

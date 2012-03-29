@@ -1,5 +1,5 @@
 (ns one-hyde.transform
-  "one-hyde: data transform functions")
+  "1hyde: data transform functions")
 
 ; =wrap-list
 (defn wrap-list

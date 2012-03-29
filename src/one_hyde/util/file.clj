@@ -1,12 +1,10 @@
 (ns one-hyde.util.file
-  "one-hyde: file control utility"
+  "1hyde: file control utility"
   (:use
     [clj-time.coerce :only [from-long]])
   (:require
     [clojure.java.io :as io]
-    [clojure.string :as str])
-  ;(:import [java.io File])
-  )
+    [clojure.string :as str]))
 
 ; =find-files
 (defn find-files

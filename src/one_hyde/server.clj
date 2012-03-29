@@ -1,18 +1,17 @@
 (ns one-hyde.server
+  "1hyde: development server"
   (:use
     [one-hyde core config]
     watchtower.core
     [compojure.core :only [routes]]
     [compojure.route :only [files]]
-    [ring.adapter.jetty :only [run-jetty]])
-
-  (require
-    [clj-time.core :as t]
-    [clj-time.format :as f])
-  )
+    [ring.adapter.jetty :only [run-jetty]]))
 
 (defn- blue [s] (str "\033[36m" s "\033[0m"))
 (defn- red  [s] (str "\033[31m" s "\033[0m"))
+
+(defn- add-path-slash [path]
+  (if path (if (.endsWith path "/") path (str path "/"))))
 
 ; =print-result
 (defn print-result
@@ -42,18 +41,12 @@
     (file-filter (extensions :clj))
     (on-change #(doseq [file %] (do-compile file)))))
 
-(defn- add-path-slash [path]
-  (if path (if (.endsWith path "/") path (str path "/"))))
-
 ; =main
-(defn -main
-  "main"
-  [& [dir]]
+(defn -main [& [dir]]
   (binding [*base-dir* (str "./" (add-path-slash dir))]
     (with-config
-      (let [port (Integer/parseInt (get (System/getenv) "PORT" "8080"))]
-        (start-watcher)
-        (run-jetty
-          (routes (files "/" {:root (str *base-dir* "public")}))
-          {:port port})))))
+      (start-watcher)
+      (run-jetty
+        (routes (files "/" {:root (str *base-dir* "public")}))
+        {:port 8080}))))
 

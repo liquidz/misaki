@@ -1,5 +1,5 @@
 (ns one-hyde.util.code
-  "one-hyde: here document utility
+  "1hyde: here document utility
 
   cf. http://d.hatena.ne.jp/nokturnalmortum/20100527/1274961805"
   (:use one-hyde.config))

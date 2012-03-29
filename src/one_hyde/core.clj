@@ -1,5 +1,5 @@
 (ns one-hyde.core
-  "one-hyde: micro static blog library core"
+  "1hyde: Jekyll inspired static site generator in Clojure"
   (:use
     [one-hyde transform config]
     [one-hyde.util file code]
