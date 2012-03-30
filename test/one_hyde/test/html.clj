@@ -27,3 +27,13 @@
   (is (= "<dl><dt>a</dt><dd>1</dd><dt>b</dt><dd>2</dd></dl>" (html (dl [:a 1 :b 2]))))
 
   (is (= "<dl><dt>a/b</dt><dd>1</dd></dl>" (html (dl {:a/b 1})))))
+
+(deftest table-test
+  (is (= "<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table>"
+         (html (table '[[a b]]))))
+  (is (= "<table><tbody><tr><td>a</td><td>b</td></tr><tr><td>c</td><td>d</td></tr></tbody></table>"
+         (html (table '[[a b] [c d]]))))
+
+  (is (= "<table><thead><tr><th>1</th><th>2</th></tr></thead><tbody><tr><td>a</td><td>b</td></tr></tbody></table>"
+         (html (table [1 2] '[[a b]]))))
+  )

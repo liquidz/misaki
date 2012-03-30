@@ -59,12 +59,21 @@
 (defn code [s]
   [:code {:class "prettyprint"} s])
 
-(defn table [[head & bodies] :as rows]
-  [:table
-    [:thead [:tr (for h head [:th h])]]
+(defn table
+  ([bodies] (table nil bodies))
+  ([head bodies]
+   [:table
+    (if head [:thead [:tr (for [h head] [:th h])]])
     [:tbody
-      (for [body bodies]
-        [:tr (for [row body] [:td row])])]])
+     (for [body bodies]
+       [:tr (for [b body] [:td b])])]]))
+
+;(defn table [[head & bodies] :as rows]
+;  [:table
+;    [:thead [:tr (for h head [:th h])]]
+;    [:tbody
+;      (for [body bodies]
+;        [:tr (for [row body] [:td row])])]])
 
 ;(defn table
 ;  [opt & rows]
