@@ -59,6 +59,13 @@
 (defn code [s]
   [:code {:class "prettyprint"} s])
 
+(defn table [[head & bodies] :as rows]
+  [:table
+    [:thead [:tr (for h head [:th h])]]
+    [:tbody
+      (for [body bodies]
+        [:tr (for [row body] [:td row])])]])
+
 ;(defn table
 ;  [opt & rows]
 ;  (if-not (map? opt)
