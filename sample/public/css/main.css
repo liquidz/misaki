@@ -8,7 +8,7 @@ header h1 { margin: 0.3em; }
 header h1 a {
     display: block;
     font-size: 0;
-    text-indent:100%;
+    text-indent:200%;
     background: transparent url(/img/logo.png) no-repeat top left;
     width: 200px;
     height: 69px;

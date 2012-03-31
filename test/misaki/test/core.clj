@@ -19,7 +19,11 @@
     (testing "multiple layout"
       (let [f (get-layout "test2")]
         (is (= "<head><title>a</title></head><body><p>b</p></body>"
-               (html (apply-template f (with-meta '("b") {:title "a"})))))))))
+               (html (apply-template f (with-meta '("b") {:title "a"})))))
+
+        (is (= "test2" (:title (meta f))))
+        (is (= "html5" (:format (meta f))))
+        ))))
 
 ;;; TEMPLATES
 (deftest parse-template-options-test

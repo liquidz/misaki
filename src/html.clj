@@ -23,10 +23,8 @@
 
 (defn ul
   ([ls] (ul identity ls))
-  ([f ls] [:ul (map (fn [x]
-                      (if (and (tag? x) (= :ul (first x)))
-                        (f x)
-                        [:li (f x)])) ls)]))
+  ([f ls]
+   [:ul (for [x ls] [:li (f x)])]))
 
 
 (defn dl

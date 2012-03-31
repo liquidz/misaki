@@ -1,4 +1,4 @@
-<img src="https://github.com/liquidz/misaki/raw/master/sample/public/img/logo.png" alt="misaki logo" />
+![misaki logo](https://github.com/liquidz/misaki/raw/master/sample/public/img/logo.png)
 
 misaki is a [Jekyll](https://github.com/mojombo/jekyll) inspired static site generator in Clojure.
 

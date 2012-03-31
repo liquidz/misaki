@@ -63,11 +63,13 @@
   (let [layout-fn (load-template (str *layouts-dir* layout-name ".clj"))
         option (meta layout-fn)]
     (if (:layout option)
-      (with-meta
-        (fn [contents]
-          (apply-template (-> option :layout get-layout)
-                      (apply-template layout-fn contents)))
-        option)
+      (let [parent-layout (-> option :layout get-layout)]
+        (with-meta
+          (fn [contents]
+            (apply-template
+              parent-layout
+              (apply-template layout-fn contents)))
+          (merge (meta parent-layout) option)))
       layout-fn)))
 
 ; =layout-file?

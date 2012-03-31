@@ -6,7 +6,7 @@
 (deftest ul-test
   (is (= "<ul><li>1</li><li>2</li></ul>" (html (ul [1 2]))))
   (is (= "<ul><li>2</li><li>3</li></ul>" (html (ul inc [1 2]))))
-  (is (= "<ul><li>1</li><ul><li>2</li></ul></ul>" (html (ul [1 (ul [2])])))))
+  (is (= "<ul><li>1</li><li><ul><li>2</li></ul></li></ul>" (html (ul [1 (ul [2])])))))
 
 (deftest img-test
   (is (= "<img alt=\"\" src=\"a.png\" />" (html (img "a.png"))))
