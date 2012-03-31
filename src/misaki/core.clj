@@ -153,8 +153,9 @@
   [tmpl-name & {:keys [allow-layout?] :or {allow-layout? true}}]
   (let [filename (str *template-dir* tmpl-name)
         tmpl-fn (load-template filename)
-        empty-data (with-meta '("") {:posts (sort-by-date (get-posts))
-                                     :date  (get-date (io/file filename))})
+        site-data (merge *site* {:posts (sort-by-date (get-posts))
+                                 :date  (get-date (io/file filename))})
+        empty-data (with-meta '("") site-data)
         contents (apply-template tmpl-fn empty-data)]
 
     (if (and allow-layout? (-> tmpl-fn meta :layout))

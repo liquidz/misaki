@@ -22,8 +22,12 @@
                (html (apply-template f (with-meta '("b") {:title "a"})))))
 
         (is (= "test2" (:title (meta f))))
-        (is (= "html5" (:format (meta f))))
-        ))))
+        (is (= "html5" (:format (meta f))))))))
+
+;;; default site data
+(deftest default-site-data-test
+  (with-test-data
+    (is (= "<p>default title</p>" (html (generate-html "site.html.clj"))))))
 
 ;;; TEMPLATES
 (deftest parse-template-options-test

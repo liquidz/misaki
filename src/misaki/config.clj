@@ -19,6 +19,8 @@
          *layouts-dir*)
 (declare ^{:dynamic true, :doc "Posts placed directory path."}
          *posts-dir*)
+(declare ^{:dynamic true, :doc "Default site data."}
+         *site*)
 
 ; =with-config
 (defmacro with-config
@@ -33,7 +35,8 @@
                                    (:layouts config#))
                *posts-dir*    (str *base-dir*
                                    (:template-dir config#)
-                                   (:posts config#))]
+                                   (:posts config#))
+               *site*         (if (:site config#) (:site config#) {})]
        ~@body)))
 
 

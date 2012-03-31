@@ -1,11 +1,14 @@
 {
- ;directories
+ ;; directory setting
  :public-dir   "public/"
  :template-dir "template/"
  :posts        "_posts/"
  :layouts      "_layouts/"
 
- ;highlight setting
+ ;; default site data
+ :site {:default-title "default title"}
+
+ ;; highlight setting
  :code-highlight {:CLJ "lang-clj"}
  }
 

@@ -8,7 +8,7 @@
 
 ; site header
 [:header
- [:h1 (html/link (list [:span "m"] "isaki") "/")]]
+ [:h1 (html/link (:site-title site) "/")]]
 
 [:article
  ; page header
