@@ -19,7 +19,3 @@
  ; contents
  [:div {:class "post"} contents]]
 
-[:footer {:class "footer"}
- [:p {:class "right"} (html/link "Back to top" "#")]
- [:p (html/link "@uochan" "http://twitter.com/uochan")
-  "&nbsp;" 2012]]
