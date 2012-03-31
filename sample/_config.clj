@@ -1,5 +1,5 @@
 {
- ;directories
+ ;directory setting
  :public-dir   "public/"
  :template-dir "template/"
  :posts        "_posts/"
