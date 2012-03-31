@@ -1,2 +1,2 @@
-; layout: default
+; @layout default
 [:p contents]

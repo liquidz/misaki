@@ -3,10 +3,6 @@
         [hiccup.core :only [html]])
   (:use [clojure.test]))
 
-;(deftest hoge
-;  (println (js "a.js" "b.js"))
-;  (println (css "a.css" "b.css")))
-
 (deftest ul-test
   (is (= "<ul><li>1</li><li>2</li></ul>" (html (ul [1 2]))))
   (is (= "<ul><li>2</li><li>3</li></ul>" (html (ul inc [1 2]))))
@@ -35,5 +31,4 @@
          (html (table '[[a b] [c d]]))))
 
   (is (= "<table><thead><tr><th>1</th><th>2</th></tr></thead><tbody><tr><td>a</td><td>b</td></tr></tbody></table>"
-         (html (table [1 2] '[[a b]]))))
-  )
+         (html (table [1 2] '[[a b]])))))

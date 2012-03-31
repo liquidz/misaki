@@ -23,15 +23,15 @@
 
 ;;; TEMPLATES
 (deftest parse-template-options-test
-  (let [datas [";layout:hello\n;title:world\ndummy:xxx"
-               "; layout:hello\n;title:world\ndummy:xxx"
-               "; layout :hello\n;title:world\ndummy:xxx"
-               "; layout : hello\n;title:world\ndummy:xxx"]]
+  (let [datas [";@layout hello\n;@title wor ld\n@dummy:xxx"
+               "; @layout hello\n;@title wor ld\n@dummy:xxx"
+               "; @layout  hello\n;@title wor ld\n@dummy:xxx"
+               "; @layout   hello\n;@title wor ld\n@dummy:xxx"]]
     (doseq [data datas]
       (let [option (parse-template-options data)]
         (are [x y] (= x y)
-          "hello" (:layout option)
-          "world" (:title option))
+          "hello"  (:layout option)
+          "wor ld" (:title option))
         (is (not (contains? option :dummy)))))))
 
 ;;; TRANSFORM

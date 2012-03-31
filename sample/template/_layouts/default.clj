@@ -1,5 +1,5 @@
-; title: default title
-; format: html5
+; @title   default title
+; @format  html5
 
 [:head [:title (:title site)]
  [:link {:href  "/atom.xml"

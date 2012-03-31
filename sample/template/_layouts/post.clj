@@ -1,5 +1,5 @@
-; layout: default
-; title: post title
+; @layout  default
+; @title   post default title
 
 (defn post-header [s]
   [:div {:class "page-header"}

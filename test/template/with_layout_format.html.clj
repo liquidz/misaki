@@ -1,2 +1,2 @@
-; layout: html4
+; @layout html4
 [:p "test"]

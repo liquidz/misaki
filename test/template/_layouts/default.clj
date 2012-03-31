@@ -1,3 +1,3 @@
-; format: html5
+; @format html5
 [:head [:title (:title site)]]
 [:body contents]

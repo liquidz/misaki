@@ -1,5 +1,5 @@
-; layout: default
-; title: 1hyde
+; @layout  default
+; @title   1hyde
 
 ; you can define your function in template
 (defn h1 [s]
@@ -66,7 +66,7 @@
 CLJ
 
 (page-header "Documents")
-[:p "working now.."]
+[:p "See " (html/link "github Wiki" "https://github.com/liquidz/one-hyde/wiki") "."]
 
 [:footer {:class "footer"}
  [:p {:class "right"} (html/link "Back to top" "#")]

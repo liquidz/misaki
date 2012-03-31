@@ -1,5 +1,5 @@
-; layout: post
-; title: The quick brown fox
+; @layout  post
+; @title   The quick brown fox
 
 (def ^:dynamic *max* 50)
 

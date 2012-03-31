@@ -1,3 +1,3 @@
-; layout: default
-; format: xhtml
+; @layout default
+; @format xhtml
 [:h1 "test"]

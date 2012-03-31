@@ -26,15 +26,17 @@
   "Parse template options
 
   ex) template file
-      ; layout: default
-      ; title: hello, world
-      [:h1 \"hello world\"]"
+      ; @layout default
+      ; @title hello, world
+      [:h1 \"hello world\"]
+
+      => {:layout \"default\", :title \"hello, world\"}"
   [data]
   (let [lines (map str/trim (str/split-lines data))
-        options (take-while #(= 0 (.indexOf % ";")) lines)]
-    (into {} (for [opt options]
-      (let [[k & v] (str/split (str/replace-first opt #";\s*" "") #"\s*:\s*")]
-        [(keyword k) (str/join ":" v)])))))
+        comments (filter #(= 0 (.indexOf % ";")) lines)
+        params (remove nil? (map #(re-seq #";\s*@(\w+)\s+(.+)$" %) comments))]
+
+    (into {} (for [[[_ k v]] params] [(keyword k) v]))))
 
 ; =load-template
 (defn load-template

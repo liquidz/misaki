@@ -1,5 +1,5 @@
-; layout: post
-; title: Sample components
+; @layout  post
+; @title   Sample components
 
 (defn h2 [s]
   [:h2 [:span (first s)] (rest s)])
