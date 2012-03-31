@@ -4,6 +4,10 @@ misaki is a [Jekyll](https://github.com/mojombo/jekyll) inspired static site gen
 
 **WARNING:** misaki is still alpha version.
 
+## Demo
+
+[Demo page](http://liquidz.github.com/project/misaki/)
+
 ## Example template
 
 ```clojure
