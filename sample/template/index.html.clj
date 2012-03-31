@@ -1,17 +1,18 @@
+; Define template options here
+;
 ; @layout  default
 ; @title   1hyde
 
-; you can define your function in template
+; You can define your function in template
 (defn h1 [s]
   [:h1 [:span (first s)] (rest s)])
 
 (defn page-header [s]
   [:div {:class "page-header"} (h1 s)])
 
-; template is compiled with hiccup
-
+; Template is compiled with hiccup
 [:header
- (h1 "1hyde")
+ (h1 (:title site))
  [:p (html/link "Jekyll" "https://github.com/mojombo/jekyll")
   " inspired static site generator written by Clojure"]]
 
@@ -26,20 +27,21 @@
 [:p "you can highlight your code with "
  (html/link "google-code-prettify" "http://code.google.com/p/google-code-prettify/")]
 #-CLJ
-; layout: default
-; title: 1hyde
+; Define template options here
+;
+; @layout  default
+; @title   1hyde
 
-; you can define your function in template
+; You can define your function in template
 (defn h1 [s]
   [:h1 [:span (first s)] (rest s)])
 
 (defn page-header [s]
   [:div {:class "page-header"} (h1 s)])
 
-; template is compiled with hiccup
-
+; Template is compiled with hiccup
 [:header
- (h1 "1hyde")
+ (h1 (:title site))
  [:p (html/link "Jekyll" "https://github.com/mojombo/jekyll")
   " inspired static site generator written by Clojure"]]
 
@@ -54,11 +56,10 @@
 [:p "you can highlight your code with "
  (html/link "google-code-prettify" "http://code.google.com/p/google-code-prettify/")]
 ;#-CLJ
-;...
 ;CLJ
 
 (page-header "Documents")
-[:p "working now.."]
+[:p "See " (html/link "github Wiki" "https://github.com/liquidz/one-hyde/wiki") "."]
 
 [:footer {:class "footer"}
  [:p {:class "right"} (html/link "Back to top" "#")]
