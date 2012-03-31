@@ -7,12 +7,11 @@
 ## Example template
 
 ```clojure
-; Define template options here
-;
+;; Define template options here
 ; @layout  default
 ; @title   sample tempalte
 
-; You can define function
+;; You can define function
 (defn h1 [s] [:h1 s])
 
 (h1 (:title site))
