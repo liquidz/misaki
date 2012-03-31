@@ -22,7 +22,9 @@
 CLJ
 ```
 
-## Run sample
+## Usage
+
+### Run sample
 
 ```bash
 git clone git://github.com/liquidz/one-hyde.git
@@ -31,7 +33,7 @@ lein run sample
 ```
 [http://localhost:8080](http://localhost:8080)
 
-## Make your blog
+### Make your blog
 
 ```bash
 cp -pir sample your-blog
