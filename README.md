@@ -7,10 +7,12 @@
 ## Example template
 
 ```clojure
-; layout: default
-; title : sample tempalte
+; Define template options here
+;
+; @layout  default
+; @title   sample tempalte
 
-; you can define function
+; You can define function
 (defn h1 [s] [:h1 s])
 
 (h1 (:title site))
@@ -37,24 +39,6 @@ cp -pir sample your-blog
 vi your-blog/template/index.html.clj
 lein run your-blog
 ```
-
-## Directory
-
- * template/_layout
-
-    Layout directory (e.g., default.clj, post.clj)
-
- * template/_posts
-
-    Posts file directory. Posts must be named like "YYYY-MM-DD-title.html.clj"
-
- * public
-
-    Public directory. All compiled templates are putted into this directory.
-
- * _config.clj
-
-    1hyde configuration file. Above directory names are defined in this file.
 
 ## Document
 
