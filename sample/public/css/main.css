@@ -7,7 +7,7 @@ h1, h2, h3, header p { font-family: 'Josefin Sans', sans-serif; }
 .container { width: 940px; margin: 0 auto; }
 
 header { margin-bottom: 20px; }
-header h1 { margin: 0.3em; }
+header h1 { margin: 0.3em; font-weight: normal; }
 header h1, header h1 a { font-size: 70px; color: #444; text-decoration: none; }
 header h1 span { color: #d73968; }
 header p { font-size: 20px; }

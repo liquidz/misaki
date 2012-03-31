@@ -1,7 +1,7 @@
-(ns one-hyde.server
-  "1hyde: development server"
+(ns misaki.server
+  "misaki: development server"
   (:use
-    [one-hyde core config]
+    [misaki core config]
     watchtower.core
     [compojure.core :only [routes]]
     [compojure.route :only [files]]

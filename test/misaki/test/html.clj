@@ -1,4 +1,4 @@
-(ns one-hyde.test.html
+(ns misaki.test.html
   (:use html
         [hiccup.core :only [html]])
   (:use [clojure.test]))

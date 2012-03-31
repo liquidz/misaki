@@ -1,5 +1,5 @@
-(ns one-hyde.config
-  "1hyde: configuration"
+(ns misaki.config
+  "misaki: configuration"
   (:require [clojure.string :as str]
             [clojure.java.io :as io]))
 

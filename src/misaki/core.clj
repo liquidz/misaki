@@ -1,8 +1,8 @@
-(ns one-hyde.core
-  "1hyde: Jekyll inspired static site generator in Clojure"
+(ns misaki.core
+  "misaki: Jekyll inspired static site generator in Clojure"
   (:use
-    [one-hyde transform config]
-    [one-hyde.util file code]
+    [misaki transform config]
+    [misaki.util file code]
     [clj-time.core :only [date-time after? month day year]]
     [hiccup.core :only [html]]
     [hiccup.page-helpers :only [html5 xhtml html4]])
@@ -58,7 +58,7 @@
 ; =get-layout
 (defn get-layout
   "Get layout function from layout name.
-  one-hyde.transform is used to convert S-exp from function."
+  misaki.transform is used to convert S-exp from function."
   [layout-name]
   (let [layout-fn (load-template (str *layouts-dir* layout-name ".clj"))
         option (meta layout-fn)]

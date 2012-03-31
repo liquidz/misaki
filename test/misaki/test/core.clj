@@ -1,5 +1,5 @@
-(ns one-hyde.test.core
-  (:use [one-hyde core transform config]
+(ns misaki.test.core
+  (:use [misaki core transform config]
         [hiccup.core :only [html]])
   (:use [clojure.test])
   (:require [clojure.java.io :as io]))

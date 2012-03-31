@@ -1,5 +1,5 @@
-(ns one-hyde.util.file
-  "1hyde: file control utility"
+(ns misaki.util.file
+  "misaki: file control utility"
   (:use
     [clj-time.coerce :only [from-long]])
   (:require

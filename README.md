@@ -1,8 +1,8 @@
-# 1hyde
+# misaki
 
-1hyde is a [Jekyll](https://github.com/mojombo/jekyll) inspired static site generator in Clojure.
+misaki is a [Jekyll](https://github.com/mojombo/jekyll) inspired static site generator in Clojure.
 
-**WARNING:** 1hyde is still alpha version.
+**WARNING:** misaki is still alpha version.
 
 ## Example template
 
@@ -15,7 +15,7 @@
 (defn h1 [s] [:h1 s])
 
 (h1 (:title site))
-[:p "Welcome to 1hyde world!"]
+[:p "Welcome to misaki world!"]
 
 #-CLJ
 (println "google-code-prettify highlight!")
@@ -27,8 +27,8 @@ CLJ
 ### Run sample
 
 ```bash
-git clone git://github.com/liquidz/one-hyde.git
-cd one-hyde
+git clone git://github.com/liquidz/misaki.git
+cd misaki
 lein run sample
 ```
 [http://localhost:8080](http://localhost:8080)
@@ -43,11 +43,11 @@ lein run your-blog
 
 ## Document
 
-[Wiki](https://github.com/liquidz/one-hyde/wiki)
+[Wiki](https://github.com/liquidz/misaki/wiki)
 
 ## License
 
 Copyright (C) 2012 Masashi Iizuka([@uochan](http://twitter.com/uochan/)) 
- 
+
 Distributed under the Eclipse Public License, the same as Clojure. 
 

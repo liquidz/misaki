@@ -1,5 +1,5 @@
-(ns one-hyde.transform
-  "1hyde: data transform functions")
+(ns misaki.transform
+  "misaki: data transform functions")
 
 ; =wrap-list
 (defn wrap-list

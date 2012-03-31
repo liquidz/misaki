@@ -1,5 +1,5 @@
 (ns html
-  "1hyde: html utility for template"
+  "misaki: html utility for template"
   (:refer-clojure :exclude [quote])
   (:require
     [clojure.string :as str]

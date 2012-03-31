@@ -1,8 +1,8 @@
-(ns one-hyde.util.code
-  "1hyde: here document utility
+(ns misaki.util.code
+  "misaki: here document utility
 
   cf. http://d.hatena.ne.jp/nokturnalmortum/20100527/1274961805"
-  (:use one-hyde.config))
+  (:use misaki.config))
 
 (defn get-code-type [s]
   (let [key (keyword s)

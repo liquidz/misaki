@@ -1,6 +1,6 @@
 ;; Define template options here
 ; @layout  default
-; @title   1hyde
+; @title   misaki
 
 ;; You can define your function in template
 (defn h1 [s]
@@ -28,7 +28,7 @@
 #-CLJ
 ;; Define template options here
 ; @layout  default
-; @title   1hyde
+; @title   misaki
 
 ;; You can define your function in template
 (defn h1 [s]
@@ -57,7 +57,7 @@
 ;CLJ
 
 (page-header "Documents")
-[:p "See " (html/link "github Wiki" "https://github.com/liquidz/one-hyde/wiki") "."]
+[:p "See " (html/link "github Wiki" "https://github.com/liquidz/misaki/wiki") "."]
 
 [:footer {:class "footer"}
  [:p {:class "right"} (html/link "Back to top" "#")]
@@ -65,7 +65,7 @@
 CLJ
 
 (page-header "Documents")
-[:p "See " (html/link "github Wiki" "https://github.com/liquidz/one-hyde/wiki") "."]
+[:p "See " (html/link "github Wiki" "https://github.com/liquidz/misaki/wiki") "."]
 
 [:footer {:class "footer"}
  [:p {:class "right"} (html/link "Back to top" "#")]
