@@ -3,17 +3,16 @@
 ; @title   misaki
 
 ;; You can define your function in template
-(defn h1 [s]
-  [:h1 [:span (first s)] (rest s)])
+(defn h1 [[fs & rs]] [:h1 [:span fs] rs])
 
 (defn page-header [s]
   [:div {:class "page-header"} (h1 s)])
 
 ;; Template is compiled with hiccup
 [:header
- (h1 (:title site))
+ [:h1 (html/link (:title site) "/")]
  [:p (html/link "Jekyll" "https://github.com/mojombo/jekyll")
-  " inspired static site generator written by Clojure"]]
+  " inspired static site generator in Clojure"]]
 
 (page-header "Sample posts")
 (html/ul
@@ -31,17 +30,16 @@
 ; @title   misaki
 
 ;; You can define your function in template
-(defn h1 [s]
-  [:h1 [:span (first s)] (rest s)])
+(defn h1 [[fs & rs]] [:h1 [:span fs] rs])
 
 (defn page-header [s]
   [:div {:class "page-header"} (h1 s)])
 
 ;; Template is compiled with hiccup
 [:header
- (h1 (:title site))
+ [:h1 (html/link (:title site) "/")]
  [:p (html/link "Jekyll" "https://github.com/mojombo/jekyll")
-  " inspired static site generator written by Clojure"]]
+  " inspired static site generator in Clojure"]]
 
 (page-header "Sample posts")
 (html/ul

@@ -45,6 +45,10 @@ lein run your-blog
 
 [Wiki](https://github.com/liquidz/misaki/wiki)
 
+## "misaki" means..
+
+"misaki(美咲)" is woman's name in Japan, and it means "Bloom beautifully".
+
 ## License
 
 Copyright (C) 2012 Masashi Iizuka([@uochan](http://twitter.com/uochan/)) 

@@ -1,16 +1,20 @@
 body, h1, h2, h3, h4, p { margin: 0; padding: 0; }
 body, p { font-family: 'Josefin Sans', sans-serif; }
-/*
-h1, h2, h3, header p { font-family: 'Josefin Sans', sans-serif; }
-*/
 
 .container { width: 940px; margin: 0 auto; }
 
 header { margin-bottom: 20px; }
-header h1 { margin: 0.3em; font-weight: normal; }
-header h1, header h1 a { font-size: 70px; color: #444; text-decoration: none; }
-header h1 span { color: #d73968; }
-header p { font-size: 20px; }
+header h1 { margin: 0.3em; }
+header h1 a {
+    display: block;
+    font-size: 0;
+    text-indent:100%;
+    background: transparent url(/img/logo.png) no-repeat top left;
+    width: 200px;
+    height: 69px;
+}
+header h1 a:hover { opacity: 0.5; }
+header p { margin-top: 1em; color: #666; font-size: 20px; }
 
 blockquote { color: #888; font-style: italic; }
 blockquote p:before { content: '> '; }
@@ -18,8 +22,8 @@ blockquote p:before { content: '> '; }
 h2 { margin-top: 1em; }
 
 .page-header { margin-top: 1.5em; border-bottom: 1px solid #eaeaea; overflow: hidden; }
-.page-header h1 { color: #444; float: left; }
-.page-header h1 span { color: #58b271; }
+.page-header h1 { color: #444; font-weight: normal; float: left; }
+.page-header h1 span { color: #58b271; font-weight: bold; }
 .page-header p { float: left; margin: 20px 0 0 30px; }
 
 pre.prettyprint {
