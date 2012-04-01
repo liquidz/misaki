@@ -41,8 +41,13 @@ $ lein run sample
 
 ```bash
 $ cp -pir sample your-blog
-$ vi your-blog/_template/index.html.clj
 $ lein run your-blog
+```
+
+While running local server, updated template file is compiled automatically.
+
+```bash
+$ vi your-blog/_template/index.html.clj
 ```
 
 ## Document
