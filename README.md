@@ -31,18 +31,18 @@ CLJ
 ### Run sample
 
 ```bash
-git clone git://github.com/liquidz/misaki.git
-cd misaki
-lein run sample
+$ git clone git://github.com/liquidz/misaki.git
+$ cd misaki
+$ lein run sample
 ```
 [http://localhost:8080](http://localhost:8080)
 
 ### Make your blog
 
 ```bash
-cp -pir sample your-blog
-vi your-blog/template/index.html.clj
-lein run your-blog
+$ cp -pir sample your-blog
+$ vi your-blog/_template/index.html.clj
+$ lein run your-blog
 ```
 
 ## Document
