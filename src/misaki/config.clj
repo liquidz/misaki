@@ -56,3 +56,9 @@
   [tmpl-name]
   (io/file (str *template-dir* tmpl-name)))
 
+
+; =config-file?
+(defn config-file?
+  "Check whether file is config file or not."
+  [file]
+  (= *config-file* (.getName file)))
