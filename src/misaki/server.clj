@@ -45,14 +45,8 @@
 (defn -main [& [dir]]
   (binding [*base-dir* (str "./" (add-path-slash dir))]
     (with-config
-      (println "\n\n")
-      (println (str "# => [" *base-dir* "]"))
-      (println (str "# => [" *base-dir* "][" *public-dir* "]"))
-      (println "\n\n")
       (start-watcher)
       (run-jetty
-        ;(routes (files "/" {:root (str *base-dir* "public")}))
-        ;(routes (files "/" {:root (str *base-dir* *public-dir*)}))
         (routes (files "/" {:root *public-dir*}))
         {:port 8080}))))
 

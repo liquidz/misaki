@@ -1,7 +1,7 @@
 {
  ;directory setting
  :public-dir   "./"
- :template-dir "template/"
+ :template-dir "_template/"
  :posts        "_posts/"
  :layouts      "_layouts/"
 
