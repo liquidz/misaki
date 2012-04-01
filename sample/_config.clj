@@ -1,6 +1,6 @@
 {
  ;directory setting
- :public-dir   "public/"
+ :public-dir   "./"
  :template-dir "template/"
  :posts        "_posts/"
  :layouts      "_layouts/"
