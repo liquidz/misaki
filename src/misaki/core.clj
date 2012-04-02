@@ -38,15 +38,6 @@
 
     (into {} (for [[[_ k v]] params] [(keyword k) v]))))
 
-; =load-template
-(defn load-template
-  "Load template file, and transform to function.
-  Template options are contained as meta data."
-  [filename]
-  (let [data (slurp filename)
-        option (parse-template-options data)]
-    (with-meta (transform data) option)))
-
 ; =apply-template
 (defn apply-template
   "Apply contents data to template function."
@@ -55,22 +46,23 @@
         contents (with-meta contents option)]
     (with-meta (f contents) option)))
 
-; =get-layout
-(defn get-layout
-  "Get layout function from layout name.
-  misaki.transform is used to convert S-exp from function."
-  [layout-name]
-  (let [layout-fn (load-template (str *layouts-dir* layout-name ".clj"))
-        option (meta layout-fn)]
-    (if (:layout option)
-      (let [parent-layout (-> option :layout get-layout)]
+; =load-template
+(defn load-template
+  "Load template file, and transform to function.
+  Template options are contained as meta data."
+  [filename]
+  (let [data (slurp filename)
+        option (parse-template-options data)]
+
+    (if-let [layout-name (:layout option)]
+      (let [parent-layout-fn (load-template (str *layouts-dir* layout-name ".clj"))]
         (with-meta
           (fn [contents]
             (apply-template
-              parent-layout
-              (apply-template layout-fn contents)))
-          (merge (meta parent-layout) option)))
-      layout-fn)))
+              parent-layout-fn
+              (apply-template (transform data) contents)))
+          (merge (meta parent-layout-fn) option)))
+      (with-meta (transform data) option))))
 
 ; =layout-file?
 (defn layout-file?
@@ -155,12 +147,9 @@
         tmpl-fn (load-template filename)
         site-data (merge *site* {:posts (sort-by-date (get-posts))
                                  :date  (get-date (io/file filename))})
-        empty-data (with-meta '("") site-data)
-        contents (apply-template tmpl-fn empty-data)]
+        empty-data (with-meta '("") site-data)]
 
-    (if (and allow-layout? (-> tmpl-fn meta :layout))
-      (apply-template (-> tmpl-fn meta :layout get-layout) contents)
-      contents)))
+    (apply-template tmpl-fn empty-data)))
 
 ; =get-template-files
 (defn get-template-files

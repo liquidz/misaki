@@ -1,4 +1,4 @@
-(defproject misaki "0.0.8-alpha"
+(defproject misaki "0.0.9-alpha"
   :description "Static site generator in Clojure inspired by Jekyll"
   :dependencies [[org.clojure/clojure "1.3.0"]
                  [hiccup "0.3.6"]

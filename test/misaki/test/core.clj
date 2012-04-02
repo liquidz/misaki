@@ -9,15 +9,15 @@
   `(binding [*base-dir* "./test/"]
      (with-config ~@body)))
 
-(deftest get-layout-test
+(deftest load-template-test
   (with-test-data
     (testing "single layout"
-      (let [f (get-layout "test1")]
+      (let [f (load-template (str *layouts-dir* "test1.clj"))]
         (is (= "<p>a</p><p>bc</p>"
                (html (apply-template f (with-meta '("b" "c") {:title "a"})))))))
 
     (testing "multiple layout"
-      (let [f (get-layout "test2")]
+      (let [f (load-template (str *layouts-dir* "test2.clj"))]
         (is (= "<head><title>a</title></head><body><p>b</p></body>"
                (html (apply-template f (with-meta '("b") {:title "a"})))))
 
