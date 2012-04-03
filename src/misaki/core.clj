@@ -34,7 +34,7 @@
   [data]
   (let [lines (map str/trim (str/split-lines data))
         comments (filter #(= 0 (.indexOf % ";")) lines)
-        params (remove nil? (map #(re-seq #";\s*@(\w+)\s+(.+)$" %) comments))]
+        params (remove nil? (map #(re-seq #"^;+\s*@(\w+)\s+(.+)$" %) comments))]
 
     (into {} (for [[[_ k v]] params] [(keyword k) v]))))
 

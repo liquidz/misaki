@@ -33,7 +33,8 @@
   (let [datas [";@layout hello\n;@title wor ld\n@dummy:xxx"
                "; @layout hello\n;@title wor ld\n@dummy:xxx"
                "; @layout  hello\n;@title wor ld\n@dummy:xxx"
-               "; @layout   hello\n;@title wor ld\n@dummy:xxx"]]
+               "; @layout   hello\n;@title wor ld\n@dummy:xxx"
+               ";; @layout   hello\n;@title wor ld\n@dummy:xxx"]]
     (doseq [data datas]
       (let [option (parse-template-options data)]
         (are [x y] (= x y)
