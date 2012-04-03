@@ -12,11 +12,13 @@
   (with-test-data
     (testing "single layout"
       (let [f (load-template (str *layouts-dir* "test1.clj"))]
+;      (let [f (load-template (str *layouts-dir* "test1.clj") true)]
         (is (= "<p>a</p><p>bc</p>"
                (html (apply-template f (with-meta '("b" "c") {:title "a"})))))))
 
     (testing "multiple layout"
       (let [f (load-template (str *layouts-dir* "test2.clj"))]
+      ;(let [f (load-template (str *layouts-dir* "test2.clj") true)]
         (is (= "<head><title>a</title></head><body><p>b</p></body>"
                (html (apply-template f (with-meta '("b") {:title "a"})))))
 

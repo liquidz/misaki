@@ -23,14 +23,12 @@
 (defn do-compile
   "Compile templte file and print status"
   [#^java.io.File file]
-  (cond
+
+  (if (or (layout-file? file) (config-file? file))
     ; compile all templates if target file is layout or config
-    (or (layout-file? file) (config-file? file))
     (do (print " * compiling all templates:")
       (print-result (compile-all-templates)))
-
     ; compile target template
-    :else
     (do (print " * compiling:" (.getName file))
       (print-result (compile-template
                       (file->template-name file)))
