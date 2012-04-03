@@ -10,14 +10,13 @@
  [:id (:base site)]
  [:author [:name "@uochan"]]
 
- (map
-   (fn [post]
-     [:entry
-      [:title (:title post)]
-      [:link  (str (:base site) (:url post))]
-      [:updated (conv/date->xml-schema (:date post))]
-      [:id (str (:base site) (:url post))]
-      [:content {:type "html"}
-       (force (:lazy-content post) )]])
-   (:posts site))]
+ (for [post (:posts site)]
+   [:entry
+    [:title (:title post)]
+    [:link  (str (:base site) (:url post))]
+    [:updated (conv/date->xml-schema (:date post))]
+    [:id (str (:base site) (:url post))]
+    [:content {:type "html"}
+     (force (:lazy-content post) )
+     ]])]
 

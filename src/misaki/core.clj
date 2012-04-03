@@ -50,19 +50,20 @@
 (defn load-template
   "Load template file, and transform to function.
   Template options are contained as meta data."
-  [filename]
-  (let [data (slurp filename)
-        option (parse-template-options data)]
+  ([filename] (load-template filename true))
+  ([filename allow-layout?]
+   (let [data (slurp filename)
+         option (parse-template-options data)]
 
-    (if-let [layout-name (:layout option)]
-      (let [parent-layout-fn (load-template (str *layouts-dir* layout-name ".clj"))]
-        (with-meta
-          (fn [contents]
-            (apply-template
-              parent-layout-fn
-              (apply-template (transform data) contents)))
-          (merge (meta parent-layout-fn) option)))
-      (with-meta (transform data) option))))
+     (if-let [layout-name (and allow-layout? (:layout option))]
+       (let [parent-layout-fn (load-template (str *layouts-dir* layout-name ".clj"))]
+         (with-meta
+           (fn [contents]
+             (apply-template
+               parent-layout-fn
+               (apply-template (transform data) contents)))
+           (merge (meta parent-layout-fn) option)))
+       (with-meta (transform data) option)))))
 
 ; =layout-file?
 (defn layout-file?
@@ -119,14 +120,22 @@
 (defn get-posts
   "Get posts data from *posts-dir* directory."
   []
-  (let [ls (filter #(has-extension? ".clj" %) (find-files *posts-dir*))]
-    (map #(hash-map
-            :file  %
-            :title (get-post-title %)
-            :url   (get-post-url %)
-            :date  (get-date %)
-            :lazy-content (delay (get-content %)))
-         ls)))
+  (for [file (filter #(has-extension? ".clj" %) (find-files *posts-dir*))]
+    {:file  file
+     :title (get-post-title file)
+     :url   (get-post-url file)
+     :date  (get-date file)
+     :lazy-content (delay (get-escaped-content file))})
+
+ ; (let [ls (filter #(has-extension? ".clj" %) (find-files *posts-dir*))]
+ ;   (map #(hash-map
+ ;           :file  %
+ ;           :title (get-post-title %)
+ ;           :url   (get-post-url %)
+ ;           :date  (get-date %)
+ ;           :lazy-content (delay (get-escaped-content %)))
+ ;        ls))
+  )
 
 ; =post-file?
 (defn post-file?
@@ -144,7 +153,7 @@
   "Generate HTML from template."
   [tmpl-name & {:keys [allow-layout?] :or {allow-layout? true}}]
   (let [filename (str *template-dir* tmpl-name)
-        tmpl-fn (load-template filename)
+        tmpl-fn (load-template filename allow-layout?)
         site-data (merge *site* {:posts (sort-by-date (get-posts))
                                  :date  (get-date (io/file filename))})
         empty-data (with-meta '("") site-data)]
