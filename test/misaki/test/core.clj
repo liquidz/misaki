@@ -1,9 +1,8 @@
 (ns misaki.test.core
-  (:use [misaki core transform config]
+  (:use [misaki core transform config server]
         [hiccup.core :only [html]])
   (:use [clojure.test])
-  (:require [clojure.java.io :as io]))
-
+  (:require [clojure.java.io :as io])) 
 ;;; LAYOUT
 (defmacro with-test-data [& body]
   `(binding [*base-dir* "./test/"]
@@ -77,3 +76,16 @@
       (is res)
       (is (.exists file))
       (.delete file))))
+
+
+;;; SERVER
+(deftest server-test
+  (with-test-data
+    (testing "compile with post"
+      (do-compile (io/file (str *posts-dir* "2011-01-01-foo.html.clj")))
+      (let [post-file (io/file (str *public-dir* "2011/01/foo.html"))
+            test-file (io/file (str *public-dir* "gen_test.html"))]
+        (is (.exists post-file))
+        (.delete post-file)
+        (is (.exists test-file))
+        (.delete test-file)))))

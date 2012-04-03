@@ -23,12 +23,21 @@
 (defn do-compile
   "Compile templte file and print status"
   [#^java.io.File file]
-  (if (or (layout-file? file) (config-file? file))
+  (cond
+    ; compile all templates if target file is layout or config
+    (or (layout-file? file) (config-file? file))
     (do (print " * compiling all templates:")
       (print-result (compile-all-templates)))
+
+    ; compile target template
+    :else
     (do (print " * compiling:" (.getName file))
       (print-result (compile-template
-                      (file->template-name file))))))
+                      (file->template-name file)))
+      ; compile index template if target file is post
+      (if (and (post-file? file) *compile-with-post*)
+        (doseq [tmpl-name *compile-with-post*]
+          (do-compile (template-name->file tmpl-name)))))))
 
 ; =start-watcher
 (defn start-watcher

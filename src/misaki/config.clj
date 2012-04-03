@@ -21,6 +21,8 @@
          *posts-dir*)
 (declare ^{:dynamic true, :doc "Default site data."}
          *site*)
+(declare ^{:dynamic true, :doc "Template names which compiled with post templates"}
+         *compile-with-post*)
 
 ; =with-config
 (defmacro with-config
@@ -36,7 +38,8 @@
                *posts-dir*    (str *base-dir*
                                    (:template-dir config#)
                                    (:posts config#))
-               *site*         (if (:site config#) (:site config#) {})]
+               *site*         (get config# :site {})
+               *compile-with-post* (:compile-with-post config#)]
        ~@body)))
 
 
