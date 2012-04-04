@@ -14,11 +14,11 @@
 (declare ^{:dynamic true, :doc "Template directory path."}
          *template-dir*)
 (declare ^{:dynamic true, :doc "Posts placed directory name."}
-         *posts*)
+         *post*)
 (declare ^{:dynamic true, :doc "Layouts placed directory path."}
-         *layouts-dir*)
+         *layout-dir*)
 (declare ^{:dynamic true, :doc "Posts placed directory path."}
-         *posts-dir*)
+         *post-dir*)
 (declare ^{:dynamic true, :doc "Default site data."}
          *site*)
 (declare ^{:dynamic true, :doc "Template names which compiled with post templates"}
@@ -31,13 +31,13 @@
   `(let [config# (load-config)]
      (binding [*public-dir*   (str *base-dir* (:public-dir config#))
                *template-dir* (str *base-dir* (:template-dir config#))
-               *posts*        (:posts config#)
-               *layouts-dir*  (str *base-dir*
+               *post*         (:post-dir config#)
+               *layout-dir*   (str *base-dir*
                                    (:template-dir config#)
-                                   (:layouts config#))
-               *posts-dir*    (str *base-dir*
+                                   (:layout-dir config#))
+               *post-dir*     (str *base-dir*
                                    (:template-dir config#)
-                                   (:posts config#))
+                                   (:post-dir config#))
                *site*         (get config# :site {})
                *compile-with-post* (:compile-with-post config#)]
        ~@body)))

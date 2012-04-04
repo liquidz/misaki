@@ -2,8 +2,8 @@
  ;; directory setting
  :public-dir   "public/"
  :template-dir "template/"
- :posts        "_posts/"
- :layouts      "_layouts/"
+ :post-dir     "_posts/"
+ :layout-dir   "_layouts/"
 
  ;; default site data
  :site {:default-title "default title"}

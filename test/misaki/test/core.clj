@@ -1,48 +1,15 @@
 (ns misaki.test.core
   (:use [misaki core transform config server]
+        misaki.test.common
         [hiccup.core :only [html]])
   (:use [clojure.test])
   (:require [clojure.java.io :as io])) 
-;;; LAYOUT
-(defmacro with-test-data [& body]
-  `(binding [*base-dir* "./test/"]
-     (with-config ~@body)))
 
-(deftest load-template-test
-  (with-test-data
-    (testing "single layout"
-      (let [f (load-template (str *layouts-dir* "test1.clj"))]
-;      (let [f (load-template (str *layouts-dir* "test1.clj") true)]
-        (is (= "<p>a</p><p>bc</p>"
-               (html (apply-template f (with-meta '("b" "c") {:title "a"})))))))
-
-    (testing "multiple layout"
-      (let [f (load-template (str *layouts-dir* "test2.clj"))]
-      ;(let [f (load-template (str *layouts-dir* "test2.clj") true)]
-        (is (= "<head><title>a</title></head><body><p>b</p></body>"
-               (html (apply-template f (with-meta '("b") {:title "a"})))))
-
-        (is (= "test2" (:title (meta f))))
-        (is (= "html5" (:format (meta f))))))))
 
 ;;; default site data
 (deftest default-site-data-test
   (with-test-data
     (is (= "<p>default title</p>" (html (generate-html "site.html.clj"))))))
-
-;;; TEMPLATES
-(deftest parse-template-options-test
-  (let [datas [";@layout hello\n;@title wor ld\n@dummy:xxx"
-               "; @layout hello\n;@title wor ld\n@dummy:xxx"
-               "; @layout  hello\n;@title wor ld\n@dummy:xxx"
-               "; @layout   hello\n;@title wor ld\n@dummy:xxx"
-               ";; @layout   hello\n;@title wor ld\n@dummy:xxx"]]
-    (doseq [data datas]
-      (let [option (parse-template-options data)]
-        (are [x y] (= x y)
-          "hello"  (:layout option)
-          "wor ld" (:title option))
-        (is (not (contains? option :dummy)))))))
 
 ;;; TRANSFORM
 (deftest transform-test
@@ -85,7 +52,7 @@
 (deftest server-test
   (with-test-data
     (testing "compile with post"
-      (do-compile (io/file (str *posts-dir* "2011-01-01-foo.html.clj")))
+      (do-compile (io/file (str *post-dir* "2011-01-01-foo.html.clj")))
       (let [post-file (io/file (str *public-dir* "2011/01/foo.html"))
             test-file (io/file (str *public-dir* "gen_test.html"))]
         (is (.exists post-file))

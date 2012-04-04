@@ -57,7 +57,7 @@
 
      ;(if-let [layout-name (and allow-layout? (:layout option))]
      (if-let [layout-name (:layout option)]
-       (let [parent-layout-fn (load-template (str *layouts-dir* layout-name ".clj"))]
+       (let [parent-layout-fn (load-template (str *layout-dir* layout-name ".clj"))]
          (with-meta
            (fn [contents]
              (apply-template
@@ -70,20 +70,20 @@
 (defn layout-file?
   "Check whether file is layout file or not."
   [#^File file]
-  (not= -1 (.indexOf (.getAbsolutePath file) *layouts-dir*)))
+  (not= -1 (.indexOf (.getAbsolutePath file) *layout-dir*)))
 
 ;;; POSTS
 ; =get-post-title
 (defn get-post-title
   "Get post title from post file(java.io.File)."
   [#^File file]
-  (->> (.getName file) (str *posts-dir*) slurp parse-template-options :title))
+  (->> (.getName file) (str *post-dir*) slurp parse-template-options :title))
 
 ; =get-post-url
 (defn get-post-url
   "Generate post url from file(java.io.File)."
   [#^File file]
-  (str "/" (make-output-filename (str *posts* (.getName file)))))
+  (str "/" (make-output-filename (str *post* (.getName file)))))
 
 ; =get-date
 (defn get-date
@@ -119,9 +119,9 @@
 
 ; =get-posts
 (defn get-posts
-  "Get posts data from *posts-dir* directory."
+  "Get posts data from *post-dir* directory."
   []
-  (for [file (filter #(has-extension? ".clj" %) (find-files *posts-dir*))]
+  (for [file (filter #(has-extension? ".clj" %) (find-files *post-dir*))]
     {:file  file
      :title (get-post-title file)
      :url   (get-post-url file)
@@ -142,7 +142,7 @@
 (defn post-file?
   "Check whether file is post file or not."
   [#^File file]
-  (not= -1 (.indexOf (.getAbsolutePath file) *posts-dir*)))
+  (not= -1 (.indexOf (.getAbsolutePath file) *post-dir*)))
 
 ;;; TEMPLATES
 ; =sort-by-date
