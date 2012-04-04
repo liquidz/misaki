@@ -1,6 +1,13 @@
 (ns misaki.transform
   "misaki: data transform functions")
 
+(defn def? [x]
+  (and (seq? x) (some #(= % (first x))'(def defn))))
+
+(def split-with-definition
+  (juxt (partial filter def?)
+        (partial remove def?)))
+
 ; =wrap-list
 (defn wrap-list
   "wrap slurped data as a list"
@@ -11,10 +18,12 @@
 (defn wrap-function
   "wrap s-exp as a template function"
   [sexp]
-  `(fn [~'contents]
-     (let [~'site (meta ~'contents)]
-       ; remove defn result in template
-       (remove var? ~sexp))))
+  (let [[defs sexp] (split-with-definition sexp)]
+    `(do
+       ~@defs
+       (fn [~'contents]
+         (let [~'site (meta ~'contents)]
+           ~sexp)))))
 
 ; =*transformers*
 (def ^{:dynamic true
@@ -33,4 +42,5 @@
   "transform slurped data with *transformers*"
   [slurped-data]
   (reduce #(%2 %) slurped-data @*transformers*))
+
 

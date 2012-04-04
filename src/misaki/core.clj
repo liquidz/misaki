@@ -126,17 +126,7 @@
      :title (get-post-title file)
      :url   (get-post-url file)
      :date  (get-date file)
-     :lazy-content (delay (get-escaped-content file))})
-
- ; (let [ls (filter #(has-extension? ".clj" %) (find-files *posts-dir*))]
- ;   (map #(hash-map
- ;           :file  %
- ;           :title (get-post-title %)
- ;           :url   (get-post-url %)
- ;           :date  (get-date %)
- ;           :lazy-content (delay (get-escaped-content %)))
- ;        ls))
-  )
+     :lazy-content (delay (get-escaped-content file))}))
 
 ; =post-file?
 (defn post-file?
