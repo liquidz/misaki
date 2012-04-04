@@ -1,10 +1,8 @@
 ; @layout  default
 ; @title   post default title
 
-(defn post-header [[fs & rs]]
-  [:div {:class "page-header"}
-   [:h1 [:span fs] rs]
-   [:p (conv/date->string (:date site))]])
+(defn h2 [s]
+  [:h2 [:span (first s)] (rest s)])
 
 ; site header
 [:header

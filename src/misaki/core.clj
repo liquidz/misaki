@@ -55,15 +55,21 @@
    (let [data (slurp filename)
          option (parse-template-options data)]
 
-     ;(if-let [layout-name (and allow-layout? (:layout option))]
      (if-let [layout-name (:layout option)]
        (let [parent-layout-fn (load-template (str *layout-dir* layout-name ".clj"))]
-         (with-meta
-           (fn [contents]
-             (apply-template
-               parent-layout-fn
-               (apply-template (transform data) contents)))
-           (merge (meta parent-layout-fn) option)))
+         (if allow-layout?
+           (with-meta
+             (fn [contents]
+               (apply-template
+                 parent-layout-fn
+                 (apply-template (transform data) contents)))
+             (merge (meta parent-layout-fn) option))
+           (with-meta
+             (fn [contents]
+               ; only apply, not to use
+               (apply-template parent-layout-fn contents)
+               (apply-template (transform data) contents))
+             option)))
        (with-meta (transform data) option)))))
 
 ; =layout-file?

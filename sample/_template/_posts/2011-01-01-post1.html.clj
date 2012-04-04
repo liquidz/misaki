@@ -1,9 +1,6 @@
 ; @layout  post
 ; @title   Sample components
 
-(defn h2 [s]
-  [:h2 [:span (first s)] (rest s)])
-
 (h2 "Link")
 #-CLJ
 (html/link "label" "http://localhost/")
