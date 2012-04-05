@@ -25,3 +25,6 @@
   (let [f (load-template (str *template-dir* "eval.test.html.clj"))]
     (is (= "<div><p>hello</p></div>" (html (apply-template f '("")))))))
 
+(deftest* function-test
+  (let [f (load-template (str *template-dir* "func.test.html.clj"))]
+    (is (= "<div><p><span>hello</span></p></div>" (html (apply-template f '("")))))))
