@@ -56,7 +56,6 @@
   (binding [*base-dir* (str "./" (add-path-slash dir))]
     (with-config
       (start-watcher)
-      (println "PUBLIC_DIR:" *public-dir*)
       (run-jetty
         (routes (files "/" {:root *public-dir*}))
         {:port 8080}))))

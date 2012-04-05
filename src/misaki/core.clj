@@ -56,20 +56,17 @@
          option (parse-template-options data)]
 
      (if-let [layout-name (:layout option)]
-       (let [parent-layout-fn (load-template (str *layout-dir* layout-name ".clj"))]
+       (let [; at first, evaluate parent layout
+             parent-layout-fn (load-template (str *layout-dir* layout-name ".clj"))
+             ; second, evaluate this layout
+             layout-fn (transform data)]
          (if allow-layout?
            (with-meta
              (fn [contents]
-               (apply-template
-                 parent-layout-fn
-                 (apply-template (transform data) contents)))
+               (apply-template parent-layout-fn
+                 (apply-template layout-fn contents)))
              (merge (meta parent-layout-fn) option))
-           (with-meta
-             (fn [contents]
-               ; only apply, not to use
-               (apply-template parent-layout-fn contents)
-               (apply-template (transform data) contents))
-             option)))
+           (with-meta layout-fn option)))
        (with-meta (transform data) option)))))
 
 ; =layout-file?
