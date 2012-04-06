@@ -32,3 +32,8 @@
 
   (is (= "<table><thead><tr><th>1</th><th>2</th></tr></thead><tbody><tr><td>a</td><td>b</td></tr></tbody></table>"
          (html (table [1 2] '[[a b]])))))
+
+(deftest code-test
+  (are [x y] (= x y)
+    "<code class=\"prettyprint\">(+ 1 2)</code>" (html (code (+ 1 2)))
+    "<code class=\"prettyprint\">(+ 1 2)</code>" (html (code "(+ 1 2)"))))

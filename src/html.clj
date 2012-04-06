@@ -54,8 +54,13 @@
         [:p %])
      xs)])
 
-(defn code [s]
-  [:code {:class "prettyprint"} s])
+;(defn code [s]
+;  [:code {:class "prettyprint"} s])
+
+(defmacro code [s]
+  [:code {:class "prettyprint"} (str s)]
+  )
+
 
 (defn table
   ([bodies] (table nil bodies))
