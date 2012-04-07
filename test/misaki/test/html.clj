@@ -4,9 +4,12 @@
   (:use [clojure.test]))
 
 (deftest ul-test
-  (is (= "<ul><li>1</li><li>2</li></ul>" (html (ul [1 2]))))
-  (is (= "<ul><li>2</li><li>3</li></ul>" (html (ul inc [1 2]))))
-  (is (= "<ul><li>1</li><li><ul><li>2</li></ul></li></ul>" (html (ul [1 (ul [2])])))))
+  (is (= "<ul><li><span>1</span></li><li><span>2</span></li></ul>"
+         (html (ul [1 2]))))
+  (is (= "<ul><li><span>2</span></li><li><span>3</span></li></ul>"
+         (html (ul inc [1 2]))))
+  (is (= "<ul><li><span>1</span></li><li><span><ul><li><span>2</span></li></ul></span></li></ul>"
+         (html (ul [1 (ul [2])])))))
 
 (deftest img-test
   (is (= "<img alt=\"\" src=\"a.png\" />" (html (img "a.png"))))
