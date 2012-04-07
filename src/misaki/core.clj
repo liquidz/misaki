@@ -158,8 +158,9 @@
 (defn get-template-files
   "get all template files(java.io.File) from *template-dir*"
   []
-  (remove #(or (.isDirectory %) (layout-file? %)
-               (not (has-extension? ".clj" %)))
+  (remove #(or (.isDirectory %)
+               (not (has-extension? ".clj" %))
+               (layout-file? %))
           (find-files *template-dir*)))
 
 ;; COMPILE
