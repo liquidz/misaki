@@ -76,6 +76,12 @@
   (not= -1 (.indexOf (.getAbsolutePath file) *layout-dir*)))
 
 ;;; POSTS
+; =get-post-options
+(defn get-post-options
+  "Get post's template options from post file(java.io.File)"
+  [#^File file]
+  (->> (.getName file) (str *post-dir*) slurp parse-template-options))
+
 ; =get-post-title
 (defn get-post-title
   "Get post title from post file(java.io.File)."
@@ -125,11 +131,13 @@
   "Get posts data from *post-dir* directory."
   []
   (for [file (filter #(has-extension? ".clj" %) (find-files *post-dir*))]
-    {:file  file
-     :title (get-post-title file)
-     :url   (get-post-url file)
-     :date  (get-date file)
-     :lazy-content (delay (get-escaped-content file))}))
+    (merge
+      (get-post-options file)
+      {:file  file
+;       :title (:title options)
+       :url   (get-post-url file)
+       :date  (get-date file)
+       :lazy-content (delay (get-escaped-content file))})))
 
 ; =post-file?
 (defn post-file?
@@ -159,7 +167,7 @@
   "get all template files(java.io.File) from *template-dir*"
   []
   (remove #(or (.isDirectory %)
-               (not (has-extension? ".clj" %))
+             (not (has-extension? ".clj" %))
                (layout-file? %))
           (find-files *template-dir*)))
 

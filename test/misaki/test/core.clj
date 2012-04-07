@@ -3,7 +3,7 @@
         misaki.test.common
         [hiccup.core :only [html]])
   (:use [clojure.test])
-  (:require [clojure.java.io :as io])) 
+  (:require [clojure.java.io :as io]))
 
 
 ;;; default site data
