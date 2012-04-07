@@ -24,7 +24,7 @@
 (defn ul
   ([ls] (ul identity ls))
   ([f ls]
-   [:ul (for [x ls] [:li (f x)])]))
+   [:ul (for [x ls] [:li [:span (f x)]])]))
 
 
 (defn dl
