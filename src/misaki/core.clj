@@ -82,12 +82,6 @@
   [#^File file]
   (->> (.getName file) (str *post-dir*) slurp parse-template-options))
 
-; =get-post-title
-(defn get-post-title
-  "Get post title from post file(java.io.File)."
-  [#^File file]
-  (->> (.getName file) (str *post-dir*) slurp parse-template-options :title))
-
 ; =get-post-url
 (defn get-post-url
   "Generate post url from file(java.io.File)."
@@ -134,7 +128,6 @@
     (merge
       (get-post-options file)
       {:file  file
-;       :title (:title options)
        :url   (get-post-url file)
        :date  (get-date file)
        :lazy-content (delay (get-escaped-content file))})))
@@ -167,7 +160,7 @@
   "get all template files(java.io.File) from *template-dir*"
   []
   (remove #(or (.isDirectory %)
-             (not (has-extension? ".clj" %))
+               (not (has-extension? ".clj" %))
                (layout-file? %))
           (find-files *template-dir*)))
 
