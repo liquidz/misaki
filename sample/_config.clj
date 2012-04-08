@@ -5,6 +5,9 @@
  :post-dir     "_posts/"
  :layout-dir   "_layouts/"
 
+ ;; site language
+ :lang "ja"
+
  ;; default site data
  :site {:site-title "misaki"}
 

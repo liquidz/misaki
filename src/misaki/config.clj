@@ -23,6 +23,8 @@
          *site*)
 (declare ^{:dynamic true, :doc "Template names which compiled with post templates"}
          *compile-with-post*)
+(declare ^{:dynamic true, :doc "Site language"}
+         *lang*)
 
 ; =with-config
 (defmacro with-config
@@ -38,6 +40,7 @@
                *post-dir*     (str *base-dir*
                                    (:template-dir config#)
                                    (:post-dir config#))
+               *lang*         (get config# :lang "en")
                *site*         (get config# :site {})
                *compile-with-post* (:compile-with-post config#)]
        ~@body)))

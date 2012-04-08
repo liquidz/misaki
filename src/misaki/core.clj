@@ -170,8 +170,8 @@
   "Get hiccup functon to compile sexp"
   [fmt]
   (case fmt
-    "html5" #(html5 %)
-    "xhtml" #(xhtml %)
+    "html5" #(html5 {:lang *lang*} %)
+    "xhtml" #(xhtml {:lang *lang*} %)
     "html4" #(html4 %)
     #(html %)))
 
@@ -194,7 +194,8 @@
   [tmpl-name]
   (try
       (let [data (generate-html tmpl-name)
-            compile-fn (-> data meta :format get-compile-fn)]
+            fmt (-> data meta :format)
+            compile-fn (get-compile-fn fmt)]
         (write-data
           (str *public-dir* (make-output-filename tmpl-name))
           (compile-fn data))
