@@ -66,3 +66,6 @@
      (for [body bodies]
        [:tr (for [b body] [:td b])])]]))
 
+
+(defn links [& title-url-pairs]
+  (ul #(apply link %) (partition 2 title-url-pairs)))
