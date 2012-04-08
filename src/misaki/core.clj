@@ -194,8 +194,7 @@
   [tmpl-name]
   (try
       (let [data (generate-html tmpl-name)
-            fmt (-> data meta :format)
-            compile-fn (get-compile-fn fmt)]
+            compile-fn (-> data meta :format get-compile-fn)]
         (write-data
           (str *public-dir* (make-output-filename tmpl-name))
           (compile-fn data))

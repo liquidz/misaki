@@ -6,7 +6,7 @@
  :layout-dir   "_layouts/"
 
  ;; site language
- :lang "ja"
+ :lang "en"
 
  ;; default site data
  :site {:site-title "misaki"}
