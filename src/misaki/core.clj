@@ -110,15 +110,15 @@
   (html (generate-html (file->template-name file)
                        :allow-layout? false)))
 
-; =get-escaped-content
-(defn get-escaped-content
-  "Get escaped post content without layout"
-  [#^File file]
-  (-> (get-content file)
-    (str/replace #"&" "&amp;")
-    (str/replace #"\"" "&quot;")
-    (str/replace #"<" "&lt;")
-    (str/replace #">" "&gt;")))
+; =escape-content
+(defn escape-content
+  "Escape content"
+  [content]
+  (-> content
+      (str/replace #"&" "&amp;")
+      (str/replace #"\"" "&quot;")
+      (str/replace #"<" "&lt;")
+      (str/replace #">" "&gt;")))
 
 ; =get-posts
 (defn get-posts
@@ -127,10 +127,10 @@
   (for [file (filter #(has-extension? ".clj" %) (find-files *post-dir*))]
     (merge
       (get-post-options file)
-      {:file  file
-       :url   (get-post-url file)
-       :date  (get-date file)
-       :lazy-content (delay (get-escaped-content file))})))
+      {:file file
+       :url  (get-post-url file)
+       :date (get-date file)
+       :lazy-content (delay (escape-content (get-content file)))})))
 
 ; =post-file?
 (defn post-file?
@@ -147,10 +147,10 @@
 (defn generate-html
   "Generate HTML from template."
   [tmpl-name & {:keys [allow-layout?] :or {allow-layout? true}}]
-  (let [filename (str *template-dir* tmpl-name)
-        tmpl-fn (load-template filename allow-layout?)
-        site-data (merge *site* {:posts (sort-by-date (get-posts))
-                                 :date  (get-date (io/file filename))})
+  (let [filename   (str *template-dir* tmpl-name)
+        tmpl-fn    (load-template filename allow-layout?)
+        site-data  (merge *site* {:posts (sort-by-date (get-posts))
+                                  :date  (get-date (io/file filename))})
         empty-data (with-meta '("") site-data)]
 
     (apply-template tmpl-fn empty-data)))
