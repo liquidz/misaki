@@ -6,3 +6,8 @@
 /.lein-failures
 /checkouts
 /.lein-deps-sum
+/blog
+/sample/2011
+/sample/2012
+/sample/atom.xml
+/sample/index.html
