@@ -44,9 +44,10 @@
                *post-dir*     (str *base-dir*
                                    (:template-dir config#)
                                    (:post-dir config#))
-               *tag-out-dir*  (str *base-dir*
-                                   (:public-dir config#)
-                                   (:tag-out-dir config#))
+               *tag-out-dir*  (:tag-out-dir config#)
+;               (str *base-dir*
+;                    (:public-dir config#)
+;                    (:tag-out-dir config#))
                *tag-layout*   (str *base-dir*
                                    (:template-dir config#)
                                    (:layout-dir config#)

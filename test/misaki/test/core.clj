@@ -42,7 +42,7 @@
   (with-test-data
     (let [tmpl "gen_test.html.clj"
           res (compile-template tmpl)
-          file (io/file (str *public-dir* (make-output-filename tmpl)))]
+          file (io/file (str *public-dir* (make-template-output-filename tmpl)))]
       (is res)
       (is (.exists file))
       (.delete file))))

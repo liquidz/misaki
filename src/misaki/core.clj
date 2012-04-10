@@ -16,7 +16,7 @@
     [java.net URLEncoder]))
 
 (declare generate-html)
-(declare make-output-filename)
+(declare make-template-output-filename)
 
 (def ^:dynamic *post-filename-regexp*
   #"(\d{4})[-_](\d{1,2})[-_](\d{1,2})[-_](.+)$")
@@ -95,7 +95,7 @@
 (defn get-post-url
   "Generate post url from file(java.io.File)."
   [#^File file]
-  (str "/" (make-output-filename (str *post* (.getName file)))))
+  (str "/" (make-template-output-filename (str *post* (.getName file)))))
 
 ; =get-date
 (defn get-date
@@ -189,9 +189,9 @@
     "html4" #(html4 %)
     #(html %)))
 
-; =make-output-filename
-(defn make-output-filename
-  "Make output filename from template name"
+; =make-template-outpu-filename
+(defn make-template-output-filename
+  "Make template output filename from template name"
   [tmpl-name]
   (let [file (template-name->file tmpl-name)
         date (get-date file)]
@@ -200,6 +200,12 @@
               (delete-extension
                 (last (first (re-seq *post-filename-regexp* tmpl-name)))))
       (delete-extension tmpl-name))))
+
+; =make-tag-output-filename
+(defn make-tag-output-filename
+  "Make tag output filename from tag name"
+  [tag-name]
+  (str *tag-out-dir* tag-name ".clj"))
 
 ; =get-tags
 (defn get-tags
@@ -231,7 +237,7 @@
       (let [data (generate-html tmpl-name)
             compile-fn (-> data meta :format get-compile-fn)]
         (write-data
-          (str *public-dir* (make-output-filename tmpl-name))
+          (str *public-dir* (make-template-output-filename tmpl-name))
           (compile-fn data))
         true)
     (catch Exception e (.printStackTrace e) false)))
