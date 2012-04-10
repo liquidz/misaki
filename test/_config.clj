@@ -8,6 +8,9 @@
  ;; default site data
  :site {:default-title "default title"}
 
+ :tag-layout "tag.test"
+ :tag-out-dir "tag/"
+
  ;; templates which compiled with post data
  :compile-with-post ["gen_test.html.clj"]
 

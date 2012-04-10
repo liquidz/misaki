@@ -23,7 +23,7 @@
 
 (defn- parse-tag-option [option]
   (if-let [tag (:tag option)]
-    (assoc option :tag (str/split tag #"[\s,]+"))
+    (assoc option :tag (distinct (str/split tag #"[\s,]+")))
     option))
 
 ; =parse-template-options
@@ -87,7 +87,9 @@
 (defn get-post-options
   "Get post's template options from post file(java.io.File)"
   [#^File file]
-  (->> (.getName file) (str *post-dir*) slurp parse-template-options))
+  (try
+    (->> (.getName file) (str *post-dir*) slurp parse-template-options)
+    (catch Exception _ {})))
 
 ; =get-post-url
 (defn get-post-url
@@ -130,10 +132,15 @@
 ; =get-posts
 (defn get-posts
   "Get posts data from *post-dir* directory."
-  []
-  (for [file (filter #(has-extension? ".clj" %) (find-files *post-dir*))]
+  [& {:keys [tag]}]
+  (for [file  (find-files *post-dir*)
+        :let  [option (get-post-options file)
+               tagset (set (get option :tag []))]
+        :when (and (has-extension? ".clj" file)
+                   (or (nil? tag)
+                       (every? #(contains? tagset %) tag)))]
     (merge
-      (get-post-options file)
+      option
       {:file file
        :url  (get-post-url file)
        :date (get-date file)
@@ -145,13 +152,9 @@
   [#^File file]
   (not= -1 (.indexOf (.getAbsolutePath file) *post-dir*)))
 
-(defn tag-file?
-  [#^File file]
-  (not= -1 (.indexOf (.getAbsolutePath file) *tag-dir*))))
-
 ;;; TEMPLATES
 ; =sort-by-date
-(defn- sort-by-date [posts]
+(defn sort-by-date [posts]
   (sort #(after? (:date %) (:date %2)) posts))
 
 ; =generate-html
@@ -198,12 +201,26 @@
                 (last (first (re-seq *post-filename-regexp* tmpl-name)))))
       (delete-extension tmpl-name))))
 
-(defn compile-tag-page
+; =get-tags
+(defn get-tags
+  "Get all tags from post list."
+  ([] (get-tags (get-posts)))
+  ([posts]
+   (->> (mapcat :tag posts)
+        (remove nil?)
+        (sort #(neg? (.compareTo % %2)))
+        distinct)))
+
+; =generate-tag-html
+(defn generate-tag-html
+  "Generate tag HTML from *tag-layout*."
   [tag-name]
-  (let [posts (get-posts)]
-    ()
-    )
-  )
+  (let [tmpl-fn (load-template *tag-layout*)
+        site-data (merge *site* {:posts (get-posts :tag [tag-name])
+                                 :tag-name tag-name})
+        empty-data (with-meta '("") site-data)
+        ]
+    (apply-template tmpl-fn empty-data)))
 
 ; =compile-template
 (defn compile-template

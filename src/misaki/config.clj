@@ -20,7 +20,7 @@
 (declare ^{:dynamic true, :doc "Posts placed directory path."}
          *post-dir*)
 (declare ^{:dynamic true, :doc "Tag index placed directory path."}
-         *tag-dir*)
+         *tag-out-dir*)
 (declare ^{:dynamic true, :doc "Tag layout name."}
          *tag-layout*)
 (declare ^{:dynamic true, :doc "Default site data."}
@@ -44,10 +44,13 @@
                *post-dir*     (str *base-dir*
                                    (:template-dir config#)
                                    (:post-dir config#))
-               *tag-dir*      (str *base-dir*
+               *tag-out-dir*  (str *base-dir*
+                                   (:public-dir config#)
+                                   (:tag-out-dir config#))
+               *tag-layout*   (str *base-dir*
                                    (:template-dir config#)
-                                   (:tag-dir config#))
-               *tag-layout*   (:tag-layout config#)
+                                   (:layout-dir config#)
+                                   (:tag-layout config#) ".clj")
                *lang*         (get config# :lang "en")
                *site*         (get config# :site {})
                *compile-with-post* (:compile-with-post config#)]
