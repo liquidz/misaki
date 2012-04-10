@@ -19,6 +19,10 @@
          *layout-dir*)
 (declare ^{:dynamic true, :doc "Posts placed directory path."}
          *post-dir*)
+(declare ^{:dynamic true, :doc "Tag index placed directory path."}
+         *tag-dir*)
+(declare ^{:dynamic true, :doc "Tag layout name."}
+         *tag-layout*)
 (declare ^{:dynamic true, :doc "Default site data."}
          *site*)
 (declare ^{:dynamic true, :doc "Template names which compiled with post templates"}
@@ -40,6 +44,10 @@
                *post-dir*     (str *base-dir*
                                    (:template-dir config#)
                                    (:post-dir config#))
+               *tag-dir*      (str *base-dir*
+                                   (:template-dir config#)
+                                   (:tag-dir config#))
+               *tag-layout*   (:tag-layout config#)
                *lang*         (get config# :lang "en")
                *site*         (get config# :site {})
                *compile-with-post* (:compile-with-post config#)]

@@ -21,6 +21,11 @@
 (def ^:dynamic *post-filename-regexp*
   #"(\d{4})[-_](\d{1,2})[-_](\d{1,2})[-_](.+)$")
 
+(defn- parse-tag-option [option]
+  (if-let [tag (:tag option)]
+    (assoc option :tag (str/split tag #"[\s,]+"))
+    option))
+
 ; =parse-template-options
 (defn parse-template-options
   "Parse template options
@@ -34,9 +39,11 @@
   [data]
   (let [lines    (map str/trim (str/split-lines data))
         comments (filter #(= 0 (.indexOf % ";")) lines)
-        params   (remove nil? (map #(re-seq #"^;+\s*@(\w+)\s+(.+)$" %) comments))]
+        params   (remove nil? (map #(re-seq #"^;+\s*@(\w+)\s+(.+)$" %) comments))
+        option   (into {} (for [[[_ k v]] params] [(keyword k) v]))]
 
-    (into {} (for [[[_ k v]] params] [(keyword k) v]))))
+    (-> option
+        parse-tag-option)))
 
 ; =apply-template
 (defn apply-template
@@ -138,6 +145,10 @@
   [#^File file]
   (not= -1 (.indexOf (.getAbsolutePath file) *post-dir*)))
 
+(defn tag-file?
+  [#^File file]
+  (not= -1 (.indexOf (.getAbsolutePath file) *tag-dir*))))
+
 ;;; TEMPLATES
 ; =sort-by-date
 (defn- sort-by-date [posts]
@@ -186,6 +197,13 @@
               (delete-extension
                 (last (first (re-seq *post-filename-regexp* tmpl-name)))))
       (delete-extension tmpl-name))))
+
+(defn compile-tag-page
+  [tag-name]
+  (let [posts (get-posts)]
+    ()
+    )
+  )
 
 ; =compile-template
 (defn compile-template
