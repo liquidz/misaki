@@ -2,7 +2,8 @@
   (:use [misaki core config]
         [hiccup.core :only [html]]
         misaki.test.common
-        clojure.test))
+        clojure.test)
+  (:require [clojure.java.io :as io]))
 
 (deftest* get-posts-test
   (let [posts (sort-by-date (get-posts))]
@@ -63,7 +64,7 @@
 (deftest* compile-tag-test
   (let [tag-name "tag1"
         res (compile-tag tag-name)
-        file (io/file *public-dir* *tag-out-dir* tag-name ".html")]
+        file (io/file (str *public-dir* *tag-out-dir* tag-name ".html"))]
     (is res)
     (is (.exists file))
     (.delete file)))

@@ -1,5 +1,6 @@
 ; @layout  post
 ; @title   The quick brown fox
+; @tag     tag2 tag3
 
 (def ^:dynamic *max* 50)
 

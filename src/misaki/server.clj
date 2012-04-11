@@ -27,15 +27,22 @@
   (if (or (layout-file? file) (config-file? file))
     ; compile all templates if target file is layout or config
     (do (print " * compiling all templates:")
-      (print-result (compile-all-templates)))
+        (print-result (compile-all-templates))
+        (print " * compiling all tags:")
+        (print-result (compile-all-tags)))
     ; compile target template
     (do (print " * compiling:" (.getName file))
-      (print-result (compile-template
-                      (file->template-name file)))
-      ; compile index template if target file is post
-      (if (and (post-file? file) *compile-with-post*)
-        (doseq [tmpl-name *compile-with-post*]
-          (do-compile (template-name->file tmpl-name)))))))
+        (print-result (compile-template (file->template-name file)))
+        (when (post-file? file)
+          ; compile with posts
+          (if *compile-with-post*
+            (doseq [tmpl-name *compile-with-post*]
+              (do-compile (template-name->file tmpl-name))))
+          ; compile tag
+          (if-let [tags (-> file get-post-options :tag)]
+            (doseq [tag tags]
+              (print " * compiling tag:" tag)
+              (print-result (compile-tag tag))))))))
 
 ; =start-watcher
 (defn start-watcher

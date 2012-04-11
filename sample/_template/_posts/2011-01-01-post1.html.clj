@@ -1,5 +1,6 @@
 ; @layout  post
 ; @title   Sample components
+; @tag     tag1 tag2
 
 (h2 "Link")
 #-CLJ

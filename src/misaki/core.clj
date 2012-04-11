@@ -205,7 +205,7 @@
 (defn make-tag-output-filename
   "Make tag output filename from tag name"
   [tag-name]
-  (str *tag-out-dir* tag-name ".clj"))
+  (str *tag-out-dir* tag-name ".html"))
 
 ; =get-tags
 (defn get-tags
@@ -228,7 +228,11 @@
         ]
     (apply-template tmpl-fn empty-data)))
 
-(defn compile-tag [tag-name]
+; =compile-tag
+(defn compile-tag
+  "Compile a tag page.
+  return true if compile succeeded."
+  [tag-name]
   (try
     (let [data (generate-tag-html tag-name)
           compile-fn (-> data meta :format get-compile-fn)]
@@ -241,7 +245,7 @@
 ; =compile-template
 (defn compile-template
   "Compile a specified template.
-  return true if compile is successed"
+  return true if compile succeeded."
   [tmpl-name]
   (try
       (let [data (generate-html tmpl-name)
@@ -252,10 +256,17 @@
         true)
     (catch Exception e (.printStackTrace e) false)))
 
+; =compile-all-tags
+(defn compile-all-tags
+  "Compile all tag page.
+  return true if all compile succeeded."
+  []
+  (every? #(compile-tag %) (get-tags)))
+
 ; =compile-all-templates
 (defn compile-all-templates
   "Compile all template files.
-  return true if all compile is successed"
+  return true if all compile succeeded."
   []
   (every? #(compile-template %)
           (map file->template-name (get-template-files))))
