@@ -18,6 +18,6 @@
  :tag-layout "tag"
 
  ;; highlight setting
- :code-highlight {:CLJ "lang-clj"}
+ :code-highlight {:CLJ "lang-clj", :CLOJURE "lang-clj"}
  }
 

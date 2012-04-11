@@ -30,7 +30,7 @@
 (page-header "Template source")
 [:p "you can highlight your code with "
  (html/link "google-code-prettify" "http://code.google.com/p/google-code-prettify/")]
-#-CLJ
+#-CLOJURE
 ;; Define template options here
 ; @layout  default
 ; @title   misaki
@@ -52,17 +52,24 @@
   #(html/link (:title %) (:url %))
   (:posts site))
 
+;; Sample post tags
+(page-header "Sample tags")
+(html/ul
+  #(html/link (str (:name %) " (" (:count %) ")")
+              (:url %))
+  (:tags site))
+
 ;; Template source
 (page-header "Template source")
 [:p "you can highlight your code with "
  (html/link "google-code-prettify" "http://code.google.com/p/google-code-prettify/")]
-;#-CLJ
-;CLJ
+#-CLJ
+CLJ
 
 ;; Document
 (page-header "Document")
 [:p "See " (html/link "github Wiki" "https://github.com/liquidz/misaki/wiki") "."]
-CLJ
+CLOJURE
 
 ;; Document
 (page-header "Document")
