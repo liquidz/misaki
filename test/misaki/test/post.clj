@@ -29,20 +29,30 @@
   (let [tags (get-tags (get-posts))]
     (are [x y] (= x y)
       3      (count tags)
-      "tag1" (nth tags 0)
-      "tag2" (nth tags 1)
-      "tag3" (nth tags 2))))
+      "tag1" (:name (nth tags 0))
+      "/tag/tag1.html" (:url (nth tags 0))
+      "tag2" (:name (nth tags 1))
+      "/tag/tag2.html" (:url (nth tags 1))
+      "tag3" (:name (nth tags 2))
+      "/tag/tag3.html" (:url (nth tags 2))
+      )))
 
 (deftest* get-counted-tags-test
   (let [tags (get-counted-tags (get-posts))]
     (are [x y] (= x y)
       3      (count tags)
-      "tag1" (:tag   (nth tags 0))
+
+      "tag1" (:name  (nth tags 0))
       1      (:count (nth tags 0))
-      "tag2" (:tag   (nth tags 1))
+      "/tag/tag1.html" (:url   (nth tags 0))
+
+      "tag2" (:name  (nth tags 1))
       2      (:count (nth tags 1))
-      "tag3" (:tag   (nth tags 2))
-      1      (:count (nth tags 2)))))
+      "/tag/tag2.html" (:url   (nth tags 1))
+
+      "tag3" (:name  (nth tags 2))
+      1      (:count (nth tags 2))
+      "/tag/tag3.html" (:url   (nth tags 2)))))
 
 (deftest* get-posts-with-tag-test
   (let [posts1 (get-posts :tag ["tag1"])
@@ -63,13 +73,13 @@
   (let [[t1 t2 t3] (get-tags (get-posts))]
     (are [x y] (= x y)
       "<p>tag1</p><ul><li>bar</li></ul>"
-      (html (generate-tag-html t1))
+      (html (generate-tag-html (:name t1)))
 
       "<p>tag2</p><ul><li>bar</li><li>foo</li></ul>"
-      (html (generate-tag-html t2))
+      (html (generate-tag-html (:name t2)))
 
       "<p>tag3</p><ul><li>foo</li></ul>"
-      (html (generate-tag-html t3)))))
+      (html (generate-tag-html (:name t3))))))
 
 
 (deftest* compile-tag-test

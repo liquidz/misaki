@@ -3,6 +3,7 @@
   (:use
     [misaki transform config]
     [misaki.util file code]
+    [clojure.core.incubator :only [-?>]]
     [clj-time.core :only [date-time after? month day year]]
     [hiccup.core :only [html]]
     [hiccup.page-helpers :only [html5 xhtml html4]])
@@ -17,6 +18,7 @@
 
 (declare generate-html)
 (declare make-template-output-filename)
+(declare make-tag-output-filename)
 
 (def ^:dynamic *post-filename-regexp*
   #"(\d{4})[-_](\d{1,2})[-_](\d{1,2})[-_](.+)$")
@@ -33,8 +35,10 @@
 
 
 (defn- parse-tag-option [option]
-  (if-let [tag (:tag option)]
-    (assoc option :tag (distinct (str/split tag #"[\s,]+")))
+  (if-let [tags (-?> option :tag (str/split #"[\s,]+"))]
+    (assoc option :tag (for [tag (distinct tags)]
+                         {:name tag
+                          :url  (str "/" (make-tag-output-filename tag))}))
     option))
 
 ; =parse-template-options
@@ -146,7 +150,7 @@
   [& {:keys [tag]}]
   (for [file  (find-files *post-dir*)
         :let  [option (get-post-options file)
-               tagset (set (get option :tag []))]
+               tagset (set (map :name (get option :tag [])))]
         :when (and (has-extension? ".clj" file)
                    (or (nil? tag)
                        (every? #(contains? tagset %) tag)))]
@@ -173,20 +177,18 @@
 (defn get-counted-tags
   "Get counted tags from post list."
   [posts]
-  (let [tag-group (group-by identity (get-unfiltered-tags posts))]
+  (let [tag-group (group-by :name (get-unfiltered-tags posts))]
     (sort-alphabetically
-      :tag (for [tag (keys tag-group)]
-             {:tag tag :count (count (get tag-group tag))}))))
+      :name (map #(assoc (first %) :count (count %)) (vals tag-group)))))
 
 ; =get-tags
 (defn get-tags
   "Get all tags from post list."
   ([] (get-tags (get-posts)))
   ([posts]
-   (-> (get-unfiltered-tags posts)
-       sort-alphabetically
-       distinct)))
-
+   (->> (get-unfiltered-tags posts)
+        (sort-alphabetically :name)
+        distinct)))
 
 ;;; TEMPLATES
 
@@ -198,7 +200,7 @@
         tmpl-fn    (load-template filename allow-layout?)
         posts      (sort-by-date (get-posts))
         site-data  (merge *site* {:posts posts
-                                  :tags  (get-tags posts)
+                                  :tags  (get-counted-tags posts)
                                   :date  (get-date (io/file filename))})
         empty-data (with-meta '("") site-data)]
 
@@ -286,7 +288,7 @@
   "Compile all tag page.
   return true if all compile succeeded."
   []
-  (every? #(compile-tag %) (get-tags)))
+  (every? #(compile-tag (:name %)) (get-tags)))
 
 ; =compile-all-templates
 (defn compile-all-templates

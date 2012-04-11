@@ -19,6 +19,13 @@
   #(html/link (:title %) (:url %))
   (:posts site))
 
+;; Sample post tags
+(page-header "Sample tags")
+(html/ul
+  #(html/link (str (:name %) " (" (:count %) ")")
+              (:url %))
+  (:tags site))
+
 ;; Template source
 (page-header "Template source")
 [:p "you can highlight your code with "

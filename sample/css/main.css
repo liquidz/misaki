@@ -26,6 +26,9 @@ h2 { margin-top: 1em; }
 .page-header h1 span { color: #58b271; font-weight: bold; }
 .page-header p { float: left; margin: 20px 0 0 30px; }
 
+.tag ul { margin: 0; padding: 0; list-style: none; }
+.tag ul li { display: inline; padding-right: 0.5em; }
+
 pre.prettyprint {
     margin: 10px; padding: 10px;
     border-radius: 5px;
