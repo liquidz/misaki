@@ -21,6 +21,17 @@
 (def ^:dynamic *post-filename-regexp*
   #"(\d{4})[-_](\d{1,2})[-_](\d{1,2})[-_](.+)$")
 
+; =sort-by-date
+(defn sort-by-date [posts]
+  (sort #(after? (:date %) (:date %2)) posts))
+
+; =sort-alphabetically
+(defn sort-alphabetically
+  "Sort list alphabetically."
+  ([ls]   (sort-alphabetically identity ls))
+  ([f ls] (sort #(neg? (.compareTo (f %) (f %2))) ls)))
+
+
 (defn- parse-tag-option [option]
   (if-let [tag (:tag option)]
     (assoc option :tag (distinct (str/split tag #"[\s,]+")))
@@ -152,10 +163,32 @@
   [#^File file]
   (not= -1 (.indexOf (.getAbsolutePath file) *post-dir*)))
 
+; =get-unfiltered-tags
+(defn get-unfiltered-tags
+  "Get unfiltered all tags from post list."
+  [posts]
+  (remove nil? (mapcat :tag posts)))
+
+; =get-counted-tags
+(defn get-counted-tags
+  "Get counted tags from post list."
+  [posts]
+  (let [tag-group (group-by identity (get-unfiltered-tags posts))]
+    (sort-alphabetically
+      :tag (for [tag (keys tag-group)]
+             {:tag tag :count (count (get tag-group tag))}))))
+
+; =get-tags
+(defn get-tags
+  "Get all tags from post list."
+  ([] (get-tags (get-posts)))
+  ([posts]
+   (-> (get-unfiltered-tags posts)
+       sort-alphabetically
+       distinct)))
+
+
 ;;; TEMPLATES
-; =sort-by-date
-(defn sort-by-date [posts]
-  (sort #(after? (:date %) (:date %2)) posts))
 
 ; =generate-html
 (defn generate-html
@@ -163,7 +196,9 @@
   [tmpl-name & {:keys [allow-layout?] :or {allow-layout? true}}]
   (let [filename   (str *template-dir* tmpl-name)
         tmpl-fn    (load-template filename allow-layout?)
-        site-data  (merge *site* {:posts (sort-by-date (get-posts))
+        posts      (sort-by-date (get-posts))
+        site-data  (merge *site* {:posts posts
+                                  :tags  (get-tags posts)
                                   :date  (get-date (io/file filename))})
         empty-data (with-meta '("") site-data)]
 
@@ -206,16 +241,6 @@
   "Make tag output filename from tag name"
   [tag-name]
   (str *tag-out-dir* tag-name ".html"))
-
-; =get-tags
-(defn get-tags
-  "Get all tags from post list."
-  ([] (get-tags (get-posts)))
-  ([posts]
-   (->> (mapcat :tag posts)
-        (remove nil?)
-        (sort #(neg? (.compareTo % %2)))
-        distinct)))
 
 ; =generate-tag-html
 (defn generate-tag-html

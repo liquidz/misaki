@@ -28,10 +28,21 @@
 (deftest* get-tags-test
   (let [tags (get-tags (get-posts))]
     (are [x y] (= x y)
-      3 (count tags)
+      3      (count tags)
       "tag1" (nth tags 0)
       "tag2" (nth tags 1)
       "tag3" (nth tags 2))))
+
+(deftest* get-counted-tags-test
+  (let [tags (get-counted-tags (get-posts))]
+    (are [x y] (= x y)
+      3      (count tags)
+      "tag1" (:tag   (nth tags 0))
+      1      (:count (nth tags 0))
+      "tag2" (:tag   (nth tags 1))
+      2      (:count (nth tags 1))
+      "tag3" (:tag   (nth tags 2))
+      1      (:count (nth tags 2)))))
 
 (deftest* get-posts-with-tag-test
   (let [posts1 (get-posts :tag ["tag1"])
@@ -68,3 +79,4 @@
     (is res)
     (is (.exists file))
     (.delete file)))
+
