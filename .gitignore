@@ -7,7 +7,9 @@
 /checkouts
 /.lein-deps-sum
 /blog
+/test/public
 /sample/2011
 /sample/2012
+/sample/tag
 /sample/atom.xml
 /sample/index.html
