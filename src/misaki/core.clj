@@ -228,6 +228,16 @@
         ]
     (apply-template tmpl-fn empty-data)))
 
+(defn compile-tag [tag-name]
+  (try
+    (let [data (generate-tag-html tag-name)
+          compile-fn (-> data meta :format get-compile-fn)]
+      (write-data
+        (str *public-dir* (make-tag-output-filename tag-name))
+        (compile-fn data))
+      true)
+    (catch Exception e (.printStackTrace e) false)))
+
 ; =compile-template
 (defn compile-template
   "Compile a specified template.

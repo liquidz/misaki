@@ -58,3 +58,12 @@
 
       "<p>tag3</p><ul><li>foo</li></ul>"
       (html (generate-tag-html t3)))))
+
+
+(deftest* compile-tag-test
+  (let [tag-name "tag1"
+        res (compile-tag tag-name)
+        file (io/file *public-dir* *tag-out-dir* tag-name ".html")]
+    (is res)
+    (is (.exists file))
+    (.delete file)))
