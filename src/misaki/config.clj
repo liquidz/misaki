@@ -1,7 +1,12 @@
 (ns misaki.config
   "misaki: configuration"
-  (:require [clojure.string :as str]
-            [clojure.java.io :as io]))
+  (:use
+    misaki.util.file
+    [clj-time.core :only [month year]])
+  (:require
+    [clojure.string :as str]
+    [clojure.java.io :as io])
+  (:import [java.io File]))
 
 (def ^:dynamic *base-dir* "./")
 
@@ -35,25 +40,43 @@
   "Wrap sexp with config data"
   [& body]
   `(let [config# (load-config)]
-     (binding [*public-dir*   (str *base-dir* (:public-dir config#))
-               *template-dir* (str *base-dir* (:template-dir config#))
-               *post*         (:post-dir config#)
-               *layout-dir*   (str *base-dir*
-                                   (:template-dir config#)
-                                   (:layout-dir config#))
-               *post-dir*     (str *base-dir*
-                                   (:template-dir config#)
-                                   (:post-dir config#))
-               *tag-out-dir*  (:tag-out-dir config#)
-               *tag-layout*   (str *base-dir*
-                                   (:template-dir config#)
-                                   (:layout-dir config#)
-                                   (:tag-layout config#) ".clj")
-               *lang*         (get config# :lang "en")
-               *site*         (get config# :site {})
-               *compile-with-post* (:compile-with-post config#)]
+     (binding
+       [*public-dir*   (str *base-dir* (:public-dir config#))
+        *template-dir* (str *base-dir* (:template-dir config#))
+        *post*         (:post-dir config#)
+        *layout-dir*   (str *base-dir*
+                            (:template-dir config#)
+                            (:layout-dir config#))
+        *post-dir*     (str *base-dir*
+                            (:template-dir config#)
+                            (:post-dir config#))
+        *tag-out-dir*  (:tag-out-dir config#)
+        *tag-layout*   (str *base-dir*
+                            (:template-dir config#)
+                            (:layout-dir config#)
+                            (:tag-layout config#) ".clj")
+        *lang*         (get config# :lang "en")
+        *site*         (get config# :site {})
+        *compile-with-post* (:compile-with-post config#)]
        ~@body)))
 
+; =config-file?
+(defn config-file?
+  "Check whether file is config file or not."
+  [file]
+  (= *config-file* (.getName file)))
+
+; =layout-file?
+(defn layout-file?
+  "Check whether file is layout file or not."
+  [#^File file]
+  (not= -1 (.indexOf (.getAbsolutePath file) *layout-dir*)))
+
+; =post-file?
+(defn post-file?
+  "Check whether file is post file or not."
+  [#^File file]
+  (not= -1 (.indexOf (.getAbsolutePath file) *post-dir*)))
 
 ; =file->template-name
 (defn file->template-name
@@ -71,9 +94,28 @@
   [tmpl-name]
   (io/file (str *template-dir* tmpl-name)))
 
+; =make-tag-output-filename
+(defn make-tag-output-filename
+  "Make tag output filename from tag name"
+  [tag-name]
+  (str *tag-out-dir* tag-name ".html"))
 
-; =config-file?
-(defn config-file?
-  "Check whether file is config file or not."
-  [file]
-  (= *config-file* (.getName file)))
+; =make-template-outpu-filename
+(defn make-template-output-filename
+  "Make template output filename from template name"
+  [tmpl-name]
+  (let [file (template-name->file tmpl-name)
+        date (get-date-from-file file)]
+    (if (post-file? file)
+      (format "%04d/%02d/%s" (year date) (month date)
+              (delete-extension
+                (remove-date-from-name tmpl-name)))
+      (delete-extension tmpl-name))))
+
+; =make-post-url
+(defn make-post-url
+  "Make post url from file(java.io.File)"
+  [#^File file]
+  (str "/" (make-template-output-filename (str *post* (.getName file)))))
+
+

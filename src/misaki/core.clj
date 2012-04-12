@@ -1,10 +1,8 @@
 (ns misaki.core
   "misaki: Jekyll inspired static site generator in Clojure"
   (:use
-    [misaki transform config]
-    [misaki.util file code]
-    [clojure.core.incubator :only [-?>]]
-    [clj-time.core :only [date-time after? month day year]]
+    [misaki template config]
+    [misaki.util file code seq]
     [hiccup.core :only [html]]
     [hiccup.page-helpers :only [html5 xhtml html4]])
   (:require
@@ -12,90 +10,9 @@
     conv
     [clojure.string :as str]
     [clojure.java.io :as io])
-  (:import
-    [java.io File]
-    [java.net URLEncoder]))
+  (:import [java.io File]))
 
 (declare generate-html)
-(declare make-template-output-filename)
-(declare make-tag-output-filename)
-
-(def ^:dynamic *post-filename-regexp*
-  #"(\d{4})[-_](\d{1,2})[-_](\d{1,2})[-_](.+)$")
-
-; =sort-by-date
-(defn sort-by-date [posts]
-  (sort #(after? (:date %) (:date %2)) posts))
-
-; =sort-alphabetically
-(defn sort-alphabetically
-  "Sort list alphabetically."
-  ([ls]   (sort-alphabetically identity ls))
-  ([f ls] (sort #(neg? (.compareTo (f %) (f %2))) ls)))
-
-
-(defn- parse-tag-option [option]
-  (if-let [tags (-?> option :tag (str/split #"[\s,]+"))]
-    (assoc option :tag (for [tag (distinct tags)]
-                         {:name tag
-                          :url  (str "/" (make-tag-output-filename tag))}))
-    option))
-
-; =parse-template-options
-(defn parse-template-options
-  "Parse template options
-
-  ex) template file
-      ; @layout default
-      ; @title hello, world
-      [:h1 \"hello world\"]
-
-      => {:layout \"default\", :title \"hello, world\"}"
-  [data]
-  (let [lines    (map str/trim (str/split-lines data))
-        comments (filter #(= 0 (.indexOf % ";")) lines)
-        params   (remove nil? (map #(re-seq #"^;+\s*@(\w+)\s+(.+)$" %) comments))
-        option   (into {} (for [[[_ k v]] params] [(keyword k) v]))]
-
-    (-> option
-        parse-tag-option)))
-
-; =apply-template
-(defn apply-template
-  "Apply contents data to template function."
-  [f contents]
-  (let [option (merge (meta f) (meta contents))
-        contents (with-meta contents option)]
-    (with-meta (f contents) option)))
-
-; =load-template
-(defn load-template
-  "Load template file, and transform to function.
-  Template options are contained as meta data."
-  ([filename] (load-template filename true))
-  ([filename allow-layout?]
-   (let [data (slurp filename)
-         option (parse-template-options data)]
-
-     (if-let [layout-name (:layout option)]
-       (let [; at first, evaluate parent layout
-             parent-layout-fn (load-template (str *layout-dir* layout-name ".clj"))
-             ; second, evaluate this layout
-             layout-fn (transform data)]
-         (if allow-layout?
-           (with-meta
-             (fn [contents]
-               (apply-template parent-layout-fn
-                 (apply-template layout-fn contents)))
-             (merge (meta parent-layout-fn) option))
-           (with-meta layout-fn option)))
-       (with-meta (transform data) option)))))
-
-; =layout-file?
-(defn layout-file?
-  "Check whether file is layout file or not."
-  [#^File file]
-  (not= -1 (.indexOf (.getAbsolutePath file) *layout-dir*)))
 
 ;;; POSTS
 ; =get-post-options
@@ -105,27 +22,6 @@
   (try
     (->> (.getName file) (str *post-dir*) slurp parse-template-options)
     (catch Exception _ {})))
-
-; =get-post-url
-(defn get-post-url
-  "Generate post url from file(java.io.File)."
-  [#^File file]
-  (str "/" (make-template-output-filename (str *post* (.getName file)))))
-
-; =get-date
-(defn get-date
-  "Get date from filename
-  ex) YYYY-MM-DD
-      YYYY-M-D
-      YYYY_MM_DD
-      YYYY_M_D"
-  [#^File file]
-  (let [date (nfirst (re-seq *post-filename-regexp* (.getName file)))]
-    (if date
-      (apply date-time (map #(Integer/parseInt %)
-                            ; last => filename
-                            (drop-last date)))
-      (last-modified-date file))))
 
 ; =get-content
 (defn get-content
@@ -157,15 +53,9 @@
     (merge
       option
       {:file file
-       :url  (get-post-url file)
-       :date (get-date file)
+       :url  (make-post-url file)
+       :date (get-date-from-file file)
        :lazy-content (delay (escape-content (get-content file)))})))
-
-; =post-file?
-(defn post-file?
-  "Check whether file is post file or not."
-  [#^File file]
-  (not= -1 (.indexOf (.getAbsolutePath file) *post-dir*)))
 
 ; =get-unfiltered-tags
 (defn get-unfiltered-tags
@@ -190,8 +80,6 @@
         (sort-alphabetically :name)
         distinct)))
 
-;;; TEMPLATES
-
 ; =generate-html
 (defn generate-html
   "Generate HTML from template."
@@ -201,7 +89,7 @@
         posts      (sort-by-date (get-posts))
         site-data  (merge *site* {:posts posts
                                   :tags  (get-counted-tags posts)
-                                  :date  (get-date (io/file filename))})
+                                  :date  (get-date-from-file (io/file filename))})
         empty-data (with-meta '("") site-data)]
 
     (apply-template tmpl-fn empty-data)))
@@ -215,7 +103,6 @@
                (layout-file? %))
           (find-files *template-dir*)))
 
-;; COMPILE
 ; =get-compile-fn
 (defn get-compile-fn
   "Get hiccup functon to compile sexp"
@@ -226,24 +113,6 @@
     "html4" #(html4 %)
     #(html %)))
 
-; =make-template-outpu-filename
-(defn make-template-output-filename
-  "Make template output filename from template name"
-  [tmpl-name]
-  (let [file (template-name->file tmpl-name)
-        date (get-date file)]
-    (if (post-file? file)
-      (format "%04d/%02d/%s" (year date) (month date)
-              (delete-extension
-                (last (first (re-seq *post-filename-regexp* tmpl-name)))))
-      (delete-extension tmpl-name))))
-
-; =make-tag-output-filename
-(defn make-tag-output-filename
-  "Make tag output filename from tag name"
-  [tag-name]
-  (str *tag-out-dir* tag-name ".html"))
-
 ; =generate-tag-html
 (defn generate-tag-html
   "Generate tag HTML from *tag-layout*."
@@ -251,37 +120,33 @@
   (let [tmpl-fn (load-template *tag-layout*)
         site-data (merge *site* {:posts (get-posts :tag [tag-name])
                                  :tag-name tag-name})
-        empty-data (with-meta '("") site-data)
-        ]
+        empty-data (with-meta '("") site-data)]
     (apply-template tmpl-fn empty-data)))
+
+; =compile*
+(defn- compile* [filename data]
+  (try
+    (let [compile-fn (-> data meta :format get-compile-fn)]
+      (write-data (str *public-dir* filename)
+                  (compile-fn data))
+      true)
+    (catch Exception e (.printStackTrace e) false)))
 
 ; =compile-tag
 (defn compile-tag
   "Compile a tag page.
   return true if compile succeeded."
   [tag-name]
-  (try
-    (let [data (generate-tag-html tag-name)
-          compile-fn (-> data meta :format get-compile-fn)]
-      (write-data
-        (str *public-dir* (make-tag-output-filename tag-name))
-        (compile-fn data))
-      true)
-    (catch Exception e (.printStackTrace e) false)))
+  (compile* (make-tag-output-filename tag-name)
+            (generate-tag-html tag-name)))
 
 ; =compile-template
 (defn compile-template
   "Compile a specified template.
   return true if compile succeeded."
   [tmpl-name]
-  (try
-      (let [data (generate-html tmpl-name)
-            compile-fn (-> data meta :format get-compile-fn)]
-        (write-data
-          (str *public-dir* (make-template-output-filename tmpl-name))
-          (compile-fn data))
-        true)
-    (catch Exception e (.printStackTrace e) false)))
+  (compile* (make-template-output-filename tmpl-name)
+            (generate-html tmpl-name)))
 
 ; =compile-all-tags
 (defn compile-all-tags

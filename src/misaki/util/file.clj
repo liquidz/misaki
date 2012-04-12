@@ -1,10 +1,15 @@
 (ns misaki.util.file
   "misaki: file control utility"
   (:use
-    [clj-time.coerce :only [from-long]])
+    [clj-time.coerce :only [from-long]]
+    [clj-time.core :only [date-time]])
   (:require
     [clojure.java.io :as io]
-    [clojure.string :as str]))
+    [clojure.string :as str])
+  (:import [java.io File]))
+
+(def ^:dynamic *post-filename-regexp*
+  #"(\d{4})[-_](\d{1,2})[-_](\d{1,2})[-_](.+)$")
 
 ; =find-files
 (defn find-files
@@ -12,7 +17,7 @@
   [dir]
   (file-seq (io/file dir)))
 
-; has-extension?
+; =has-extension?
 (defn has-extension?
   "check whether file has specified extension or not"
   [ext file]
@@ -29,10 +34,28 @@
 ; =last-modified-date
 (defn last-modified-date
   "Get last modified date from java.io.File"
-  [#^java.io.File file]
+  [#^File file]
   (from-long (.lastModified file)))
 
-; make-directories
+; =get-date-from-file
+(defn get-date-from-file
+  "Get date from filename
+  ex) YYYY-MM-DD
+      YYYY-M-D
+      YYYY_MM_DD
+      YYYY_M_D"
+  [#^File file]
+  (let [date (nfirst (re-seq *post-filename-regexp* (.getName file)))]
+    (if date
+      (apply date-time (map #(Integer/parseInt %)
+                            ; last => filename
+                            (drop-last date)))
+      (last-modified-date file))))
+
+(defn remove-date-from-name [filename]
+  (last (first (re-seq *post-filename-regexp* filename))))
+
+; =make-directories
 (defn make-directories
   "make directories which will place file"
   [filename]
@@ -50,3 +73,8 @@
   (make-directories filename)
   (with-open [w (io/writer filename)]
     (spit w data)))
+
+; =add-path-slash
+(defn add-path-slash
+  [path]
+  (if path (if (.endsWith path "/") path (str path "/"))))

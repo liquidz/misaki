@@ -1,5 +1,5 @@
 (ns misaki.test.layout
-  (:use [misaki core config]
+  (:use [misaki core template config]
         [hiccup.core :only [html]]
         misaki.test.common
         clojure.test))
