@@ -2,6 +2,7 @@
   "misaki: development server"
   (:use
     [misaki core config]
+    [misaki.util.file :only [add-path-slash]]
     watchtower.core
     [compojure.core :only [routes]]
     [compojure.route :only [files]]
@@ -9,9 +10,6 @@
 
 (defn- blue [s] (str "\033[36m" s "\033[0m"))
 (defn- red  [s] (str "\033[31m" s "\033[0m"))
-
-(defn- add-path-slash [path]
-  (if path (if (.endsWith path "/") path (str path "/"))))
 
 ; =print-result
 (defn print-result
