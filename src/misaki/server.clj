@@ -17,6 +17,15 @@
   [result]
   (println " ..." (if result (blue "DONE") (red "FAIL"))))
 
+; =do-all-compile
+(defn do-all-compile
+  "Compile all templates"
+  []
+  (print " * compiling all templates:")
+  (print-result (compile-all-templates))
+  (print " * compiling all tags:")
+  (print-result (compile-all-tags)))
+
 ; =do-compile
 (defn do-compile
   "Compile templte file and print status"
@@ -24,10 +33,7 @@
 
   (if (or (layout-file? file) (config-file? file))
     ; compile all templates if target file is layout or config
-    (do (print " * compiling all templates:")
-        (print-result (compile-all-templates))
-        (print " * compiling all tags:")
-        (print-result (compile-all-tags)))
+    (do-all-compile)
     ; compile target template
     (do (print " * compiling:" (.getName file))
         (print-result (compile-template (file->template-name file)))
@@ -46,10 +52,14 @@
 (defn start-watcher
   "Start watchtower watcher to compile changed templates"
   []
+  ; compile all templates at first
+  (do-all-compile)
+
   (watcher
     [*template-dir*
      (str *public-dir* "_config.clj")]
     (rate 50)
+    (change-first? false) ; do not compile each templates at first
     (file-filter ignore-dotfiles)
     (file-filter (extensions :clj))
     (on-change #(doseq [file %]

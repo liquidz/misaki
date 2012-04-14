@@ -6,6 +6,6 @@
                  [compojure "1.0.1"]
                  [ring/ring-jetty-adapter "1.0.1"]
                  [clj-time "0.3.7"]
-                 [watchtower "0.1.0"]]
+                 [uochan/watchtower "0.1.2"]]
   :dev-dependencies [[codox "0.4.1"]]
   :main misaki.server)
