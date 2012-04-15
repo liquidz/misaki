@@ -8,7 +8,7 @@
          :rel   "alternate"
          :title (:title site)
          :type  "application/atom-xml"}]
- (html/css
+ (css
    "http://fonts.googleapis.com/css?family=Josefin+Sans"
    "/css/prettify.css"
    "/css/main.css"
@@ -25,11 +25,11 @@
   contents
 
   [:footer {:class "footer"}
-   [:p {:class "right"} (html/link "Back to top" "#")]
-   [:p (html/link "@uochan" "http://twitter.com/uochan")
+   [:p {:class "right"} (link "Back to top" "#")]
+   [:p (link "@uochan" "http://twitter.com/uochan")
     "&nbsp;" 2012]]]
 
- (html/js
+ (js
    "/js/prettify.js"
    "/js/lang-clj.js"
    "/js/main.js")]

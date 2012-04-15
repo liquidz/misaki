@@ -42,6 +42,10 @@
     (is (.exists file))
     (.delete file)))
 
+(deftest* html-function-template-test
+  (is (= "<p class=\"paragraph\"><a href=\"link.html\">link</a></p>"
+         (html (generate-html "html.test.html.clj")))))
+
 
 ;;; SERVER
 (deftest* server-test

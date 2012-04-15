@@ -6,7 +6,7 @@
 
 ; site header
 [:header
- [:h1 (html/link (:site-title site) "/")]]
+ [:h1 (link (:site-title site) "/")]]
 
 
 [:article
@@ -18,7 +18,7 @@
 
  ; post tag
  [:div {:class "tag"}
-  (html/ul #(html/link (str "[" (:name %) "]") (:url %))
+  (ul #(link (str "[" (:name %) "]") (:url %))
            (:tag site))]
 
  ; contents

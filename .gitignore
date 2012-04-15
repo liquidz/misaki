@@ -8,8 +8,8 @@
 /.lein-deps-sum
 /blog
 /test/public
-/sample/2011
-/sample/2012
-/sample/tag
-/sample/atom.xml
-/sample/index.html
+/sample/public/2011
+/sample/public/2012
+/sample/public/tag
+/sample/public/atom.xml
+/sample/public/index.html

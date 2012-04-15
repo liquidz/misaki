@@ -1,6 +1,6 @@
 {
  ;; directory setting
- :public-dir   "./"
+ :public-dir   "public/"
  :tag-out-dir  "tag/"
  :template-dir "_template/"
  :post-dir     "_posts/"
