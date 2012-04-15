@@ -40,3 +40,9 @@
   (are [x y] (= x y)
     "<code class=\"prettyprint\">(+ 1 2)</code>" (html (code (+ 1 2)))
     "<code class=\"prettyprint\">(+ 1 2)</code>" (html (code "(+ 1 2)"))))
+
+(deftest paragraph-test
+  (are [x y] (= x (html y))
+    "<p class=\"paragraph\">hello</p>" (p "hello")
+    "<p class=\"paragraph\">helloworld</p>" (p "hello" "world")
+    "<p class=\"paragraph\">he<code class=\"prettyprint\">ll</code>o</p>" (p "he`ll`o")))

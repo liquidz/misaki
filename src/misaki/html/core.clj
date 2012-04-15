@@ -2,6 +2,7 @@
   "misaki: html utility for template"
   (:require
     [clojure.string :as str]
+    [hiccup.core :as hiccup]
     [hiccup.page-helpers :as page]))
 
 (defn- tag? [x]
@@ -77,4 +78,11 @@
      label]
     (js "//platform.twitter.com/widgets.js")])
 
+(defn- parse-paragraph [x]
+  (if (string? x)
+    (str/replace x #"`([^`]+)`" #(hiccup/html [:code {:class "prettyprint"} (second %)]))
+    x))
+
+(defn p [& s]
+  [:p {:class "paragraph"} (map parse-paragraph s)])
 
