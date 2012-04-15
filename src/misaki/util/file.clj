@@ -1,6 +1,7 @@
 (ns misaki.util.file
   "misaki: file control utility"
   (:use
+    [clojure.core.incubator :only [-?>>]]
     [clj-time.coerce :only [from-long]]
     [clj-time.core :only [date-time]])
   (:require
@@ -45,12 +46,12 @@
       YYYY_MM_DD
       YYYY_M_D"
   [#^File file]
-  (let [date (nfirst (re-seq *post-filename-regexp* (.getName file)))]
-    (if date
-      (apply date-time (map #(Integer/parseInt %)
-                            ; last => filename
-                            (drop-last date)))
-      (last-modified-date file))))
+  (if-let [date (-?>> (.getName file)
+                      (re-seq *post-filename-regexp*)
+                      nfirst
+                      drop-last)] ; last = filename
+    (apply date-time (map #(Integer/parseInt %) date))
+    (last-modified-date file)))
 
 (defn remove-date-from-name [filename]
   (last (first (re-seq *post-filename-regexp* filename))))
