@@ -12,7 +12,7 @@
   [:p {:style (str "font-size: " n "px; color: #" (int->color n) ";")} s])
 
 
-(html/ul
+(ul
   (map
     #(make-paragraph % "The quick brown fox jumps over the lazy dog")
     (range 10 *max*)))

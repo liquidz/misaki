@@ -125,28 +125,31 @@
 
 ; =compile*
 (defn- compile* [filename data]
-  (try
-    (let [compile-fn (-> data meta :format get-compile-fn)]
-      (write-data (str *public-dir* filename)
-                  (compile-fn data))
-      true)
-    (catch Exception e (.printStackTrace e) false)))
+  (let [compile-fn (-> data meta :format get-compile-fn)]
+    (write-data (str *public-dir* filename)
+                (compile-fn data))
+    true))
+
+(defmacro with-print-stack-trace [& body]
+  `(try ~@body (catch Exception e# (.printStackTrace e#) false)))
 
 ; =compile-tag
 (defn compile-tag
   "Compile a tag page.
   return true if compile succeeded."
   [tag-name]
-  (compile* (make-tag-output-filename tag-name)
-            (generate-tag-html tag-name)))
+  (with-print-stack-trace
+    (compile* (make-tag-output-filename tag-name)
+              (generate-tag-html tag-name))))
 
 ; =compile-template
 (defn compile-template
   "Compile a specified template.
   return true if compile succeeded."
   [tmpl-name]
-  (compile* (make-template-output-filename tmpl-name)
-            (generate-html tmpl-name)))
+  (with-print-stack-trace
+    (compile* (make-template-output-filename tmpl-name)
+              (generate-html tmpl-name))))
 
 ; =compile-all-tags
 (defn compile-all-tags

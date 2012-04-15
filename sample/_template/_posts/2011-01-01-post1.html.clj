@@ -4,50 +4,50 @@
 
 (h2 "Link")
 #-CLJ
-(html/link "label" "http://localhost/")
+(link "label" "http://localhost/")
 CLJ
-(html/link "label" "http://localhost/")
+(link "label" "http://localhost/")
 
 (h2 "Unordered list")
 #-CLJ
-(html/ul (range 3))
+(ul (range 3))
 CLJ
-(html/ul (range 3))
+(ul (range 3))
 
 (h2 "Definition list")
 #-CLJ
-(html/dl {:a 1, :b 2})
-(html/dl [:hello "world" :foo "bar"])
+(dl {:a 1, :b 2})
+(dl [:hello "world" :foo "bar"])
 CLJ
-(html/dl {:a 1, :b 2})
-(html/dl [:hello "world" :foo "bar"])
+(dl {:a 1, :b 2})
+(dl [:hello "world" :foo "bar"])
 
 (h2 "Block quote")
 #-CLJ
-(html/quote
+(blockquote
   "foo
   bar"
   [:a {:href "#"} "baz"])
 CLJ
-(html/quote
+(blockquote
   "foo
   bar"
   [:a {:href "#"} "baz"])
 
 (h2 "Inline code")
 #-CLJ
-(html/code "clojure.core/+")
+(code "clojure.core/+")
 CLJ
-(html/code "clojure.core/+")
+(code "clojure.core/+")
 
 (h2 "Source code")
 [:p "Comment out following code."]
+#-CLOJURE
 #-CLJ
-;#-CLJ
-;(let [msg "world"]
-;  (println "hello," msg))
-;CLJ
+(let [msg "world"]
+  (println "hello," msg))
 CLJ
+CLOJURE
 
 #-CLJ
 (let [msg "world"]
@@ -56,10 +56,10 @@ CLJ
 
 (h2 "JavaScript")
 #-CLJ
-(html/js "a.js" "b.js")
+(js "a.js" "b.js")
 CLJ
 
 (h2 "Style Sheet")
 #-CLJ
-(html/css "a.css" "b.css")
+(css "a.css" "b.css")
 CLJ

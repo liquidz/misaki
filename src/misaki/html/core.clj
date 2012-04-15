@@ -1,6 +1,5 @@
-(ns html
+(ns misaki.html.core
   "misaki: html utility for template"
-  (:refer-clojure :exclude [quote])
   (:require
     [clojure.string :as str]
     [hiccup.page-helpers :as page]))
@@ -45,11 +44,10 @@
   ([href] (link href href))
   ([label href] [:a {:href href} label]))
 
-(defn quote [& xs]
+(defn blockquote [& xs]
   [:blockquote
    (map
      #(if (string? %)
-        ;(interpose [:br] (map (fn [x] [:p x]) (str/split-lines %)))
         (map (fn [x] [:p x]) (str/split-lines %))
         [:p %])
      xs)])

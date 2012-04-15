@@ -1,5 +1,5 @@
 (ns misaki.test.html
-  (:use html
+  (:use misaki.html.core
         [hiccup.core :only [html]])
   (:use [clojure.test]))
 

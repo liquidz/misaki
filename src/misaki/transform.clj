@@ -22,6 +22,7 @@
     `(do
        ~@defs
        (fn [~'contents]
+         (use 'misaki.html.core)
          (let [~'site (meta ~'contents)]
            ~sexp)))))
 
