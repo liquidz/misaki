@@ -12,7 +12,14 @@
   "(name :a/b)  => \"b\"
    (name* :a/b) => \"a/b\""
   [k]
-  (apply str (rest (str k))))
+  (if (keyword? k) (apply str (rest (str k))) k))
+
+(defn- parse-inline-code [x]
+  (if (string? x)
+    (str/replace x #"`([^`]+)`" #(hiccup/html [:code {:class "prettyprint"} (second %)]))
+    x))
+
+(def ^:private parse-string parse-inline-code)
 
 (defn js [& args]
   (apply page/include-js args))
@@ -22,7 +29,7 @@
 
 
 (defn ul
-  ([ls] (ul identity ls))
+  ([ls] (ul parse-string ls))
   ([f ls]
    [:ul (for [x ls] [:li [:span (f x)]])]))
 
@@ -32,7 +39,8 @@
   (if (map? x) (dl (mapcat identity x))
     [:dl
      (map (fn [[dt dd]]
-            (list [:dt (name* dt)] [:dd dd]))
+            (list [:dt (parse-string (name* dt))]
+                  [:dd (parse-string dd)]))
           (partition 2 x))]))
 
 
@@ -43,7 +51,7 @@
 
 (defn link
   ([href] (link href href))
-  ([label href] [:a {:href href} label]))
+  ([label href] [:a {:href href} (parse-string label)]))
 
 (defn blockquote [& xs]
   [:blockquote
@@ -63,7 +71,7 @@
     (if head [:thead [:tr (for [h head] [:th h])]])
     [:tbody
      (for [body bodies]
-       [:tr (for [b body] [:td b])])]]))
+       [:tr (for [b body] [:td (parse-string b)])])]]))
 
 
 (defn links [& title-url-pairs]
@@ -78,11 +86,7 @@
      label]
     (js "//platform.twitter.com/widgets.js")])
 
-(defn- parse-paragraph [x]
-  (if (string? x)
-    (str/replace x #"`([^`]+)`" #(hiccup/html [:code {:class "prettyprint"} (second %)]))
-    x))
 
 (defn p [& s]
-  [:p {:class "paragraph"} (map parse-paragraph s)])
+  [:p {:class "paragraph"} (map parse-string s)])
 

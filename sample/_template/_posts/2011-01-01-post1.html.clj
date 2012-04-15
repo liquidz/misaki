@@ -5,8 +5,14 @@
 (h2 "Link")
 #-CLJ
 (link "label" "http://localhost/")
+(link "http://localhost/")
+(link "`code`" "http://localhost/")
 CLJ
 (link "label" "http://localhost/")
+[:br]
+(link "http://localhost/")
+[:br]
+(link "`code`" "http://localhost/")
 
 (h2 "Unordered list")
 #-CLJ
@@ -17,10 +23,10 @@ CLJ
 (h2 "Definition list")
 #-CLJ
 (dl {:a 1, :b 2})
-(dl [:hello "world" :foo "bar"])
+(dl [:hello "world" :foo "`bar`"])
 CLJ
 (dl {:a 1, :b 2})
-(dl [:hello "world" :foo "bar"])
+(dl [:hello "world" :foo "`bar`"])
 
 (h2 "Block quote")
 #-CLJ
