@@ -6,7 +6,6 @@
     [hiccup.core :only [html]]
     [hiccup.page-helpers :only [html5 xhtml html4]])
   (:require
-    html
     conv
     [clojure.string :as str]
     [clojure.java.io :as io])
