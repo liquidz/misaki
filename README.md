@@ -1,4 +1,5 @@
 ![misaki logo](https://github.com/liquidz/misaki/raw/master/sample/public/img/logo.png)
+
 [![Build Status](https://secure.travis-ci.org/liquidz/misaki.png?branch=master)](http://travis-ci.org/liquidz/misaki)
 
 misaki is a [Jekyll](https://github.com/mojombo/jekyll) inspired static site generator in Clojure.
