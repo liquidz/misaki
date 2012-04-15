@@ -2,6 +2,8 @@
   "misaki: configuration"
   (:use
     misaki.util.file
+    [clojure.core.incubator :only [-?>>]]
+    [clj-time.core :only [date-time year month]]
     [clj-time.core :only [month year]])
   (:require
     [clojure.string :as str]
@@ -30,10 +32,12 @@
          *tag-layout*)
 (declare ^{:dynamic true, :doc "Default site data."}
          *site*)
-(declare ^{:dynamic true, :doc "Template names which compiled with post templates"}
+(declare ^{:dynamic true, :doc "Template names which compiled with post templates."}
          *compile-with-post*)
-(declare ^{:dynamic true, :doc "Site language"}
+(declare ^{:dynamic true, :doc "Site language."}
          *lang*)
+(declare ^{:dynamic true, :doc "Regexp for parse post filename."}
+         *post-filename-regexp*)
 
 ; =with-config
 (defmacro with-config
@@ -57,7 +61,10 @@
                             (:tag-layout config#) ".clj")
         *lang*         (get config# :lang "en")
         *site*         (get config# :site {})
-        *compile-with-post* (:compile-with-post config#)]
+        *compile-with-post* (:compile-with-post config#)
+        *post-filename-regexp* (get config# :post-filename-regexp
+                                 #"(\d{4})[-_](\d{1,2})[-_](\d{1,2})[-_](.+)$")
+        ]
        ~@body)))
 
 ; =config-file?
@@ -93,6 +100,27 @@
   "Convert template name to java.io.File"
   [tmpl-name]
   (io/file (str *template-dir* tmpl-name)))
+
+; =get-date-from-file
+(defn get-date-from-file
+  "Get date from filename
+  ex) YYYY-MM-DD
+      YYYY-M-D
+      YYYY_MM_DD
+      YYYY_M_D"
+  [#^File file]
+  (if-let [date (-?>> (.getName file)
+                      (re-seq *post-filename-regexp*)
+                      nfirst
+                      drop-last)] ; last = filename
+    (apply date-time (map #(Integer/parseInt %) date))
+    (last-modified-date file)))
+
+; =remove-date-from-name
+(defn remove-date-from-name
+  "Remove date string from filename"
+  [filename]
+  (last (first (re-seq *post-filename-regexp* filename))))
 
 ; =make-tag-output-filename
 (defn make-tag-output-filename

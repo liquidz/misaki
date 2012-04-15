@@ -117,7 +117,7 @@
   "Generate tag HTML from *tag-layout*."
   [tag-name]
   (let [tmpl-fn (load-template *tag-layout*)
-        site-data (merge *site* {:posts (get-posts :tag [tag-name])
+        site-data (merge *site* {:posts (sort-by-date (get-posts :tag [tag-name]))
                                  :tag-name tag-name})
         empty-data (with-meta '("") site-data)]
     (apply-template tmpl-fn empty-data)))

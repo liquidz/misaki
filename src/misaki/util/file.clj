@@ -1,16 +1,14 @@
 (ns misaki.util.file
   "misaki: file control utility"
   (:use
-    [clojure.core.incubator :only [-?>>]]
-    [clj-time.coerce :only [from-long]]
-    [clj-time.core :only [date-time]])
+    [clj-time.coerce :only [from-long]])
   (:require
     [clojure.java.io :as io]
     [clojure.string :as str])
   (:import [java.io File]))
 
-(def ^:dynamic *post-filename-regexp*
-  #"(\d{4})[-_](\d{1,2})[-_](\d{1,2})[-_](.+)$")
+;#(def ^:dynamic *post-filename-regexp*
+;#  #"(\d{4})[-_](\d{1,2})[-_](\d{1,2})[-_](.+)$")
 
 ; =find-files
 (defn find-files
@@ -37,24 +35,6 @@
   "Get last modified date from java.io.File"
   [#^File file]
   (from-long (.lastModified file)))
-
-; =get-date-from-file
-(defn get-date-from-file
-  "Get date from filename
-  ex) YYYY-MM-DD
-      YYYY-M-D
-      YYYY_MM_DD
-      YYYY_M_D"
-  [#^File file]
-  (if-let [date (-?>> (.getName file)
-                      (re-seq *post-filename-regexp*)
-                      nfirst
-                      drop-last)] ; last = filename
-    (apply date-time (map #(Integer/parseInt %) date))
-    (last-modified-date file)))
-
-(defn remove-date-from-name [filename]
-  (last (first (re-seq *post-filename-regexp* filename))))
 
 ; =make-directories
 (defn make-directories

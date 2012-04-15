@@ -14,6 +14,8 @@
  ;; templates which compiled with post data
  :compile-with-post ["gen_test.html.clj"]
 
+ :post-filename-regexp #"(\d{4})[.](\d{1,2})[.](\d{1,2})[-_](.+)$"
+
  ;; highlight setting
  :code-highlight {:CLJ "lang-clj"}
  }
