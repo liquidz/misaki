@@ -54,6 +54,14 @@ CLOJURE
   (println "hello," msg))
 CLJ
 
+(h2 "Paragraph")
+#-CLJ
+(p "hello, world")
+(p "paragraph with `inline` code")
+CLJ
+(p "hello, world")
+(p "paragraph with `inline` code")
+
 (h2 "JavaScript")
 #-CLJ
 (js "a.js" "b.js")
