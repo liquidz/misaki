@@ -14,12 +14,23 @@
   [k]
   (if (keyword? k) (apply str (rest (str k))) k))
 
-(defn- parse-inline-code [x]
-  (if (string? x)
-    (str/replace x #"`([^`]+)`" #(hiccup/html [:code {:class "prettyprint"} (second %)]))
-    x))
+(defmacro defparser [name str-arg & body]
+  `(defn- ~name [~str-arg]
+     (if (string? ~str-arg)
+       (do ~@body)
+       ~str-arg)))
 
-(def ^:private parse-string parse-inline-code)
+(defparser parse-emphasized x
+  (str/replace x #"\*(.+?)\*" #(hiccup/html [:em (second %)])))
+
+(defparser parse-strong x
+  (str/replace x #"\*\*(.+?)\*\*" #(hiccup/html [:strong (second %)])))
+
+(defparser parse-inline-code x
+  (str/replace x #"`([^`]+)`" #(hiccup/html [:code {:class "prettyprint"} (second %)])))
+
+(def ^:private parse-string
+  (comp parse-emphasized parse-strong parse-inline-code))
 
 (defn js [& args]
   (apply page/include-js args))

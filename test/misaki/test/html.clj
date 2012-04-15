@@ -58,4 +58,7 @@
   (are [x y] (= x (html y))
     "<p class=\"paragraph\">hello</p>" (p "hello")
     "<p class=\"paragraph\">helloworld</p>" (p "hello" "world")
-    "<p class=\"paragraph\">he<code class=\"prettyprint\">ll</code>o</p>" (p "he`ll`o")))
+    "<p class=\"paragraph\">he<code class=\"prettyprint\">ll</code>o</p>" (p "he`ll`o")
+    "<p class=\"paragraph\">he<strong>ll</strong>o</p>" (p "he**ll**o")
+    "<p class=\"paragraph\">he<em>ll</em>o</p>" (p "he*ll*o")
+    "<p class=\"paragraph\"><strong>he</strong>l<em>lo</em></p>" (p "**he**l*lo*")))
