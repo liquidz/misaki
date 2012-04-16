@@ -11,6 +11,8 @@
   :dependencies ~(conj deps '[org.clojure/clojure "1.3.0"])
   :dev-dependencies [[lein-multi "1.1.0"]
                      [codox "0.4.1"]]
-  :multi-deps {"1.2"  ~(conj deps '[org.clojure/clojure "1.2.1"])
-               "1.4B" ~(conj deps '[org.clojure/clojure "1.4.0-beta4"])}
+  :repositories [["sonatype-snapshots" "https://oss.sonatype.org/content/repositories/snapshots/"]]
+  :multi-deps {"1.2.1"  ~(conj deps '[org.clojure/clojure "1.2.1"])
+               "1.4" ~(conj deps '[org.clojure/clojure "1.4.0"])
+               "1.5S" ~(conj deps '[org.clojure/clojure "1.5.0-master-SNAPSHOT"])}
   :main misaki.server)
