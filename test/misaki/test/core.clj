@@ -51,7 +51,7 @@
 (deftest* server-test
   (testing "compile with post"
     (do-compile (io/file (str *post-dir* "2011.01.01-foo.html.clj")))
-    (let [post-file (io/file (str *public-dir* "2011/01/foo.html"))
+    (let [post-file (io/file (str *public-dir* "2011-01/foo.html"))
           test-file (io/file (str *public-dir* "gen_test.html"))]
       (is (.exists post-file))
       (.delete post-file)

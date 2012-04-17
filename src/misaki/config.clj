@@ -2,8 +2,8 @@
   "misaki: configuration"
   (:use
     misaki.util.file
-    [clojure.core.incubator :only [-?>>]]
-    [clj-time.core :only [date-time year month]]
+    [clojure.core.incubator :only [-?> -?>>]]
+    [clj-time.core :only [date-time year month day]]
     [clj-time.core :only [month year]])
   (:require
     [clojure.string :as str]
@@ -38,6 +38,8 @@
          *lang*)
 (declare ^{:dynamic true, :doc "Regexp for parse post filename."}
          *post-filename-regexp*)
+(declare ^{:dynamic true, :doc "Format rule for post filename."}
+         *post-filename-format*)
 
 ; =with-config
 (defmacro with-config
@@ -64,7 +66,8 @@
         *compile-with-post* (:compile-with-post config#)
         *post-filename-regexp* (get config# :post-filename-regexp
                                  #"(\d{4})[-_](\d{1,2})[-_](\d{1,2})[-_](.+)$")
-        ]
+        *post-filename-format* (get config# :post-filename-format
+                                 "%year/%month/%file")]
        ~@body)))
 
 ; =config-file?
@@ -103,7 +106,7 @@
 
 ; =get-date-from-file
 (defn get-date-from-file
-  "Get date from filename
+  "Get date from filename with *post-filename-regexp*
   ex) YYYY-MM-DD
       YYYY-M-D
       YYYY_MM_DD
@@ -133,11 +136,14 @@
   "Make template output filename from template name"
   [tmpl-name]
   (let [file (template-name->file tmpl-name)
-        date (get-date-from-file file)]
+        date (get-date-from-file file)
+        filename (-?> tmpl-name remove-date-from-name delete-extension)]
     (if (post-file? file)
-      (format "%04d/%02d/%s" (year date) (month date)
-              (delete-extension
-                (remove-date-from-name tmpl-name)))
+      (-> *post-filename-format*
+        (str/replace #"%year"  (-> date year str))
+        (str/replace #"%month" (->> date month (format "%02d")))
+        (str/replace #"%day"   (->> date day (format "%02d")))
+        (str/replace #"%file"  filename))
       (delete-extension tmpl-name))))
 
 ; =make-post-url
