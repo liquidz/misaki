@@ -10,36 +10,45 @@
     [clojure.java.io :as io])
   (:import [java.io File]))
 
+;; ## Declarations
+
+;; Blog base directory
 (def ^:dynamic *base-dir* "./")
-
+;; Config filename
 (def ^:dynamic *config-file* "_config.clj")
-(defn load-config []
-  (read-string (slurp (str *base-dir* *config-file*))))
 
-(declare ^{:dynamic true, :doc "Public directory path. Compiled html is placed here."}
-         *public-dir*)
-(declare ^{:dynamic true, :doc "Template directory path."}
-         *template-dir*)
-(declare ^{:dynamic true, :doc "Posts placed directory name."}
-         *post*)
-(declare ^{:dynamic true, :doc "Layouts placed directory path."}
-         *layout-dir*)
-(declare ^{:dynamic true, :doc "Posts placed directory path."}
-         *post-dir*)
-(declare ^{:dynamic true, :doc "Tag index placed directory path."}
-         *tag-out-dir*)
-(declare ^{:dynamic true, :doc "Tag layout name."}
-         *tag-layout*)
-(declare ^{:dynamic true, :doc "Default site data."}
-         *site*)
-(declare ^{:dynamic true, :doc "Template names which compiled with post templates."}
-         *compile-with-post*)
-(declare ^{:dynamic true, :doc "Site language."}
-         *lang*)
-(declare ^{:dynamic true, :doc "Regexp for parse post filename."}
-         *post-filename-regexp*)
-(declare ^{:dynamic true, :doc "Format rule for post filename."}
-         *post-filename-format*)
+;; Public directory path. Compiled html is placed here.
+(declare ^:dynamic *public-dir*)
+;; Template directory path.
+(declare ^:dynamic *template-dir*)
+;; Posts placed directory name.
+(declare ^:dynamic *post*)
+;; Layouts placed directory path.
+(declare ^:dynamic *layout-dir*)
+;; Posts placed directory path.
+(declare ^:dynamic *post-dir*)
+;; Tag index placed directory path.
+(declare ^:dynamic *tag-out-dir*)
+;; Tag layout name.
+(declare ^:dynamic *tag-layout*)
+;; Default site data.
+(declare ^:dynamic *site*)
+;; Template names which compiled with post templates.
+(declare ^:dynamic *compile-with-post*)
+;; Site language.
+(declare ^:dynamic *lang*)
+;; Regexp for parse post filename.
+(declare ^:dynamic *post-filename-regexp*)
+;; Format rule for post filename.
+(declare ^:dynamic *post-filename-format*)
+
+;; ## Config Data Wrapper
+
+; =load-config
+(defn load-config
+  "Load and read config file"
+  []
+  (read-string (slurp (str *base-dir* *config-file*))))
 
 ; =with-config
 (defmacro with-config
@@ -70,6 +79,8 @@
                                  "%year/%month/%file")]
        ~@body)))
 
+;; ## File Cheker
+
 ; =config-file?
 (defn config-file?
   "Check whether file is config file or not."
@@ -88,12 +99,14 @@
   [#^File file]
   (not= -1 (.indexOf (.getAbsolutePath file) *post-dir*)))
 
+;; ## file <-> template converter
+
 ; =file->template-name
 (defn file->template-name
   "Convert java.io.File to template name.
 
-  ex) File<aa/bb/cc/template/index.clj>
-      => template/index.clj"
+      File<aa/bb/cc/template/index.clj>
+      ;=> template/index.clj"
   [file]
   (last (str/split (.getAbsolutePath file)
                    (re-pattern *template-dir*))))
@@ -104,13 +117,18 @@
   [tmpl-name]
   (io/file (str *template-dir* tmpl-name)))
 
+;; ## Filename Date Utility
+
 ; =get-date-from-file
 (defn get-date-from-file
   "Get date from filename with *post-filename-regexp*
-  ex) YYYY-MM-DD
-      YYYY-M-D
-      YYYY_MM_DD
-      YYYY_M_D"
+
+   By default:
+
+       YYYY-MM-DD
+       YYYY-M-D
+       YYYY_MM_DD
+       YYYY_M_D"
   [#^File file]
   (if-let [date (-?>> (.getName file)
                       (re-seq *post-filename-regexp*)
@@ -124,6 +142,8 @@
   "Remove date string from filename"
   [filename]
   (last (first (re-seq *post-filename-regexp* filename))))
+
+;; ## Filename and URL generater
 
 ; =make-tag-output-filename
 (defn make-tag-output-filename

@@ -13,7 +13,23 @@
 
 (declare generate-html)
 
-;;; POSTS
+;; ### Utilities
+
+(defmacro with-print-stack-trace [& body]
+  `(try ~@body (catch Exception e# (.printStackTrace e#) false)))
+
+; =escape-content
+(defn escape-content
+  "Escape content"
+  [content]
+  (-> content
+      (str/replace #"&" "&amp;")
+      (str/replace #"\"" "&quot;")
+      (str/replace #"<" "&lt;")
+      (str/replace #">" "&gt;")))
+
+;; ## Templates
+
 ; =get-post-options
 (defn get-post-options
   "Get post's template options from post file(java.io.File)"
@@ -29,19 +45,11 @@
   (html (generate-html (file->template-name file)
                        :allow-layout? false)))
 
-; =escape-content
-(defn escape-content
-  "Escape content"
-  [content]
-  (-> content
-      (str/replace #"&" "&amp;")
-      (str/replace #"\"" "&quot;")
-      (str/replace #"<" "&lt;")
-      (str/replace #">" "&gt;")))
-
 ; =get-posts
 (defn get-posts
-  "Get posts data from *post-dir* directory."
+  "Get posts data from *post-dir* directory.
+  
+  Content data is delayed."
   [& {:keys [tag]}]
   (for [file  (find-files *post-dir*)
         :let  [option (get-post-options file)
@@ -55,6 +63,8 @@
        :url  (make-post-url file)
        :date (get-date-from-file file)
        :lazy-content (delay (escape-content (get-content file)))})))
+
+;; ## Tags
 
 ; =get-unfiltered-tags
 (defn get-unfiltered-tags
@@ -79,6 +89,8 @@
         (sort-alphabetically :name)
         distinct)))
 
+;; ## S-exp HTML Generater
+
 ; =generate-html
 (defn generate-html
   "Generate HTML from template."
@@ -93,14 +105,17 @@
 
     (apply-template tmpl-fn empty-data)))
 
-; =get-template-files
-(defn get-template-files
-  "get all template files(java.io.File) from *template-dir*"
-  []
-  (remove #(or (.isDirectory %)
-               (not (has-extension? ".clj" %))
-               (layout-file? %))
-          (find-files *template-dir*)))
+; =generate-tag-html
+(defn generate-tag-html
+  "Generate tag HTML from *tag-layout*."
+  [tag-name]
+  (let [tmpl-fn (load-template *tag-layout*)
+        site-data (merge *site* {:posts (sort-by-date (get-posts :tag [tag-name]))
+                                 :tag-name tag-name})
+        empty-data (with-meta '("") site-data)]
+    (apply-template tmpl-fn empty-data)))
+
+;; ## HTML Compiler
 
 ; =get-compile-fn
 (defn get-compile-fn
@@ -112,16 +127,6 @@
     "html4" #(html4 %)
     #(html %)))
 
-; =generate-tag-html
-(defn generate-tag-html
-  "Generate tag HTML from *tag-layout*."
-  [tag-name]
-  (let [tmpl-fn (load-template *tag-layout*)
-        site-data (merge *site* {:posts (sort-by-date (get-posts :tag [tag-name]))
-                                 :tag-name tag-name})
-        empty-data (with-meta '("") site-data)]
-    (apply-template tmpl-fn empty-data)))
-
 ; =compile*
 (defn- compile* [filename data]
   (let [compile-fn (-> data meta :format get-compile-fn)]
@@ -129,12 +134,10 @@
                 (compile-fn data))
     true))
 
-(defmacro with-print-stack-trace [& body]
-  `(try ~@body (catch Exception e# (.printStackTrace e#) false)))
-
 ; =compile-tag
 (defn compile-tag
   "Compile a tag page.
+
   return true if compile succeeded."
   [tag-name]
   (with-print-stack-trace
@@ -144,6 +147,7 @@
 ; =compile-template
 (defn compile-template
   "Compile a specified template.
+
   return true if compile succeeded."
   [tmpl-name]
   (with-print-stack-trace
@@ -153,9 +157,19 @@
 ; =compile-all-tags
 (defn compile-all-tags
   "Compile all tag page.
+
   return true if all compile succeeded."
   []
   (every? #(compile-tag (:name %)) (get-tags)))
+
+; =get-template-files
+(defn get-template-files
+  "get all template files(java.io.File) from *template-dir*"
+  []
+  (remove #(or (.isDirectory %)
+               (not (has-extension? ".clj" %))
+               (layout-file? %))
+          (find-files *template-dir*)))
 
 ; =compile-all-templates
 (defn compile-all-templates

@@ -1,3 +1,5 @@
+
+
 (ns conv
   "Data converting utilities for template"
   (:require
@@ -5,14 +7,23 @@
     [clj-time.core :as t]
     [clj-time.format :as fmt]))
 
+;; ## Converter for org.joda.time.DateTime
+
 ; =date->xml-schema
-(defn date->xml-schema [date]
+(defn date->xml-schema
+  "Convert org.joda.time.DateTime to XML Schema"
+  [date]
   (fmt/unparse
     (fmt/formatter "yyyy-MM-dd'T'HH:mm:ss")
     date))
 
 ; =date->string
-(defn date->string [date]
+(defn date->string
+  "Convert org.joda.time.DateTime to String
+
+      (date->string (clj-time.core/now))
+      ;=> \"01 Jan 2012\""
+  [date]
   (str/join
     " "
     [(.toString date "dd")
@@ -21,12 +32,21 @@
           (t/month date))
      (.toString date "yyyy")]))
 
-(defn year [date]
+; =year
+(defn year
+  "Get year from org.joda.time.DateTime"
+  [date]
   (t/year date))
 
-(defn month [date]
+; =month
+(defn month
+  "Get month from org.joda.time.DateTime"
+  [date]
   (format "%02d" (t/month date)))
 
-(defn day [date]
+; =day
+(defn day
+  "Get day from org.joda.time.DateTime"
+  [date]
   (format "%02d" (t/day date)))
 
