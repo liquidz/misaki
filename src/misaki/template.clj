@@ -5,13 +5,12 @@
     [clojure.core.incubator :only [-?>]])
   (:require [clojure.string :as str]))
 
-; =parse-tag-option
-(defn- parse-tag-option [option]
-  (if-let [tags (-?> option :tag (str/split #"[\s,]+"))]
-    (assoc option :tag (for [tag (distinct tags)]
-                         {:name tag
-                          :url  (str "/" (make-tag-output-filename tag))}))
-    option))
+; =parse-tag
+(defn- parse-tag [tag-data]
+  (if-let [tags (and tag-data (str/split tag-data #"[\s,]+"))]
+    (for [tag (distinct tags)]
+      {:name tag
+       :url  (str "/" (make-tag-output-filename tag))})))
 
 ; =parse-template-options
 (defn parse-template-options
@@ -27,10 +26,9 @@
   (let [lines    (map str/trim (str/split-lines data))
         comments (filter #(= 0 (.indexOf % ";")) lines)
         params   (remove nil? (map #(re-seq #"^;+\s*@(\w+)\s+(.+)$" %) comments))
-        option   (into {} (for [[[_ k v]] params] [(keyword k) v]))]
-
-    (-> option
-        parse-tag-option)))
+        option   (into {} (for [[[_ k v]] params] [(keyword k) v]))
+        tags     (-?> option :tag parse-tag)]
+    (assoc option :tag tags)))
 
 ; =apply-template
 (defn apply-template
