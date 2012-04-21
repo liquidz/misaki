@@ -3,7 +3,9 @@
   (:use [clj-time.core :only [after?]]))
 
 ; =sort-by-date
-(defn sort-by-date [posts]
+(defn sort-by-date
+  "Sort post list with org.joda.time.DateTime"
+  [posts]
   (sort #(after? (:date %) (:date %2)) posts))
 
 ; =sort-alphabetically

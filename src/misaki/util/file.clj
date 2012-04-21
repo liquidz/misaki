@@ -9,25 +9,25 @@
 
 ; =find-files
 (defn find-files
-  "find files recursively"
+  "Find files in `dir` recursively."
   [dir]
   (file-seq (io/file dir)))
 
 ; =has-extension?
 (defn has-extension?
-  "check whether file has specified extension or not"
+  "Check whether file has specified extension or not."
   [ext file]
   (.endsWith (.getName file) ext))
 
 ; =filter-extension
 (defn filter-extension
-  "filter file list with extension"
+  "Filter file list with `has-extension?`."
   [ext file-list]
   (filter (partial has-extension? ext) file-list))
 
 ; =delete-extension
 (defn delete-extension
-  "delete file extension"
+  "Delete file extension."
   [x]
   (if (= java.io.File (class x))
     (delete-extension (.getName x))
@@ -41,7 +41,7 @@
 
 ; =make-directories
 (defn make-directories
-  "make directories which will place file"
+  "Make directories which will place file."
   [filename]
   (let [paths (drop-last (str/split filename #"/"))]
     (dotimes [n (count paths)]
@@ -60,5 +60,6 @@
 
 ; =add-path-slash
 (defn add-path-slash
+  "Add slash to end of text."
   [path]
   (if path (if (.endsWith path "/") path (str path "/"))))

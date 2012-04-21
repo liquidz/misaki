@@ -1,22 +1,29 @@
 (ns misaki.transform
   "misaki: data transform functions")
 
-(defn def? [x]
-  (and (seq? x) (some #(= % (first x))'(def defn))))
+;; ## Transform Utilities
 
+; =def?
+(defn def?
+  "Check whether `def` or `defn` s-exp or not."
+  [x]
+  (and (seq? x) (some #(= % (first x)) '(def defn))))
+
+; =split-with-definition
+;; Split s-exp with def?
 (def split-with-definition
   (juxt (partial filter def?)
         (partial remove def?)))
 
 ; =wrap-list
 (defn wrap-list
-  "wrap slurped data as a list"
+  "Wrap slurped data as a list."
   [slurped-data]
   (str "(list " slurped-data " )"))
 
 ; =wrap-function
 (defn wrap-function
-  "wrap s-exp as a template function"
+  "Wrap s-exp as a template function."
   [sexp]
   (let [[defs sexp] (split-with-definition sexp)]
     `(do
@@ -26,21 +33,23 @@
          (let [~'site (meta ~'contents)]
            ~sexp)))))
 
+;; ## Transformer
+
 ; =*transformers*
 (def ^{:dynamic true
-       :doc "transform functions"}
+       :doc "Transform functions"}
   *transformers*
   (atom [wrap-list read-string wrap-function eval]))
 
 ; =add-transformer!
 (defn add-transformer!
-  "add transform function to *transformers*"
+  "Add transform function to *transformers*."
   [f]
   (swap! *transformers* conj f))
 
 ; =transform
 (defn transform
-  "transform slurped data with *transformers*"
+  "Transform slurped data with *transformers*."
   [slurped-data]
   (reduce #(%2 %) slurped-data @*transformers*))
 

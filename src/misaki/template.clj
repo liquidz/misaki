@@ -14,14 +14,14 @@
 
 ; =parse-template-options
 (defn parse-template-options
-  "Parse template options
-
+  "Parse template options from slurped data.
   ex) template file
+
       ; @layout default
       ; @title hello, world
       [:h1 \"hello world\"]
 
-      => {:layout \"default\", :title \"hello, world\"}"
+      ;=> {:layout \"default\", :title \"hello, world\"}"
   [data]
   (let [lines    (map str/trim (str/split-lines data))
         comments (filter #(= 0 (.indexOf % ";")) lines)
@@ -41,7 +41,9 @@
 ; =load-template
 (defn load-template
   "Load template file, and transform to function.
-  Template options are contained as meta data."
+  Template options are contained as meta data.
+  
+  If `allow-layout?` option is specified, you can select whether evaluate layout or not."
   ([filename] (load-template filename true))
   ([filename allow-layout?]
    (let [data   (slurp filename)

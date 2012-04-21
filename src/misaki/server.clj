@@ -1,5 +1,5 @@
 (ns misaki.server
-  "misaki: development server"
+  "misaki: Development server"
   (:use
     [misaki core config]
     [misaki.util.file :only [add-path-slash]]
@@ -13,9 +13,11 @@
 
 ; =print-result
 (defn print-result
-  "Print compile result"
+  "Print colored compile result."
   [result]
   (println " ..." (if result (blue "DONE") (red "FAIL"))))
+
+;; ## Dev Compiler
 
 ; =do-all-compile
 (defn do-all-compile
@@ -48,6 +50,8 @@
               (print " * compiling tag:" tag)
               (print-result (compile-tag tag))))))))
 
+;; ## Template Watcher
+
 ; =start-watcher
 (defn start-watcher
   "Start watchtower watcher to compile changed templates"
@@ -65,6 +69,8 @@
     (on-change #(doseq [file %]
                   ; use `wrap-config` to apply config file updates
                   (with-config (do-compile file))))))
+
+;; ## main
 
 ; =main
 (defn -main [& [dir]]

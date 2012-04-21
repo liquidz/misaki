@@ -43,7 +43,6 @@
 ; =get-posts
 (defn get-posts
   "Get posts data from *post-dir* directory.
-
   Content data is delayed."
   [& {:keys [tag]}]
   (for [file  (filter-extension ".clj" (find-files *post-dir*))
@@ -113,7 +112,7 @@
 
 ; =get-compile-fn
 (defn get-compile-fn
-  "Get hiccup functon to compile sexp"
+  "Get hiccup functon to compile sexp."
   [fmt]
   (case fmt
     "html5" #(html5 {:lang *lang*} %)
@@ -131,7 +130,6 @@
 ; =compile-tag
 (defn compile-tag
   "Compile a tag page.
-
   return true if compile succeeded."
   [tag-name]
   (try
@@ -141,8 +139,7 @@
 
 ; =compile-template
 (defn compile-template
-  "Compile a specified template.
-
+  "Compile a specified template, and write compiled data to *public-dir*.
   return true if compile succeeded."
   [tmpl-name]
   (try
@@ -153,14 +150,13 @@
 ; =compile-all-tags
 (defn compile-all-tags
   "Compile all tag page.
-
   return true if all compile succeeded."
   []
   (every? #(compile-tag (:name %)) (get-tags)))
 
 ; =get-template-files
 (defn get-template-files
-  "get all template files(java.io.File) from *template-dir*"
+  "Get all template files(java.io.File) from *template-dir*."
   []
   (remove layout-file?
           (filter-extension ".clj" (find-files *template-dir*))))

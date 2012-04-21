@@ -157,11 +157,18 @@
 
 
 (defn links
-  "Make link list"
+  "Make link list
+
+      (links \"aa\" \"aa.html\"
+             \"bb\" \"bb.html\")
+      ;=> <ul><li><span><a href=\"aa.html\">aa</a></span></li>
+              <li><span><a href=\"bb.html\">bb</a></span></li></ul>"
   [& title-url-pairs]
   (ul #(apply link %) (partition 2 title-url-pairs)))
 
-(defn tweet-button [& {:keys [id label lang] :or {id "tweet_button", label "Tweet", lang "en"}}]
+(defn tweet-button
+  "Make tweet button"
+  [& {:keys [id label lang] :or {id "tweet_button", label "Tweet", lang "en"}}]
   [:div {:id id}
     [:a {:href "https://twitter.com/share"
          :class "twitter-share-button"
@@ -171,6 +178,8 @@
     (js "//platform.twitter.com/widgets.js")])
 
 
-(defn p [& s]
+(defn p
+  "Make paragraph"
+  [& s]
   [:p {:class "paragraph"} (map parse-string s)])
 
