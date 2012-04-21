@@ -12,34 +12,34 @@
 ;; ## Declarations
 
 ;; Blog base directory
-(def ^:dynamic *base-dir* "./")
+(def ^{:dynamic true} *base-dir* "./")
 ;; Config filename
-(def ^:dynamic *config-file* "_config.clj")
+(def ^{:dynamic true} *config-file* "_config.clj")
 
 ;; Public directory path. Compiled html is placed here.
-(declare ^:dynamic *public-dir*)
+(declare ^{:dynamic true} *public-dir*)
 ;; Template directory path.
-(declare ^:dynamic *template-dir*)
+(declare ^{:dynamic true} *template-dir*)
 ;; Posts placed directory name.
-(declare ^:dynamic *post*)
+(declare ^{:dynamic true} *post*)
 ;; Layouts placed directory path.
-(declare ^:dynamic *layout-dir*)
+(declare ^{:dynamic true} *layout-dir*)
 ;; Posts placed directory path.
-(declare ^:dynamic *post-dir*)
+(declare ^{:dynamic true} *post-dir*)
 ;; Tag index placed directory path.
-(declare ^:dynamic *tag-out-dir*)
+(declare ^{:dynamic true} *tag-out-dir*)
 ;; Tag layout name.
-(declare ^:dynamic *tag-layout*)
+(declare ^{:dynamic true} *tag-layout*)
 ;; Default site data.
-(declare ^:dynamic *site*)
+(declare ^{:dynamic true} *site*)
 ;; Template names which compiled with post templates.
-(declare ^:dynamic *compile-with-post*)
+(declare ^{:dynamic true} *compile-with-post*)
 ;; Site language.
-(declare ^:dynamic *lang*)
+(declare ^{:dynamic true} *lang*)
 ;; Regexp for parse post filename.
-(declare ^:dynamic *post-filename-regexp*)
+(declare ^{:dynamic true} *post-filename-regexp*)
 ;; Format rule for post filename.
-(declare ^:dynamic *post-filename-format*)
+(declare ^{:dynamic true} *post-filename-format*)
 
 ;; ## Config Data Wrapper
 
