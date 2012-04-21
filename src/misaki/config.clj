@@ -83,7 +83,7 @@
 ; =config-file?
 (defn config-file?
   "Check whether file is config file or not."
-  [file]
+  [#^File file]
   (= *config-file* (.getName file)))
 
 ; =layout-file?
@@ -106,14 +106,14 @@
 
       File<aa/bb/cc/template/index.clj>
       ;=> template/index.clj"
-  [file]
+  [#^File file]
   (last (str/split (.getAbsolutePath file)
                    (re-pattern *template-dir*))))
 
 ; =template-name->file
 (defn template-name->file
   "Convert template name to java.io.File"
-  [tmpl-name]
+  [#^String tmpl-name]
   (io/file (str *template-dir* tmpl-name)))
 
 ;; ## Filename Date Utility
@@ -139,7 +139,7 @@
 ; =remove-date-from-name
 (defn remove-date-from-name
   "Remove date string from filename"
-  [filename]
+  [#^String filename]
   (last (first (re-seq *post-filename-regexp* filename))))
 
 ;; ## Filename and URL generater
@@ -147,13 +147,13 @@
 ; =make-tag-output-filename
 (defn make-tag-output-filename
   "Make tag output filename from tag name"
-  [tag-name]
+  [#^String tag-name]
   (str *tag-out-dir* tag-name ".html"))
 
 ; =make-template-outpu-filename
 (defn make-template-output-filename
   "Make template output filename from template name"
-  [tmpl-name]
+  [#^String tmpl-name]
   (let [file (template-name->file tmpl-name)
         date (get-date-from-file file)
         filename (-?> tmpl-name remove-date-from-name delete-extension)]
@@ -173,6 +173,7 @@
 
 ; =make-layout-filename
 (defn make-layout-filename
-  [layout-name]
+  "Make layout filename from layout name(String)"
+  [#^String layout-name]
   (str *layout-dir* layout-name ".clj"))
 
