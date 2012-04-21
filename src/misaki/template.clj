@@ -34,7 +34,7 @@
 (defn apply-template
   "Apply contents data to template function."
   [f contents]
-  (let [option (merge (meta f) (meta contents))
+  (let [option   (merge (meta f) (meta contents))
         contents (with-meta contents option)]
     (with-meta (f contents) option)))
 
@@ -44,12 +44,13 @@
   Template options are contained as meta data."
   ([filename] (load-template filename true))
   ([filename allow-layout?]
-   (let [data (slurp filename)
+   (let [data   (slurp filename)
          option (parse-template-options data)]
 
-     (if-let [layout-name (:layout option)]
+     (if-let [layout-filename (-?> option :layout make-layout-filename)]
        (let [; at first, evaluate parent layout
-             parent-layout-fn (load-template (str *layout-dir* layout-name ".clj"))
+             ; parent layout must be evaluated if layout is not allowded
+             parent-layout-fn (load-template layout-filename)
              ; second, evaluate this layout
              layout-fn (transform data)]
          (if allow-layout?
@@ -59,3 +60,4 @@
              (merge (meta parent-layout-fn) option))
            (with-meta layout-fn option)))
        (with-meta (transform data) option)))))
+

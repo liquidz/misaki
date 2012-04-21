@@ -1,7 +1,6 @@
 (ns misaki.config
   "misaki: configuration"
-  (:use
-    misaki.util.file
+  (:use misaki.util.file
     [clojure.core.incubator :only [-?> -?>>]]
     [clj-time.core :only [date-time year month day]]
     [clj-time.core :only [month year]])
@@ -172,4 +171,8 @@
   [#^File file]
   (str "/" (make-template-output-filename (str *post* (.getName file)))))
 
+; =make-layout-filename
+(defn make-layout-filename
+  [layout-name]
+  (str *layout-dir* layout-name ".clj"))
 
