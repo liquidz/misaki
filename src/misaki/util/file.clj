@@ -7,9 +7,6 @@
     [clojure.string :as str])
   (:import [java.io File]))
 
-;#(def ^:dynamic *post-filename-regexp*
-;#  #"(\d{4})[-_](\d{1,2})[-_](\d{1,2})[-_](.+)$")
-
 ; =find-files
 (defn find-files
   "find files recursively"
@@ -21,6 +18,12 @@
   "check whether file has specified extension or not"
   [ext file]
   (.endsWith (.getName file) ext))
+
+; =filter-extension
+(defn filter-extension
+  "filter file list with extension"
+  [ext file-list]
+  (filter (partial has-extension? ext) file-list))
 
 ; =delete-extension
 (defn delete-extension

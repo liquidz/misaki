@@ -15,9 +15,6 @@
 
 ;; ### Utilities
 
-(defmacro with-print-stack-trace [& body]
-  `(try ~@body (catch Exception e# (.printStackTrace e#) false)))
-
 ; =escape-content
 (defn escape-content
   "Escape content"
@@ -34,9 +31,7 @@
 (defn get-post-options
   "Get post's template options from post file(java.io.File)"
   [#^File file]
-  (try
-    (->> (.getName file) (str *post-dir*) slurp parse-template-options)
-    (catch Exception _ {})))
+  (->> (.getName file) (str *post-dir*) slurp parse-template-options))
 
 ; =get-content
 (defn get-content
@@ -48,21 +43,20 @@
 ; =get-posts
 (defn get-posts
   "Get posts data from *post-dir* directory.
-  
+
   Content data is delayed."
   [& {:keys [tag]}]
-  (for [file  (find-files *post-dir*)
+  (for [file  (filter-extension ".clj" (find-files *post-dir*))
         :let  [option (get-post-options file)
                tagset (set (map :name (get option :tag [])))]
-        :when (and (has-extension? ".clj" file)
-                   (or (nil? tag)
-                       (every? #(contains? tagset %) tag)))]
-    (merge
+        :when (or (nil? tag)
+                  (every? #(contains? tagset %) tag))]
+    (assoc
       option
-      {:file file
-       :url  (make-post-url file)
-       :date (get-date-from-file file)
-       :lazy-content (delay (escape-content (get-content file)))})))
+      :file file
+      :url  (make-post-url file)
+      :date (get-date-from-file file)
+      :lazy-content (delay (escape-content (get-content file))))))
 
 ;; ## Tags
 
@@ -98,9 +92,9 @@
   (let [filename   (str *template-dir* tmpl-name)
         tmpl-fn    (load-template filename allow-layout?)
         posts      (sort-by-date (get-posts))
-        site-data  (merge *site* {:posts posts
-                                  :tags  (get-counted-tags posts)
-                                  :date  (get-date-from-file (io/file filename))})
+        site-data  (assoc *site* :posts posts
+                                 :tags  (get-counted-tags posts)
+                                 :date  (get-date-from-file (io/file filename)))
         empty-data (with-meta '("") site-data)]
 
     (apply-template tmpl-fn empty-data)))
@@ -110,8 +104,8 @@
   "Generate tag HTML from *tag-layout*."
   [tag-name]
   (let [tmpl-fn (load-template *tag-layout*)
-        site-data (merge *site* {:posts (sort-by-date (get-posts :tag [tag-name]))
-                                 :tag-name tag-name})
+        site-data (assoc *site* :posts (sort-by-date (get-posts :tag [tag-name]))
+                                :tag-name tag-name)
         empty-data (with-meta '("") site-data)]
     (apply-template tmpl-fn empty-data)))
 
@@ -140,9 +134,10 @@
 
   return true if compile succeeded."
   [tag-name]
-  (with-print-stack-trace
+  (try
     (compile* (make-tag-output-filename tag-name)
-              (generate-tag-html tag-name))))
+              (generate-tag-html tag-name))
+    (catch Exception e (.printStackTrace e) false)))
 
 ; =compile-template
 (defn compile-template
@@ -150,9 +145,10 @@
 
   return true if compile succeeded."
   [tmpl-name]
-  (with-print-stack-trace
+  (try
     (compile* (make-template-output-filename tmpl-name)
-              (generate-html tmpl-name))))
+              (generate-html tmpl-name))
+    (catch Exception e (.printStackTrace e) false)))
 
 ; =compile-all-tags
 (defn compile-all-tags
@@ -166,10 +162,8 @@
 (defn get-template-files
   "get all template files(java.io.File) from *template-dir*"
   []
-  (remove #(or (.isDirectory %)
-               (not (has-extension? ".clj" %))
-               (layout-file? %))
-          (find-files *template-dir*)))
+  (remove layout-file?
+          (filter-extension ".clj" (find-files *template-dir*))))
 
 ; =compile-all-templates
 (defn compile-all-templates

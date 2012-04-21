@@ -150,7 +150,7 @@
   [#^String tag-name]
   (str *tag-out-dir* tag-name ".html"))
 
-; =make-template-outpu-filename
+; =make-template-output-filename
 (defn make-template-output-filename
   "Make template output filename from template name"
   [#^String tmpl-name]

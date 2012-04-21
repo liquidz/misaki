@@ -9,7 +9,8 @@
                  [uochan/watchtower "0.1.2"]]
 
   :dev-dependencies [[lein-multi "1.1.0"]
-                     [lein-marginalia "0.7.0"]]
+                     [lein-marginalia "0.7.0"]
+                     [debug-reader "0.0.1"]]
 
   :repositories [["sonatype-snapshots"
                   "https://oss.sonatype.org/content/repositories/snapshots/"]]
