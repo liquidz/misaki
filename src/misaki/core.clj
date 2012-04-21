@@ -31,7 +31,7 @@
 (defn get-post-options
   "Get post's template options from post file(java.io.File)"
   [#^File file]
-  (->> (.getName file) (str *post-dir*) slurp parse-template-options))
+  (->> file io/reader slurp parse-template-options))
 
 ; =get-content
 (defn get-content
