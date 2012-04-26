@@ -4,11 +4,9 @@
     [misaki core config]
     [misaki.util.file :only [add-path-slash has-extension?]]
     watchtower.core
-    [cljs.closure :only [build]]
     [compojure.core :only [routes]]
     [compojure.route :only [files]]
-    [ring.adapter.jetty :only [run-jetty]])
-  (:require [clojure.java.io :as io]))
+    [ring.adapter.jetty :only [run-jetty]]))
 
 (defn- blue [s] (str "\033[36m" s "\033[0m"))
 (defn- red  [s] (str "\033[31m" s "\033[0m"))
@@ -30,21 +28,6 @@
   (print " * compiling all tags:")
   (print-result (compile-all-tags)))
 
-(defn do-cljs-compile
-  "Compile clojurescript file and print status"
-  []
-  (try
-    ; make directory if not exists
-    (let [parent-dir (.getParentFile (io/file (:output-to *cljs-compile-options*)))]
-      (if-not (.exists parent-dir)
-        (.mkdir parent-dir)))
-    ; build clojurescript
-    (build (:src-dir *cljs-compile-options*)
-           *cljs-compile-options*)
-    (catch Exception e
-      (.printStackTrace e) false))
-  true)
-
 ; =do-compile
 (defn do-compile
   "Compile templte file and print status"
@@ -54,7 +37,7 @@
     ; clojurescript
     (has-extension? ".cljs" file)
     (do (print " * compiling clojurescript:")
-      (print-result (do-cljs-compile)))
+      (print-result (compile-clojurescripts)))
 
     ; layout or config
     (or (layout-file? file) (config-file? file))

@@ -3194,7 +3194,8 @@ net.brehaut.ClojureTools = (function (SH) {
     [misaki template config]
     [misaki.util file code seq]
     [hiccup.core :only [html]]
-    [hiccup.page-helpers :only [html5 xhtml html4]])
+    [hiccup.page-helpers :only [html5 xhtml html4]]
+    [cljs.closure :only [build]])
   (:require
     conv
     [clojure.string :as str]
@@ -3290,6 +3291,17 @@ net.brehaut.ClojureTools = (function (SH) {
   (try
     (compile* (make-template-output-filename tmpl-name)
               (generate-html tmpl-name))
+    (catch Exception e (.printStackTrace e) false)))</pre></td></tr><tr><td class="docs"><p>Compile clojurescripts.
+  return true if compile succeeded.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn compile-clojurescripts
+  []
+  (try
+    ; make directory if not exists
+    (make-directories (:output-to *cljs-compile-options*))
+    ; build clojurescript
+    (build (:src-dir *cljs-compile-options*)
+           *cljs-compile-options*)
+    true
     (catch Exception e (.printStackTrace e) false)))</pre></td></tr><tr><td class="docs"><p>Compile all tag page.
   return true if all compile succeeded.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn compile-all-tags
@@ -3460,11 +3472,9 @@ net.brehaut.ClojureTools = (function (SH) {
     [misaki core config]
     [misaki.util.file :only [add-path-slash has-extension?]]
     watchtower.core
-    [cljs.closure :only [build]]
     [compojure.core :only [routes]]
     [compojure.route :only [files]]
-    [ring.adapter.jetty :only [run-jetty]])
-  (:require [clojure.java.io :as io]))</pre></td></tr><tr><td class="docs">
+    [ring.adapter.jetty :only [run-jetty]]))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn- blue [s] (str &quot;\033[36m&quot; s &quot;\033[0m&quot;))
 (defn- red  [s] (str &quot;\033[31m&quot; s &quot;\033[0m&quot;))</pre></td></tr><tr><td class="docs"><p>Print colored compile result.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn print-result
@@ -3476,27 +3486,14 @@ net.brehaut.ClojureTools = (function (SH) {
   (print &quot; * compiling all templates:&quot;)
   (print-result (compile-all-templates))
   (print &quot; * compiling all tags:&quot;)
-  (print-result (compile-all-tags)))</pre></td></tr><tr><td class="docs"><p>Compile clojurescript file and print status</p>
-</td><td class="codes"><pre class="brush: clojure">(defn do-cljs-compile
-  []
-  (try
-    ; make directory if not exists
-    (let [parent-dir (.getParentFile (io/file (:output-to *cljs-compile-options*)))]
-      (if-not (.exists parent-dir)
-        (.mkdir parent-dir)))
-    ; build clojurescript
-    (build (:src-dir *cljs-compile-options*)
-           *cljs-compile-options*)
-    (catch Exception e
-      (.printStackTrace e) false))
-  true)</pre></td></tr><tr><td class="docs"><p>Compile templte file and print status</p>
+  (print-result (compile-all-tags)))</pre></td></tr><tr><td class="docs"><p>Compile templte file and print status</p>
 </td><td class="codes"><pre class="brush: clojure">(defn do-compile
   [#^java.io.File file]
   (cond
     ; clojurescript
     (has-extension? &quot;.cljs&quot; file)
     (do (print &quot; * compiling clojurescript:&quot;)
-      (print-result (do-cljs-compile)))
+      (print-result (compile-clojurescripts)))
     ; layout or config
     (or (layout-file? file) (config-file? file))
     (do-all-compile)
@@ -3512,7 +3509,7 @@ net.brehaut.ClojureTools = (function (SH) {
         ; compile tag
         (if-let [tags (-&gt; file get-post-options :tag)]
           (doseq [tag tags]
-            (print &quot; * compiling tag:&quot; tag)
+            (print &quot; * compiling tag:&quot; (:name tag))
             (print-result (compile-tag tag))))))))</pre></td></tr><tr><td class="docs"><h2>Template Watcher</h2>
 </td><td class="codes"></td></tr><tr><td class="docs"><p>Start watchtower watcher to compile changed templates</p>
 </td><td class="codes"><pre class="brush: clojure">(defn start-watcher

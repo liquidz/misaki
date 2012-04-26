@@ -4,7 +4,8 @@
     [misaki template config]
     [misaki.util file code seq]
     [hiccup.core :only [html]]
-    [hiccup.page-helpers :only [html5 xhtml html4]])
+    [hiccup.page-helpers :only [html5 xhtml html4]]
+    [cljs.closure :only [build]])
   (:require
     conv
     [clojure.string :as str]
@@ -145,6 +146,20 @@
   (try
     (compile* (make-template-output-filename tmpl-name)
               (generate-html tmpl-name))
+    (catch Exception e (.printStackTrace e) false)))
+
+; =compile-clojurescripts
+(defn compile-clojurescripts
+  "Compile clojurescripts.
+  return true if compile succeeded."
+  []
+  (try
+    ; make directory if not exists
+    (make-directories (:output-to *cljs-compile-options*))
+    ; build clojurescript
+    (build (:src-dir *cljs-compile-options*)
+           *cljs-compile-options*)
+    true
     (catch Exception e (.printStackTrace e) false)))
 
 ; =compile-all-tags
