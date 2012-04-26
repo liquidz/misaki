@@ -17,6 +17,14 @@
  :post-filename-regexp #"(\d{4})[.](\d{1,2})[.](\d{1,2})[-_](.+)$"
  :post-filename-format "%year-%month/%file"
 
+ ;; clojurescript compile options
+ ;; src-dir is `:template-dir`
+ ;; output-dir is `:public-dir`
+ :cljs {:output-to     "js/main.js"
+        :optimizations :whitespace
+        ;:optimizations :simple
+        :pretty-print  true}
+
  ;; highlight setting
  :code-highlight {:CLJ "lang-clj"}
  }

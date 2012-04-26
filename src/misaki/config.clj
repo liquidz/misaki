@@ -12,7 +12,8 @@
 ;; ## Declarations
 
 ;; Blog base directory
-(def ^{:dynamic true} *base-dir* "./")
+;(def ^{:dynamic true} *base-dir* "./")
+(def ^{:dynamic true} *base-dir* "")
 ;; Config filename
 (def ^{:dynamic true} *config-file* "_config.clj")
 
@@ -40,6 +41,8 @@
 (declare ^{:dynamic true} *post-filename-regexp*)
 ;; Format rule for post filename.
 (declare ^{:dynamic true} *post-filename-format*)
+;; Compile options for ClojureScript
+(declare ^{:dynamic true} *cljs-compile-options*)
 
 ;; ## Config Data Wrapper
 
@@ -53,10 +56,13 @@
 (defmacro with-config
   "Wrap sexp with config data"
   [& body]
-  `(let [config# (load-config)]
+  `(let [config# (load-config)
+         public# (str *base-dir* (:public-dir config#))
+         template# (str *base-dir* (:template-dir config#))
+         cljs# (get config# :cljs {})]
      (binding
-       [*public-dir*   (str *base-dir* (:public-dir config#))
-        *template-dir* (str *base-dir* (:template-dir config#))
+       [*public-dir*   public#
+        *template-dir* template#
         *post*         (:post-dir config#)
         *layout-dir*   (str *base-dir*
                             (:template-dir config#)
@@ -75,7 +81,10 @@
         *post-filename-regexp* (get config# :post-filename-regexp
                                  #"(\d{4})[-_](\d{1,2})[-_](\d{1,2})[-_](.+)$")
         *post-filename-format* (get config# :post-filename-format
-                                 "%year/%month/%file")]
+                                 "%year/%month/%file")
+        *cljs-compile-options* (assoc (dissoc cljs# :output-dir)
+                                      :src-dir template#
+                                      :output-to (str public# (:output-to cljs#)))]
        ~@body)))
 
 ;; ## File Cheker

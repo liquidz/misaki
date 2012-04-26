@@ -3029,7 +3029,7 @@ net.brehaut.ClojureTools = (function (SH) {
   };
 })(SyntaxHighlighter);
 </script><title>misaki -- Marginalia</title></head><body><table><tr><td class="docs"><div class="header"><h1 class="project-name">misaki</h1><h2 class="project-version">0.0.16-alpha</h2><br /><p>Jekyll inspired static site generator in Clojure</p>
-</div><div class="dependencies"><h3>dependencies</h3><table><tr><td class="dep-name">org.clojure/clojure</td><td class="dotted"><hr /></td><td class="dep-version">1.4.0</td></tr><tr><td class="dep-name">org.clojure/core.incubator</td><td class="dotted"><hr /></td><td class="dep-version">0.1.0</td></tr><tr><td class="dep-name">hiccup</td><td class="dotted"><hr /></td><td class="dep-version">0.3.6</td></tr><tr><td class="dep-name">compojure</td><td class="dotted"><hr /></td><td class="dep-version">1.0.2</td></tr><tr><td class="dep-name">ring/ring-jetty-adapter</td><td class="dotted"><hr /></td><td class="dep-version">1.0.2</td></tr><tr><td class="dep-name">clj-time</td><td class="dotted"><hr /></td><td class="dep-version">0.3.7</td></tr><tr><td class="dep-name">uochan/watchtower</td><td class="dotted"><hr /></td><td class="dep-version">0.1.2</td></tr></table></div><div class="dependencies"><h3>dev dependencies</h3><table><tr><td class="dep-name">lein-multi</td><td class="dotted"><hr /></td><td class="dep-version">1.1.0</td></tr><tr><td class="dep-name">lein-marginalia</td><td class="dotted"><hr /></td><td class="dep-version">0.7.0</td></tr><tr><td class="dep-name">debug-reader</td><td class="dotted"><hr /></td><td class="dep-version">0.0.1</td></tr></table></div></td><td class="codes" style="text-align: center; vertical-align: middle;color: #666;padding-right:20px"><br /><br /><br />(this space intentionally left almost blank)</td></tr><tr><td class="docs"><div class="toc"><a name="toc"><h3>namespaces</h3></a><ul><li><a href="#conv">conv</a></li><li><a href="#misaki.config">misaki.config</a></li><li><a href="#misaki.core">misaki.core</a></li><li><a href="#misaki.html.core">misaki.html.core</a></li><li><a href="#misaki.server">misaki.server</a></li><li><a href="#misaki.template">misaki.template</a></li><li><a href="#misaki.transform">misaki.transform</a></li><li><a href="#misaki.util.code">misaki.util.code</a></li><li><a href="#misaki.util.file">misaki.util.file</a></li><li><a href="#misaki.util.seq">misaki.util.seq</a></li></ul></div></td><td class="codes">&nbsp;</td></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#conv" name="conv"><h1 class="project-name">conv</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>Data converting utilities for template</p>
+</div><div class="dependencies"><h3>dependencies</h3><table><tr><td class="dep-name">org.clojure/clojure</td><td class="dotted"><hr /></td><td class="dep-version">1.4.0</td></tr><tr><td class="dep-name">org.clojure/core.incubator</td><td class="dotted"><hr /></td><td class="dep-version">0.1.0</td></tr><tr><td class="dep-name">org.clojure/clojurescript</td><td class="dotted"><hr /></td><td class="dep-version">0.0-1011</td></tr><tr><td class="dep-name">hiccup</td><td class="dotted"><hr /></td><td class="dep-version">0.3.6</td></tr><tr><td class="dep-name">compojure</td><td class="dotted"><hr /></td><td class="dep-version">1.0.2</td></tr><tr><td class="dep-name">ring/ring-jetty-adapter</td><td class="dotted"><hr /></td><td class="dep-version">1.0.2</td></tr><tr><td class="dep-name">clj-time</td><td class="dotted"><hr /></td><td class="dep-version">0.3.7</td></tr><tr><td class="dep-name">uochan/watchtower</td><td class="dotted"><hr /></td><td class="dep-version">0.1.2</td></tr></table></div><div class="dependencies"><h3>dev dependencies</h3><table><tr><td class="dep-name">lein-multi</td><td class="dotted"><hr /></td><td class="dep-version">1.1.0</td></tr><tr><td class="dep-name">lein-marginalia</td><td class="dotted"><hr /></td><td class="dep-version">0.7.0</td></tr><tr><td class="dep-name">debug-reader</td><td class="dotted"><hr /></td><td class="dep-version">0.0.1</td></tr></table></div></td><td class="codes" style="text-align: center; vertical-align: middle;color: #666;padding-right:20px"><br /><br /><br />(this space intentionally left almost blank)</td></tr><tr><td class="docs"><div class="toc"><a name="toc"><h3>namespaces</h3></a><ul><li><a href="#conv">conv</a></li><li><a href="#misaki.config">misaki.config</a></li><li><a href="#misaki.core">misaki.core</a></li><li><a href="#misaki.html.core">misaki.html.core</a></li><li><a href="#misaki.server">misaki.server</a></li><li><a href="#misaki.template">misaki.template</a></li><li><a href="#misaki.transform">misaki.transform</a></li><li><a href="#misaki.util.code">misaki.util.code</a></li><li><a href="#misaki.util.file">misaki.util.file</a></li><li><a href="#misaki.util.seq">misaki.util.seq</a></li></ul></div></td><td class="codes">&nbsp;</td></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#conv" name="conv"><h1 class="project-name">conv</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>Data converting utilities for template</p>
 </td><td class="codes"><pre class="brush: clojure">(ns conv
   (:require
     [clojure.string :as str]
@@ -3072,8 +3072,9 @@ net.brehaut.ClojureTools = (function (SH) {
     [clojure.string :as str]
     [clojure.java.io :as io])
   (:import [java.io File]))</pre></td></tr><tr><td class="docs"><h2>Declarations</h2>
-</td><td class="codes"></td></tr><tr><td class="docs"><p>Blog base directory</p>
-</td><td class="codes"><pre class="brush: clojure">(def ^{:dynamic true} *base-dir* &quot;./&quot;)</pre></td></tr><tr><td class="docs"><p>Config filename</p>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>Blog base directory
+(def ^{:dynamic true} <em>base-dir</em> "./")</p>
+</td><td class="codes"><pre class="brush: clojure">(def ^{:dynamic true} *base-dir* )</pre></td></tr><tr><td class="docs"><p>Config filename</p>
 </td><td class="codes"><pre class="brush: clojure">(def ^{:dynamic true} *config-file* &quot;_config.clj&quot;)</pre></td></tr><tr><td class="docs"><p>Public directory path. Compiled html is placed here.</p>
 </td><td class="codes"><pre class="brush: clojure">(declare ^{:dynamic true} *public-dir*)</pre></td></tr><tr><td class="docs"><p>Template directory path.</p>
 </td><td class="codes"><pre class="brush: clojure">(declare ^{:dynamic true} *template-dir*)</pre></td></tr><tr><td class="docs"><p>Posts placed directory name.</p>
@@ -3086,17 +3087,21 @@ net.brehaut.ClojureTools = (function (SH) {
 </td><td class="codes"><pre class="brush: clojure">(declare ^{:dynamic true} *compile-with-post*)</pre></td></tr><tr><td class="docs"><p>Site language.</p>
 </td><td class="codes"><pre class="brush: clojure">(declare ^{:dynamic true} *lang*)</pre></td></tr><tr><td class="docs"><p>Regexp for parse post filename.</p>
 </td><td class="codes"><pre class="brush: clojure">(declare ^{:dynamic true} *post-filename-regexp*)</pre></td></tr><tr><td class="docs"><p>Format rule for post filename.</p>
-</td><td class="codes"><pre class="brush: clojure">(declare ^{:dynamic true} *post-filename-format*)</pre></td></tr><tr><td class="docs"><h2>Config Data Wrapper</h2>
+</td><td class="codes"><pre class="brush: clojure">(declare ^{:dynamic true} *post-filename-format*)</pre></td></tr><tr><td class="docs"><p>Compile options for ClojureScript</p>
+</td><td class="codes"><pre class="brush: clojure">(declare ^{:dynamic true} *cljs-compile-options*)</pre></td></tr><tr><td class="docs"><h2>Config Data Wrapper</h2>
 </td><td class="codes"></td></tr><tr><td class="docs"><p>Load and read config file</p>
 </td><td class="codes"><pre class="brush: clojure">(defn load-config
   []
   (read-string (slurp (str *base-dir* *config-file*))))</pre></td></tr><tr><td class="docs"><p>Wrap sexp with config data</p>
 </td><td class="codes"><pre class="brush: clojure">(defmacro with-config
   [&amp; body]
-  `(let [config# (load-config)]
+  `(let [config# (load-config)
+         public# (str *base-dir* (:public-dir config#))
+         template# (str *base-dir* (:template-dir config#))
+         cljs# (get config# :cljs {})]
      (binding
-       [*public-dir*   (str *base-dir* (:public-dir config#))
-        *template-dir* (str *base-dir* (:template-dir config#))
+       [*public-dir*   public#
+        *template-dir* template#
         *post*         (:post-dir config#)
         *layout-dir*   (str *base-dir*
                             (:template-dir config#)
@@ -3115,7 +3120,10 @@ net.brehaut.ClojureTools = (function (SH) {
         *post-filename-regexp* (get config# :post-filename-regexp
                                  #&quot;(\d{4})[-_](\d{1,2})[-_](\d{1,2})[-_](.+)$&quot;)
         *post-filename-format* (get config# :post-filename-format
-                                 &quot;%year/%month/%file&quot;)]
+                                 &quot;%year/%month/%file&quot;)
+        *cljs-compile-options* (assoc (dissoc cljs# :output-dir)
+                                      :src-dir template#
+                                      :output-to (str public# (:output-to cljs#)))]
        ~@body)))</pre></td></tr><tr><td class="docs"><h2>File Cheker</h2>
 </td><td class="codes"></td></tr><tr><td class="docs"><p>Check whether file is config file or not.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn config-file?
@@ -3450,11 +3458,13 @@ net.brehaut.ClojureTools = (function (SH) {
 </td><td class="codes"><pre class="brush: clojure">(ns misaki.server
   (:use
     [misaki core config]
-    [misaki.util.file :only [add-path-slash]]
+    [misaki.util.file :only [add-path-slash has-extension?]]
     watchtower.core
+    [cljs.closure :only [build]]
     [compojure.core :only [routes]]
     [compojure.route :only [files]]
-    [ring.adapter.jetty :only [run-jetty]]))</pre></td></tr><tr><td class="docs">
+    [ring.adapter.jetty :only [run-jetty]])
+  (:require [clojure.java.io :as io]))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn- blue [s] (str &quot;\033[36m&quot; s &quot;\033[0m&quot;))
 (defn- red  [s] (str &quot;\033[31m&quot; s &quot;\033[0m&quot;))</pre></td></tr><tr><td class="docs"><p>Print colored compile result.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn print-result
@@ -3466,25 +3476,44 @@ net.brehaut.ClojureTools = (function (SH) {
   (print &quot; * compiling all templates:&quot;)
   (print-result (compile-all-templates))
   (print &quot; * compiling all tags:&quot;)
-  (print-result (compile-all-tags)))</pre></td></tr><tr><td class="docs"><p>Compile templte file and print status</p>
+  (print-result (compile-all-tags)))</pre></td></tr><tr><td class="docs"><p>Compile clojurescript file and print status</p>
+</td><td class="codes"><pre class="brush: clojure">(defn do-cljs-compile
+  []
+  (try
+    ; make directory if not exists
+    (let [parent-dir (.getParentFile (io/file (:output-to *cljs-compile-options*)))]
+      (if-not (.exists parent-dir)
+        (.mkdir parent-dir)))
+    ; build clojurescript
+    (build (:src-dir *cljs-compile-options*)
+           *cljs-compile-options*)
+    (catch Exception e
+      (.printStackTrace e) false))
+  true)</pre></td></tr><tr><td class="docs"><p>Compile templte file and print status</p>
 </td><td class="codes"><pre class="brush: clojure">(defn do-compile
   [#^java.io.File file]
-  (if (or (layout-file? file) (config-file? file))
-    ; compile all templates if target file is layout or config
+  (cond
+    ; clojurescript
+    (has-extension? &quot;.cljs&quot; file)
+    (do (print &quot; * compiling clojurescript:&quot;)
+      (print-result (do-cljs-compile)))
+    ; layout or config
+    (or (layout-file? file) (config-file? file))
     (do-all-compile)
-    ; compile target template
+    ; else
+    :else
     (do (print &quot; * compiling:&quot; (.getName file))
-        (print-result (compile-template (file-&gt;template-name file)))
-        (when (post-file? file)
-          ; compile with posts
-          (if *compile-with-post*
-            (doseq [tmpl-name *compile-with-post*]
-              (do-compile (template-name-&gt;file tmpl-name))))
-          ; compile tag
-          (if-let [tags (-&gt; file get-post-options :tag)]
-            (doseq [tag tags]
-              (print &quot; * compiling tag:&quot; tag)
-              (print-result (compile-tag tag))))))))</pre></td></tr><tr><td class="docs"><h2>Template Watcher</h2>
+      (print-result (compile-template (file-&gt;template-name file)))
+      (when (post-file? file)
+        ; compile with posts
+        (if *compile-with-post*
+          (doseq [tmpl-name *compile-with-post*]
+            (do-compile (template-name-&gt;file tmpl-name))))
+        ; compile tag
+        (if-let [tags (-&gt; file get-post-options :tag)]
+          (doseq [tag tags]
+            (print &quot; * compiling tag:&quot; tag)
+            (print-result (compile-tag tag))))))))</pre></td></tr><tr><td class="docs"><h2>Template Watcher</h2>
 </td><td class="codes"></td></tr><tr><td class="docs"><p>Start watchtower watcher to compile changed templates</p>
 </td><td class="codes"><pre class="brush: clojure">(defn start-watcher
   []
@@ -3497,12 +3526,14 @@ net.brehaut.ClojureTools = (function (SH) {
     (change-first? false) ; do not compile each templates at first
     (file-filter ignore-dotfiles)
     (file-filter (extensions :clj))
+    (file-filter (extensions :cljs))
     (on-change #(doseq [file %]
                   ; use `wrap-config` to apply config file updates
                   (with-config (do-compile file))))))</pre></td></tr><tr><td class="docs"><h2>main</h2>
 </td><td class="codes"></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn -main [&amp; [dir]]
-  (binding [*base-dir* (str &quot;./&quot; (add-path-slash dir))]
+;  (binding [*base-dir* (str &quot;./&quot; (add-path-slash dir))]
+  (binding [*base-dir* (add-path-slash dir)]
     (with-config
       (start-watcher)
       (run-jetty
