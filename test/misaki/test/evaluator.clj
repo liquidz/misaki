@@ -1,5 +1,5 @@
-(ns misaki.test.evaluater
-  (:use [misaki config evaluater loader]
+(ns misaki.test.evaluator
+  (:use [misaki config evaluator loader]
         misaki.test.common
         [hiccup.core :only [html]])
   (:use [clojure.test])

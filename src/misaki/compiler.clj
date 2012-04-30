@@ -1,5 +1,5 @@
 (ns misaki.compiler
-  (:use [misaki config loader evaluater]
+  (:use [misaki config loader evaluator]
         [hiccup.core :only [html]])
   (:require [clojure.string :as str])
   )

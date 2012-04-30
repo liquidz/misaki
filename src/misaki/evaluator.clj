@@ -1,4 +1,4 @@
-(ns misaki.evaluater
+(ns misaki.evaluator
   (:require
     [clojure.string :as str]))
 
