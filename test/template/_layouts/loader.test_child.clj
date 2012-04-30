@@ -1,3 +1,5 @@
 ; @layout loader.test_parent
-; @title child
-[:p content]
+; @child  true
+; @title  child
+
+[:p contents]

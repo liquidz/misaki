@@ -1,4 +1,4 @@
-(ns misaki.test.new_loader
+(ns misaki.test.loader
   (:use [misaki config loader]
         misaki.test.common
         [hiccup.core :only [html]])
@@ -54,8 +54,8 @@
       3 (count res)
 
       '(list "hello") (nth res 2)
-      '(list [:p content]) (nth res 1)
-      '(list [:div content]) (nth res 0)
+      '(list [:p contents]) (nth res 1)
+      '(list (defn plus1 [n] (inc n)) [:div contents]) (nth res 0)
 
       "son" (-> (nth res 2) meta :title)
       "child" (-> (nth res 1) meta :title)
@@ -63,5 +63,9 @@
 
       "loader.test_child" (-> (nth res 2) meta :layout)
       "loader.test_parent" (-> (nth res 1) meta :layout)
-      nil (-> (nth res 0) meta :layout))))
+      nil (-> (nth res 0) meta :layout)
+
+      "true" (-> (nth res 2) meta :son)
+      "true" (-> (nth res 1) meta :child)
+      "true" (-> (nth res 0) meta :parent))))
 
