@@ -1,5 +1,5 @@
 (ns misaki.controller
-  (:use [misaki config loader evaluator]
+  (:use [misaki config loader evaluator compiler]
         [misaki.util file seq]
         [hiccup.core :only [html]]
         )
@@ -13,6 +13,7 @@
 (defn make-site-data
   [#^File file & {:keys [base] :or {base {}}}]
   (assoc (merge *site* base)
+         :file  file
          :posts (sort-by-date (get-posts))
          :tags  (sort-alphabetically :name (get-tags))
          :date  (get-date-from-file file)))
@@ -76,3 +77,9 @@
 (defn get-tags []
   (distinct (mapcat get-template-tag (get-template-files))))
 
+;; Compile
+(defn do-template-compile
+  [#^File file]
+  (let [tmpl-fn   (evaluate-template (load-template file))
+        site-data (make-site-data file :base (meta tmpl-fn))]
+    (compile-template (apply-template tmpl-fn (with-meta '() site-data)))))

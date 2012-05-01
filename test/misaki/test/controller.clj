@@ -70,3 +70,15 @@
     (is (true?  (tag-contains? post "tag1")))
     (is (true?  (tag-contains? post "tag2")))
     (is (false? (tag-contains? post "tag3")))))
+
+;; Compile test
+(deftest* do-template-compile-test
+  (let [file (io/file (str *template-dir* "controller.test01.html.clj"))
+        res  (do-template-compile file)
+        out  (io/file (str *public-dir* "controller.test01.html"))]
+
+    (is res)
+    (is (.exists file))
+    "<p>hello</p>" (slurp file)
+
+    (.delete out)))

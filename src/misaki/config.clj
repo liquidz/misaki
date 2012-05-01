@@ -160,19 +160,23 @@
   (str *tag-out-dir* tag-name ".html"))
 
 ; =make-template-output-filename
-(defn make-template-output-filename
-  "Make template output filename from template name"
-  [#^String tmpl-name]
-  (let [file (template-name->file tmpl-name)
-        date (get-date-from-file file)
-        filename (-?> tmpl-name remove-date-from-name delete-extension)]
+(defmulti make-template-output-filename class)
+(defmethod make-template-output-filename String
+  [tmpl-name]
+  (make-template-output-filename (template-name->file tmpl-name)))
+
+(defmethod make-template-output-filename File
+;  "Make template output filename from template name"
+  [file]
+  (let [date (get-date-from-file file)
+        filename (-?> (.getName file) remove-date-from-name delete-extension)]
     (if (post-file? file)
       (-> *post-filename-format*
         (str/replace #"%year"  (-> date year str))
         (str/replace #"%month" (->> date month (format "%02d")))
         (str/replace #"%day"   (->> date day (format "%02d")))
         (str/replace #"%file"  filename))
-      (delete-extension tmpl-name))))
+      (delete-extension (.getName file)))))
 
 ; =make-post-url
 (defn make-post-url
