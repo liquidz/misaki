@@ -1,14 +1,15 @@
 (ns misaki.compiler
-  (:use [misaki config loader evaluator]
+  (:use [misaki config controller]
         [hiccup.core :only [html]])
   (:require [clojure.string :as str])
   )
 
-(defn make-site-data []
+(defn make-site-data
+  [#^File file]
   (assoc *site*
          :posts ()
          :tags ()
-         :date ""))
+         :date (get-date-from-file file)))
 
 ;(defn get-compile-fn []
 ;  )

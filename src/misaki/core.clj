@@ -46,7 +46,7 @@
   "Get posts data from *post-dir* directory.
   Content data is delayed."
   [& {:keys [tag]}]
-  (for [file  (filter-extension ".clj" (find-files *post-dir*))
+  (for [file  (extension-filter ".clj" (find-files *post-dir*))
         :let  [option (get-post-options file)
                tagset (set (map :name (get option :tag [])))]
         :when (or (nil? tag)
@@ -174,7 +174,7 @@
   "Get all template files(java.io.File) from *template-dir*."
   []
   (remove layout-file?
-          (filter-extension ".clj" (find-files *template-dir*))))
+          (extension-filter ".clj" (find-files *template-dir*))))
 
 ; =compile-all-templates
 (defn compile-all-templates

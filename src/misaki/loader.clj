@@ -12,9 +12,10 @@
 (defn parse-tag
   [#^String tags]
   (if (nil? tags) ()
-    (for [tag (str/split tags #"[\s\t]+")]
-      {:name tag
-       :url (str "/" (make-tag-output-filename tag))})))
+    (distinct
+      (for [tag (str/split tags #"[\s\t]+")]
+        {:name tag
+         :url (str "/" (make-tag-output-filename tag))}))))
 
 (defn parse-tag-option
   [option]

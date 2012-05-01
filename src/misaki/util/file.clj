@@ -19,8 +19,8 @@
   [ext file]
   (.endsWith (.getName file) ext))
 
-; =filter-extension
-(defn filter-extension
+; =extension-filter
+(defn extension-filter
   "Filter file list with `has-extension?`."
   [ext file-list]
   (filter (partial has-extension? ext) file-list))
