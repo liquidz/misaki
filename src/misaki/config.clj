@@ -1,9 +1,10 @@
 (ns misaki.config
   "misaki: configuration"
   (:use misaki.util.file
-    [clojure.core.incubator :only [-?> -?>>]]
-    [clj-time.core :only [date-time year month day]]
-    [clj-time.core :only [month year]])
+        [clojure.core.incubator :only [-?> -?>>]]
+        [clj-time.core :only [date-time year month day]]
+        [clj-time.core :only [month year]]
+        [clostache.parser :only [render]])
   (:require
     [clojure.string :as str]
     [clojure.java.io :as io])
@@ -46,11 +47,32 @@
 
 ;; ## Config Data Wrapper
 
+(defn render-map [m & {:keys [ignore] :or {ignore #{}}}]
+  (reduce (fn [res [k v]]
+            (if (contains? ignore k) res
+              (assoc res k (if (string? v) (render v res) v)))
+            ) m m))
+
 ; =load-config
 (defn load-config
   "Load and read config file"
   []
-  (read-string (slurp (str *base-dir* *config-file*))))
+  (let [config (read-string (slurp (str *base-dir* *config-file*)))
+        ;res (render-map config :ignore #{:post-filename-format})
+        ]
+    (reduce
+      (fn [res [k v]]
+        (if (= k :post-filename-format)
+          res
+          (assoc res k (if (string? v) (render v res) v))
+          )
+        )
+      (apply hash-map config)
+      (partition 2 config)
+      )
+    ;res
+    ))
+  ;(read-string (slurp (str *base-dir* *config-file*))))
 
 ; =with-config
 (defmacro with-config
@@ -64,17 +86,18 @@
        [*public-dir*   public#
         *template-dir* template#
         *post*         (:post-dir config#)
-        *layout-dir*   (str *base-dir*
-                            (:template-dir config#)
-                            (:layout-dir config#))
-        *post-dir*     (str *base-dir*
-                            (:template-dir config#)
-                            (:post-dir config#))
+        *layout-dir*   (str *base-dir* (:layout-dir config#))
+        *post-dir*     (str *base-dir* (:post-dir config#))
+        ;*layout-dir*   (str *base-dir* (:template-dir config#) (:layout-dir config#))
+        ;*post-dir*     (str *base-dir* (:template-dir config#) (:post-dir config#))
         *tag-out-dir*  (:tag-out-dir config#)
-        *tag-layout*   (str *base-dir*
-                            (:template-dir config#)
-                            (:layout-dir config#)
-                            (:tag-layout config#) ".clj")
+        *tag-layout*   (str *base-dir* (:tag-layout config#))
+        ;*tag-layout*   (str *base-dir*
+        ;                    (:template-dir config#)
+        ;                    (:layout-dir config#)
+        ;                    (:tag-layout config#)
+        ;                    ".clj"
+        ;                    )
         *lang*         (get config# :lang "en")
         *site*         (get config# :site {})
         *compile-with-post* (:compile-with-post config#)
@@ -171,28 +194,28 @@
   (let [date (get-date-from-file file)
         filename (-?> (.getName file) remove-date-from-name delete-extension)]
     (if (post-file? file)
-      (-> *post-filename-format*
-        (str/replace #"%year"  (-> date year str))
-        (str/replace #"%month" (->> date month (format "%02d")))
-        (str/replace #"%day"   (->> date day (format "%02d")))
-        (str/replace #"%file"  filename))
+      (render *post-filename-format*
+              {:year (-> date year str)
+               :month (->> date month (format "%02d"))
+               :day (->> date day (format "%02d"))
+               :filename filename})
       (delete-extension (.getName file)))))
 
 (defn make-post-output-filename
   [#^File file]
   (let [date (get-date-from-file file)
         filename (-?> (.getName file) remove-date-from-name delete-extension)]
-    (-> *post-filename-format*
-        (str/replace #"%year"  (-> date year str))
-        (str/replace #"%month" (->> date month (format "%02d")))
-        (str/replace #"%day"   (->> date day (format "%02d")))
-        (str/replace #"%file"  filename))))
+    (render *post-filename-format*
+            {:year (-> date year str)
+             :month (->> date month (format "%02d"))
+             :day (->> date day (format "%02d"))
+             :filename filename})))
 
 ; =make-post-url
 (defn make-post-url
   "Make post url from file(java.io.File)"
   [#^File file]
-  (str "/" (make-template-output-filename (str *post* (.getName file)))))
+  (str "/" (make-template-output-filename file)))
 
 ; =make-layout-filename
 (defn make-layout-filename
