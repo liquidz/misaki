@@ -47,32 +47,20 @@
 
 ;; ## Config Data Wrapper
 
-(defn render-map [m & {:keys [ignore] :or {ignore #{}}}]
+(defn render-map [init target & {:keys [ignore] :or {ignore #{}}}]
   (reduce (fn [res [k v]]
             (if (contains? ignore k) res
               (assoc res k (if (string? v) (render v res) v)))
-            ) m m))
+            ) init target))
 
 ; =load-config
 (defn load-config
   "Load and read config file"
   []
-  (let [config (read-string (slurp (str *base-dir* *config-file*)))
-        ;res (render-map config :ignore #{:post-filename-format})
-        ]
-    (reduce
-      (fn [res [k v]]
-        (if (= k :post-filename-format)
-          res
-          (assoc res k (if (string? v) (render v res) v))
-          )
-        )
-      (apply hash-map config)
-      (partition 2 config)
-      )
-    ;res
-    ))
-  ;(read-string (slurp (str *base-dir* *config-file*))))
+  (let [config (read-string (slurp (str *base-dir* *config-file*)))]
+    (render-map (apply hash-map config)
+                (partition 2 config)
+                :ignore #{:post-filename-format})))
 
 ; =with-config
 (defmacro with-config
@@ -88,23 +76,15 @@
         *post*         (:post-dir config#)
         *layout-dir*   (str *base-dir* (:layout-dir config#))
         *post-dir*     (str *base-dir* (:post-dir config#))
-        ;*layout-dir*   (str *base-dir* (:template-dir config#) (:layout-dir config#))
-        ;*post-dir*     (str *base-dir* (:template-dir config#) (:post-dir config#))
         *tag-out-dir*  (:tag-out-dir config#)
         *tag-layout*   (str *base-dir* (:tag-layout config#))
-        ;*tag-layout*   (str *base-dir*
-        ;                    (:template-dir config#)
-        ;                    (:layout-dir config#)
-        ;                    (:tag-layout config#)
-        ;                    ".clj"
-        ;                    )
         *lang*         (get config# :lang "en")
         *site*         (get config# :site {})
         *compile-with-post* (:compile-with-post config#)
         *post-filename-regexp* (get config# :post-filename-regexp
                                  #"(\d{4})[-_](\d{1,2})[-_](\d{1,2})[-_](.+)$")
         *post-filename-format* (get config# :post-filename-format
-                                 "%year/%month/%file")
+                                 "{{year}}/{{month}}/{{filename}}")
         *cljs-compile-options* (assoc (dissoc cljs# :output-dir)
                                       :src-dir template#
                                       :output-to (str public# (:output-to cljs#)))]
