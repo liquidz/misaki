@@ -3,7 +3,8 @@
         [misaki.util file seq]
         [hiccup.core :only [html]]
         )
-  (:require [clojure.string :as str])
+  (:require [clojure.string :as str]
+            [clojure.java.io :as io])
   (:import [java.io File])
   )
 
@@ -77,9 +78,29 @@
 (defn get-tags []
   (distinct (mapcat get-template-tag (get-template-files))))
 
+
 ;; Compile
 (defn do-template-compile
   [#^File file]
-  (let [tmpl-fn   (evaluate-template (load-template file))
-        site-data (make-site-data file :base (meta tmpl-fn))]
-    (compile-template (apply-template tmpl-fn (with-meta '() site-data)))))
+  (try
+    (let [tmpl-fn   (evaluate-template (load-template file))
+          site-data (make-site-data file :base (meta tmpl-fn))]
+        (compile* (apply-template tmpl-fn (with-meta '() site-data))))
+    (catch Exception e
+      (println "LOAD AND EVALUATION ERROR") ; use ascii color
+      (.printStackTrace e)
+      false)))
+
+(defn do-tag-compile
+  [tag-data]
+  (try
+    (let [file (io/file *tag-layout*)
+          tmpl-fn (evaluate-template (load-template file))
+          site-data (make-site-data file :base (meta tmpl-fn))
+          site-data (vary-meta site-data assoc :tag-name (:name tag-data))]
+      (compile* (apply-template tmpl-fn (with-meta '() site-data))))
+    (catch Exception e
+      (println "LOAD AND EVALUATION ERROR")
+      (.printStackTrace e)
+      false)))
+

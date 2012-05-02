@@ -178,6 +178,16 @@
         (str/replace #"%file"  filename))
       (delete-extension (.getName file)))))
 
+(defn make-post-output-filename
+  [#^File file]
+  (let [date (get-date-from-file file)
+        filename (-?> (.getName file) remove-date-from-name delete-extension)]
+    (-> *post-filename-format*
+        (str/replace #"%year"  (-> date year str))
+        (str/replace #"%month" (->> date month (format "%02d")))
+        (str/replace #"%day"   (->> date day (format "%02d")))
+        (str/replace #"%file"  filename))))
+
 ; =make-post-url
 (defn make-post-url
   "Make post url from file(java.io.File)"
