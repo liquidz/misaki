@@ -12,10 +12,13 @@
 (declare get-posts)
 
 (defn make-site-data
-  [#^File file & {:keys [base] :or {base {}}}]
+  [#^File file & {:keys [base tag] :or {base {}, tag nil}}]
   (assoc (merge *site* base)
          :file  file
-         :posts (sort-by-date (get-posts))
+         :posts (sort-by-date
+                  (if (and (not (nil? tag)) (sequential? tag))
+                    (get-posts :tag tag)
+                    (get-posts)))
          :tags  (sort-alphabetically :name (get-tags))
          :date  (get-date-from-file file)))
 

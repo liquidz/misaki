@@ -8,16 +8,23 @@
   (:require [clojure.java.io :as io]))
 
 (deftest* make-site-data-test
-  (let [file (io/file (str *post-dir* "2000.01.01-foo.html.clj"))
-        site (make-site-data file :base (parse-template-option file))]
+  (let [file   (io/file (str *post-dir* "2000.01.01-foo.html.clj"))
+        option (parse-template-option file)
+        site   (make-site-data file :base option)
+        site2  (make-site-data file :base option :tag ["tag1"])]
     (are [x y] (= x y)
+      ; site
       file    (:file site)
       "baz"   (:title site)
       "world" (:hello site)
       3       (count (:posts site))
       ()      (:tag site)
       '("tag1" "tag2" "tag3") (map :name (:tags site))
-      (date-time 2000 1 1) (:date site))))
+      (date-time 2000 1 1) (:date site)
+
+      ; site with tag
+      file (:file site2)
+      1 (count (:posts site2)))))
 
 ;; Posts Test
 (deftest* get-post-data-test
