@@ -25,18 +25,22 @@
   (let [posts (sort-by-date (get-posts))]
     (are [x y] (= x y)
       3 (count posts)
-
+      ; title
       "bar" (-> posts first :title)
       "foo" (-> posts second :title)
       "baz" (-> posts last :title)
-
+      ; url
       "/2022-02/bar.html" (-> posts first :url)
       "/2011-01/foo.html" (-> posts second :url)
       "/2000-01/foo.html" (-> posts last :url)
-
+      ; tag
       '("tag1" "tag2") (->> posts first :tag (map :name))
       '("tag2" "tag3") (->> posts second :tag (map :name))
-      () (-> posts last :tag))))
+      () (-> posts last :tag)
+      ; content
+      "&lt;p&gt;bar&lt;/p&gt;" (-> posts first :lazy-content force)
+      "&lt;p&gt;foo&lt;/p&gt;" (-> posts second :lazy-content force)
+      "&lt;p&gt;baz&lt;/p&gt;" (-> posts last :lazy-content force))))
 
 ;; Tags test
 (deftest* get-template-tag-test
