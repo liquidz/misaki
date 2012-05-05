@@ -66,7 +66,7 @@
   [& {:keys [tag]}]
   (filter
     #(or (nil? tag)
-         (and (seq? tag)
+         (and (sequential? tag)
               (every? (partial tag-contains? %) tag)))
     (map get-post-data (get-posts-files))))
 

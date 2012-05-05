@@ -40,7 +40,13 @@
       ; content
       "&lt;p&gt;bar&lt;/p&gt;" (-> posts first :lazy-content force)
       "&lt;p&gt;foo&lt;/p&gt;" (-> posts second :lazy-content force)
-      "&lt;p&gt;baz&lt;/p&gt;" (-> posts last :lazy-content force))))
+      "&lt;p&gt;baz&lt;/p&gt;" (-> posts last :lazy-content force)))
+  (let [posts (sort-by-date (get-posts :tag ["tag2"]))]
+    (are [x y] (= x y)
+      2 (count posts)
+      ; title
+      "bar" (-> posts first :title)
+      "foo" (-> posts second :title))))
 
 ;; Tags test
 (deftest* get-template-tag-test
@@ -86,3 +92,7 @@
     "<p>hello</p>" (slurp file)
 
     (.delete out)))
+
+(deftest* do-tag-compile-test
+  ()
+  )
