@@ -1,5 +1,5 @@
 (ns misaki.test.controller
-  (:use [misaki config controller]
+  (:use [misaki config loader controller]
         [misaki.util seq]
         misaki.test.common
         [clj-time.core :only [date-time]]
@@ -7,6 +7,17 @@
   (:use [clojure.test])
   (:require [clojure.java.io :as io]))
 
+(deftest* make-site-data-test
+  (let [file (io/file (str *post-dir* "2000.01.01-foo.html.clj"))
+        site (make-site-data file :base (parse-template-option file))]
+    (are [x y] (= x y)
+      file    (:file site)
+      "baz"   (:title site)
+      "world" (:hello site)
+      3       (count (:posts site))
+      ()      (:tag site)
+      '("tag1" "tag2" "tag3") (map :name (:tags site))
+      (date-time 2000 1 1) (:date site))))
 
 ;; Posts Test
 (deftest* get-post-data-test
