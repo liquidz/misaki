@@ -47,8 +47,9 @@
           ; compile tag
           (if-let [tags (-> file get-post-options :tag)]
             (doseq [tag tags]
-              (print " * compiling tag:" tag)
-              (print-result (compile-tag tag))))))))
+              (let [{tag_name :name} tag]
+                (print " * compiling tag:" tag_name)
+                (print-result (compile-tag tag_name)))))))))
 
 ;; ## Template Watcher
 
