@@ -46,10 +46,9 @@
               (do-compile (template-name->file tmpl-name))))
           ; compile tag
           (if-let [tags (-> file get-post-options :tag)]
-            (doseq [tag tags]
-              (let [{tag_name :name} tag]
-                (print " * compiling tag:" tag_name)
-                (print-result (compile-tag tag_name)))))))))
+            (doseq [{tag-name :name} tags]
+              (print " * compiling tag:" tag-name)
+              (print-result (compile-tag tag-name))))))))
 
 ;; ## Template Watcher
 
