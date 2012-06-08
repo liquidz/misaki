@@ -106,11 +106,20 @@
         out  (io/file (str *public-dir* "controller.test01.html"))]
 
     (is res)
-    (is (.exists file))
-    "<p>hello</p>" (slurp file)
+    (is (.exists out))
+    "<p>hello</p>" (slurp out)
 
     (.delete out)))
 
-(deftest* do-tag-compile-test
-  ()
-  )
+;(deftest* do-tag-compile-test
+;  (println "PATH =" (str *public-dir* *tag-out-dir* "tag1.html"))
+;  (let [out (io/file (str *public-dir* *tag-out-dir* "tag1.html"))
+;        res (do-tag-compile {:name "tag1"})]
+;    (are [x y] (= x y)
+;      true res
+;      true (.exists out)
+;      ;"<p>tag1</p><ul><li>bar</li></ul>" (slurp out)
+;      )
+;    (.delete out)
+;    )
+;  )

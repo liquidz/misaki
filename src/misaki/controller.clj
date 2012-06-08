@@ -98,9 +98,10 @@
   [tag-data]
   (try
     (let [file (io/file *tag-layout*)
-          tmpl-fn (evaluate-template (load-template file))
-          site-data (make-site-data file :base (meta tmpl-fn))
-          site-data (vary-meta site-data assoc :tag-name (:name tag-data))]
+          tmpl-fn   (evaluate-template (load-template file))
+          tag-str   (:name tag-data)
+          site-data (make-site-data file :base (meta tmpl-fn) :tag [tag-str])
+          site-data (assoc site-data :tag-name tag-str)]
       (compile* (apply-template tmpl-fn (with-meta '() site-data))))
     (catch Exception e
       (println "LOAD AND EVALUATION ERROR")
