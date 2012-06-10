@@ -90,7 +90,7 @@
           site-data (make-site-data file :base (meta tmpl-fn))]
         (compile* (apply-template tmpl-fn (with-meta '() site-data))))
     (catch Exception e
-      (println "LOAD AND EVALUATION ERROR") ; use ascii color
+      (println "LOAD AND EVALUATION ERROR") ; TODO: use ascii color
       (.printStackTrace e)
       false)))
 

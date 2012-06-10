@@ -4,7 +4,7 @@
     [misaki template config]
     [misaki.util file code seq]
     [hiccup.core :only [html]]
-    [hiccup.page-helpers :only [html5 xhtml html4]]
+    [hiccup.page :only [html5 xhtml html4]]
     [cljs.closure :only [build]])
   (:require
     conv

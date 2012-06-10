@@ -3,7 +3,7 @@
   (:require
     [clojure.string :as str]
     [hiccup.core :as hiccup]
-    [hiccup.page-helpers :as page]))
+    [hiccup.page :as page]))
 
 ;; ## Utilities
 

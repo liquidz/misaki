@@ -2,7 +2,7 @@
   (:use [misaki config]
         [misaki.util file]
         [hiccup.core :only [html]]
-        [hiccup.page-helpers :only [html5 xhtml html4]]
+        [hiccup.page :only [html5 xhtml html4]]
         [cljs.closure :only [build]])
   (:require [clojure.string :as str])
   )
@@ -33,7 +33,7 @@
       (write-data (str *public-dir* filename)
                   (compile-fn shtml)))
     (catch Exception e
-      (println "COMPILE ERROR") ; use ascii color
+      (println "COMPILE ERROR") ; TODO: use ascii color
       (.printStackTrace e) false))
   true)
 
