@@ -4,7 +4,8 @@
     ;[misaki transform config]
     [misaki evaluator config]
     [clojure.core.incubator :only [-?>]])
-  (:require [clojure.string :as str])
+  (:require [clojure.string :as str]
+            [clojure.java.io :as io])
   (:import [java.io File]))
 
 
@@ -46,31 +47,32 @@
         contents (with-meta contents option)]
     (with-meta (f contents) option)))
 
+; =load-template-data
+(defn- load-template-data
+  "Load template data(String) and option."
+  [#^File file]
+  (let [data (slurp file)
+        option (parse-template-option data)
+        result (list [data option])]
+    (if-let [parent (-?> option :layout make-layout-filename io/file)]
+      (concat (load-template-data parent) result)
+      result)))
+
 ; =load-template
 (defn load-template
-  "Load template file, and transform to function.
+  "Load template file, and evaluate as function.
   Template options are contained as meta data.
-  
+
   If `allow-layout?` option is specified, you can select whether evaluate layout or not."
   ([#^File file] (load-template file true))
   ([#^File file allow-layout?]
-   (let [data   (slurp file)
-         option (parse-template-option data)]
-
-     (if-let [layout-filename (-?> option :layout make-layout-filename)]
-       (let [; at first, evaluate parent layout
-             ; parent layout must be evaluated if layout is not allowded
-             parent-layout-fn (load-template layout-filename)
-             ; second, evaluate this layout
-             ;layout-fn (transform data)]
-             layout-fn (evaluate data)]
-         (if allow-layout?
-           (with-meta
-             #(apply-template parent-layout-fn
-                (apply-template layout-fn %))
-             (merge (meta parent-layout-fn) option))
-           (with-meta layout-fn
-                      (merge (meta parent-layout-fn) option))))
-       ;(with-meta (transform data) option)))))
-       (with-meta (evaluate data) option)))))
-
+   (reduce
+     (fn [parent-fn [template-data option]]
+       (let [template-fn (evaluate template-data)]
+         (with-meta
+           (if (or (nil? parent-fn) (not allow-layout?))
+             template-fn
+             #(apply-template parent-fn (apply-template template-fn %)))
+           (merge (meta parent-fn) option))))
+     nil
+     (load-template-data file))))
