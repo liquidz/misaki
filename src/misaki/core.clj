@@ -34,28 +34,38 @@
   [#^File file]
   (->> file io/reader slurp parse-template-options))
 
-; =get-content
-(defn get-content
+; =get-post-content
+(defn get-post-content
   "Get post content without layout"
   [#^File file]
   (html (generate-html file :allow-layout? false)))
+
+; =get-post-data
+(defn get-post-data
+  [#^File file]
+  (assoc (get-post-options file)
+         :file file
+         :url  (make-post-url file)
+         :date (get-date-from-file file)
+         :lazy-content (delay (escape-content (get-post-content file)))))
+
+; =post-contains-tag?
+(defn post-contains-tag? [post-data #^String tag]
+  (let [tags  (get post-data :tag [])
+        names (set (map :name tags))]
+    (contains? names tag)))
 
 ; =get-posts
 (defn get-posts
   "Get posts data from *post-dir* directory.
   Content data is delayed."
   [& {:keys [tag]}]
-  (for [file  (find-clj-files *post-dir*)
-        :let  [option (get-post-options file)
-               tagset (set (map :name (get option :tag [])))]
-        :when (or (nil? tag)
-                  (every? #(contains? tagset %) tag))]
-    (assoc
-      option
-      :file file
-      :url  (make-post-url file)
-      :date (get-date-from-file file)
-      :lazy-content (delay (escape-content (get-content file))))))
+
+  (filter
+    #(or (nil? tag)
+         (and (sequential? tag)
+              (every? (partial post-contains-tag? %) tag)))
+    (map get-post-data (find-clj-files *post-dir*))))
 
 ;; ## Tags
 
