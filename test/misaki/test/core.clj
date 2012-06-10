@@ -8,19 +8,20 @@
 
 ;;; default site data
 (deftest* default-site-data-test
-  (is (= "<p>default title</p>" (html (generate-html "site.html.clj")))))
+  (let [file (template-name->file "site.html.clj")]
+    (is (= "<p>default title</p>" (html (generate-html file))))))
 
 ;;; format
 (deftest* template-format-test
-  (are [x y] (= x y)
-    "html5" (-> "no_format.html.clj" generate-html meta :format)
-    "xhtml" (-> "with_format.html.clj" generate-html meta :format)
-    "html4" (-> "with_layout_format.html.clj" generate-html meta :format)))
+  (are [x y] (= x (:format (meta (generate-html (template-name->file y)))))
+    "html5" "no_format.html.clj"
+    "xhtml" "with_format.html.clj"
+    "html4" "with_layout_format.html.clj"))
 
 ;;; generate
 (deftest* generate-html-test
-  (= "<html><head><title>hello</title></head><body><h1>hello</h1><p>world</p></body></html>"
-     (html (generate-html "gen_test.html.clj"))))
+  (is (= "<head><title>gen test</title></head><body><h1>gen test</h1><p>world</p></body>"
+         (-> "gen_test.html.clj" template-name->file generate-html html))))
 
 (deftest* compile-template-test
   (let [tmpl "gen_test.html.clj"
@@ -32,7 +33,7 @@
 
 (deftest* html-function-template-test
   (is (= "<p class=\"paragraph\"><a href=\"link.html\">link</a></p>"
-         (html (generate-html "html.test.html.clj")))))
+         (-> "html.test.html.clj" template-name->file generate-html html))))
 
 ;; SERVER
 (deftest* compile-cljs-test

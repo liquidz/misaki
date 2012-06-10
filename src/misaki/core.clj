@@ -38,15 +38,13 @@
 (defn get-content
   "Get post content without layout"
   [#^File file]
-  (html (generate-html (file->template-name file)
-                       :allow-layout? false)))
+  (html (generate-html file :allow-layout? false)))
 
 ; =get-posts
 (defn get-posts
   "Get posts data from *post-dir* directory.
   Content data is delayed."
   [& {:keys [tag]}]
-  ;(for [file  (extension-filter ".clj" (find-files *post-dir*))
   (for [file  (find-clj-files *post-dir*)
         :let  [option (get-post-options file)
                tagset (set (map :name (get option :tag [])))]
@@ -94,10 +92,8 @@
 ; =generate-html
 (defn generate-html
   "Generate HTML from template."
-  [tmpl-name & {:keys [allow-layout?] :or {allow-layout? true}}]
-  (let [filename   (str *template-dir* tmpl-name)
-        tmpl-fn    (load-template filename allow-layout?)
-        file       (io/file filename)
+  [#^File file & {:keys [allow-layout?] :or {allow-layout? true}}]
+  (let [tmpl-fn    (load-template file allow-layout?)
         site-data  (make-site-data file)
         empty-data (with-meta '("") site-data)]
 
@@ -107,8 +103,9 @@
 (defn generate-tag-html
   "Generate tag HTML from *tag-layout*."
   [tag-name]
-  (let [tmpl-fn    (load-template *tag-layout*)
-        site-data  (make-site-data (io/file *tag-layout*) :tag [tag-name])
+  (let [file       (io/file *tag-layout*)
+        tmpl-fn    (load-template file)
+        site-data  (make-site-data file :tag [tag-name])
         empty-data (with-meta '("") site-data)]
     (apply-template tmpl-fn empty-data)))
 
@@ -149,7 +146,7 @@
   [tmpl-name]
   (try
     (compile* (make-template-output-filename tmpl-name)
-              (generate-html tmpl-name))
+              (generate-html (template-name->file tmpl-name)))
     (catch Exception e (.printStackTrace e) false)))
 
 ; =compile-clojurescripts

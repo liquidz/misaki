@@ -4,7 +4,8 @@
     ;[misaki transform config]
     [misaki evaluator config]
     [clojure.core.incubator :only [-?>]])
-  (:require [clojure.string :as str]))
+  (:require [clojure.string :as str])
+  (:import [java.io File]))
 
 ; =parse-tag
 (defn- parse-tag [tag-data]
@@ -45,9 +46,9 @@
   Template options are contained as meta data.
   
   If `allow-layout?` option is specified, you can select whether evaluate layout or not."
-  ([filename] (load-template filename true))
-  ([filename allow-layout?]
-   (let [data   (slurp filename)
+  ([#^File file] (load-template file true))
+  ([#^File file allow-layout?]
+   (let [data   (slurp file)
          option (parse-template-options data)]
 
      (if-let [layout-filename (-?> option :layout make-layout-filename)]
