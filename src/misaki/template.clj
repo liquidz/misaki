@@ -8,14 +8,20 @@
   (:import [java.io File]))
 
 ; =parse-tag
-(defn- parse-tag [tag-data]
-  (if-let [tags (and tag-data (str/split tag-data #"[\s,]+"))]
-    (for [tag (distinct tags)]
+(defn- parse-tag
+  [#^String tags]
+  (if (nil? tags) ()
+    (for [tag (distinct (str/split tags #"[\s\t,]+"))]
       {:name tag
        :url  (str "/" (make-tag-output-filename tag))})))
+;(defn- parse-tag [tag-data]
+;  (if-let [tags (and tag-data (str/split tag-data #"[\s,]+"))]
+;    (for [tag (distinct tags)]
+;      {:name tag
+;       :url  (str "/" (make-tag-output-filename tag))})))
 
-; =parse-template-options
-(defn parse-template-options
+; =parse-template-option
+(defn parse-template-option
   "Parse template options from slurped data.
   ex) template file
 
@@ -49,7 +55,7 @@
   ([#^File file] (load-template file true))
   ([#^File file allow-layout?]
    (let [data   (slurp file)
-         option (parse-template-options data)]
+         option (parse-template-option data)]
 
      (if-let [layout-filename (-?> option :layout make-layout-filename)]
        (let [; at first, evaluate parent layout

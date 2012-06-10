@@ -28,11 +28,11 @@
 
 ;; ## Templates
 
-; =get-post-options
-(defn get-post-options
+; =get-post-option
+(defn get-post-option
   "Get post's template options from post file(java.io.File)"
   [#^File file]
-  (->> file io/reader slurp parse-template-options))
+  (->> file io/reader slurp parse-template-option))
 
 ; =get-post-content
 (defn get-post-content
@@ -43,7 +43,7 @@
 ; =get-post-data
 (defn get-post-data
   [#^File file]
-  (assoc (get-post-options file)
+  (assoc (get-post-option file)
          :file file
          :url  (make-post-url file)
          :date (get-date-from-file file)
@@ -74,7 +74,7 @@
   "Get all(unfiltered) tags from post list."
   []
   (let [post-files (find-clj-files *post-dir*)]
-    (remove nil? (mapcat (comp :tag get-post-options) post-files))))
+    (remove nil? (mapcat (comp :tag get-post-option) post-files))))
 
 ; =get-tags
 (defn get-tags

@@ -11,14 +11,14 @@
       "<p>default title</p>" (html (apply-template f '("")))
       "<p>a</p>" (html (apply-template f (with-meta '("") {:title "a"}))))))
 
-(deftest* parse-template-options-test
+(deftest* parse-template-option-test
   (let [datas [";@layout hello\n;@title wor ld\n@dummy:xxx"
                "; @layout hello\n;@title wor ld\n@dummy:xxx"
                "; @layout  hello\n;@title wor ld\n@dummy:xxx"
                "; @layout   hello\n;@title wor ld\n@dummy:xxx"
                ";; @layout   hello\n;@title wor ld\n@dummy:xxx"]]
     (doseq [data datas]
-      (let [option (parse-template-options data)]
+      (let [option (parse-template-option data)]
         (are [x y] (= x y)
           "hello"  (:layout option)
           "wor ld" (:title option))

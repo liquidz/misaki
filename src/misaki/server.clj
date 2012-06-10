@@ -53,7 +53,7 @@
           (doseq [tmpl-name *compile-with-post*]
             (do-compile (template-name->file tmpl-name))))
         ; compile tag
-        (if-let [tags (-> file get-post-options :tag)]
+        (if-let [tags (-> file get-post-option :tag)]
           (doseq [{tag-name :name} tags]
             (print " * compiling tag:" tag-name)
             (print-result (compile-tag tag-name))))))))
