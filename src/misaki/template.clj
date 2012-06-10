@@ -7,6 +7,7 @@
   (:require [clojure.string :as str])
   (:import [java.io File]))
 
+
 ; =parse-tag
 (defn- parse-tag
   [#^String tags]
@@ -14,14 +15,9 @@
     (for [tag (distinct (str/split tags #"[\s\t,]+"))]
       {:name tag
        :url  (str "/" (make-tag-output-filename tag))})))
-;(defn- parse-tag [tag-data]
-;  (if-let [tags (and tag-data (str/split tag-data #"[\s,]+"))]
-;    (for [tag (distinct tags)]
-;      {:name tag
-;       :url  (str "/" (make-tag-output-filename tag))})))
 
 ; =parse-template-option
-(defn parse-template-option
+(defmulti parse-template-option
   "Parse template options from slurped data.
   ex) template file
 
@@ -30,13 +26,17 @@
       [:h1 \"hello world\"]
 
       ;=> {:layout \"default\", :title \"hello, world\"}"
+  class)
+
+(defmethod parse-template-option File
+  [file] (parse-template-option (slurp file)))
+
+(defmethod parse-template-option String
   [data]
-  (let [lines    (map str/trim (str/split-lines data))
-        comments (filter #(= 0 (.indexOf % ";")) lines)
-        params   (remove nil? (map #(re-seq #"^;+\s*@(\w+)\s+(.+)$" %) comments))
-        option   (into {} (for [[[_ k v]] params] [(keyword k) v]))
-        tags     (-?> option :tag parse-tag)]
-    (assoc option :tag tags)))
+  (let [lines  (map str/trim (str/split-lines data))
+        params (remove nil? (map #(re-seq #"^;+\s*@(\w+)\s+(.+)$" %) lines))
+        option (into {} (for [[[_ k v]] params] [(keyword k) v]))]
+    (assoc option :tag (-?> option :tag parse-tag))))
 
 ; =apply-template
 (defn apply-template
