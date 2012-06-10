@@ -69,7 +69,8 @@
              #(apply-template parent-layout-fn
                 (apply-template layout-fn %))
              (merge (meta parent-layout-fn) option))
-           (with-meta layout-fn option)))
+           (with-meta layout-fn
+                      (merge (meta parent-layout-fn) option))))
        ;(with-meta (transform data) option)))))
        (with-meta (evaluate data) option)))))
 
