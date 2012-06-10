@@ -136,7 +136,8 @@
   (try
     (compile* (make-tag-output-filename tag-name)
               (generate-tag-html tag-name))
-    (catch Exception e (.printStackTrace e) false)))
+    (catch Exception e
+      (.printStackTrace e) false)))
 
 ; =compile-template
 (defn compile-template

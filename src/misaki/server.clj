@@ -73,8 +73,7 @@
     (rate 50)
     (change-first? false) ; do not compile each templates at first
     (file-filter ignore-dotfiles)
-    (file-filter (extensions :clj))
-    (file-filter (extensions :cljs))
+    (file-filter (extensions :clj :cljs))
     (on-change #(doseq [file %]
                   ; use `wrap-config` to apply config file updates
                   (with-config (do-compile file))))))

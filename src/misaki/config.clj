@@ -4,7 +4,8 @@
         [clojure.core.incubator :only [-?> -?>>]]
         [clj-time.core :only [date-time year month day]]
         [clj-time.core :only [month year]]
-        [clostache.parser :only [render]])
+        [clostache.parser :only [render]]
+        )
   (:require
     [clojure.string :as str]
     [clojure.java.io :as io])
@@ -13,7 +14,6 @@
 ;; ## Declarations
 
 ;; Blog base directory
-;(def ^{:dynamic true} *base-dir* "./")
 (def ^{:dynamic true} *base-dir* "")
 ;; Config filename
 (def ^{:dynamic true} *config-file* "_config.clj")
@@ -45,39 +45,32 @@
 ;; Compile options for ClojureScript
 (declare ^{:dynamic true} *cljs-compile-options*)
 
-;; ## Config Data Wrapper
 
-(defn render-map [init target & {:keys [ignore] :or {ignore #{}}}]
-  (reduce (fn [res [k v]]
-            (if (contains? ignore k) res
-              (assoc res k (if (string? v) (render v res) v)))
-            ) init target))
+;; ## Config Data Wrapper
 
 ; =load-config
 (defn load-config
   "Load and read config file"
   []
-  (let [config (read-string (slurp (str *base-dir* *config-file*)))]
-    (render-map (apply hash-map config)
-                (partition 2 config)
-                :ignore #{:post-filename-format})))
+  (read-string (slurp (str *base-dir* *config-file*))))
 
 ; =with-config
 (defmacro with-config
   "Wrap sexp with config data"
   [& body]
-  `(let [config# (load-config)
-         public# (str *base-dir* (:public-dir config#))
+  `(let [config#   (load-config)
+         public#   (str *base-dir* (:public-dir config#))
          template# (str *base-dir* (:template-dir config#))
+         layout#   (str template# (:layout-dir config#))
          cljs# (get config# :cljs {})]
      (binding
        [*public-dir*   public#
         *template-dir* template#
         *post*         (:post-dir config#)
-        *layout-dir*   (str *base-dir* (:layout-dir config#))
-        *post-dir*     (str *base-dir* (:post-dir config#))
+        *layout-dir*   layout#;(str template# (:layout-dir config#))
+        *post-dir*     (str template# (:post-dir config#))
         *tag-out-dir*  (:tag-out-dir config#)
-        *tag-layout*   (str *base-dir* (:tag-layout config#))
+        *tag-layout*   (str layout# (:tag-layout config#) ".clj")
         *lang*         (get config# :lang "en")
         *site*         (get config# :site {})
         *compile-with-post* (:compile-with-post config#)

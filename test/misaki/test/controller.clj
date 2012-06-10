@@ -111,15 +111,10 @@
 
     (.delete out)))
 
-;(deftest* do-tag-compile-test
-;  (println "PATH =" (str *public-dir* *tag-out-dir* "tag1.html"))
-;  (let [out (io/file (str *public-dir* *tag-out-dir* "tag1.html"))
-;        res (do-tag-compile {:name "tag1"})]
-;    (are [x y] (= x y)
-;      true res
-;      true (.exists out)
-;      ;"<p>tag1</p><ul><li>bar</li></ul>" (slurp out)
-;      )
-;    (.delete out)
-;    )
-;  )
+(deftest* do-tag-compile-test
+  (let [out (io/file (str *public-dir* *tag-out-dir* "tag1.html"))
+        res (do-tag-compile {:name "tag1"})]
+    (are [x y] (= x y)
+      true res
+      true (.exists out))
+    (.delete out)))

@@ -3,8 +3,11 @@
  :public-dir   "public/"
  :tag-out-dir  "tag/"
  :template-dir "_template/"
+ ;:post-dir     "{{template-dir}}_posts/"
  :post-dir     "_posts/"
+ ;:layout-dir   "{{template-dir}}_layouts/"
  :layout-dir   "_layouts/"
+
 
  ;; site language
  ;;   default value: "en"
@@ -23,7 +26,8 @@
  ;;   default value: #"(\d{4})[-_](\d{1,2})[-_](\d{1,2})[-_](.+)$"
  :post-filename-regexp #"(\d{4})[-_](\d{1,2})[-_](\d{1,2})[-_](.+)$"
 
- :post-filename-format "%year-%month/%file"
+; :post-filename-format "%year-%month/%file"
+ :post-filename-format "{{year}}-{{month}}/{{filename}}"
 
  ;; highlight setting
  :code-highlight {:CLJ "lang-clj", :CLOJURE "lang-clj"}

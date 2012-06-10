@@ -1,17 +1,17 @@
-[
+{
  ;; directory setting
  :public-dir   "public/"
  :template-dir "template/"
- ;:post-dir     "_posts/"
- ;:layout-dir   "_layouts/"
- :post-dir     "{{template-dir}}_posts/"
- :layout-dir   "{{template-dir}}_layouts/"
+ :post-dir     "_posts/"
+ :layout-dir   "_layouts/"
+ ;:post-dir     "{{template-dir}}_posts/"
+ ;:layout-dir   "{{template-dir}}_layouts/"
 
  ;; default site data
  :site {:default-title "default title"}
 
- :tag-layout "{{layout-dir}}tag.test.clj"
- ;:tag-layout "tag.test"
+ ;:tag-layout "{{layout-dir}}tag.test.clj"
+ :tag-layout "tag.test"
  ;:tag-out-dir "{{public-dir}}tag/"
  :tag-out-dir "tag/"
 
@@ -32,5 +32,5 @@
 
  ;; highlight setting
  :code-highlight {:CLJ "lang-clj"}
- ]
+ }
 
