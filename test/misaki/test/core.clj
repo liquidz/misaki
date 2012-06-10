@@ -1,5 +1,5 @@
 (ns misaki.test.core
-  (:use [misaki core template transform config server]
+  (:use [misaki core template config server]
         misaki.test.common
         [hiccup.core :only [html]])
   (:use [clojure.test])
@@ -9,18 +9,6 @@
 ;;; default site data
 (deftest* default-site-data-test
   (is (= "<p>default title</p>" (html (generate-html "site.html.clj")))))
-
-;;; TRANSFORM
-(deftest transform-test
-  (binding [*transformers* (atom [inc #(* 2 %)])]
-    (is (= 4 (transform 1)))
-    (add-transformer! #(* 3 %))
-    (is (= 12 (transform 1))))
-
-  (let [f (transform "(apply + (vals site))")]
-    ; f => (fn [site & contents] (list (apply + site)))
-    (is (= '(6) (apply-template f (with-meta '("") {:a 1 :b 2 :c 3}))))))
-
 
 ;;; format
 (deftest* template-format-test
@@ -45,7 +33,6 @@
 (deftest* html-function-template-test
   (is (= "<p class=\"paragraph\"><a href=\"link.html\">link</a></p>"
          (html (generate-html "html.test.html.clj")))))
-
 
 ;; SERVER
 (deftest* compile-cljs-test

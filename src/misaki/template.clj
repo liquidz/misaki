@@ -1,7 +1,8 @@
 (ns misaki.template
   "misaki: template"
   (:use
-    [misaki transform config]
+    ;[misaki transform config]
+    [misaki evaluator config]
     [clojure.core.incubator :only [-?>]])
   (:require [clojure.string :as str]))
 
@@ -54,12 +55,14 @@
              ; parent layout must be evaluated if layout is not allowded
              parent-layout-fn (load-template layout-filename)
              ; second, evaluate this layout
-             layout-fn (transform data)]
+             ;layout-fn (transform data)]
+             layout-fn (evaluate data)]
          (if allow-layout?
            (with-meta
              #(apply-template parent-layout-fn
                 (apply-template layout-fn %))
              (merge (meta parent-layout-fn) option))
            (with-meta layout-fn option)))
-       (with-meta (transform data) option)))))
+       ;(with-meta (transform data) option)))))
+       (with-meta (evaluate data) option)))))
 

@@ -25,6 +25,11 @@
   [ext file-list]
   (filter (partial has-extension? ext) file-list))
 
+(defn find-clj-files
+  "Find *.clj files in `dir` recursively."
+  [dir]
+  (extension-filter ".clj" (find-files dir)))
+
 ; =delete-extension
 (defn delete-extension
   "Delete file extension."
