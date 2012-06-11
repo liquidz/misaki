@@ -46,7 +46,7 @@
     ; else
     :else
     (do (print " * compiling:" (.getName file))
-      (print-result (compile-template (file->template-name file)))
+      (print-result (compile-template file))
       (when (post-file? file)
         ; compile with posts
         (if *compile-with-post*

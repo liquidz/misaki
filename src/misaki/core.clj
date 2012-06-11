@@ -141,10 +141,10 @@
 (defn compile-template
   "Compile a specified template, and write compiled data to *public-dir*.
   return true if compile succeeded."
-  [tmpl-name]
+  [#^File file]
   (try
-    (compile* (make-template-output-filename tmpl-name)
-              (generate-html (template-name->file tmpl-name)))
+    (compile* (make-template-output-filename file)
+              (generate-html file))
     (catch Exception e (.printStackTrace e) false)))
 
 ; =compile-clojurescripts
@@ -168,17 +168,11 @@
   []
   (every? #(compile-tag (:name %)) (get-tags)))
 
-; =get-template-files
-(defn get-template-files
-  "Get all template files(java.io.File) from *template-dir*."
-  []
-  (remove layout-file? (find-clj-files *template-dir*)))
-
 ; =compile-all-templates
 (defn compile-all-templates
   "Compile all template files.
   return true if all compile succeeded."
   []
-  (every? #(compile-template %)
-          (map file->template-name (get-template-files))))
+  (let [files (remove layout-file? (find-clj-files *template-dir*))]
+    (every? #(compile-template %) files)))
 

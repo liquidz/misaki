@@ -24,7 +24,7 @@
          (-> "gen_test.html.clj" template-name->file generate-html html))))
 
 (deftest* compile-template-test
-  (let [tmpl "gen_test.html.clj"
+  (let [tmpl (io/file (str *template-dir* "gen_test.html.clj"))
         res (compile-template tmpl)
         file (io/file (str *public-dir* (make-template-output-filename tmpl)))]
     (is res)

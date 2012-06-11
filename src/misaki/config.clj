@@ -110,16 +110,6 @@
 
 ;; ## file <-> template converter
 
-; =file->template-name
-(defn file->template-name
-  "Convert java.io.File to template name.
-
-      File<aa/bb/cc/template/index.clj>
-      ;=> template/index.clj"
-  [#^File file]
-  (last (str/split (.getAbsolutePath file)
-                   (re-pattern *template-dir*))))
-
 ; =template-name->file
 (defn template-name->file
   "Convert template name to java.io.File"
