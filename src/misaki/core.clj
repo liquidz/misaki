@@ -2,7 +2,7 @@
   "misaki: Jekyll inspired static site generator in Clojure"
   (:use
     [misaki template config]
-    [misaki.util file code seq]
+    [misaki.util file code sequence string]
     [hiccup.core :only [html]]
     [hiccup.page :only [html5 xhtml html4]]
     [cljs.closure :only [build]])
@@ -14,19 +14,7 @@
 
 (declare generate-html)
 
-;; ### Utilities
-
-; =escape-content
-(defn escape-content
-  "Escape content"
-  [content]
-  (-> content
-      (str/replace #"&" "&amp;")
-      (str/replace #"\"" "&quot;")
-      (str/replace #"<" "&lt;")
-      (str/replace #">" "&gt;")))
-
-;; ## Templates
+;; ## Post functions
 
 ; =get-post-option
 (defn get-post-option
@@ -34,8 +22,8 @@
   [#^File file]
   (->> file io/reader slurp parse-template-option))
 
-; =get-post-content
-(defn get-post-content
+; =generate-post-content
+(defn generate-post-content
   "Get post content without layout"
   [#^File file]
   (html (generate-html file :allow-layout? false)))
@@ -47,7 +35,7 @@
          :file file
          :url  (make-post-url file)
          :date (get-date-from-file file)
-         :lazy-content (delay (escape-content (get-post-content file)))))
+         :lazy-content (delay (escape-string (generate-post-content file)))))
 
 ; =post-contains-tag?
 (defn post-contains-tag? [post-data #^String tag]
@@ -67,7 +55,7 @@
               (every? (partial post-contains-tag? %) tag)))
     (map get-post-data (find-clj-files *post-dir*))))
 
-;; ## Tags
+;; ## Tag functions
 
 ; =get-all-tags
 (defn get-all-tags
@@ -93,8 +81,7 @@
   (let [tag? (and (not (nil? tag)) (sequential? tag))]
     (assoc (merge *site* base)
            :file     file
-           :posts    (sort-by-date
-                       (if tag? (get-posts :tag tag) (get-posts)))
+           :posts    (sort-by-date (if tag? (get-posts :tag tag) (get-posts)))
            :tags     (sort-alphabetically :name (get-tags :count? true))
            :tag-name (if tag? (str/join "," tag))
            :date     (get-date-from-file file))))
@@ -108,6 +95,7 @@
         empty-data (with-meta '("") site-data)]
 
     (apply-template tmpl-fn empty-data)))
+
 
 ; =generate-tag-html
 (defn generate-tag-html
@@ -184,8 +172,7 @@
 (defn get-template-files
   "Get all template files(java.io.File) from *template-dir*."
   []
-  (remove layout-file?
-          (extension-filter ".clj" (find-files *template-dir*))))
+  (remove layout-file? (find-clj-files *template-dir*)))
 
 ; =compile-all-templates
 (defn compile-all-templates

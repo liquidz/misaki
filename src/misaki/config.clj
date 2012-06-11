@@ -11,6 +11,11 @@
     [clojure.java.io :as io])
   (:import [java.io File]))
 
+;; ## Default value
+(def LANGUAGE "en")
+(def POST_FILENAME_REGEXP #"(\d{4})[-_](\d{1,2})[-_](\d{1,2})[-_](.+)$")
+(def POST_FILENAME_FORMAT "{{year}}/{{month}}/{{filename}}")
+
 ;; ## Declarations
 
 ;; Blog base directory
@@ -62,22 +67,22 @@
          public#   (str *base-dir* (:public-dir config#))
          template# (str *base-dir* (:template-dir config#))
          layout#   (str template# (:layout-dir config#))
-         cljs# (get config# :cljs {})]
+         cljs#     (get config# :cljs {})]
      (binding
        [*public-dir*   public#
         *template-dir* template#
         *post*         (:post-dir config#)
-        *layout-dir*   layout#;(str template# (:layout-dir config#))
+        *layout-dir*   layout#
         *post-dir*     (str template# (:post-dir config#))
         *tag-out-dir*  (:tag-out-dir config#)
         *tag-layout*   (str layout# (:tag-layout config#) ".clj")
-        *lang*         (get config# :lang "en")
+        *lang*         (get config# :lang LANGUAGE)
         *site*         (get config# :site {})
         *compile-with-post* (:compile-with-post config#)
         *post-filename-regexp* (get config# :post-filename-regexp
-                                 #"(\d{4})[-_](\d{1,2})[-_](\d{1,2})[-_](.+)$")
+                                 POST_FILENAME_REGEXP)
         *post-filename-format* (get config# :post-filename-format
-                                 "{{year}}/{{month}}/{{filename}}")
+                                 POST_FILENAME_FORMAT)
         *cljs-compile-options* (assoc (dissoc cljs# :output-dir)
                                       :src-dir template#
                                       :output-to (str public# (:output-to cljs#)))]
@@ -162,9 +167,9 @@
   (let [date (get-date-from-file file)
         filename (-?> (.getName file) remove-date-from-name delete-extension)]
     (render *post-filename-format*
-            {:year (-> date year str)
+            {:year  (-> date year str)
              :month (->> date month (format "%02d"))
-             :day (->> date day (format "%02d"))
+             :day   (->> date day (format "%02d"))
              :filename filename})))
 
 ; =make-template-output-filename

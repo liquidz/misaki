@@ -1,4 +1,4 @@
-(ns misaki.util.seq
+(ns misaki.util.sequence
   "misaki: sequence utility"
   (:use [clj-time.core :only [after?]]))
 
