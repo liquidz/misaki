@@ -155,26 +155,9 @@
   [#^String tag-name]
   (str *tag-out-dir* tag-name ".html"))
 
-; =make-template-output-filename
-(defmulti make-template-output-filename class)
-(defmethod make-template-output-filename String
-  [tmpl-name]
-  (make-template-output-filename (template-name->file tmpl-name)))
-
-(defmethod make-template-output-filename File
-;  "Make template output filename from template name"
-  [file]
-  (let [date (get-date-from-file file)
-        filename (-?> (.getName file) remove-date-from-name delete-extension)]
-    (if (post-file? file)
-      (render *post-filename-format*
-              {:year (-> date year str)
-               :month (->> date month (format "%02d"))
-               :day (->> date day (format "%02d"))
-               :filename filename})
-      (delete-extension (.getName file)))))
-
+; =make-post-output-filename
 (defn make-post-output-filename
+  "Make post output filename from java.io.File"
   [#^File file]
   (let [date (get-date-from-file file)
         filename (-?> (.getName file) remove-date-from-name delete-extension)]
@@ -184,9 +167,24 @@
              :day (->> date day (format "%02d"))
              :filename filename})))
 
+; =make-template-output-filename
+(defmulti make-template-output-filename
+  "Make template output filename from template name"
+  class)
+
+(defmethod make-template-output-filename String
+  [tmpl-name]
+  (make-template-output-filename (template-name->file tmpl-name)))
+
+(defmethod make-template-output-filename File
+  [file]
+  (if (post-file? file)
+    (make-post-output-filename file)
+    (delete-extension (.getName file))))
+
 ; =make-post-url
 (defn make-post-url
-  "Make post url from file(java.io.File)"
+  "Make post url from java.io.File"
   [#^File file]
   (str "/" (make-template-output-filename file)))
 
