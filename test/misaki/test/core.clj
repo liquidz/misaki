@@ -1,7 +1,8 @@
 (ns misaki.test.core
   (:use [misaki core template config server]
         misaki.test.common
-        [hiccup.core :only [html]])
+        [hiccup.core :only [html]]
+        [clj-time.core :only [date-time]])
   (:use [clojure.test])
   (:require [clojure.java.io :as io]))
 
@@ -11,6 +12,17 @@
     (are [x y] (= x y)
       "<p>baz</p>" (generate-post-content file1)
       "<p>foo</p>" (generate-post-content file2))))
+
+(deftest* get-post-data-test
+  (let [file (io/file (str *post-dir* "2000.01.01-foo.html.clj"))
+        data (get-post-data file)]
+    (are [x y] (= x y)
+      "baz"   (:title data)
+      "world" (:hello data)
+      file    (:file data)
+      "/2000-01/foo.html"  (:url data)
+      (date-time 2000 1 1) (:date data)
+      "&lt;p&gt;baz&lt;/p&gt;" (force (:lazy-content data)))))
 
 ; ---------------
 
