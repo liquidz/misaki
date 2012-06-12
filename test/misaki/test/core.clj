@@ -5,6 +5,14 @@
   (:use [clojure.test])
   (:require [clojure.java.io :as io]))
 
+(deftest* generate-post-content-test
+  (let [file1 (io/file (str *post-dir* "2000.01.01-foo.html.clj"))
+        file2 (io/file (str *post-dir* "2011.01.01-foo.html.clj"))]
+    (are [x y] (= x y)
+      "<p>baz</p>" (generate-post-content file1)
+      "<p>foo</p>" (generate-post-content file2))))
+
+; ---------------
 
 ;;; default site data
 (deftest* default-site-data-test
