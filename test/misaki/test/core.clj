@@ -7,6 +7,7 @@
   (:use [clojure.test])
   (:require [clojure.java.io :as io]))
 
+;;; generate-post-content
 (deftest* generate-post-content-test
   (let [file1 (io/file (str *post-dir* "2000.01.01-foo.html.clj"))
         file2 (io/file (str *post-dir* "2011.01.01-foo.html.clj"))]
@@ -14,6 +15,7 @@
       "<p>baz</p>" (generate-post-content file1)
       "<p>foo</p>" (generate-post-content file2))))
 
+;;; get-post-data
 (deftest* get-post-data-test
   (let [file (io/file (str *post-dir* "2000.01.01-foo.html.clj"))
         data (get-post-data file)]
@@ -25,6 +27,7 @@
       (date-time 2000 1 1) (:date data)
       "&lt;p&gt;baz&lt;/p&gt;" (force (:lazy-content data)))))
 
+;;; post-contains-tag?
 (deftest* post-contains-tag?-test
   (let [file (io/file (str *post-dir* "2011.01.01-foo.html.clj"))
         data (get-post-data file)]
@@ -34,6 +37,7 @@
       true  (post-contains-tag? data "tag3")
       false (post-contains-tag? data nil))))
 
+;;; get-posts
 (deftest* get-posts-test
   (let [posts (sort-by-date (get-posts))]
     (are [x y] (= x y)
@@ -53,6 +57,41 @@
       false (nil? (-> posts second :lazy-content))
       "world" (-> posts second :hello))))
 
+;;; get-all-tags
+(deftest* get-all-tags-test
+  (let [[t1 t2 _ t3 :as tags] (sort-alphabetically :name (get-all-tags))]
+    (are [x y] (= x y)
+      4      (count tags)
+      "tag1" (:name t1)
+      "tag2" (:name t2)
+      "tag3" (:name t3)
+      "/tag/tag1.html" (:url t1)
+      "/tag/tag2.html" (:url t2)
+      "/tag/tag3.html" (:url t3))))
+
+;;; get-tags
+(deftest* get-tags-test
+  (let [[t1 t2 t3 :as tags] (get-tags)]
+    (are [x y] (= x y)
+      3      (count tags)
+      "tag1" (:name t1)
+      "tag2" (:name t2)
+      "tag3" (:name t3)
+      "/tag/tag1.html" (:url t1)
+      "/tag/tag2.html" (:url t2)
+      "/tag/tag3.html" (:url t3)))
+  (let [[t1 t2 t3 :as tags] (get-tags :count? true)]
+    (are [x y] (= x y)
+      3      (count tags)
+      "tag1" (:name  t1)
+      "tag2" (:name  t2)
+      "tag3" (:name  t3)
+      1      (:count t1)
+      2      (:count t2)
+      1      (:count t3)
+      "/tag/tag1.html" (:url   t1)
+      "/tag/tag2.html" (:url   t2)
+      "/tag/tag3.html" (:url   t3))))
 
 ; ---------------
 
