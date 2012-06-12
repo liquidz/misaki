@@ -3,13 +3,11 @@
   (:use
     [misaki core config template]
     [misaki.util.file :only [add-path-slash has-extension?]]
+    [misaki.util.string :only [blue red]]
     watchtower.core
     [compojure.core :only [routes]]
     [compojure.route :only [files]]
     [ring.adapter.jetty :only [run-jetty]]))
-
-(defn- blue [s] (str "\033[36m" s "\033[0m"))
-(defn- red  [s] (str "\033[31m" s "\033[0m"))
 
 ; =print-result
 (defn print-result
