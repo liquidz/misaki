@@ -16,12 +16,6 @@
 
 ;; ## Post functions
 
-; =get-post-option
-(defn get-post-option
-  "Get post's template options from post file(java.io.File)"
-  [#^File file]
-  (->> file io/reader slurp parse-template-option))
-
 ; =generate-post-content
 (defn generate-post-content
   "Get post content without layout"
@@ -31,7 +25,7 @@
 ; =get-post-data
 (defn get-post-data
   [#^File file]
-  (assoc (get-post-option file)
+  (assoc (parse-template-option  file)
          :file file
          :url  (make-post-url file)
          :date (get-date-from-file file)
@@ -62,7 +56,7 @@
   "Get all(unfiltered) tags from post list."
   []
   (let [post-files (find-clj-files *post-dir*)]
-    (remove nil? (mapcat (comp :tag get-post-option) post-files))))
+    (remove nil? (mapcat (comp :tag parse-template-option) post-files))))
 
 ; =get-tags
 (defn get-tags
@@ -147,19 +141,19 @@
               (generate-html file))
     (catch Exception e (.printStackTrace e) false)))
 
-; =compile-clojurescripts
-(defn compile-clojurescripts
-  "Compile clojurescripts.
-  return true if compile succeeded."
-  []
-  (try
-    ; make directory if not exists
-    (make-directories (:output-to *cljs-compile-options*))
-    ; build clojurescript
-    (build (:src-dir *cljs-compile-options*)
-           *cljs-compile-options*)
-    true
-    (catch Exception e (.printStackTrace e) false)))
+;;;; =compile-clojurescripts
+;;;(defn compile-clojurescripts
+;;;  "Compile clojurescripts.
+;;;  return true if compile succeeded."
+;;;  []
+;;;  (try
+;;;    ; make directory if not exists
+;;;    (make-directories (:output-to *cljs-compile-options*))
+;;;    ; build clojurescript
+;;;    (build (:src-dir *cljs-compile-options*)
+;;;           *cljs-compile-options*)
+;;;    true
+;;;    (catch Exception e (.printStackTrace e) false)))
 
 ; =compile-all-tags
 (defn compile-all-tags

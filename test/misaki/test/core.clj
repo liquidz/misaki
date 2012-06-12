@@ -36,12 +36,12 @@
          (-> "html.test.html.clj" template-name->file generate-html html))))
 
 ;; SERVER
-(deftest* compile-cljs-test
-  (do-compile (io/file (str *template-dir* "cljs/core.cljs")))
-  (let [js-file (io/file (str *public-dir* "js/main.js"))]
-    (is (.exists js-file))
-    (.delete js-file)
-    (.. js-file getParentFile delete)))
+;;;(deftest* compile-cljs-test
+;;;  (do-compile (io/file (str *template-dir* "cljs/core.cljs")))
+;;;  (let [js-file (io/file (str *public-dir* "js/main.js"))]
+;;;    (is (.exists js-file))
+;;;    (.delete js-file)
+;;;    (.. js-file getParentFile delete)))
 
 (deftest* server-test
   (testing "compile with post"

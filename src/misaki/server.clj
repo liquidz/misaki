@@ -1,7 +1,7 @@
 (ns misaki.server
   "misaki: Development server"
   (:use
-    [misaki core config]
+    [misaki core config template]
     [misaki.util.file :only [add-path-slash has-extension?]]
     watchtower.core
     [compojure.core :only [routes]]
@@ -34,10 +34,10 @@
   [#^java.io.File file]
 
   (cond
-    ; clojurescript
-    (has-extension? ".cljs" file)
-    (do (print " * compiling clojurescript:")
-      (print-result (compile-clojurescripts)))
+;;;    ; clojurescript
+;;;    (has-extension? ".cljs" file)
+;;;    (do (print " * compiling clojurescript:")
+;;;      (print-result (compile-clojurescripts)))
 
     ; layout or config
     (or (layout-file? file) (config-file? file))
@@ -53,7 +53,7 @@
           (doseq [tmpl-name *compile-with-post*]
             (do-compile (template-name->file tmpl-name))))
         ; compile tag
-        (if-let [tags (-> file get-post-option :tag)]
+        (if-let [tags (-> file parse-template-option :tag)]
           (doseq [{tag-name :name} tags]
             (print " * compiling tag:" tag-name)
             (print-result (compile-tag tag-name))))))))
