@@ -1,5 +1,6 @@
 (ns misaki.test.core
   (:use [misaki core template config server]
+        [misaki.util sequence]
         misaki.test.common
         [hiccup.core :only [html]]
         [clj-time.core :only [date-time]])
@@ -32,6 +33,26 @@
       true  (post-contains-tag? data "tag2")
       true  (post-contains-tag? data "tag3")
       false (post-contains-tag? data nil))))
+
+(deftest* get-posts-test
+  (let [posts (sort-by-date (get-posts))]
+    (are [x y] (= x y)
+      3 (count posts)
+
+      "bar" (-> posts first :title)
+      "/2022-02/bar.html" (-> posts first :url)
+      false (nil? (-> posts first :file))
+      false (nil? (-> posts first :date))
+      false (nil? (-> posts first :lazy-content))
+      "world" (-> posts first :hello)
+
+      "foo" (-> posts second :title)
+      "/2011-01/foo.html" (-> posts second :url)
+      false (nil? (-> posts second :file))
+      false (nil? (-> posts second :date))
+      false (nil? (-> posts second :lazy-content))
+      "world" (-> posts second :hello))))
+
 
 ; ---------------
 
