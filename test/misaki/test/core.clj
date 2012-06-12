@@ -24,6 +24,15 @@
       (date-time 2000 1 1) (:date data)
       "&lt;p&gt;baz&lt;/p&gt;" (force (:lazy-content data)))))
 
+(deftest* post-contains-tag?-test
+  (let [file (io/file (str *post-dir* "2011.01.01-foo.html.clj"))
+        data (get-post-data file)]
+    (are [x y] (= x y)
+      false (post-contains-tag? data "tag1")
+      true  (post-contains-tag? data "tag2")
+      true  (post-contains-tag? data "tag3")
+      false (post-contains-tag? data nil))))
+
 ; ---------------
 
 ;;; default site data
