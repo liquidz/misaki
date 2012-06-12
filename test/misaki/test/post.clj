@@ -1,6 +1,6 @@
 (ns misaki.test.post
   (:use [misaki core config]
-        [misaki.util seq]
+        [misaki.util sequence]
         [hiccup.core :only [html]]
         misaki.test.common
         clojure.test)
