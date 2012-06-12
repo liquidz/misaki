@@ -16,7 +16,7 @@
  :tag-out-dir "tag/"
 
  ;; templates which compiled with post data
- :compile-with-post ["gen_test.html.clj"]
+ :compile-with-post ["index.html.clj"]
 
  :post-filename-regexp #"(\d{4})[.](\d{1,2})[.](\d{1,2})[-_](.+)$"
  ;:post-filename-format "%year-%month/%file"

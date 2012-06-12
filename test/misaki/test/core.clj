@@ -93,6 +93,61 @@
       "/tag/tag2.html" (:url   t2)
       "/tag/tag3.html" (:url   t3))))
 
+;;; make-site-data
+(deftest* make-site-data-test
+  (let [file1   (io/file (str *post-dir* "2000.01.01-foo.html.clj"))
+        file2   (io/file (str *post-dir* "2011.01.01-foo.html.clj"))
+        option1 (parse-template-option file1)
+        option2 (parse-template-option file2)]
+
+    (testing "simple site data"
+      (let [site (make-site-data file1 :base option1)]
+        (are [x y] (= x y)
+          file1   (:file site)
+          "baz"   (:title site)
+          "world" (:hello site)
+          3       (count (:posts site))
+          ()      (:tag site)
+          nil     (:tag-name site)
+          '("tag1" "tag2" "tag3") (map :name (:tags site))
+          (date-time 2000 1 1) (:date site))))
+
+    (testing "site data with post tag"
+      (let [site (make-site-data file1 :base option1 :tag ["tag1"])]
+        file1  (:file site)
+        1      (count (:posts site))
+        ()     (:tag site)
+        "tag1" (:tag-name site)
+        "bar"  (-> site :posts first :title)))
+
+    (testing "site data containing tag-name"
+      (let [site (make-site-data file2 :base option2)]
+        (are [x y] (= x y)
+          file2   (:file site)
+          "foo"   (:title site)
+          "world" (:hello site)
+          3       (count (:posts site))
+          2       (count (:tag site))
+          "tag2"  (-> site :tag first :name)
+          nil     (:tag-name site)
+          '("tag1" "tag2" "tag3") (map :name (:tags site))
+          (date-time 2011 1 1) (:date site))))))
+
+;;; generate-html
+(deftest* generate-html-test
+  (let [file1 (template-name->file "index.html.clj")
+        file2 (io/file (str *post-dir* "2011.01.01-foo.html.clj"))
+        ]
+    (are [x y] (= x y)
+      ; index.html.clj
+      "<head><title>gen test</title></head><body><h1>gen test</h1><p>world</p></body>"
+      (html (generate-html file1))
+
+      ; 2011.01.01-foo.html.clj
+      "<div><p>foo</p></div>"
+      (html (generate-html file2)))))
+
+
 ; ---------------
 
 ;;; default site data
@@ -107,13 +162,9 @@
     "xhtml" "with_format.html.clj"
     "html4" "with_layout_format.html.clj"))
 
-;;; generate
-(deftest* generate-html-test
-  (is (= "<head><title>gen test</title></head><body><h1>gen test</h1><p>world</p></body>"
-         (-> "gen_test.html.clj" template-name->file generate-html html))))
 
 (deftest* compile-template-test
-  (let [tmpl (io/file (str *template-dir* "gen_test.html.clj"))
+  (let [tmpl (io/file (str *template-dir* "index.html.clj"))
         res (compile-template tmpl)
         file (io/file (str *public-dir* (make-template-output-filename tmpl)))]
     (is res)
@@ -136,7 +187,7 @@
   (testing "compile with post"
     (do-compile (io/file (str *post-dir* "2011.01.01-foo.html.clj")))
     (let [post-file (io/file (str *public-dir* "2011-01/foo.html"))
-          test-file (io/file (str *public-dir* "gen_test.html"))]
+          test-file (io/file (str *public-dir* "index.html"))]
       (is (.exists post-file))
       (.delete post-file)
       (is (.exists test-file))

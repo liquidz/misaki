@@ -37,7 +37,7 @@
   (let [lines  (map str/trim (str/split-lines data))
         params (remove nil? (map #(re-seq #"^;+\s*@(\w+)\s+(.+)$" %) lines))
         option (into {} (for [[[_ k v]] params] [(keyword k) v]))]
-    (assoc option :tag (-?> option :tag parse-tag))))
+    (assoc option :tag (-> option :tag parse-tag))))
 
 ; =apply-template
 (defn apply-template
