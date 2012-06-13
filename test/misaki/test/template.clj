@@ -3,7 +3,9 @@
         [hiccup.core :only [html]]
         misaki.test.common
         clojure.test)
-  (:require [clojure.java.io :as io]))
+  (:require
+    [clojure.string :as str]
+    [clojure.java.io :as io]))
 
 ;;; parse-tag-string
 (deftest parse-tag-string-test
@@ -48,6 +50,36 @@
       '(2 3 4) res
       "a"      (:a (meta res))
       "b"      (:b (meta res)))))
+
+;;; load-template-data
+(deftest* load-template-data-test
+  (letfn [(del-crln [s] (str/replace s #"[\r\n]" ""))]
+    (testing "Single template"
+      (let [file (io/file (str *layout-dir* "div.clj"))
+            [data :as res] (load-template-data file)]
+        (are [x y] (= x y)
+          true (seq? res)
+          1    (count res)
+          true (vector? data)
+          2    (count data)
+          "; @title div title[:div contents]" (-> data first del-crln)
+          "div title" (-> data second :title))))
+
+    (testing "Template with layout"
+      (let [file (io/file (str *template-dir* "index.html.clj"))
+            [parent child :as res] (load-template-data file)]
+        (are [x y] (= x y)
+          true (seq? res)
+          2    (count res)
+          ; parent
+          "; @format html5(defn paragraph [x] [:p x])[:head [:title (:title site)]][:body contents]"
+            (-> parent first del-crln)
+          "html5" (-> parent second :format)
+          ; child
+          "; @layout default; @title  index; @test   hello; dummy   dummy[:h1 (:title site)][:p \"world\"]"
+            (-> child first del-crln)
+          "index" (-> child second :title))))))
+
 
 (deftest* load-template-test
   ;; single template

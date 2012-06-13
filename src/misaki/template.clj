@@ -48,7 +48,7 @@
     (with-meta (f contents) option)))
 
 ; =load-template-data
-(defn- load-template-data
+(defn load-template-data
   "Load template data(String) and option."
   [#^File file]
   (let [data (slurp file)
