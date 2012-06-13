@@ -1,4 +1,5 @@
 (ns misaki.evaluator
+  "S-exp evaluating functions"
   (:require
     [clojure.string :as str]))
 
@@ -24,6 +25,7 @@
 
 ; =wrap-as-function
 (defn wrap-as-function
+  "Wrap sexp with common function for misaki template."
   [sexp]
   (let [[defs sexp] (split-with-definition sexp)]
     `(do (use 'misaki.html.core)
@@ -31,37 +33,15 @@
          (fn [~'contents]
            (let [~'site (meta ~'contents)] ~sexp)))))
 
-;(defn apply-template
-;  "Apply contents data to template function."
-;  [f contents]
-;  (let [option   (merge (meta f) (meta contents))
-;        contents (with-meta contents option)]
-;    (with-meta (f contents) option)))
+(def ^:dynamic *eval-functions*
+  [wrap-as-list
+   read-string
+   wrap-as-function
+   eval])
 
-;;(defn comp-template-function [parent-fn child-fn]
-;;  (let [option (merge (meta parent-fn) (meta child-fn))]
-;;    (with-meta
-;;      #(apply-template parent-fn (apply-template child-fn %))
-;;      option)))
-;;
-;;(defn evaluate-template
-;;  [templates & {:keys [allow-layout?] :or {allow-layout? true}}]
-;;  (reduce
-;;    (fn [parent-fn tmpl]
-;;      (let [option  (meta tmpl)
-;;            tmpl-fn (with-meta (eval (wrap-as-function tmpl)) option)]
-;;        (if (or (nil? parent-fn) (not allow-layout?))
-;;          tmpl-fn
-;;          (comp-template-function parent-fn tmpl-fn))))
-;;    nil
-;;    templates))
-
-(def evaluate
-  (comp eval wrap-as-function read-string wrap-as-list))
-
-;;; =*evalating-functions*
-;;(def ^{:dynamic true
-;;       :doc "Evaluating functions"}
-;;  *evaluating-functions*
-;;  (atom [wrap-list read-string wrap-function eval]))
+; =evaluate
+(defn evaluate
+  "Evaluate template's sexp string to template function."
+  [sexp-str]
+  (reduce #(%2 %) sexp-str *eval-functions*))
 
