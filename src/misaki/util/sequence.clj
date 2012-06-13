@@ -12,5 +12,5 @@
 (defn sort-alphabetically
   "Sort list alphabetically."
   ([ls]   (sort-alphabetically identity ls))
-  ([f ls] (sort #(neg? (.compareTo (f %) (f %2))) ls)))
+  ([f ls] (sort #(neg? (compare (f %) (f %2))) ls)))
 
