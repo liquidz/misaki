@@ -147,6 +147,19 @@
       "<div><p>foo</p></div>"
       (html (generate-html file2)))))
 
+;;; generate-tag-html
+(deftest* generate-tag-html-test
+  (are [x y] (= x y)
+    ; tag1
+    "<p>tag1</p><ul><li>bar</li></ul>"
+    (html (generate-tag-html "tag1"))
+    ; tag2
+    "<p>tag2</p><ul><li>bar</li><li>foo</li></ul>"
+    (html (generate-tag-html "tag2"))
+    ; tagX
+    "<p>tagX</p><ul></ul>"
+    (html (generate-tag-html "tagX"))))
+
 
 ; ---------------
 
