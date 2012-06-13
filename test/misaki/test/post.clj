@@ -67,25 +67,24 @@
       0 (count posts5))))
 
 
-(deftest* generate-tag-html-test
-  ;(let [[t1 t2 t3] (get-tags (get-posts))]
-  (let [[t1 t2 t3] (get-tags)]
-    (are [x y] (= x y)
-      "<p>tag1</p><ul><li>bar</li></ul>"
-      (html (generate-tag-html (:name t1)))
+;(deftest* generate-tag-html-test
+;  (let [[t1 t2 t3] (get-tags)]
+;    (are [x y] (= x y)
+;      "<p>tag1</p><ul><li>bar</li></ul>"
+;      (html (generate-tag-html (:name t1)))
+;
+;      "<p>tag2</p><ul><li>bar</li><li>foo</li></ul>"
+;      (html (generate-tag-html (:name t2)))
+;
+;      "<p>tag3</p><ul><li>foo</li></ul>"
+;      (html (generate-tag-html (:name t3))))))
 
-      "<p>tag2</p><ul><li>bar</li><li>foo</li></ul>"
-      (html (generate-tag-html (:name t2)))
 
-      "<p>tag3</p><ul><li>foo</li></ul>"
-      (html (generate-tag-html (:name t3))))))
-
-
-(deftest* compile-tag-test
-  (let [tag-name "tag1"
-        res (compile-tag tag-name)
-        file (io/file (str *public-dir* *tag-out-dir* tag-name ".html"))]
-    (is res)
-    (is (.exists file))
-    (.delete file)))
+;;(deftest* compile-tag-test
+;;  (let [tag-name "tag1"
+;;        res (compile-tag tag-name)
+;;        file (io/file (str *public-dir* *tag-out-dir* tag-name ".html"))]
+;;    (is res)
+;;    (is (.exists file))
+;;    (.delete file)))
 

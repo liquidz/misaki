@@ -149,17 +149,29 @@
 
 ;;; generate-tag-html
 (deftest* generate-tag-html-test
-  (are [x y] (= x y)
-    ; tag1
-    "<p>tag1</p><ul><li>bar</li></ul>"
-    (html (generate-tag-html "tag1"))
-    ; tag2
-    "<p>tag2</p><ul><li>bar</li><li>foo</li></ul>"
-    (html (generate-tag-html "tag2"))
-    ; tagX
-    "<p>tagX</p><ul></ul>"
-    (html (generate-tag-html "tagX"))))
+  (let [[t1 t2 t3] (get-tags)]
+    (are [x y] (= x y)
+      ; tag1
+      "<p>tag1</p><ul><li>bar</li></ul>"
+      (html (generate-tag-html (:name t1)))
+      ; tag2
+      "<p>tag2</p><ul><li>bar</li><li>foo</li></ul>"
+      (html (generate-tag-html (:name t2)))
+      ; tag3
+      "<p>tag3</p><ul><li>foo</li></ul>"
+      (html (generate-tag-html (:name t3)))
+      ; tagX
+      "<p>tagX</p><ul></ul>"
+      (html (generate-tag-html "tagX")))))
 
+;;; compile-tag-test
+(deftest* compile-tag-test
+  (let [tag-name "tag1"
+        res (compile-tag tag-name)
+        file (io/file (str *public-dir* *tag-out-dir* tag-name ".html"))]
+    (is res)
+    (is (.exists file))
+    (.delete file)))
 
 ; ---------------
 
