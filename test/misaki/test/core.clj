@@ -173,21 +173,7 @@
     (is (.exists file))
     (.delete file)))
 
-; ---------------
-
-;;; default site data
-(deftest* default-site-data-test
-  (let [file (template-name->file "site.html.clj")]
-    (is (= "<p>default title</p>" (html (generate-html file))))))
-
-;;; format
-(deftest* template-format-test
-  (are [x y] (= x (:format (meta (generate-html (template-name->file y)))))
-    "html5" "no_format.html.clj"
-    "xhtml" "with_format.html.clj"
-    "html4" "with_layout_format.html.clj"))
-
-
+;;; compile-template
 (deftest* compile-template-test
   (let [tmpl (io/file (str *template-dir* "index.html.clj"))
         res (compile-template tmpl)
@@ -196,6 +182,20 @@
     (is (.exists file))
     (.delete file)))
 
+;;; default site data
+(deftest* default-site-data-test
+  (let [file (template-name->file "site.html.clj")]
+    (is (= "<p>default title</p>" (html (generate-html file))))))
+
+;;; format check
+(deftest* template-format-test
+  (are [x y] (= x (:format (meta (generate-html (template-name->file y)))))
+    "html5" "no_format.html.clj"
+    "xhtml" "with_format.html.clj"
+    "html4" "with_layout_format.html.clj"))
+
+
+;;; functions in template test
 (deftest* html-function-template-test
   (is (= "<p class=\"paragraph\"><a href=\"link.html\">link</a></p>"
          (-> "html.test.html.clj" template-name->file generate-html html))))
