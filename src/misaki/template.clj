@@ -1,7 +1,6 @@
 (ns misaki.template
   "misaki: template"
   (:use
-    ;[misaki transform config]
     [misaki evaluator config]
     [clojure.core.incubator :only [-?>]])
   (:require [clojure.string :as str]
@@ -9,10 +8,11 @@
   (:import [java.io File]))
 
 
-; =parse-tag
-(defn- parse-tag
+; =parse-tag-string
+(defn parse-tag-string
+  "Parse tag string to tag list."
   [#^String tags]
-  (if (nil? tags) ()
+  (if (or (nil? tags) (str/blank? tags)) ()
     (for [tag (distinct (str/split tags #"[\s\t,]+"))]
       {:name tag
        :url  (str "/" (make-tag-output-filename tag))})))
@@ -37,7 +37,7 @@
   (let [lines  (map str/trim (str/split-lines data))
         params (remove nil? (map #(re-seq #"^;+\s*@(\w+)\s+(.+)$" %) lines))
         option (into {} (for [[[_ k v]] params] [(keyword k) v]))]
-    (assoc option :tag (-> option :tag parse-tag))))
+    (assoc option :tag (-> option :tag parse-tag-string))))
 
 ; =apply-template
 (defn apply-template
