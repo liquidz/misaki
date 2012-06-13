@@ -140,7 +140,7 @@
         ]
     (are [x y] (= x y)
       ; index.html.clj
-      "<head><title>gen test</title></head><body><h1>gen test</h1><p>world</p></body>"
+      "<head><title>index</title></head><body><h1>index</h1><p>world</p></body>"
       (html (generate-html file1))
 
       ; 2011.01.01-foo.html.clj
