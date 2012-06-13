@@ -6,6 +6,7 @@
         clojure.test)
   (:require [clojure.java.io :as io]))
 
+;;; sort-by-date
 (deftest* sort-by-date-test
   (let [[p1 p2 p3] (sort-by-date (get-posts))]
     (are [x y] (= x y)
@@ -18,6 +19,7 @@
       (date-time 2011 1 1) (:date p2)
       (date-time 2000 1 1) (:date p3))))
 
+;;; sort-alphabetically
 (deftest sort-alphabetically-test
   (testing "sort list"
     (let [[a b c] (sort-alphabetically '("b" "a" "c"))]

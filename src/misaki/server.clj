@@ -80,7 +80,6 @@
 
 ; =main
 (defn -main [& [dir]]
-;  (binding [*base-dir* (str "./" (add-path-slash dir))]
   (binding [*base-dir* (add-path-slash dir)]
     (with-config
       (start-watcher)
