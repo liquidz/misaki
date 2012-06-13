@@ -39,23 +39,38 @@
 
 ;;; get-posts
 (deftest* get-posts-test
-  (let [posts (sort-by-date (get-posts))]
-    (are [x y] (= x y)
-      3 (count posts)
+  (testing "Get all posts"
+    (let [posts (sort-by-date (get-posts))]
+      (are [x y] (= x y)
+        3 (count posts)
 
-      "bar" (-> posts first :title)
-      "/2022-02/bar.html" (-> posts first :url)
-      false (nil? (-> posts first :file))
-      false (nil? (-> posts first :date))
-      false (nil? (-> posts first :lazy-content))
-      "world" (-> posts first :hello)
+        "bar" (-> posts first :title)
+        "/2022-02/bar.html" (-> posts first :url)
+        false (nil? (-> posts first :file))
+        false (nil? (-> posts first :date))
+        false (nil? (-> posts first :lazy-content))
+        "world" (-> posts first :hello)
 
-      "foo" (-> posts second :title)
-      "/2011-01/foo.html" (-> posts second :url)
-      false (nil? (-> posts second :file))
-      false (nil? (-> posts second :date))
-      false (nil? (-> posts second :lazy-content))
-      "world" (-> posts second :hello))))
+        "foo" (-> posts second :title)
+        "/2011-01/foo.html" (-> posts second :url)
+        false (nil? (-> posts second :file))
+        false (nil? (-> posts second :date))
+        false (nil? (-> posts second :lazy-content))
+        "world" (-> posts second :hello))))
+
+  (testing "Get tagged posts"
+    (let [posts1 (get-posts :tag ["tag1"])
+          posts2 (get-posts :tag ["tag2"])
+          posts3 (get-posts :tag ["tag3"])
+          posts4 (get-posts :tag ["tag1" "tag2"])
+          posts5 (get-posts :tag ["tag1" "tag3"])]
+
+      (are [x y] (= x y)
+        1 (count posts1)
+        2 (count posts2)
+        1 (count posts3)
+        1 (count posts4)
+        0 (count posts5)))))
 
 ;;; get-all-tags
 (deftest* get-all-tags-test

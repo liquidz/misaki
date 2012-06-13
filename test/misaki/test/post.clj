@@ -52,19 +52,6 @@
 ;      1      (:count (nth tags 2))
 ;      "/tag/tag3.html" (:url   (nth tags 2)))))
 
-(deftest* get-posts-with-tag-test
-  (let [posts1 (get-posts :tag ["tag1"])
-        posts2 (get-posts :tag ["tag2"])
-        posts3 (get-posts :tag ["tag3"])
-        posts4 (get-posts :tag ["tag1" "tag2"])
-        posts5 (get-posts :tag ["tag1" "tag3"])]
-
-    (are [x y] (= x y)
-      1 (count posts1)
-      2 (count posts2)
-      1 (count posts3)
-      1 (count posts4)
-      0 (count posts5))))
 
 
 ;(deftest* generate-tag-html-test

@@ -76,37 +76,36 @@
             (-> parent first del-crln)
           "html5" (-> parent second :format)
           ; child
-          "; @layout default; @title  index; @test   hello; dummy   dummy[:h1 (:title site)][:p \"world\"]"
+          "; @layout default; @title  index; @test   hello; dummy   dummy[:h1 (:title site)](paragraph \"world\")"
             (-> child first del-crln)
           "index" (-> child second :title))))))
 
-
+;;; load-template
 (deftest* load-template-test
-  ;; single template
   (testing "Load single template"
-    (let [f (load-template (str *template-dir* "template.test.html.clj"))]
+    (let [f (load-template (io/file (str *template-dir* "single.html.clj")))]
       (are [x y] (= x y)
-        "<p>default title</p>"
+        "<h1>single</h1>"
         (html (apply-template f '("")))
 
-        "<p>a</p>"
-        (html (apply-template f (with-meta '("") {:title "a"}))))))
+        "<h1>dummy</h1>"
+        (html (apply-template f (with-meta '("") {:title "dummy"}))))))
 
   (testing "Load layouted template"
-    (let [f (load-template (str *template-dir* "template.test_child.html.clj"))]
+    (let [f (load-template (io/file (str *template-dir* "index.html.clj")))]
       (are [x y] (= x y)
-        "<div><p>default title</p><p>11</p><p>true</p></div>"
+        "<head><title>index</title></head><body><h1>index</h1><p>world</p></body>"
         (html (apply-template f '("")))
 
-        "<div><p>a</p><p>11</p><p>true</p></div>"
-        (html (apply-template f (with-meta '("") {:title "a"}))))))
+        "<head><title>dummy</title></head><body><h1>dummy</h1><p>world</p></body>"
+        (html (apply-template f (with-meta '("") {:title "dummy"}))))))
 
   (testing "Load layouted template with NOT allow-layout flag"
-    (let [f (load-template (str *template-dir* "template.test_child.html.clj") false)]
+    (let [f (load-template (io/file (str *template-dir* "index.html.clj")) false)]
       (are [x y] (= x y)
-        "<p>default title</p><p>11</p><p>true</p>"
+        "<h1>index</h1><p>world</p>"
         (html (apply-template f '("")))
 
-        "<p>a</p><p>11</p><p>true</p>"
-        (html (apply-template f (with-meta '("") {:title "a"})))))))
+        "<h1>dummy</h1><p>world</p>"
+        (html (apply-template f (with-meta '("") {:title "dummy"})))))))
 

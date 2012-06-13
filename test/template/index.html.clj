@@ -3,4 +3,4 @@
 ; @test   hello
 ; dummy   dummy
 [:h1 (:title site)]
-[:p "world"]
+(paragraph "world")
