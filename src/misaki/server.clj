@@ -32,10 +32,10 @@
   [#^java.io.File file]
 
   (cond
-;;;    ; clojurescript
-;;;    (has-extension? ".cljs" file)
-;;;    (do (print " * compiling clojurescript:")
-;;;      (print-result (compile-clojurescripts)))
+    ; clojurescript
+    (has-extension? ".cljs" file)
+    (do (print " * compiling clojurescript:")
+      (print-result (compile-clojurescripts)))
 
     ; layout or config
     (or (layout-file? file) (config-file? file))

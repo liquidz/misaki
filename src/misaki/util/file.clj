@@ -7,6 +7,12 @@
     [clojure.string :as str])
   (:import [java.io File]))
 
+; =add-path-slash
+(defn add-path-slash
+  "Add slash to end of text."
+  [path]
+  (if path (if (.endsWith path "/") path (str path "/"))))
+
 ; =find-files
 (defn find-files
   "Find files in `dir` recursively."
@@ -38,6 +44,12 @@
     (delete-extension (.getName x))
     (str/replace-first x #"\.[^.]+$" "")))
 
+; =delete-filename
+(defn delete-filename
+  "Delete file name."
+  [path]
+  (add-path-slash (str/join "/" (drop-last (str/split path #"/")))))
+
 ; =last-modified-date
 (defn last-modified-date
   "Get last modified date from java.io.File"
@@ -63,8 +75,3 @@
   (with-open [w (io/writer filename)]
     (spit w data)))
 
-; =add-path-slash
-(defn add-path-slash
-  "Add slash to end of text."
-  [path]
-  (if path (if (.endsWith path "/") path (str path "/"))))

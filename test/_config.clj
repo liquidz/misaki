@@ -23,11 +23,11 @@
  :post-filename-format "{{year}}-{{month}}/{{filename}}"
 
  ;; clojurescript compile options
- ;; src-dir is `:template-dir`
- ;; output-dir is `:public-dir`
- :cljs {:output-to     "js/main.js"
-        :optimizations :whitespace
-        ;:optimizations :simple
+ ;; src-dir base is `:template-dir`
+ ;; output-dir base is `:public-dir`
+ :cljs {:src-dir       "cljs"
+        :output-to     "js/main.js"
+        :optimizations :simple
         :pretty-print  true}
 
  ;; highlight setting

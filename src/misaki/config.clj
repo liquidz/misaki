@@ -66,7 +66,8 @@
          public#   (str *base-dir* (:public-dir config#))
          template# (str *base-dir* (:template-dir config#))
          layout#   (str template# (:layout-dir config#))
-         cljs#     (get config# :cljs {})]
+         cljs#     (get config# :cljs {})
+         cljs-out# (str public# (:output-to cljs#))]
      (binding
        [*public-dir*   public#
         *template-dir* template#
@@ -82,9 +83,10 @@
                                  POST_FILENAME_REGEXP)
         *post-filename-format* (get config# :post-filename-format
                                  POST_FILENAME_FORMAT)
-        *cljs-compile-options* (assoc (dissoc cljs# :output-dir)
-                                      :src-dir template#
-                                      :output-to (str public# (:output-to cljs#)))]
+        *cljs-compile-options* (assoc cljs#
+                                      :src-dir (add-path-slash (str template# (:src-dir cljs#)))
+                                      :output-dir (delete-filename cljs-out#)
+                                      :output-to cljs-out#)]
        ~@body)))
 
 ;; ## File Cheker

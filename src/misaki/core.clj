@@ -141,19 +141,19 @@
               (generate-html file))
     (catch Exception e (.printStackTrace e) false)))
 
-;;;; =compile-clojurescripts
-;;;(defn compile-clojurescripts
-;;;  "Compile clojurescripts.
-;;;  return true if compile succeeded."
-;;;  []
-;;;  (try
-;;;    ; make directory if not exists
-;;;    (make-directories (:output-to *cljs-compile-options*))
-;;;    ; build clojurescript
-;;;    (build (:src-dir *cljs-compile-options*)
-;;;           *cljs-compile-options*)
-;;;    true
-;;;    (catch Exception e (.printStackTrace e) false)))
+; =compile-clojurescripts
+(defn compile-clojurescripts
+  "Compile clojurescripts.
+  return true if compile succeeded."
+  []
+  (try
+    ; make directory if not exists
+    (make-directories (:output-to *cljs-compile-options*))
+    ; build clojurescript
+    (build (:src-dir *cljs-compile-options*)
+           *cljs-compile-options*)
+    true
+    (catch Exception e (.printStackTrace e) false)))
 
 ; =compile-all-tags
 (defn compile-all-tags
