@@ -31,6 +31,7 @@
   [ext file-list]
   (filter (partial has-extension? ext) file-list))
 
+; =find-clj-files
 (defn find-clj-files
   "Find *.clj files in `dir` recursively."
   [dir]
@@ -48,7 +49,8 @@
 (defn delete-filename
   "Delete file name."
   [path]
-  (add-path-slash (str/join "/" (drop-last (str/split path #"/")))))
+  (if (.endsWith path "/") path
+    (add-path-slash (str/join "/" (drop-last (str/split path #"/"))))))
 
 ; =last-modified-date
 (defn last-modified-date
