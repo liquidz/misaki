@@ -4,8 +4,6 @@
 
 misaki is a [Jekyll](https://github.com/mojombo/jekyll) inspired static site generator in Clojure.
 
-**WARNING:** misaki is still alpha version.
-
 ## Demo
 
 [Demo page](http://liquidz.github.com/project/misaki/)
@@ -37,7 +35,11 @@ $ git clone git://github.com/liquidz/misaki.git
 $ cd misaki
 $ lein run sample
 ```
-[http://localhost:8080](http://localhost:8080)
+
+> If you get "java.lang.AssertionError: Assert failed: Can't recur here",
+> please execute `rm -rf classes/cljs` to remove cljs classes, and run sample again.
+
+Access [http://localhost:8080](http://localhost:8080) to check sample.
 
 ### Make your blog
 
