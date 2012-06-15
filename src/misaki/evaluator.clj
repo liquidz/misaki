@@ -29,6 +29,7 @@
   [sexp]
   (let [[defs sexp] (split-with-definition sexp)]
     `(do (use 'misaki.html.core)
+         (use 'misaki.html.conv)
          ~@defs
          (fn [~'contents]
            (let [~'site (meta ~'contents)] ~sexp)))))

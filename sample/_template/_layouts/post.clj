@@ -14,7 +14,7 @@
  [:div {:class "page-header"}
   [:h1 [:span (-> site :title first)]
    (-> site :title rest)]
-  [:p (-> site :date conv/date->string)]]
+  [:p (-> site :date date->string)]]
 
  ; post tag
  [:div {:class "tag"}

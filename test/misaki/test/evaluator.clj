@@ -18,8 +18,9 @@
   (let [s '(list "hello" (def x 1) 123) f (wrap-as-function s)]
     (is (= 'do (first f)))
     (is (= '(clojure.core/use (quote misaki.html.core)) (second f)))
-    (is (= '(def x 1) (nth f 2)))
-    (is (= 'clojure.core/fn (first (nth f 3))))))
+    (is (= '(clojure.core/use (quote misaki.html.conv)) (nth f 2)))
+    (is (= '(def x 1) (nth f 3)))
+    (is (= 'clojure.core/fn (first (nth f 4))))))
 
 ;;; evaluate
 (deftest evaluate-test

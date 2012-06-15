@@ -6,7 +6,7 @@
  [:title (:title site)]
  [:link {:href (str (:base site) "/atom.xml"), :rel "self"}]
  [:link {:href (:base site)}]
- [:updated (conv/date->xml-schema (:date site))]
+ [:updated (date->xml-schema (:date site))]
  [:id (:base site)]
  [:author [:name "@uochan"]]
 
@@ -14,7 +14,7 @@
    [:entry
     [:title (:title post)]
     [:link  (str (:base site) (:url post))]
-    [:updated (conv/date->xml-schema (:date post))]
+    [:updated (date->xml-schema (:date post))]
     [:id (str (:base site) (:url post))]
     [:content {:type "html"}
      (force (:lazy-content post) )
