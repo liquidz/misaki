@@ -1,5 +1,3 @@
-
-
 (ns conv
   "Data converting utilities for template"
   (:require
@@ -11,7 +9,7 @@
 
 ; =date->xml-schema
 (defn date->xml-schema
-  "Convert org.joda.time.DateTime to XML Schema"
+  "Convert org.joda.time.DateTime to XML Schema."
   [date]
   (fmt/unparse
     (fmt/formatter "yyyy-MM-dd'T'HH:mm:ss")

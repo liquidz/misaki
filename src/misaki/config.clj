@@ -1,16 +1,15 @@
 (ns misaki.config
-  "misaki: configuration"
+  "Configuration Manager"
   (:use misaki.util.file
         [clojure.core.incubator :only [-?> -?>>]]
         [clj-time.core :only [date-time year month day]]
-        [clostache.parser :only [render]]
-        )
+        [clostache.parser :only [render]])
   (:require
     [clojure.string :as str]
     [clojure.java.io :as io])
   (:import [java.io File]))
 
-;; ## Default value
+;; ## Default Value
 (def LANGUAGE "en")
 (def POST_FILENAME_REGEXP #"(\d{4})[-_](\d{1,2})[-_](\d{1,2})[-_](.+)$")
 (def POST_FILENAME_FORMAT "{{year}}/{{month}}/{{filename}}")
@@ -54,13 +53,13 @@
 
 ; =load-config
 (defn load-config
-  "Load and read config file"
+  "Load config file(_config.clj) from *base-dir*."
   []
   (read-string (slurp (str *base-dir* *config-file*))))
 
 ; =with-config
 (defmacro with-config
-  "Wrap sexp with config data"
+  "Declare config data, and wrap sexp body with them."
   [& body]
   `(let [config#   (load-config)
          public#   (str *base-dir* (:public-dir config#))
@@ -109,11 +108,11 @@
   [#^File file]
   (not= -1 (.indexOf (.getAbsolutePath file) *post-dir*)))
 
-;; ## file <-> template converter
+;; ## Template Converter
 
 ; =template-name->file
 (defn template-name->file
-  "Convert template name to java.io.File"
+  "Convert template name to java.io.File."
   [#^String tmpl-name]
   (io/file (str *template-dir* tmpl-name)))
 
@@ -121,14 +120,7 @@
 
 ; =get-date-from-file
 (defn get-date-from-file
-  "Get date from filename with *post-filename-regexp*
-
-   By default:
-
-       YYYY-MM-DD
-       YYYY-M-D
-       YYYY_MM_DD
-       YYYY_M_D"
+  "Get date from file(java.io.File) with *post-filename-regexp*."
   [#^File file]
   (if-let [date (-?>> (.getName file)
                       (re-seq *post-filename-regexp*)
@@ -139,21 +131,21 @@
 
 ; =remove-date-from-name
 (defn remove-date-from-name
-  "Remove date string from filename"
+  "Remove date string from filename(String)."
   [#^String filename]
   (last (first (re-seq *post-filename-regexp* filename))))
 
-;; ## Filename and URL generater
+;; ## Filename Generator
 
 ; =make-tag-output-filename
 (defn make-tag-output-filename
-  "Make tag output filename from tag name"
+  "Make tag output filename from tag name."
   [#^String tag-name]
   (str *tag-out-dir* tag-name ".html"))
 
 ; =make-post-output-filename
 (defn make-post-output-filename
-  "Make post output filename from java.io.File"
+  "Make post output filename from java.io.File."
   [#^File file]
   (let [date (get-date-from-file file)
         filename (-?> (.getName file) remove-date-from-name delete-extension)]
@@ -165,7 +157,7 @@
 
 ; =make-template-output-filename
 (defmulti make-template-output-filename
-  "Make template output filename from template name"
+  "Make template output filename from template name."
   class)
 
 (defmethod make-template-output-filename String
@@ -178,15 +170,17 @@
     (make-post-output-filename file)
     (delete-extension (.getName file))))
 
+; =make-layout-filename
+(defn make-layout-filename
+  "Make layout filename from layout name(String)."
+  [#^String layout-name]
+  (str *layout-dir* layout-name ".clj"))
+
+;; ## URL Generator
+
 ; =make-post-url
 (defn make-post-url
   "Make post url from java.io.File"
   [#^File file]
   (str "/" (make-template-output-filename file)))
-
-; =make-layout-filename
-(defn make-layout-filename
-  "Make layout filename from layout name(String)"
-  [#^String layout-name]
-  (str *layout-dir* layout-name ".clj"))
 

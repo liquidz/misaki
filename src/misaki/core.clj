@@ -1,5 +1,5 @@
 (ns misaki.core
-  "misaki: Jekyll inspired static site generator in Clojure"
+  "HTML compiler for clojure source."
   (:use
     [misaki template config]
     [misaki.util file code sequence string]
@@ -14,16 +14,19 @@
 
 (declare generate-html)
 
-;; ## Post functions
+;; ## Post Functions
 
 ; =generate-post-content
 (defn generate-post-content
-  "Get post content without layout"
+  "Generate post content without layout."
   [#^File file]
   (html (generate-html file :allow-layout? false)))
 
 ; =get-post-data
 (defn get-post-data
+  "Get post template data from java.io.File.
+
+  Content data(:lazy-content) is delayed."
   [#^File file]
   (assoc (parse-template-option  file)
          :file file
@@ -32,24 +35,24 @@
          :lazy-content (delay (escape-string (generate-post-content file)))))
 
 ; =post-contains-tag?
-(defn post-contains-tag? [post-data #^String tag]
+(defn post-contains-tag?
+  "Check whether post contains tag or not."
+  [post-data #^String tag]
   (let [tags  (get post-data :tag [])
         names (set (map :name tags))]
     (contains? names tag)))
 
 ; =get-posts
 (defn get-posts
-  "Get posts data from *post-dir* directory.
-  Content data is delayed."
+  "Get posts data from *post-dir* directory."
   [& {:keys [tag]}]
-
   (filter
     #(or (nil? tag)
          (and (sequential? tag)
               (every? (partial post-contains-tag? %) tag)))
     (map get-post-data (find-clj-files *post-dir*))))
 
-;; ## Tag functions
+;; ## Tag Functions
 
 ; =get-all-tags
 (defn get-all-tags
@@ -69,8 +72,9 @@
          (sort-alphabetically :name)
          distinct)))
 
-;; ## S-exp HTML Generater
+;; ## S-exp Template Applier
 (defn make-site-data
+  "Make site meta data from java.io.File for HTML generator."
   [#^File file & {:keys [base tag] :or {base {}, tag nil}}]
   (let [tag? (and (not (nil? tag)) (sequential? tag))]
     (assoc (merge *site* base)
@@ -82,7 +86,7 @@
 
 ; =generate-html
 (defn generate-html
-  "Generate HTML from template."
+  "Generate HTML from template file(java.io.File)."
   [#^File file & {:keys [allow-layout?] :or {allow-layout? true}}]
   (let [tmpl-fn    (load-template file allow-layout?)
         site-data  (make-site-data file)
@@ -93,7 +97,7 @@
 
 ; =generate-tag-html
 (defn generate-tag-html
-  "Generate tag HTML from *tag-layout*."
+  "Generate tag HTML from tag name(String) with *tag-layout* layout."
   [tag-name]
   (let [file       (io/file *tag-layout*)
         tmpl-fn    (load-template file)
@@ -105,7 +109,7 @@
 
 ; =get-compile-fn
 (defn get-compile-fn
-  "Get hiccup functon to compile sexp."
+  "Get hiccup functon from format option."
   [fmt]
   (case fmt
     "html5" #(html5 {:lang *lang*} %)
@@ -154,6 +158,8 @@
            *cljs-compile-options*)
     true
     (catch Exception e (.printStackTrace e) false)))
+
+;; ## Compile Controller
 
 ; =compile-all-tags
 (defn compile-all-tags
