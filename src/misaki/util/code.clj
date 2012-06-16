@@ -1,7 +1,8 @@
 (ns misaki.util.code
-  "misaki: here document utility
+  "Here document utility
 
-  cf. http://d.hatena.ne.jp/nokturnalmortum/20100527/1274961805"
+  cf. [http://d.hatena.ne.jp/nokturnalmortum/20100527/1274961805](http://d.hatena.ne.jp/nokturnalmortum/20100527/1274961805)
+  "
   (:use misaki.config))
 
 (defn get-code-type
@@ -18,7 +19,6 @@
                    (.setAccessible true))
                  nil)]
     (aset dm (int ch) fun)))
-; http://java.sun.com/j2se/1.3/ja/docs/ja/api/java/lang/reflect/AccessibleObject.html
 
 (defn read-until
   "Read until end text."

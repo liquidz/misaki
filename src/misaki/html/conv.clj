@@ -9,7 +9,10 @@
 
 ; =date->xml-schema
 (defn date->xml-schema
-  "Convert org.joda.time.DateTime to XML Schema."
+  "Convert org.joda.time.DateTime to XML Schema.
+
+      (date->xml-scheme (clj-time.core/now))
+      ;=> \"2012-01-01T01:01:01\""
   [date]
   (fmt/unparse
     (fmt/formatter "yyyy-MM-dd'T'HH:mm:ss")

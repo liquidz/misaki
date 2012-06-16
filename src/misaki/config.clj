@@ -17,49 +17,70 @@
 ;; ## Declarations
 
 ;; Blog base directory
-(def ^{:dynamic true} *base-dir* "")
+(def ^{:dynamic true
+       :doc "Blog base directory."}
+  *base-dir* "")
 ;; Config filename
-(def ^{:dynamic true} *config-file* "_config.clj")
+(def ^{:dynamic true
+       :doc "Config filename.
+            Default filename is '_config.clj'."}
+  *config-file* "_config.clj")
 
 ;; Public directory path. Compiled html is placed here.
-(declare ^{:dynamic true} *public-dir*)
+(declare ^:dynamic *public-dir*)
 ;; Template directory path.
-(declare ^{:dynamic true} *template-dir*)
+(declare ^:dynamic *template-dir*)
 ;; Posts placed directory name.
-(declare ^{:dynamic true} *post*)
+(declare ^:dynamic *post*)
 ;; Layouts placed directory path.
-(declare ^{:dynamic true} *layout-dir*)
+(declare ^:dynamic *layout-dir*)
 ;; Posts placed directory path.
-(declare ^{:dynamic true} *post-dir*)
+(declare ^:dynamic *post-dir*)
 ;; Tag index placed directory path.
-(declare ^{:dynamic true} *tag-out-dir*)
+(declare ^:dynamic *tag-out-dir*)
 ;; Tag layout name.
-(declare ^{:dynamic true} *tag-layout*)
+(declare ^:dynamic *tag-layout*)
 ;; Default site data.
-(declare ^{:dynamic true} *site*)
+(declare ^:dynamic *site*)
 ;; Template names which compiled with post templates.
-(declare ^{:dynamic true} *compile-with-post*)
+(declare ^:dynamic *compile-with-post*)
 ;; Site language.
-(declare ^{:dynamic true} *lang*)
+(declare ^:dynamic *lang*)
 ;; Regexp for parse post filename.
-(declare ^{:dynamic true} *post-filename-regexp*)
+(declare ^:dynamic *post-filename-regexp*)
 ;; Format rule for post filename.
-(declare ^{:dynamic true} *post-filename-format*)
+(declare ^:dynamic *post-filename-format*)
 ;; Compile options for ClojureScript
-(declare ^{:dynamic true} *cljs-compile-options*)
+(declare ^:dynamic *cljs-compile-options*)
 
 
 ;; ## Config Data Wrapper
 
 ; =load-config
 (defn load-config
-  "Load config file(_config.clj) from *base-dir*."
+  "Load `*config-file*` from `*base-dir*`."
   []
   (read-string (slurp (str *base-dir* *config-file*))))
 
 ; =with-config
 (defmacro with-config
-  "Declare config data, and wrap sexp body with them."
+  "Declare config data, and wrap sexp body with them.
+
+
+  * Configured directory and file setting
+   * pubic directory: `*base-dir*` + `*public-dir*`
+   * template directory : `*base-dir*` + `*template-dir*`
+   * layout directory : `*base-dir*` + `*template-dir*` + `*layout-dir*`
+   * post directory : `*base-dir*` + `*template-dir*` + `*post-dir*`
+   * tag output directory : `*tag-out-dir*`
+   * tag layout file : `*base-dir*` + `*template-dir*` + `*layout-dir*` + `*tag-layout*` + '.clj'
+
+
+  * Configured clojurescript setting
+   * source directory : `*base-dir*` + `*template-dir*` + `*src-dir*`
+   * output directory : `*base-dir*` + `*public-dir*` + (delete-filename `*output-to*`)
+   * output to : `*base-dir*` + `*public-dir*` + `*output-to*`
+  "
   [& body]
   `(let [config#   (load-config)
          public#   (str *base-dir* (:public-dir config#))
@@ -120,7 +141,7 @@
 
 ; =get-date-from-file
 (defn get-date-from-file
-  "Get date from file(java.io.File) with *post-filename-regexp*."
+  "Get date from file(java.io.File) with `*post-filename-regexp*`."
   [#^File file]
   (if-let [date (-?>> (.getName file)
                       (re-seq *post-filename-regexp*)

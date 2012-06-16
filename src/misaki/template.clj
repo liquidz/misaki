@@ -1,5 +1,5 @@
 (ns misaki.template
-  "misaki: template"
+  "Template file loader"
   (:use
     [misaki evaluator config]
     [clojure.core.incubator :only [-?>]])
@@ -10,7 +10,12 @@
 
 ; =parse-tag-string
 (defn parse-tag-string
-  "Parse tag string to tag list."
+  "Parse tag string to tag list.
+
+      \"aa,bb\"
+      ;=> [{:name \"aa\", :url TAG-PAGE-URL}
+      ;    {:name \"bb\", :url TAG_PAGE-URL}]
+  "
   [#^String tags]
   (if (or (nil? tags) (str/blank? tags)) ()
     (for [tag (distinct (str/split tags #"[\s\t,]+"))]
@@ -20,7 +25,6 @@
 ; =parse-template-option
 (defmulti parse-template-option
   "Parse template options from slurped data.
-  ex) template file
 
       ; @layout default
       ; @title hello, world

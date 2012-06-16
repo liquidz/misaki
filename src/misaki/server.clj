@@ -1,5 +1,9 @@
 (ns misaki.server
-  "misaki: Development server"
+  "Development server
+
+  Listen 8080 port to publish developing blog,
+  and watch template updates.
+  "
   (:use
     [misaki core config template]
     [misaki.util.file :only [add-path-slash has-extension?]]

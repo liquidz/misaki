@@ -26,7 +26,7 @@
 (defn get-post-data
   "Get post template data from java.io.File.
 
-  Content data(:lazy-content) is delayed."
+  Content data(`:lazy-content`) is delayed."
   [#^File file]
   (assoc (parse-template-option  file)
          :file file
@@ -97,7 +97,7 @@
 
 ; =generate-tag-html
 (defn generate-tag-html
-  "Generate tag HTML from tag name(String) with *tag-layout* layout."
+  "Generate tag HTML from tag name(String) with `*tag-layout*` layout."
   [tag-name]
   (let [file       (io/file *tag-layout*)
         tmpl-fn    (load-template file)
@@ -137,7 +137,7 @@
 
 ; =compile-template
 (defn compile-template
-  "Compile a specified template, and write compiled data to *public-dir*.
+  "Compile a specified template, and write compiled data to `*public-dir*`.
   return true if compile succeeded."
   [#^File file]
   (try

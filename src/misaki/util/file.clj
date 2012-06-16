@@ -1,5 +1,5 @@
 (ns misaki.util.file
-  "misaki: file control utility"
+  "File control utility"
   (:use
     [clj-time.coerce :only [from-long]])
   (:require
@@ -39,7 +39,13 @@
 
 ; =delete-extension
 (defn delete-extension
-  "Delete file extension."
+  "Delete file extension.
+
+      (delete-extension \"foo.bar\")
+      ;=> \"foo\"
+      (delete-extension \"foo.bar.baz\")
+      ;=> \"foo.bar\"
+  "
   [x]
   (if (= java.io.File (class x))
     (delete-extension (.getName x))
@@ -47,7 +53,13 @@
 
 ; =delete-filename
 (defn delete-filename
-  "Delete file name."
+  "Delete file name.
+
+      (delete-filename \"/foo/bar\")
+      ;=> \"/foo\"
+      (delete-filename \"/foo/\")
+      ;=> \"/foo/\"
+  "
   [path]
   (if (.endsWith path "/") path
     (add-path-slash (str/join "/" (drop-last (str/split path #"/"))))))

@@ -1,7 +1,5 @@
 (ns misaki.evaluator
-  "S-exp evaluating functions"
-  (:require
-    [clojure.string :as str]))
+  "S-exp Template Evaluator")
 
 ; =def?
 (defn def?
@@ -12,8 +10,8 @@
            (= 'defn (first x)))))
 
 ; =split-with-definition
-;; Split s-exp with def?
-(def split-with-definition
+(def ^{:doc "Split s-exp with `def?`."}
+  split-with-definition
   (juxt (partial filter def?)
         (partial remove def?)))
 
@@ -25,7 +23,12 @@
 
 ; =wrap-as-function
 (defn wrap-as-function
-  "Wrap sexp with common function for misaki template."
+  "Wrap sexp with common function like below.
+
+      (fn [contents]
+        (let [site (meta contents)]
+          bodies))
+  "
   [sexp]
   (let [[defs sexp] (split-with-definition sexp)]
     `(do (use 'misaki.html.core)
@@ -34,7 +37,9 @@
          (fn [~'contents]
            (let [~'site (meta ~'contents)] ~sexp)))))
 
-(def ^:dynamic *eval-functions*
+(def ^{:dynamic true
+       :doc "Definition of evaluating functions."}
+  *eval-functions*
   [wrap-as-list
    read-string
    wrap-as-function

@@ -1,5 +1,5 @@
 (ns misaki.util.string
-  "misaki: string utility"
+  "String utility"
   (:require [clojure.string :as str]))
 
 ; =escape-content

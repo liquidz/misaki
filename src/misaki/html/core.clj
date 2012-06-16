@@ -11,9 +11,12 @@
   (and (vector? x) (keyword? (first x))))
 
 (defn- name*
-  "
-      (name :a/b)  => \"b\"
-      (name* :a/b) => \"a/b\""
+  "`name` function ignoring namespaced keyword
+
+      (name :a/b)
+      ;=> \"b\"
+      (name* :a/b)
+      ;=> \"a/b\""
   [k]
   (if (keyword? k) (apply str (rest (str k))) k))
 
@@ -53,7 +56,7 @@
 ;; ## HTML Tags
 
 (defn js
-  "Include JS
+  "Include JavaScript
 
       (js \"foo.js\" \"bar.js\")
       ;=> <script type=\"text/javascript\" src=\"foo.js\"></script>
@@ -62,7 +65,7 @@
   (apply page/include-js args))
 
 (defn css
-  "Include CSS
+  "Include Cascading Style Sheet
 
       (css \"foo.css\" \"bar.css\")
       ;=> <link rel=\"stylesheet\" type=\"text/css\" href=\"foo.css\" />

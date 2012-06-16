@@ -1,5 +1,5 @@
 (ns misaki.util.sequence
-  "misaki: sequence utility"
+  "Sequence utility"
   (:use [clj-time.core :only [after?]]))
 
 ; =sort-by-date
