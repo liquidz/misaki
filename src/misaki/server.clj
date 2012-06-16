@@ -14,10 +14,14 @@
     [ring.adapter.jetty :only [run-jetty]]))
 
 ; =print-result
-(defn print-result
+(defn print-compile-result
   "Print colored compile result."
-  [result]
-  (println " ..." (if result (blue "DONE") (red "FAIL"))))
+  [message result]
+  (let [text (case result
+               true (blue "DONE")
+               false (red "FAIL")
+               (blue "SKIP"))]
+    (println (str " * compiling " message ": ... " text))))
 
 ;; ## Dev Compiler
 
@@ -25,10 +29,9 @@
 (defn do-all-compile
   "Compile all templates"
   []
-  (print " * compiling all templates:")
-  (print-result (compile-all-templates))
-  (print " * compiling all tags:")
-  (print-result (compile-all-tags)))
+  (print-compile-result "all templates" (compile-all-templates))
+  (print-compile-result "all tags" (compile-all-tags))
+  (print-compile-result "clojurescripts" (compile-clojurescripts)))
 
 ; =do-compile
 (defn do-compile
@@ -38,8 +41,7 @@
   (cond
     ; clojurescript
     (has-extension? ".cljs" file)
-    (do (print " * compiling clojurescript:")
-      (print-result (compile-clojurescripts)))
+    (print-compile-result "clojurescript" (compile-clojurescripts))
 
     ; layout or config
     (or (layout-file? file) (config-file? file))
@@ -47,8 +49,8 @@
 
     ; else
     :else
-    (do (print " * compiling:" (.getName file))
-      (print-result (compile-template file))
+    (do
+      (print-compile-result "template" (compile-template file))
       (when (post-file? file)
         ; compile with posts
         (if *compile-with-post*
@@ -57,8 +59,7 @@
         ; compile tag
         (if-let [tags (-> file parse-template-option :tag)]
           (doseq [{tag-name :name} tags]
-            (print " * compiling tag:" tag-name)
-            (print-result (compile-tag tag-name))))))))
+            (print-compile-result "tag" (compile-tag tag-name))))))))
 
 ;; ## Template Watcher
 
@@ -86,10 +87,8 @@
 (defn -main [& [dir :as args]]
   (binding [*base-dir* (add-path-slash dir)]
     (with-config
-
       (if (contains? (set args) "--compile")
         ; compile all only if '--compile' option is specified
-        ;(time (do-all-compile))
         (do-all-compile)
         ; start watching and server
         (do (start-watcher)

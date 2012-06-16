@@ -151,12 +151,13 @@
   return true if compile succeeded."
   []
   (try
-    ; make directory if not exists
-    (make-directories (:output-to *cljs-compile-options*))
-    ; build clojurescript
-    (build (:src-dir *cljs-compile-options*)
-           *cljs-compile-options*)
-    true
+    (when *cljs-compile-options*
+      ; make directory if not exists
+      (make-directories (:output-to *cljs-compile-options*))
+      ; build clojurescript
+      (build (:src-dir *cljs-compile-options*)
+             *cljs-compile-options*)
+      true)
     (catch Exception e (.printStackTrace e) false)))
 
 ;; ## Compile Controller
@@ -173,12 +174,6 @@
   "Compile all template files.
   return true if all compile succeeded."
   []
-  ;(let [files (remove layout-file? (find-clj-files *template-dir*))
-  ;      ;threads (doall (map #(future (compile-template %)) files))
-  ;      threads (doall (map #(future (compile-template %)) files))
-  ;      ]
-  ;  (every? true? (doall (map deref threads))))
   (let [files (remove layout-file? (find-clj-files *template-dir*))]
-    (every? #(compile-template %) files))
-  )
+    (every? #(compile-template %) files)))
 
