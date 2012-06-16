@@ -7,7 +7,7 @@
     [hiccup.page :only [html5 xhtml html4]]
     [cljs.closure :only [build]])
   (:require
-    conv
+    misaki.html.conv
     [clojure.string :as str]
     [clojure.java.io :as io])
   (:import [java.io File]))
@@ -173,6 +173,12 @@
   "Compile all template files.
   return true if all compile succeeded."
   []
+  ;(let [files (remove layout-file? (find-clj-files *template-dir*))
+  ;      ;threads (doall (map #(future (compile-template %)) files))
+  ;      threads (doall (map #(future (compile-template %)) files))
+  ;      ]
+  ;  (every? true? (doall (map deref threads))))
   (let [files (remove layout-file? (find-clj-files *template-dir*))]
-    (every? #(compile-template %) files)))
+    (every? #(compile-template %) files))
+  )
 

@@ -83,11 +83,17 @@
 ;; ## main
 
 ; =main
-(defn -main [& [dir]]
+(defn -main [& [dir :as args]]
   (binding [*base-dir* (add-path-slash dir)]
     (with-config
-      (start-watcher)
-      (run-jetty
-        (routes (files "/" {:root *public-dir*}))
-        {:port 8080}))))
+
+      (if (contains? (set args) "--compile")
+        ; compile all only if '--compile' option is specified
+        ;(time (do-all-compile))
+        (do-all-compile)
+        ; start watching and server
+        (do (start-watcher)
+            (run-jetty
+              (routes (files "/" {:root *public-dir*}))
+              {:port 8080}))))))
 
