@@ -3,11 +3,8 @@
  :public-dir   "public/"
  :tag-out-dir  "tag/"
  :template-dir "_template/"
- ;:post-dir     "{{template-dir}}_posts/"
  :post-dir     "_posts/"
- ;:layout-dir   "{{template-dir}}_layouts/"
  :layout-dir   "_layouts/"
-
 
  ;; site language
  ;;   default value: "en"
@@ -25,9 +22,19 @@
  ;; post setting
  ;;   default value: #"(\d{4})[-_](\d{1,2})[-_](\d{1,2})[-_](.+)$"
  :post-filename-regexp #"(\d{4})[-_](\d{1,2})[-_](\d{1,2})[-_](.+)$"
-
-; :post-filename-format "%year-%month/%file"
  :post-filename-format "{{year}}-{{month}}/{{filename}}"
+
+ ;; post sort type (:date :name :title :date-desc :name-desc :title-desc)
+ ;;   default value: :date-desc
+ :post-sort-type :date-desc
+
+ ;; clojurescript compile options
+ ;; src-dir base is `:template-dir`
+ ;; output-dir base is `:public-dir`
+ ;:cljs {:src-dir       "cljs"
+ ;       :output-to     "js/main.js"
+ ;       :optimizations :simple
+ ;       :pretty-print  true}
 
  ;; highlight setting
  :code-highlight {:CLJ "lang-clj", :CLOJURE "lang-clj"}
