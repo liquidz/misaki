@@ -76,10 +76,11 @@
 (defn make-site-data
   "Make site meta data from java.io.File for HTML generator."
   [#^File file & {:keys [base tag] :or {base {}, tag nil}}]
-  (let [tag? (and (not (nil? tag)) (sequential? tag))]
+  (let [tag?    (and (not (nil? tag)) (sequential? tag))
+        sort-fn (sort-type->sort-fn)]
     (assoc (merge *site* base)
            :file     file
-           :posts    (sort-by-date (if tag? (get-posts :tag tag) (get-posts)))
+           :posts    (sort-fn (if tag? (get-posts :tag tag) (get-posts)))
            :tags     (sort-alphabetically :name (get-tags :count? true))
            :tag-name (if tag? (str/join "," tag))
            :date     (get-date-from-file file))))

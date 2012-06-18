@@ -146,7 +146,23 @@
           "tag2"  (-> site :tag first :name)
           nil     (:tag-name site)
           '("tag1" "tag2" "tag3") (map :name (:tags site))
-          (date-time 2011 1 1) (:date site))))))
+          (date-time 2011 1 1) (:date site))))
+
+    (testing "with *post-sort-type* => :name"
+      (binding [*post-sort-type* :name]
+        (let [[p1 p2 p3] (:posts (make-site-data file1))]
+          (are [x y] (= x y)
+            "baz" (:title p1)
+            "foo" (:title p2)
+            "bar" (:title p3)))))
+
+    (testing "with *post-sort-type* => :title"
+      (binding [*post-sort-type* :title]
+        (let [[p1 p2 p3] (:posts (make-site-data file1))]
+          (are [x y] (= x y)
+            "bar" (:title p1)
+            "baz" (:title p2)
+            "foo" (:title p3)))))))
 
 ;;; generate-html
 (deftest* generate-html-test

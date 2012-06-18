@@ -1,6 +1,6 @@
 (ns misaki.config
   "Configuration Manager"
-  (:use misaki.util.file
+  (:use [misaki.util file sequence]
         [clojure.core.incubator :only [-?> -?>>]]
         [clj-time.core :only [date-time year month day]]
         [clostache.parser :only [render]])
@@ -50,6 +50,8 @@
 (declare ^:dynamic *post-filename-regexp*)
 ;; Format rule for post filename.
 (declare ^:dynamic *post-filename-format*)
+;; Sort type of post list.
+(declare ^:dynamic *post-sort-type*)
 ;; Compile options for ClojureScript
 (declare ^:dynamic *cljs-compile-options*)
 
@@ -103,6 +105,7 @@
                                  POST_FILENAME_REGEXP)
         *post-filename-format* (get config# :post-filename-format
                                  POST_FILENAME_FORMAT)
+        *post-sort-type* (get config# :post-sort-type :date)
         *cljs-compile-options* (if cljs#
                                  (assoc cljs#
                                         :src-dir (add-path-slash (str template# (:src-dir cljs#)))
@@ -130,13 +133,23 @@
   [#^File file]
   (not= -1 (.indexOf (.getAbsolutePath file) *post-dir*)))
 
-;; ## Template Converter
+;; ## Converter
 
 ; =template-name->file
 (defn template-name->file
   "Convert template name to java.io.File."
   [#^String tmpl-name]
   (io/file (str *template-dir* tmpl-name)))
+
+(defn sort-type->sort-fn
+  "Convert sort-type keyword to sort function."
+  []
+  (case *post-sort-type*
+    :date  sort-by-date
+    :name  (partial sort-alphabetically #(.getName (:file %)))
+    :title (partial sort-alphabetically #(:title %))
+    sort-by-date))
+
 
 ;; ## Filename Date Utility
 
