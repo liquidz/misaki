@@ -17,11 +17,23 @@
 ;;; get-date-from-file
 (deftest* get-date-from-file-test
   ; test config: #"(\d{4})[.](\d{1,2})[.](\d{1,2})[-_](.+)$"
-  (let [date (get-date-from-file (io/file "2000.11.22-dummy.clj"))]
-    (are [x y] (= x y)
-      2000 (year date)
-      11   (month date)
-      22   (day date))))
+  (testing "valid date"
+    (let [date (get-date-from-file (io/file "2000.11.22-dummy.clj"))]
+      (are [x y] (= x y)
+        2000 (year date)
+        11   (month date)
+        22   (day date))))
+
+  (testing "invalid date"
+    (are [filename] (nil? (get-date-from-file (io/file filename)))
+      "2000.11.xx.dummy.clj"
+      "2000.xx.22-dummy.clj"
+      "xxxx.11.22-dummy.clj"
+      "2000.11.dummy.clj"
+      "2000.dummy.clj"
+      "dummy.clj"
+      ""
+      nil)))
 
 ;;; remove-date-from-name
 (deftest* remote-date-from-name-test

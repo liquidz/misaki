@@ -160,12 +160,12 @@
 (defn get-date-from-file
   "Get date from file(java.io.File) with `*post-filename-regexp*`."
   [#^File file]
-  (if-let [date (-?>> (.getName file)
-                      (re-seq *post-filename-regexp*)
-                      nfirst
-                      drop-last)] ; last = filename
-    (apply date-time (map #(Integer/parseInt %) date))
-    (last-modified-date file)))
+  (let [date (-?>> file (.getName)
+                   (re-seq *post-filename-regexp*)
+                   nfirst drop-last)] ; last = filename
+    (if (and date (= 3 (count date))
+             (every? #(re-matches #"^[0-9]+$" %) date))
+      (apply date-time (map #(Integer/parseInt %) date)))))
 
 ; =remove-date-from-name
 (defn remove-date-from-name
