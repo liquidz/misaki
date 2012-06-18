@@ -145,9 +145,12 @@
   "Convert sort-type keyword to sort function."
   []
   (case *post-sort-type*
-    :date  sort-by-date
-    :name  (partial sort-alphabetically #(.getName (:file %)))
-    :title (partial sort-alphabetically #(:title %))
+    :date  sort-by-date ; desc
+    :name  (partial sort-alphabetically #(.getName (:file %))) ; inc
+    :title (partial sort-alphabetically #(:title %)) ; inc
+    ;:date-desc  sort-by-date
+    ;:name-desc  (partial sort-alphabetically #(.getName (:file %)))
+    ;:title-desc (partial sort-alphabetically #(:title %))
     sort-by-date))
 
 

@@ -8,16 +8,29 @@
 
 ;;; sort-by-date
 (deftest* sort-by-date-test
-  (let [[p1 p2 p3] (sort-by-date (get-posts))]
-    (are [x y] (= x y)
-      ; title
-      "bar" (:title p1)
-      "foo" (:title p2)
-      "baz" (:title p3)
-      ; date
-      (date-time 2022 2 2) (:date p1)
-      (date-time 2011 1 1) (:date p2)
-      (date-time 2000 1 1) (:date p3))))
+  (testing "sort date desc"
+    (let [[p1 p2 p3] (sort-by-date (get-posts))]
+      (are [x y] (= x y)
+        ; title
+        "bar" (:title p1)
+        "foo" (:title p2)
+        "baz" (:title p3)
+        ; date
+        (date-time 2022 2 2) (:date p1)
+        (date-time 2011 1 1) (:date p2)
+        (date-time 2000 1 1) (:date p3))))
+
+  (testing "sort date inc"
+    (let [[p1 p2 p3] (sort-by-date :inc (get-posts))]
+      (are [x y] (= x y)
+        ; title
+        "baz" (:title p1)
+        "foo" (:title p2)
+        "bar" (:title p3)
+        ; date
+        (date-time 2000 1 1) (:date p1)
+        (date-time 2011 1 1) (:date p2)
+        (date-time 2022 2 2) (:date p3)))))
 
 ;;; sort-alphabetically
 (deftest sort-alphabetically-test
