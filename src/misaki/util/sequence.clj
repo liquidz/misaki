@@ -14,6 +14,9 @@
 ; =sort-alphabetically
 (defn sort-alphabetically
   "Sort list alphabetically."
-  ([ls]   (sort-alphabetically identity ls))
-  ([f ls] (sort #(neg? (compare (f %) (f %2))) ls)))
+  ([ls]   (sort-alphabetically :inc identity ls))
+  ([f ls] (sort-alphabetically :inc f ls))
+  ([order f ls]
+   (let [f? (if (= :desc order) pos? neg?)]
+     (sort #(f? (compare (f %) (f %2))) ls))))
 

@@ -34,12 +34,13 @@
 
 ;;; sort-alphabetically
 (deftest sort-alphabetically-test
-  (testing "sort list"
+  (testing "sort list inc"
     (let [[a b c] (sort-alphabetically '("b" "a" "c"))]
       (are [x y] (= x y)
         "a" a
         "b" b
         "c" c)))
+
   (testing "sort map"
     (let [[a b c] (sort-alphabetically :text (list {:num 2 :text "b"}
                                                    {:num 1 :text "a"}
@@ -50,4 +51,11 @@
         "c" (:text c)
         1   (:num a)
         2   (:num b)
-        3   (:num c)))))
+        3   (:num c))))
+
+  (testing "sort list desc"
+    (let [[a b c] (sort-alphabetically :desc identity '("b" "a" "c"))]
+      (are [x y] (= x y)
+        "c" a
+        "b" b
+        "a" c))))
