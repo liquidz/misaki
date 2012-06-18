@@ -116,12 +116,16 @@
         option2 (parse-template-option file2)]
 
     (testing "simple site data"
-      (let [site (make-site-data file1 :base option1)]
+      (let [site (make-site-data file1 :base option1)
+            [p1 p2 p3] (:posts site)]
         (are [x y] (= x y)
           file1   (:file site)
           "baz"   (:title site)
           "world" (:hello site)
           3       (count (:posts site))
+          "bar"   (:title p1)
+          "foo"   (:title p2)
+          "baz"   (:title p3)
           ()      (:tag site)
           nil     (:tag-name site)
           '("tag1" "tag2" "tag3") (map :name (:tags site))
@@ -148,7 +152,15 @@
           '("tag1" "tag2" "tag3") (map :name (:tags site))
           (date-time 2011 1 1) (:date site))))
 
-    (testing "with *post-sort-type* => :name"
+    (testing "with *post-sort-type* => :date (inc)"
+      (binding [*post-sort-type* :date]
+        (let [[p1 p2 p3] (:posts (make-site-data file1))]
+          (are [x y] (= x y)
+            "baz" (:title p1)
+            "foo" (:title p2)
+            "bar" (:title p3)))))
+
+    (testing "with *post-sort-type* => :name (inc)"
       (binding [*post-sort-type* :name]
         (let [[p1 p2 p3] (:posts (make-site-data file1))]
           (are [x y] (= x y)
@@ -156,13 +168,30 @@
             "foo" (:title p2)
             "bar" (:title p3)))))
 
-    (testing "with *post-sort-type* => :title"
+    (testing "with *post-sort-type* => :name-desc"
+      (binding [*post-sort-type* :name-desc]
+        (let [[p1 p2 p3] (:posts (make-site-data file1))]
+          (are [x y] (= x y)
+            "bar" (:title p1)
+            "foo" (:title p2)
+            "baz" (:title p3)))))
+
+    (testing "with *post-sort-type* => :title (inc)"
       (binding [*post-sort-type* :title]
         (let [[p1 p2 p3] (:posts (make-site-data file1))]
           (are [x y] (= x y)
             "bar" (:title p1)
             "baz" (:title p2)
-            "foo" (:title p3)))))))
+            "foo" (:title p3)))))
+
+    (testing "with *post-sort-type* => :title-desc"
+      (binding [*post-sort-type* :title-desc]
+        (let [[p1 p2 p3] (:posts (make-site-data file1))]
+          (are [x y] (= x y)
+            "foo" (:title p1)
+            "baz" (:title p2)
+            "bar" (:title p3)))))
+    ))
 
 ;;; generate-html
 (deftest* generate-html-test

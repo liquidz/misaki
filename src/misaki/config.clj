@@ -105,7 +105,7 @@
                                  POST_FILENAME_REGEXP)
         *post-filename-format* (get config# :post-filename-format
                                  POST_FILENAME_FORMAT)
-        *post-sort-type* (get config# :post-sort-type :date)
+        *post-sort-type* (get config# :post-sort-type :date-desc)
         *cljs-compile-options* (if cljs#
                                  (assoc cljs#
                                         :src-dir (add-path-slash (str template# (:src-dir cljs#)))
@@ -145,12 +145,12 @@
   "Convert sort-type keyword to sort function."
   []
   (case *post-sort-type*
-    :date  sort-by-date ; desc
-    :name  (partial sort-alphabetically #(.getName (:file %))) ; inc
-    :title (partial sort-alphabetically #(:title %)) ; inc
-    ;:date-desc  sort-by-date
-    ;:name-desc  (partial sort-alphabetically #(.getName (:file %)))
-    ;:title-desc (partial sort-alphabetically #(:title %))
+    :date  (partial sort-by-date :inc)
+    :name  (partial sort-alphabetically #(.getName (:file %)))
+    :title (partial sort-alphabetically #(:title %))
+    :date-desc  sort-by-date
+    :name-desc  (partial sort-alphabetically :desc #(.getName (:file %)))
+    :title-desc (partial sort-alphabetically :desc #(:title %))
     sort-by-date))
 
 
