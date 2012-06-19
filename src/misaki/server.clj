@@ -72,7 +72,7 @@
 
   (watcher
     [*template-dir*
-     (str *public-dir* "_config.clj")]
+     (str *base-dir* *config-file*)]
     (rate 50)
     (change-first? false) ; do not compile each templates at first
     (file-filter ignore-dotfiles)
