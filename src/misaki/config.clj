@@ -185,12 +185,14 @@
 (defn make-post-output-filename
   "Make post output filename from java.io.File."
   [#^File file]
-  (let [date (get-date-from-file file)
-        filename (-?> (.getName file) remove-date-from-name delete-extension)]
+  (let [date     (get-date-from-file file)
+        filename (if date
+                   (-?> (.getName file) remove-date-from-name delete-extension)
+                   (delete-extension (.getName file)))]
     (render *post-filename-format*
-            {:year  (-> date year str)
-             :month (->> date month (format "%02d"))
-             :day   (->> date day (format "%02d"))
+            {:year  (-?> date year str)
+             :month (-?>> date month (format "%02d"))
+             :day   (-?>> date day (format "%02d"))
              :filename filename})))
 
 ; =make-template-output-filename
