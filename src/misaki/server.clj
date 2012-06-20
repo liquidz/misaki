@@ -1,7 +1,7 @@
 (ns misaki.server
   "Development server
 
-  Listen 8080 port to publish developing blog,
+  Listen *port* to publish developing blog,
   and watch template updates.
   "
   (:use
@@ -94,5 +94,5 @@
         (do (start-watcher)
             (run-jetty
               (routes (files "/" {:root *public-dir*}))
-              {:port 8080}))))))
+              {:port *port*}))))))
 

@@ -6,6 +6,10 @@
  :post-dir     "_posts/"
  :layout-dir   "_layouts/"
 
+ ;; dev server port
+ ;;   default value: 8080
+ :port 8080
+
  ;; site language
  ;;   default value: "en"
  :lang "en"

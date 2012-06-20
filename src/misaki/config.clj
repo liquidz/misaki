@@ -10,6 +10,7 @@
   (:import [java.io File]))
 
 ;; ## Default Value
+(def PORT 8080)
 (def LANGUAGE "en")
 (def POST_FILENAME_REGEXP #"(\d{4})[-_](\d{1,2})[-_](\d{1,2})[-_](.+)$")
 (def POST_FILENAME_FORMAT "{{year}}/{{month}}/{{filename}}")
@@ -44,6 +45,8 @@
 (declare ^:dynamic *site*)
 ;; Template names which compiled with post templates.
 (declare ^:dynamic *compile-with-post*)
+;; Server port.
+(declare ^:dynamic *port*)
 ;; Site language.
 (declare ^:dynamic *lang*)
 ;; Regexp for parse post filename.
@@ -98,6 +101,7 @@
         *post-dir*     (str template# (:post-dir config#))
         *tag-out-dir*  (:tag-out-dir config#)
         *tag-layout*   (str layout# (:tag-layout config#) ".clj")
+        *port*         (get config# :port PORT)
         *lang*         (get config# :lang LANGUAGE)
         *site*         (get config# :site {})
         *compile-with-post* (:compile-with-post config#)
