@@ -7,6 +7,12 @@
     [clojure.string :as str])
   (:import [java.io File]))
 
+; =file?
+(defn file?
+  "Check whether specified data is java.io.File or not."
+  [x]
+  (= java.io.File (class x)))
+
 ; =add-path-slash
 (defn add-path-slash
   "Add slash to end of text."

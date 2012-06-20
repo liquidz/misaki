@@ -6,6 +6,14 @@
         clojure.test)
   (:require [clojure.java.io :as io]))
 
+;; file?
+(deftest file?-test
+  (are [x y] (= x (file? y))
+    true  (io/file ".")
+    false "string"
+    false 123
+    false nil))
+
 ;; add-path-slash
 (deftest add-path-slash-test
   (are [x y] (= x (add-path-slash y))
