@@ -34,8 +34,8 @@
     (are [x y] (= x y)
       false (post-contains-tag? data "tag1")
       true  (post-contains-tag? data "tag2")
-      true  (post-contains-tag? data "tag3")
-      false (post-contains-tag? data nil))))
+      true  (post-contains-tag? data "tag3"))
+    (is (thrown? AssertionError (post-contains-tag? data nil)))))
 
 ;;; get-posts
 (deftest* get-posts-test

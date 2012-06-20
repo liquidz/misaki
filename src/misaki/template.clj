@@ -2,6 +2,7 @@
   "Template file loader"
   (:use
     [misaki evaluator config]
+    [misaki.util.file :only [file?]]
     [clojure.core.incubator :only [-?>]])
   (:require [clojure.string :as str]
             [clojure.java.io :as io])
@@ -47,6 +48,7 @@
 (defn apply-template
   "Apply contents data to template function."
   [f contents]
+  {:pre [(fn? f) (sequential? contents)]}
   (let [option   (merge (meta f) (meta contents))
         contents (with-meta contents option)]
     (with-meta (f contents) option)))
@@ -55,6 +57,7 @@
 (defn load-template-data
   "Load template data(String) and option."
   [#^File file]
+  {:pre [(file? file)]}
   (let [data (slurp file)
         option (parse-template-option data)
         result (list [data option])]
@@ -70,6 +73,7 @@
   If `allow-layout?` option is specified, you can select whether evaluate layout or not."
   ([#^File file] (load-template file true))
   ([#^File file allow-layout?]
+   {:pre [(file? file)]}
    (reduce
      (fn [parent-fn [template-data option]]
        (let [template-fn (evaluate template-data)]

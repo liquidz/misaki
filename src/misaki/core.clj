@@ -20,6 +20,7 @@
 (defn generate-post-content
   "Generate post content without layout."
   [#^File file]
+  {:pre [(file? file)]}
   (html (generate-html file :allow-layout? false)))
 
 ; =get-post-data
@@ -28,7 +29,8 @@
 
   Content data(`:lazy-content`) is delayed."
   [#^File file]
-  (assoc (parse-template-option  file)
+  {:pre [(file? file)]}
+  (assoc (parse-template-option file)
          :file file
          :url  (make-post-url file)
          :date (get-date-from-file file)
@@ -38,6 +40,7 @@
 (defn post-contains-tag?
   "Check whether post contains tag or not."
   [post-data #^String tag]
+  {:pre [(map? post-data) (string? tag)]}
   (let [tags  (get post-data :tag [])
         names (set (map :name tags))]
     (contains? names tag)))
@@ -76,6 +79,7 @@
 (defn make-site-data
   "Make site meta data from java.io.File for HTML generator."
   [#^File file & {:keys [base tag] :or {base {}, tag nil}}]
+  {:pre [(file? file)]}
   (let [tag?    (and (not (nil? tag)) (sequential? tag))
         sort-fn (sort-type->sort-fn)]
     (assoc (merge *site* base)
@@ -89,6 +93,7 @@
 (defn generate-html
   "Generate HTML from template file(java.io.File)."
   [#^File file & {:keys [allow-layout?] :or {allow-layout? true}}]
+  {:pre [(file? file)]}
   (let [tmpl-fn    (load-template file allow-layout?)
         site-data  (make-site-data file)
         empty-data (with-meta '("") site-data)]
@@ -99,7 +104,8 @@
 ; =generate-tag-html
 (defn generate-tag-html
   "Generate tag HTML from tag name(String) with `*tag-layout*` layout."
-  [tag-name]
+  [#^String tag-name]
+  {:pre [(string? tag-name)]}
   (let [file       (io/file *tag-layout*)
         tmpl-fn    (load-template file)
         site-data  (make-site-data file :tag [tag-name])
@@ -111,7 +117,7 @@
 ; =get-compile-fn
 (defn get-compile-fn
   "Get hiccup functon from format option."
-  [fmt]
+  [#^String fmt]
   (case fmt
     "html5" #(html5 {:lang *lang*} %)
     "xhtml" #(xhtml {:lang *lang*} %)
@@ -119,7 +125,9 @@
     #(html %)))
 
 ; =compile*
-(defn- compile* [filename data]
+(defn- compile*
+  [#^String filename data]
+  {:pre [(string? filename) (sequential? data)]}
   (let [compile-fn (-> data meta :format get-compile-fn)]
     (write-data (str *public-dir* filename)
                 (compile-fn data))
@@ -129,7 +137,8 @@
 (defn compile-tag
   "Compile a tag page.
   return true if compile succeeded."
-  [tag-name]
+  [#^String tag-name]
+  {:pre [(string? tag-name)]}
   (try
     (compile* (make-tag-output-filename tag-name)
               (generate-tag-html tag-name))
@@ -141,6 +150,7 @@
   "Compile a specified template, and write compiled data to `*public-dir*`.
   return true if compile succeeded."
   [#^File file]
+  {:pre [(file? file)]}
   (try
     (compile* (make-template-output-filename file)
               (generate-html file))

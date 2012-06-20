@@ -6,7 +6,7 @@
   "
   (:use
     [misaki core config template]
-    [misaki.util.file :only [add-path-slash has-extension?]]
+    [misaki.util.file :only [add-path-slash has-extension? file?]]
     [misaki.util.string :only [blue red]]
     watchtower.core
     [compojure.core :only [routes]]
@@ -16,7 +16,7 @@
 ; =print-result
 (defn print-compile-result
   "Print colored compile result."
-  [message result]
+  [#^String message result]
   (let [text (case result
                true (blue "DONE")
                false (red "FAIL")
@@ -37,7 +37,7 @@
 (defn do-compile
   "Compile templte file and print status"
   [#^java.io.File file]
-
+  {:pre [(file? file)]}
   (cond
     ; clojurescript
     (has-extension? ".cljs" file)

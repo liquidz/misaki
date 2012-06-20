@@ -123,18 +123,21 @@
 (defn config-file?
   "Check whether file is config file or not."
   [#^File file]
+  {:pre [(file? file)]}
   (= *config-file* (.getName file)))
 
 ; =layout-file?
 (defn layout-file?
   "Check whether file is layout file or not."
   [#^File file]
+  {:pre [(file? file)]}
   (not= -1 (.indexOf (.getAbsolutePath file) *layout-dir*)))
 
 ; =post-file?
 (defn post-file?
   "Check whether file is post file or not."
   [#^File file]
+  {:pre [(file? file)]}
   (not= -1 (.indexOf (.getAbsolutePath file) *post-dir*)))
 
 ;; ## Converter
@@ -143,6 +146,7 @@
 (defn template-name->file
   "Convert template name to java.io.File."
   [#^String tmpl-name]
+  {:pre [(string? tmpl-name)]}
   (io/file (str *template-dir* tmpl-name)))
 
 (defn sort-type->sort-fn
@@ -175,6 +179,7 @@
 (defn remove-date-from-name
   "Remove date string from filename(String)."
   [#^String filename]
+  {:pre [(string? filename)]}
   (last (first (re-seq *post-filename-regexp* filename))))
 
 ;; ## Filename Generator
@@ -183,12 +188,14 @@
 (defn make-tag-output-filename
   "Make tag output filename from tag name."
   [#^String tag-name]
+  {:pre [(string? tag-name)]}
   (str *tag-out-dir* tag-name ".html"))
 
 ; =make-post-output-filename
 (defn make-post-output-filename
   "Make post output filename from java.io.File."
   [#^File file]
+  {:pre [(file? file)]}
   (let [date     (get-date-from-file file)
         filename (if date
                    (-?> (.getName file) remove-date-from-name delete-extension)
@@ -218,6 +225,7 @@
 (defn make-layout-filename
   "Make layout filename from layout name(String)."
   [#^String layout-name]
+  {:pre [(string? layout-name)]}
   (str *layout-dir* layout-name ".clj"))
 
 ;; ## URL Generator
@@ -226,5 +234,6 @@
 (defn make-post-url
   "Make post url from java.io.File"
   [#^File file]
+  {:pre [(file? file)]}
   (str "/" (make-template-output-filename file)))
 

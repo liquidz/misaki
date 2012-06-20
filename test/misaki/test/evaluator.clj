@@ -30,5 +30,5 @@
       (is (= '(6) (apply-template f (with-meta '("") {:a 1 :b 2 :c 3}))))))
 
   (testing "custom evaluate"
-    (binding [*eval-functions* [inc inc]]
-      (is (= 3 (evaluate 1))))))
+    (binding [*eval-functions* [#(str % "!") #(str % "?")]]
+      (is (= "hello!?" (evaluate "hello"))))))

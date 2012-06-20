@@ -18,7 +18,8 @@
 ; =wrap-list
 (defn wrap-as-list
   "Wrap slurped data as a list."
-  [slurped-data]
+  [#^String slurped-data]
+  {:pre [(string? slurped-data)]}
   (str "(list " slurped-data " )"))
 
 ; =wrap-as-function
@@ -30,6 +31,7 @@
           bodies))
   "
   [sexp]
+  {:pre [(sequential? sexp)]}
   (let [[defs sexp] (split-with-definition sexp)]
     `(do (use 'misaki.html.core)
          (use 'misaki.html.conv)
@@ -48,6 +50,7 @@
 ; =evaluate
 (defn evaluate
   "Evaluate template's sexp string to template function."
-  [sexp-str]
+  [#^String sexp-str]
+  {:pre [(string? sexp-str)]}
   (reduce #(%2 %) sexp-str *eval-functions*))
 
