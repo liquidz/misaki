@@ -59,18 +59,19 @@
         "world" (-> posts second :hello))))
 
   (testing "Get tagged posts"
-    (let [posts1 (get-posts :tag ["tag1"])
-          posts2 (get-posts :tag ["tag2"])
-          posts3 (get-posts :tag ["tag3"])
-          posts4 (get-posts :tag ["tag1" "tag2"])
-          posts5 (get-posts :tag ["tag1" "tag3"])]
+    (let [posts1 (get-tagged-posts ["tag1"])
+          posts2 (get-tagged-posts ["tag2"])
+          posts3 (get-tagged-posts ["tag3"])
+          posts4 (get-tagged-posts ["tag1" "tag2"])
+          posts5 (get-tagged-posts ["tag1" "tag3"])]
 
       (are [x y] (= x y)
         1 (count posts1)
         2 (count posts2)
         1 (count posts3)
         1 (count posts4)
-        0 (count posts5)))))
+        0 (count posts5))
+      (is (thrown? AssertionError (get-tagged-posts "string"))))))
 
 ;;; get-all-tags
 (deftest* get-all-tags-test

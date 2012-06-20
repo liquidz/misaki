@@ -48,12 +48,17 @@
 ; =get-posts
 (defn get-posts
   "Get posts data from *post-dir* directory."
-  [& {:keys [tag]}]
+  []
+  (map get-post-data (find-clj-files *post-dir*)))
+
+; =get-tagged-posts
+(defn get-tagged-posts
+  "Get tagged posts data from *post-dir* directory."
+  [tags]
+  {:pre [(sequential? tags)]}
   (filter
-    #(or (nil? tag)
-         (and (sequential? tag)
-              (every? (partial post-contains-tag? %) tag)))
-    (map get-post-data (find-clj-files *post-dir*))))
+    #(every? (partial post-contains-tag? %) tags)
+    (get-posts)))
 
 ;; ## Tag Functions
 
@@ -84,7 +89,7 @@
         sort-fn (sort-type->sort-fn)]
     (assoc (merge *site* base)
            :file     file
-           :posts    (sort-fn (if tag? (get-posts :tag tag) (get-posts)))
+           :posts    (sort-fn (if tag? (get-tagged-posts tag) (get-posts)))
            :tags     (sort-alphabetically :name (get-tags :count? true))
            :tag-name (if tag? (str/join "," tag))
            :date     (get-date-from-file file))))
