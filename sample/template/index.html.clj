@@ -1,6 +1,6 @@
 ;; Define template options here
 ; @layout  default
-; @title   misaki
+; @title   home
 
 ;; You can define your function in template
 (defn page-header [[fs & rs]]
@@ -33,7 +33,7 @@
 #-CLOJURE
 ;; Define template options here
 ; @layout  default
-; @title   misaki
+; @title   home
 
 ;; You can define your function in template
 (defn page-header [[fs & rs]]
