@@ -51,7 +51,8 @@
   {:pre [(fn? f) (sequential? contents)]}
   (let [option   (merge (meta f) (meta contents))
         contents (with-meta contents option)]
-    (with-meta (f contents) option)))
+    (binding [*site* option]
+      (with-meta (f contents) option))))
 
 ; =load-template-data
 (defn load-template-data

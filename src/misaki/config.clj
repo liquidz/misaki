@@ -57,6 +57,8 @@
 (declare ^:dynamic *post-sort-type*)
 ;; Compile options for ClojureScript
 (declare ^:dynamic *cljs-compile-options*)
+;; Current site data
+(declare ^:dynamic *site*)
 
 
 ;; ## Config Data Wrapper

@@ -15,12 +15,12 @@
 
 ;;; wrap-as-function
 (deftest* wrap-as-function-test
-  (let [s '(list "hello" (def x 1) 123) f (wrap-as-function s)]
-    (is (= 'do (first f)))
-    (is (= '(clojure.core/use (quote misaki.html.core)) (second f)))
-    (is (= '(clojure.core/use (quote misaki.html.conv)) (nth f 2)))
-    (is (= '(def x 1) (nth f 3)))
-    (is (= 'clojure.core/fn (first (nth f 4))))))
+  (let [s '(list "hello" (def a 1) 123) f (wrap-as-function s)]
+    (are [x y] (= x y)
+      (first f) 'do
+      (first (second f)) 'clojure.core/use
+      (nth f 2) '(def a 1)
+      (first (nth f 3)) 'clojure.core/fn)))
 
 ;;; evaluate
 (deftest evaluate-test
