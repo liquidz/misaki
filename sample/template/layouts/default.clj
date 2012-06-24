@@ -1,20 +1,6 @@
 ; @title   default title
 ; @format  html5
 
-(defn post-list [site]
-  (ul
-    #(list
-       (date->string (:date %))
-       "&nbsp;-&nbsp;"
-       (link (:title %) (:url %)))
-    (:posts site)))
-
-(defn tag-list [site]
-  (ul
-    #(link (str (:name %) " (" (:count %) ")")
-           (:url %))
-    (:tags site)))
-
 [:head
  [:title
   (if (= (:title site) "home")
@@ -27,32 +13,24 @@
          :rel   "alternate"
          :title (:title site)
          :type  "application/atom-xml"}]
- (css
-   "http://fonts.googleapis.com/css?family=Josefin+Sans"
-   "/css/prettify.css"
-   "/css/main.css")]
+
+ (css ["/css/prettify.css" (:css site ())])]
+; /head
 
 [:body
 
  ; github ribbon
  (github-ribbon "https://github.com/liquidz/misaki")
 
- [:div {:class "container"}
-;  [:header
-;   [:h1 (link (:title site) "/")]
-;   [:p (:copy site)]]
-
+ (container
   contents
 
-  [:footer {:class "footer"}
-   [:p {:class "right"} (link "Back to top" "#")]
-;   [:p (link (str "@" (:twitter-account site))
-;             (str "http://twitter.com/" (:twitter-account site)))]
-   [:p (link "@uochan" "http://twitter.com/uochan")
-    "&nbsp;" 2012]]]
+  (footer
+    (link "@uochan" "http://twitter.com/uochan")
+    "&nbsp; 2012"))
+ ; /container
 
- (js
-   "/js/prettify.js"
-   "/js/lang-clj.js"
-   "/js/main.js")]
-
+ (js ["/js/prettify.js"
+      "/js/lang-clj.js"
+      (:js site ())])]
+; /body

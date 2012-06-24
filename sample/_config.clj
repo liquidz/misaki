@@ -16,8 +16,9 @@
 
  ;; default site data
  :site {:site-title "misaki"
-        :copyright "@uochan 2012"
-        }
+        :css ["http://fonts.googleapis.com/css?family=Josefin+Sans"
+              "/css/main.css"]
+        :js ["/js/main.js"]}
 
  ;; post file compile hook
  :compile-with-post ["index.html.clj" "atom.xml.clj"]

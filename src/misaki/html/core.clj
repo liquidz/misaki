@@ -1,9 +1,12 @@
 (ns misaki.html.core
   "misaki: HTML utility for template"
+  (:use [misaki.config :only [*site*]])
   (:require
     [clojure.string :as str]
     [hiccup.core :as hiccup]
-    [hiccup.page :as page]))
+    [hiccup.page :as page]
+    [misaki.html.conv :as conv]
+    ))
 
 ;; ## Utilities
 
@@ -62,7 +65,7 @@
       ;=> <script type=\"text/javascript\" src=\"foo.js\"></script>
       ;=> <script type=\"text/javascript\" src=\"bar.js\"></script>"
   [& args]
-  (apply page/include-js args))
+  (apply page/include-js (flatten args)))
 
 (defn css
   "Include Cascading Style Sheet
@@ -71,7 +74,7 @@
       ;=> <link rel=\"stylesheet\" type=\"text/css\" href=\"foo.css\" />
       ;=> <link rel=\"stylesheet\" type=\"text/css\" href=\"bar.css\" />"
   [& args]
-  (apply page/include-css args))
+  (apply page/include-css (flatten args)))
 
 
 (defn ul
@@ -178,12 +181,24 @@
   ([h] [:header [:h1 (link h "/")]])
   ([h & p] [:header [:h1 (link h "/")] [:p p]]))
 
-(defn footer []
+(defn container [& body]
+  [:div {:class "container"} body])
+
+(defn footer [& p]
   [:footer {:class "footer"}
    [:p {:class "right"} (link "Back to top" "#")]
-;   [:p (link (str "@" (:twitter-account site))
-;             (str "http://twitter.com/" (:twitter-account site)))]
-   [:p (link "@uochan" "http://twitter.com/uochan")
-    "&nbsp;" 2012]]
-  )
+   [:p p]])
 
+(defn post-list []
+  (ul
+    #(list
+       (conv/date->string (:date %))
+       "&nbsp;-&nbsp;"
+       (link (:title %) (:url %)))
+    (:posts *site*)))
+
+(defn tag-list []
+  (ul
+    #(link (str (:name %) " (" (:count %) ")")
+           (:url %))
+    (:tags *site*)))

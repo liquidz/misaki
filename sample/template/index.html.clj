@@ -15,11 +15,11 @@
 
 ;; Sample posts
 (page-header "Sample posts")
-(post-list site)
+(post-list)
 
 ;; Sample post tags
 (page-header "Sample tags")
-(tag-list site)
+(tag-list)
 
 ;; Template source
 (page-header "Template source")
