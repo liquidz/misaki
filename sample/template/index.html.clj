@@ -7,7 +7,7 @@
   [:div {:class "page-header"}
    [:h1 [:span fs] rs]])
 
-;; Template is compiled with hiccup
+; Template is compiled with hiccup
 [:header
  [:h1 (link (:title site) "/")]
  [:p (link "Jekyll" "https://github.com/mojombo/jekyll")

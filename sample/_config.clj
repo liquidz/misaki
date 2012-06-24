@@ -2,9 +2,9 @@
  ;; directory setting
  :public-dir   "public/"
  :tag-out-dir  "tag/"
- :template-dir "_template/"
- :post-dir     "_posts/"
- :layout-dir   "_layouts/"
+ :template-dir "template/"
+ :post-dir     "posts/"
+ :layout-dir   "layouts/"
 
  ;; dev server port
  ;;   default value: 8080
@@ -15,7 +15,10 @@
  :lang "en"
 
  ;; default site data
- :site {:site-title "misaki"}
+ :site {:site-title "misaki"
+        :copy "Jekyll inspired static site generator in Clojure"
+        :twitter-account "uochan"
+        }
 
  ;; post file compile hook
  :compile-with-post ["index.html.clj" "atom.xml.clj"]
