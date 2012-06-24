@@ -68,5 +68,4 @@ CLOJURE
 
 ;; Document
 (page-header "Document")
-[:p "See " (link "github Wiki" "https://github.com/liquidz/misaki/wiki") "."]
-
+(p "See [github Wiki](https://github.com/liquidz/misaki/wiki).")

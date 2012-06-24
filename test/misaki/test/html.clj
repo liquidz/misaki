@@ -62,4 +62,6 @@
     "<p class=\"paragraph\">he<code class=\"prettyprint\">ll</code>o</p>" (p "he`ll`o")
     "<p class=\"paragraph\">he<strong>ll</strong>o</p>" (p "he**ll**o")
     "<p class=\"paragraph\">he<em>ll</em>o</p>" (p "he*ll*o")
-    "<p class=\"paragraph\"><strong>he</strong>l<em>lo</em></p>" (p "**he**l*lo*")))
+    "<p class=\"paragraph\"><strong>he</strong>l<em>lo</em></p>" (p "**he**l*lo*")
+    "<p class=\"paragraph\"><a href=\"a.html\">a</a></p>" (p "[a](a.html)")
+    ))

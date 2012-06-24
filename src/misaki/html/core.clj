@@ -8,6 +8,8 @@
     [misaki.html.conv :as conv]
     ))
 
+(declare link)
+
 ;; ## Utilities
 
 (defn- tag? [x]
@@ -30,6 +32,11 @@
      (if (string? arg#)
        (str/replace arg# ~regexp ~result-fn)
        arg#)))
+
+;; Parse link
+(defparser parse-link
+  #"\[(.+?)\]\((.+?)\)"
+  #(hiccup/html (link (nth % 1) (nth % 2))))
 
 ;; Parse emphasized
 ;;
@@ -54,7 +61,7 @@
 
 ;; Function to apply string parsers
 (def ^:private parse-string
-  (comp parse-emphasized parse-strong parse-inline-code))
+  (comp parse-link parse-emphasized parse-strong parse-inline-code))
 
 ;; ## HTML Tags
 
