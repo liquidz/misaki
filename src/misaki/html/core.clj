@@ -184,9 +184,14 @@
   [& s]
   [:p {:class "paragraph"} (map parse-string s)])
 
-(defn header
-  ([h] [:header [:h1 (link h "/")]])
-  ([h & p] [:header [:h1 (link h "/")] [:p p]]))
+(defn- header-decoration [[first-char & rest-chars]]
+  (list [:span {:class "first_char"} first-char]
+        rest-chars))
+
+(defn header [h & p]
+  [:header
+   [:h1 (link (header-decoration h) "/")]
+   (if p [:p p])])
 
 (defn container [& body]
   [:div {:class "container"} body])
