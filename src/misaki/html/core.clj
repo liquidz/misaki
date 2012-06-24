@@ -169,18 +169,6 @@
   [& title-url-pairs]
   (ul #(apply link %) (partition 2 title-url-pairs)))
 
-(defn tweet-button
-  "Make tweet button"
-  [& {:keys [id label lang] :or {id "tweet_button", label "Tweet", lang "en"}}]
-  [:div {:id id}
-    [:a {:href "https://twitter.com/share"
-         :class "twitter-share-button"
-         :data-count "horizontal"
-         :data-lang lang}
-     label]
-    (js "//platform.twitter.com/widgets.js")])
-
-
 (defn p
   "Make paragraph"
   [& s]

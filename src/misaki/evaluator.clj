@@ -33,8 +33,9 @@
   [sexp]
   {:pre [(sequential? sexp)]}
   (let [[defs sexp] (split-with-definition sexp)]
-    `(do (use 'misaki.html.core)
-         (use 'misaki.html.conv)
+    `(do (use 'misaki.html.core
+              'misaki.html.conv
+              'misaki.html.util)
          ~@defs
          (fn [~'contents]
            (let [~'site (meta ~'contents)] ~sexp)))))
