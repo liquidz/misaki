@@ -8,23 +8,18 @@
    [:h1 [:span fs] rs]])
 
 ; Template is compiled with hiccup
-[:header
- [:h1 (link (:title site) "/")]
- [:p (link "Jekyll" "https://github.com/mojombo/jekyll")
-  " inspired static site generator in Clojure"]]
+(header
+  (:title site)
+  (link "Jekyll" "https://github.com/mojombo/jekyll")
+  " inspired static site generator in Clojure")
 
 ;; Sample posts
 (page-header "Sample posts")
-(ul
-  #(link (:title %) (:url %))
-  (:posts site))
+(post-list site)
 
 ;; Sample post tags
 (page-header "Sample tags")
-(ul
-  #(link (str (:name %) " (" (:count %) ")")
-              (:url %))
-  (:tags site))
+(tag-list site)
 
 ;; Template source
 (page-header "Template source")

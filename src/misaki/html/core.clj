@@ -174,3 +174,16 @@
   [& s]
   [:p {:class "paragraph"} (map parse-string s)])
 
+(defn header
+  ([h] [:header [:h1 (link h "/")]])
+  ([h & p] [:header [:h1 (link h "/")] [:p p]]))
+
+(defn footer []
+  [:footer {:class "footer"}
+   [:p {:class "right"} (link "Back to top" "#")]
+;   [:p (link (str "@" (:twitter-account site))
+;             (str "http://twitter.com/" (:twitter-account site)))]
+   [:p (link "@uochan" "http://twitter.com/uochan")
+    "&nbsp;" 2012]]
+  )
+

@@ -16,8 +16,7 @@
 
  ;; default site data
  :site {:site-title "misaki"
-        :copy "Jekyll inspired static site generator in Clojure"
-        :twitter-account "uochan"
+        :copyright "@uochan 2012"
         }
 
  ;; post file compile hook

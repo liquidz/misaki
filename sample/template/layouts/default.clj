@@ -1,6 +1,20 @@
 ; @title   default title
 ; @format  html5
 
+(defn post-list [site]
+  (ul
+    #(list
+       (date->string (:date %))
+       "&nbsp;-&nbsp;"
+       (link (:title %) (:url %)))
+    (:posts site)))
+
+(defn tag-list [site]
+  (ul
+    #(link (str (:name %) " (" (:count %) ")")
+           (:url %))
+    (:tags site)))
+
 [:head
  [:title
   (if (= (:title site) "home")
