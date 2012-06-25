@@ -19,22 +19,22 @@
 ; =generate-post-content
 (defn generate-post-content
   "Generate post content without layout."
-  [#^File file]
-  {:pre [(file? file)]}
-  (html (generate-html file :allow-layout? false)))
+  [#^File post-file]
+  {:pre [(file? post-file)]}
+  (html (generate-html post-file :allow-layout? false)))
 
 ; =get-post-data
 (defn get-post-data
   "Get post template data from java.io.File.
 
   Content data(`:lazy-content`) is delayed."
-  [#^File file]
-  {:pre [(file? file)]}
-  (assoc (parse-template-option file)
-         :file file
-         :url  (make-post-url file)
-         :date (get-date-from-file file)
-         :lazy-content (delay (escape-string (generate-post-content file)))))
+  [#^File post-file]
+  {:pre [(file? post-file)]}
+  (assoc (parse-template-option post-file)
+         :file post-file
+         :url  (make-post-url post-file)
+         :date (get-date-from-file post-file)
+         :lazy-content (delay (escape-string (generate-post-content post-file)))))
 
 ; =post-contains-tag?
 (defn post-contains-tag?

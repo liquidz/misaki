@@ -1,5 +1,6 @@
 (ns misaki.evaluator
-  "S-exp Template Evaluator")
+  "S-exp Template Evaluator.
+  Template string is evaluated as Function.")
 
 ; =def?
 (defn def?
@@ -9,22 +10,22 @@
        (or (= 'def (first x))
            (= 'defn (first x)))))
 
-; =split-with-definition
-(def ^{:doc "Split s-exp with `def?`."}
-  split-with-definition
+; =split-into-def-and-body
+(def split-into-def-and-body
+  "Split s-exp into definition and template body using `def?`."
   (juxt (partial filter def?)
         (partial remove def?)))
 
-; =wrap-list
-(defn wrap-as-list
-  "Wrap slurped data as a list."
-  [#^String slurped-data]
-  {:pre [(string? slurped-data)]}
-  (str "(list " slurped-data " )"))
+; =enclose-str-with-list
+(defn enclose-str-with-list
+  "Enclose slurped string with list."
+  [#^String slurped-str]
+  {:pre [(string? slurped-str)]}
+  (str "(list " slurped-str" )"))
 
-; =wrap-as-function
-(defn wrap-as-function
-  "Wrap sexp with common function like below.
+; =enclose-sexp-with-function
+(defn enclose-sexp-with-function
+  "Enclose read s-exp with common function like below.
 
       (fn [contents]
         (let [site (meta contents)]
@@ -32,7 +33,7 @@
   "
   [sexp]
   {:pre [(sequential? sexp)]}
-  (let [[defs sexp] (split-with-definition sexp)]
+  (let [[defs sexp] (split-into-def-and-body sexp)]
     `(do (use 'misaki.html.core
               'misaki.html.conv
               'misaki.html.util)
@@ -43,13 +44,13 @@
 (def ^{:dynamic true
        :doc "Definition of evaluating functions."}
   *eval-functions*
-  [wrap-as-list
+  [enclose-str-with-list
    read-string
-   wrap-as-function
+   enclose-sexp-with-function
    eval])
 
-; =evaluate
-(defn evaluate
+; =evaluate-to-function
+(defn evaluate-to-function
   "Evaluate template's sexp string to template function."
   [#^String sexp-str]
   {:pre [(string? sexp-str)]}

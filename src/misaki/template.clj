@@ -77,7 +77,7 @@
    {:pre [(file? file)]}
    (reduce
      (fn [parent-fn [template-data option]]
-       (let [template-fn (evaluate template-data)]
+       (let [template-fn (evaluate-to-function template-data)]
          (with-meta
            (if (or (nil? parent-fn) (not allow-layout?))
              template-fn
