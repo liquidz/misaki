@@ -130,6 +130,7 @@
           ()      (:tag site)
           nil     (:tag-name site)
           '("tag1" "tag2" "tag3") (map :name (:tags site))
+          '(1 2 1) (map :count (:tags site))
           (date-time 2000 1 1) (:date site))))
 
     (testing "site data with post tag"
@@ -151,6 +152,7 @@
           "tag2"  (-> site :tag first :name)
           nil     (:tag-name site)
           '("tag1" "tag2" "tag3") (map :name (:tags site))
+          '(1 2 1) (map :count (:tags site))
           (date-time 2011 1 1) (:date site))))
 
     (testing "with *post-sort-type* => :date (inc)"

@@ -91,7 +91,7 @@
     (assoc (merge *site* base)
            :file     file
            :posts    (sort-fn (if tag? (get-tagged-posts tag) (get-posts)))
-           :tags     (sort-alphabetically :name (get-tags :add-count? true))
+           :tags     (get-tags :count-by-name? true)
            :tag-name (if tag? (str/join "," tag))
            :date     (get-date-from-file file))))
 
