@@ -15,10 +15,10 @@
       "<p>baz</p>" (generate-post-content file1)
       "<p>foo</p>" (generate-post-content file2))))
 
-;;; get-post-data
-(deftest* get-post-data-test
+;;; get-post-info
+(deftest* get-post-info-test
   (let [file (io/file (str *post-dir* "2000.01.01-foo.html.clj"))
-        data (get-post-data file)]
+        data (get-post-info file)]
     (are [x y] (= x y)
       "baz"   (:title data)
       "world" (:hello data)
@@ -27,15 +27,15 @@
       (date-time 2000 1 1) (:date data)
       "&lt;p&gt;baz&lt;/p&gt;" (force (:lazy-content data)))))
 
-;;; post-contains-tag?
+;;; post-inf-contains-tag?
 (deftest* post-contains-tag?-test
   (let [file (io/file (str *post-dir* "2011.01.01-foo.html.clj"))
-        data (get-post-data file)]
+        data (get-post-info file)]
     (are [x y] (= x y)
-      false (post-contains-tag? data "tag1")
-      true  (post-contains-tag? data "tag2")
-      true  (post-contains-tag? data "tag3"))
-    (is (thrown? AssertionError (post-contains-tag? data nil)))))
+      false (post-info-contains-tag? data "tag1")
+      true  (post-info-contains-tag? data "tag2")
+      true  (post-info-contains-tag? data "tag3"))
+    (is (thrown? AssertionError (post-info-contains-tag? data nil)))))
 
 ;;; get-posts
 (deftest* get-posts-test
@@ -96,7 +96,7 @@
       "/tag/tag1.html" (:url t1)
       "/tag/tag2.html" (:url t2)
       "/tag/tag3.html" (:url t3)))
-  (let [[t1 t2 t3 :as tags] (get-tags :count? true)]
+  (let [[t1 t2 t3 :as tags] (get-tags :count-by-name? true)]
     (are [x y] (= x y)
       3      (count tags)
       "tag1" (:name  t1)

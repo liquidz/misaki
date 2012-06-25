@@ -23,11 +23,11 @@
   {:pre [(file? post-file)]}
   (html (generate-html post-file :allow-layout? false)))
 
-; =get-post-data
-(defn get-post-data
-  "Get post template data from java.io.File.
+; =get-post-info
+(defn get-post-info
+  "Get post template information from java.io.File.
 
-  Content data(`:lazy-content`) is delayed."
+  Post content(`:lazy-content`) is delayed."
   [#^File post-file]
   {:pre [(file? post-file)]}
   (assoc (parse-template-option post-file)
@@ -36,28 +36,28 @@
          :date (get-date-from-file post-file)
          :lazy-content (delay (escape-string (generate-post-content post-file)))))
 
-; =post-contains-tag?
-(defn post-contains-tag?
-  "Check whether post contains tag or not."
-  [post-data #^String tag]
-  {:pre [(map? post-data) (string? tag)]}
-  (let [tags  (get post-data :tag [])
-        names (set (map :name tags))]
-    (contains? names tag)))
+; =post-info-contains-tag?
+(defn post-info-contains-tag?
+  "Check whether post information contains tag or not."
+  [post-info #^String tag-str]
+  {:pre [(map? post-info) (string? tag-str)]}
+  (let [tags      (get post-info :tag [])
+        tag-names (set (map :name tags))]
+    (contains? tag-names tag-str)))
 
 ; =get-posts
 (defn get-posts
   "Get posts data from *post-dir* directory."
   []
-  (map get-post-data (find-clj-files *post-dir*)))
+  (map get-post-info (find-clj-files *post-dir*)))
 
 ; =get-tagged-posts
 (defn get-tagged-posts
   "Get tagged posts data from *post-dir* directory."
-  [tags]
-  {:pre [(sequential? tags)]}
+  [tag-seq]
+  {:pre [(sequential? tag-seq)]}
   (filter
-    #(every? (partial post-contains-tag? %) tags)
+    #(every? (partial post-info-contains-tag? %) tag-seq)
     (get-posts)))
 
 ;; ## Tag Functions
@@ -71,14 +71,15 @@
 
 ; =get-tags
 (defn get-tags
-  "Get tags from post list."
-  [& {:keys [count?] :or {count? false}}]
-  (let [tags (get-all-tags)]
-    (->> (if count?
-           (map #(assoc (first %) :count (count %)) (vals (group-by :name tags)))
-           tags)
-         (sort-alphabetically :name)
-         distinct)))
+  "Get tags from post list.
+
+  Add counting by tag name if true is setted to :count-by-name?"
+  [& {:keys [count-by-name?] :or {count-by-name? false}}]
+  (let [tags (get-all-tags)
+        tags (if count-by-name?
+               (map #(assoc (first %) :count (count %)) (vals (group-by :name tags)))
+               tags)]
+    (distinct (sort-alphabetically :name tags))))
 
 ;; ## S-exp Template Applier
 (defn make-site-data
@@ -90,7 +91,7 @@
     (assoc (merge *site* base)
            :file     file
            :posts    (sort-fn (if tag? (get-tagged-posts tag) (get-posts)))
-           :tags     (sort-alphabetically :name (get-tags :count? true))
+           :tags     (sort-alphabetically :name (get-tags :add-count? true))
            :tag-name (if tag? (str/join "," tag))
            :date     (get-date-from-file file))))
 
