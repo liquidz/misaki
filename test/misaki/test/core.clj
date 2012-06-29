@@ -117,7 +117,7 @@
         option2 (parse-template-option file2)]
 
     (testing "simple site data"
-      (let [site (make-site-data file1 :base option1)
+      (let [site (make-site-data file1 :base-option option1)
             [p1 p2 p3] (:posts site)]
         (are [x y] (= x y)
           file1   (:file site)
@@ -134,7 +134,7 @@
           (date-time 2000 1 1) (:date site))))
 
     (testing "site data with post tag"
-      (let [site (make-site-data file1 :base option1 :tag ["tag1"])]
+      (let [site (make-site-data file1 :base-option option1 :tags ["tag1"])]
         file1  (:file site)
         1      (count (:posts site))
         ()     (:tag site)
@@ -142,7 +142,7 @@
         "bar"  (-> site :posts first :title)))
 
     (testing "site data containing tag-name"
-      (let [site (make-site-data file2 :base option2)]
+      (let [site (make-site-data file2 :base-option option2)]
         (are [x y] (= x y)
           file2   (:file site)
           "foo"   (:title site)

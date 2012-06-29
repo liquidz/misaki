@@ -83,17 +83,18 @@
 
 ;; ## S-exp Template Applier
 (defn make-site-data
-  "Make site meta data from java.io.File for HTML generator."
-  [#^File file & {:keys [base tag] :or {base {}, tag nil}}]
-  {:pre [(file? file)]}
-  (let [tag?    (and (not (nil? tag)) (sequential? tag))
-        sort-fn (sort-type->sort-fn)]
-    (assoc (merge *site* base)
-           :file     file
-           :posts    (sort-fn (if tag? (get-tagged-posts tag) (get-posts)))
+  "Make site meta data from template java.io.File for HTML generator."
+  [#^File tmpl-file & {:keys [base-option tags]
+                       :or   {base-option {}, tags nil}}]
+  {:pre [(file? tmpl-file)]}
+  (let [with-tag? (and (not (nil? tags)) (sequential? tags))
+        sort-fn   (sort-type->sort-fn)]
+    (assoc (merge *site* base-option)
+           :file     tmpl-file
+           :posts    (sort-fn (if with-tag? (get-tagged-posts tags) (get-posts)))
            :tags     (get-tags :count-by-name? true)
-           :tag-name (if tag? (str/join "," tag))
-           :date     (get-date-from-file file))))
+           :tag-name (if with-tag? (str/join "," tags))
+           :date     (get-date-from-file tmpl-file))))
 
 ; =generate-html
 (defn generate-html
@@ -114,7 +115,7 @@
   {:pre [(string? tag-name)]}
   (let [file       (io/file *tag-layout*)
         tmpl-fn    (load-template file)
-        site-data  (make-site-data file :tag [tag-name])
+        site-data  (make-site-data file :tags [tag-name])
         empty-data (with-meta '("") site-data)]
     (apply-template tmpl-fn empty-data)))
 
