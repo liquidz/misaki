@@ -6,19 +6,19 @@
   "
   (:use
     [misaki core config template]
-    [misaki.util.file :only [add-path-slash has-extension? file?]]
+    [misaki.util.file   :only [add-path-slash has-extension? file?]]
     [misaki.util.string :only [blue red]]
     watchtower.core
-    [compojure.core :only [routes]]
-    [compojure.route :only [files]]
+    [compojure.core     :only [routes]]
+    [compojure.route    :only [files]]
     [ring.adapter.jetty :only [run-jetty]]))
 
 ; =print-result
 (defn print-compile-result
   "Print colored compile result."
-  [#^String message result]
+  [#^String message, result]
   (let [text (case result
-               true (blue "DONE")
+               true  (blue "DONE")
                false (red "FAIL")
                (blue "SKIP"))]
     (println (str " * compiling " message ": ... " text))))
@@ -29,8 +29,8 @@
 (defn do-all-compile
   "Compile all templates"
   []
-  (print-compile-result "all templates" (compile-all-templates))
-  (print-compile-result "all tags" (compile-all-tags))
+  (print-compile-result "all templates"  (compile-all-templates))
+  (print-compile-result "all tags"       (compile-all-tags))
   (print-compile-result "clojurescripts" (compile-clojurescripts)))
 
 ; =do-compile
