@@ -123,8 +123,8 @@
 ; =get-compile-fn
 (defn get-compile-fn
   "Get hiccup functon from format option."
-  [#^String fmt]
-  (case fmt
+  [#^String format-str]
+  (case format-str
     "html5" #(html5 {:lang *lang*} %)
     "xhtml" #(xhtml {:lang *lang*} %)
     "html4" #(html4 %)
@@ -132,11 +132,11 @@
 
 ; =compile*
 (defn- compile*
-  [#^String filename data]
-  {:pre [(string? filename) (sequential? data)]}
-  (let [compile-fn (-> data meta :format get-compile-fn)]
-    (write-string (str *public-dir* filename)
-                  (compile-fn data))
+  [#^String output-filename template-sexp]
+  {:pre [(string? output-filename) (sequential? template-sexp)]}
+  (let [compile-fn (-> template-sexp meta :format get-compile-fn)]
+    (write-string (str *public-dir* output-filename)
+                  (compile-fn template-sexp))
     true))
 
 ; =compile-tag
@@ -155,11 +155,11 @@
 (defn compile-template
   "Compile a specified template, and write compiled data to `*public-dir*`.
   return true if compile succeeded."
-  [#^File file]
-  {:pre [(file? file)]}
+  [#^File tmpl-file]
+  {:pre [(file? tmpl-file)]}
   (try
-    (compile* (make-template-output-filename file)
-              (file->template-sexp file))
+    (compile* (make-template-output-filename tmpl-file)
+              (file->template-sexp tmpl-file))
     (catch Exception e (.printStackTrace e) false)))
 
 ; =compile-clojurescripts
