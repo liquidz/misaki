@@ -7,8 +7,8 @@
   "Sort post list with org.joda.time.DateTime"
   ([posts]
    (sort-by-date :desc posts))
-  ([order posts]
-   (let [f? (if (= :inc order) before? after?)]
+  ([order-key posts]
+   (let [f? (if (= :inc order-key) before? after?)]
      (sort #(f? (:date %) (:date %2)) posts))))
 
 ; =sort-alphabetically
@@ -16,7 +16,7 @@
   "Sort list alphabetically."
   ([ls]   (sort-alphabetically :inc identity ls))
   ([f ls] (sort-alphabetically :inc f ls))
-  ([order f ls]
-   (let [f? (if (= :desc order) pos? neg?)]
+  ([order-key f ls]
+   (let [f? (if (= :desc order-key) pos? neg?)]
      (sort #(f? (compare (f %) (f %2))) ls))))
 
