@@ -114,7 +114,7 @@
         *post-sort-type*       (get config# :post-sort-type :date-desc)
         *cljs-compile-options* (if cljs#
                                  (assoc cljs#
-                                   :src-dir    (add-path-slash (str template# (:src-dir cljs#)))
+                                   :src-dir    (normalize-path (str template# (:src-dir cljs#)))
                                    :output-dir (get-parent-path cljs-out#)
                                    :output-to  cljs-out#))]
        ~@body)))
@@ -200,8 +200,8 @@
   {:pre [(file? file)]}
   (let [date     (get-date-from-file file)
         filename (if date
-                   (-?> (.getName file) remove-date-from-name delete-extension)
-                   (delete-extension (.getName file)))]
+                   (-?> (.getName file) remove-date-from-name remove-extension)
+                   (remove-extension (.getName file)))]
     (render *post-filename-format*
             {:year  (-?> date year str)
              :month (-?>> date month (format "%02d"))
@@ -221,7 +221,7 @@
   [file]
   (if (post-file? file)
     (make-post-output-filename file)
-    (delete-extension (.getName file))))
+    (remove-extension (.getName file))))
 
 ; =make-layout-filename
 (defn make-layout-filename

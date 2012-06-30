@@ -14,16 +14,16 @@
     false 123
     false nil))
 
-;; add-path-slash
-(deftest add-path-slash-test
-  (are [x y] (= x (add-path-slash y))
+;; normalize-path
+(deftest normalize-path-test
+  (are [x y] (= x (normalize-path y))
     "foo/" "foo"
     "foo/" "foo/"
     "/"    ""))
 
-;; delete-extension
-(deftest delete-extension-test
-  (are [x y] (= x (delete-extension y))
+;; remove-extension
+(deftest remove-extension-test
+  (are [x y] (= x (remove-extension y))
     "foo"     "foo.bar"
     "foo.bar" "foo.bar.baz"
     "foo"     "foo"

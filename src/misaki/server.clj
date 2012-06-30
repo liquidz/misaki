@@ -6,7 +6,7 @@
   "
   (:use
     [misaki core config template]
-    [misaki.util.file   :only [add-path-slash has-extension? file?]]
+    [misaki.util.file   :only [normalize-path has-extension? file?]]
     [misaki.util.string :only [blue red]]
     watchtower.core
     [compojure.core     :only [routes]]
@@ -85,7 +85,7 @@
 
 ; =main
 (defn -main [& [dir :as args]]
-  (binding [*base-dir* (add-path-slash dir)]
+  (binding [*base-dir* (normalize-path dir)]
     (with-config
       (if (contains? (set args) "--compile")
         ; compile all only if '--compile' option is specified

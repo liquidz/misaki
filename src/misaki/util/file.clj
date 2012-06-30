@@ -13,9 +13,10 @@
   [x]
   (= java.io.File (class x)))
 
-; =add-path-slash
-(defn add-path-slash
-  "Add slash to end of text."
+; =normalize-path
+(defn normalize-path
+  "Normalize file path.
+  If path does not contain '/' at end of string, add '/'."
   [path]
   (if path (if (.endsWith path "/") path (str path "/"))))
 
@@ -43,18 +44,18 @@
   [dir]
   (extension-filter ".clj" (find-files dir)))
 
-; =delete-extension
-(defn delete-extension
-  "Delete file extension.
+; =remove-extension
+(defn remove-extension
+  "Remove file extension.
 
-      (delete-extension \"foo.bar\")
+      (remove-extension \"foo.bar\")
       ;=> \"foo\"
-      (delete-extension \"foo.bar.baz\")
+      (remove-extension \"foo.bar.baz\")
       ;=> \"foo.bar\"
   "
   [x]
   (if (= java.io.File (class x))
-    (delete-extension (.getName x))
+    (remove-extension (.getName x))
     (str/replace-first x #"\.[^.]+$" "")))
 
 ; =get-parent-path
@@ -69,7 +70,7 @@
   "
   [path]
   (if (.endsWith path "/") path
-    (add-path-slash (str/join "/" (drop-last (str/split path #"/"))))))
+    (normalize-path (str/join "/" (drop-last (str/split path #"/"))))))
 
 ; =last-modified-date
 (defn last-modified-date
