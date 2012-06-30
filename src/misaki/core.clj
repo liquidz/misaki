@@ -12,7 +12,7 @@
     [clojure.java.io :as io])
   (:import [java.io File]))
 
-(declare generate-html)
+(declare file->template-sexp)
 
 ;; ## Post Functions
 
@@ -21,7 +21,7 @@
   "Generate post content without layout."
   [#^File post-file]
   {:pre [(file? post-file)]}
-  (html (generate-html post-file :allow-layout? false)))
+  (html (file->template-sexp post-file :allow-layout? false)))
 
 ; =get-post-info
 (defn get-post-info
@@ -96,21 +96,20 @@
            :tag-name (if with-tag? (str/join "," tags))
            :date     (get-date-from-file tmpl-file))))
 
-; =generate-html
-(defn generate-html
-  "Generate HTML from template file(java.io.File)."
-  [#^File file & {:keys [allow-layout?] :or {allow-layout? true}}]
-  {:pre [(file? file)]}
-  (let [tmpl-fn    (load-template file allow-layout?)
-        site-data  (make-site-data file)
+; =file->template-sexp
+(defn file->template-sexp
+  "Convert java.io.File to Template s-exp which can be compiled by hiccup"
+  [#^File tmpl-file & {:keys [allow-layout?] :or {allow-layout? true}}]
+  {:pre [(file? tmpl-file)]}
+  (let [tmpl-fn    (load-template tmpl-file allow-layout?)
+        site-data  (make-site-data tmpl-file)
         empty-data (with-meta '("") site-data)]
-
     (apply-template tmpl-fn empty-data)))
 
 
-; =generate-tag-html
-(defn generate-tag-html
-  "Generate tag HTML from tag name(String) with `*tag-layout*` layout."
+; =generate-tag-template-sexp
+(defn generate-tag-template-sexp
+  "Generate tag template s-exp from tag name(String) with `*tag-layout*` layout."
   [#^String tag-name]
   {:pre [(string? tag-name)]}
   (let [file       (io/file *tag-layout*)
@@ -136,8 +135,8 @@
   [#^String filename data]
   {:pre [(string? filename) (sequential? data)]}
   (let [compile-fn (-> data meta :format get-compile-fn)]
-    (write-data (str *public-dir* filename)
-                (compile-fn data))
+    (write-string (str *public-dir* filename)
+                  (compile-fn data))
     true))
 
 ; =compile-tag
@@ -148,7 +147,7 @@
   {:pre [(string? tag-name)]}
   (try
     (compile* (make-tag-output-filename tag-name)
-              (generate-tag-html tag-name))
+              (generate-tag-template-sexp tag-name))
     (catch Exception e
       (.printStackTrace e) false)))
 
@@ -160,7 +159,7 @@
   {:pre [(file? file)]}
   (try
     (compile* (make-template-output-filename file)
-              (generate-html file))
+              (file->template-sexp file))
     (catch Exception e (.printStackTrace e) false)))
 
 ; =compile-clojurescripts

@@ -12,7 +12,9 @@
 
   :dev-dependencies [[lein-multi "1.1.0"]
                      [lein-marginalia "0.7.1"]
-                     [debug-reader "0.0.1"]]
+                     [debug-reader "0.0.1"]
+                     [lein-autotest-notify "0.0.4"]
+                     ]
 
   :repositories [["sonatype-snapshots"
                   "https://oss.sonatype.org/content/repositories/snapshots/"]]

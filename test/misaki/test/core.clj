@@ -196,36 +196,36 @@
             "bar" (:title p3)))))
     ))
 
-;;; generate-html
-(deftest* generate-html-test
+;;; file->template-sexp
+(deftest* file->template-sexp-test
   (let [file1 (template-name->file "index.html.clj")
         file2 (io/file (str *post-dir* "2011.01.01-foo.html.clj"))
         ]
     (are [x y] (= x y)
       ; index.html.clj
       "<head><title>index</title></head><body><h1>index</h1><p>world</p></body>"
-      (html (generate-html file1))
+      (html (file->template-sexp file1))
 
       ; 2011.01.01-foo.html.clj
       "<div><p>foo</p></div>"
-      (html (generate-html file2)))))
+      (html (file->template-sexp file2)))))
 
-;;; generate-tag-html
-(deftest* generate-tag-html-test
+;;; generate-tag-template-sexp
+(deftest* generate-tag-sexp-test
   (let [[t1 t2 t3] (get-tags)]
     (are [x y] (= x y)
       ; tag1
       "<p>tag1</p><ul><li>bar</li></ul>"
-      (html (generate-tag-html (:name t1)))
+      (html (generate-tag-template-sexp (:name t1)))
       ; tag2
       "<p>tag2</p><ul><li>bar</li><li>foo</li></ul>"
-      (html (generate-tag-html (:name t2)))
+      (html (generate-tag-template-sexp (:name t2)))
       ; tag3
       "<p>tag3</p><ul><li>foo</li></ul>"
-      (html (generate-tag-html (:name t3)))
+      (html (generate-tag-template-sexp (:name t3)))
       ; tagX
       "<p>tagX</p><ul></ul>"
-      (html (generate-tag-html "tagX")))))
+      (html (generate-tag-template-sexp "tagX")))))
 
 ;;; compile-tag-test
 (deftest* compile-tag-test
@@ -248,11 +248,11 @@
 ;;; default site data
 (deftest* default-site-data-test
   (let [file (template-name->file "site.html.clj")]
-    (is (= "<p>default title</p>" (html (generate-html file))))))
+    (is (= "<p>default title</p>" (html (file->template-sexp file))))))
 
 ;;; format check
 (deftest* template-format-test
-  (are [x y] (= x (:format (meta (generate-html (template-name->file y)))))
+  (are [x y] (= x (:format (meta (file->template-sexp (template-name->file y)))))
     "html5" "no_format.html.clj"
     "xhtml" "with_format.html.clj"
     "html4" "with_layout_format.html.clj"))
@@ -261,7 +261,7 @@
 ;;; functions in template test
 (deftest* html-function-template-test
   (is (= "<p class=\"paragraph\"><a href=\"link.html\">link</a></p>"
-         (-> "html.test.html.clj" template-name->file generate-html html))))
+         (-> "html.test.html.clj" template-name->file file->template-sexp html))))
 
 ;; SERVER
 ;(deftest* compile-cljs-test
