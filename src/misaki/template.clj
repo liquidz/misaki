@@ -38,8 +38,8 @@
   [file] (parse-template-option (slurp file)))
 
 (defmethod parse-template-option String
-  [data]
-  (let [lines  (map str/trim (str/split-lines data))
+  [slurped-data]
+  (let [lines  (map str/trim (str/split-lines slurped-data))
         params (remove nil? (map #(re-seq #"^;+\s*@(\w+)\s+(.+)$" %) lines))
         option (into {} (for [[[_ k v]] params] [(keyword k) v]))]
     (assoc option :tag (-> option :tag parse-tag-string))))
@@ -56,10 +56,10 @@
 
 ; =load-template-data
 (defn load-template-data
-  "Load template data(String) and option."
+  "Load template slurped body(String) and option."
   [#^File file]
   {:pre [(file? file)]}
-  (let [data (slurp file)
+  (let [data   (slurp file)
         option (parse-template-option data)
         result (list [data option])]
     (if-let [parent (-?> option :layout make-layout-filename io/file)]
