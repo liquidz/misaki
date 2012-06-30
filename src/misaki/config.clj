@@ -12,8 +12,8 @@
 ;; ## Default Value
 (def PORT 8080)
 (def LANGUAGE "en")
-(def POST_FILENAME_REGEXP #"(\d{4})[-_](\d{1,2})[-_](\d{1,2})[-_](.+)$")
-(def POST_FILENAME_FORMAT "{{year}}/{{month}}/{{filename}}")
+(def POST_FILENAME_REGEXP    #"(\d{4})[-_](\d{1,2})[-_](\d{1,2})[-_](.+)$")
+(def POST_OUTPUT_NAME_FORMAT "{{year}}/{{month}}/{{filename}}")
 
 ;; ## Declarations
 
@@ -63,8 +63,8 @@
 
 ;; ## Config Data Wrapper
 
-; =load-config
-(defn load-config
+; =read-config
+(defn read-config
   "Load `*config-file*` from `*base-dir*`."
   []
   (read-string (slurp (str *base-dir* *config-file*))))
@@ -85,15 +85,15 @@
 
   * Configured clojurescript setting
    * source directory : `*base-dir*` + `*template-dir*` + `*src-dir*`
-   * output directory : `*base-dir*` + `*public-dir*` + (delete-filename `*output-to*`)
+   * output directory : `*base-dir*` + `*public-dir*` + (get-parent-path `*output-to*`)
    * output to : `*base-dir*` + `*public-dir*` + `*output-to*`
   "
   [& body]
-  `(let [config#   (load-config)
+  `(let [config#   (read-config)
          public#   (str *base-dir* (:public-dir config#))
          template# (str *base-dir* (:template-dir config#))
-         layout#   (str template# (:layout-dir config#))
-         cljs#     (:cljs config#);(get config# :cljs {})
+         layout#   (str template#  (:layout-dir config#))
+         cljs#     (:cljs config#)
          cljs-out# (if cljs# (str public# (:output-to cljs#)))]
      (binding
        [*public-dir*   public#
@@ -106,17 +106,17 @@
         *port*         (get config# :port PORT)
         *lang*         (get config# :lang LANGUAGE)
         *site*         (get config# :site {})
-        *compile-with-post* (:compile-with-post config#)
+        *compile-with-post*    (:compile-with-post config#)
         *post-filename-regexp* (get config# :post-filename-regexp
                                  POST_FILENAME_REGEXP)
         *post-filename-format* (get config# :post-filename-format
-                                 POST_FILENAME_FORMAT)
-        *post-sort-type* (get config# :post-sort-type :date-desc)
+                                 POST_OUTPUT_NAME_FORMAT)
+        *post-sort-type*       (get config# :post-sort-type :date-desc)
         *cljs-compile-options* (if cljs#
                                  (assoc cljs#
-                                        :src-dir (add-path-slash (str template# (:src-dir cljs#)))
-                                        :output-dir (delete-filename cljs-out#)
-                                        :output-to cljs-out#))]
+                                   :src-dir    (add-path-slash (str template# (:src-dir cljs#)))
+                                   :output-dir (get-parent-path cljs-out#)
+                                   :output-to  cljs-out#))]
        ~@body)))
 
 ;; ## File Cheker
@@ -155,9 +155,9 @@
   "Convert sort-type keyword to sort function."
   []
   (case *post-sort-type*
-    :date  (partial sort-by-date :inc)
-    :name  (partial sort-alphabetically #(.getName (:file %)))
-    :title (partial sort-alphabetically #(:title %))
+    :date       (partial sort-by-date :inc)
+    :name       (partial sort-alphabetically #(.getName (:file %)))
+    :title      (partial sort-alphabetically #(:title %))
     :date-desc  sort-by-date
     :name-desc  (partial sort-alphabetically :desc #(.getName (:file %)))
     :title-desc (partial sort-alphabetically :desc #(:title %))
@@ -169,13 +169,13 @@
 ; =get-date-from-file
 (defn get-date-from-file
   "Get date from file(java.io.File) with `*post-filename-regexp*`."
-  [#^File file]
-  (let [date (-?>> file (.getName)
-                   (re-seq *post-filename-regexp*)
-                   nfirst drop-last)] ; last = filename
-    (if (and date (= 3 (count date))
-             (every? #(re-matches #"^[0-9]+$" %) date))
-      (apply date-time (map #(Integer/parseInt %) date)))))
+  [#^File post-file]
+  (let [date-seq (-?>> post-file (.getName)
+                      (re-seq *post-filename-regexp*)
+                      nfirst drop-last)] ; last = filename
+    (if (and date-seq (= 3 (count date-seq))
+             (every? #(re-matches #"^[0-9]+$" %) date-seq))
+      (apply date-time (map #(Integer/parseInt %) date-seq)))))
 
 ; =remove-date-from-name
 (defn remove-date-from-name

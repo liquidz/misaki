@@ -57,13 +57,14 @@
     (delete-extension (.getName x))
     (str/replace-first x #"\.[^.]+$" "")))
 
-; =delete-filename
-(defn delete-filename
-  "Delete file name.
+; =get-parent-path
+(defn get-parent-path
+  "Get parent path name(String).
+  If specified path has no parent, returns the path itself.
 
-      (delete-filename \"/foo/bar\")
+      (get-parent-path \"/foo/bar\")
       ;=> \"/foo\"
-      (delete-filename \"/foo/\")
+      (get-parent-path \"/foo/\")
       ;=> \"/foo/\"
   "
   [path]
@@ -86,8 +87,8 @@
             file (io/file name)]
         (if-not (.exists file) (.mkdir file))))))
 
-; =write-string
-(defn write-string
+; =write-file
+(defn write-file
   "Write compiled data as specified filename.
   If filepath is not exists, this function make directories."
   [#^String filename, #^String data]

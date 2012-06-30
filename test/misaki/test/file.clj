@@ -29,9 +29,9 @@
     "foo"     "foo"
     ""       ""))
 
-;; delete-filename
-(deftest delete-filename-test
-  (are [x y] (= x (delete-filename y))
+;; get-parent-path
+(deftest get-parent-path-test
+  (are [x y] (= x (get-parent-path y))
     "/foo/"     "/foo/bar"
     "/foo/bar/" "/foo/bar/"
     "/"         "/foo"))

@@ -5,9 +5,9 @@
         clojure.test)
   (:require [clojure.java.io :as io]))
 
-;;; load-config
-(deftest* load-config-test
-  (let [config (load-config)]
+;;; read-config
+(deftest* read-config-test
+  (let [config (read-config)]
     (are [x y] (= x y)
       "public/"   (:public-dir config)
       "template/" (:template-dir config)
