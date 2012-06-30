@@ -3,15 +3,15 @@
 
   cf. [http://d.hatena.ne.jp/nokturnalmortum/20100527/1274961805](http://d.hatena.ne.jp/nokturnalmortum/20100527/1274961805)
   "
-  (:use misaki.config))
+  (:use misaki.config)
+  (:require [clojure.string :as str]))
 
 (defn get-code-type
   "Get code type from code-highlight setting in `config`."
   [s]
-  (let [key (keyword s)
-        config (load-config)
-        type (get (:code-highlight config) key)]
-    (if type (str " " type) "")))
+  (let [code-key (keyword s)
+        config   (read-config)]
+    (get (:code-highlight config) code-key)))
 
 (defn dispatch-reader-macro
   [ch fun]
@@ -40,10 +40,10 @@
       this is here text
       EOT"
   [reader ch]
-  (let [end (read-until reader "\n")
-        type (get-code-type end)]
-    [:pre {:class (str "prettyprint" type)}
-    (read-until reader (apply str "\n" end))]))
+  (let [end-str   (read-until reader "\n")
+        css-class (remove nil? ["prettyprint" (get-code-type end-str)])]
+    [:pre {:class (str/join " " css-class)}
+    (read-until reader (apply str "\n" end-str))]))
 
 ;; Register `#-` reader macro
 (dispatch-reader-macro \- here-code)
