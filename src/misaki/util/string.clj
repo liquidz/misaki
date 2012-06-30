@@ -2,21 +2,21 @@
   "String utility"
   (:require [clojure.string :as str]))
 
-; =escape-content
+; =escape-string
 (defn escape-string
-  "Escape string"
+  "Escape string."
   [s]
-  (-> s (str/replace #"&" "&amp;")
+  (-> s (str/replace #"&"  "&amp;")
         (str/replace #"\"" "&quot;")
-        (str/replace #"<" "&lt;")
-        (str/replace #">" "&gt;")))
+        (str/replace #"<"  "&lt;")
+        (str/replace #">"  "&gt;")))
 
 ; =blue
 (defn blue
-  "Wrap string with ASCII color code(blue)"
+  "Color string with blue ASCII color code."
   [s] (str "\033[36m" s "\033[0m"))
 
 ; =red
 (defn red
-  "Wrap string with ASCII color code(red)"
+  "Color string with red ASCII color code."
   [s] (str "\033[31m" s "\033[0m"))
