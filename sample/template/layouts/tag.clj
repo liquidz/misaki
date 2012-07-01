@@ -2,16 +2,13 @@
 ; @title   tag default title
 
 ; site header
-[:header
- [:h1 (link (:site-title site) "/")]]
+(header (:site-title site))
 
 [:article
  ; page header
  [:div {:class "page-header"}
-  [:h1 [:span (-> site :tag-name first)]
-   (-> site :tag-name rest)]]
+  (h1 (:tag-name site))]
 
- (ul
-   #(link (:title %) (:url %))
-   (:posts site)) ]
+ (ul #(link (:title %) (:url %))
+     (:posts site))]
 

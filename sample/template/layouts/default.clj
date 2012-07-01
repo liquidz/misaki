@@ -1,5 +1,5 @@
-; @title   default title
-; @format  html5
+; @title  default title
+; @format html5
 
 [:head
  [:title
@@ -14,7 +14,7 @@
          :title (:title site)
          :type  "application/atom-xml"}]
 
- (css ["/css/prettify.css" (:css site ())])]
+ (css ["/css/prettify.css" (:stylesheet site ())])]
 ; /head
 
 [:body
@@ -26,11 +26,11 @@
   contents
 
   (footer
-    (link "@uochan" "http://twitter.com/uochan")
+    (link (str "@" (:twitter site)) (str "http://twitter.com/" (:twitter site)))
     "&nbsp; 2012"))
  ; /container
 
  (js ["/js/prettify.js"
       "/js/lang-clj.js"
-      (:js site ())])]
+      (:javascript site ())])]
 ; /body

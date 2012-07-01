@@ -17,8 +17,10 @@ CLJ
 (h2 "Unordered list")
 #-CLJ
 (ul (range 3))
+(ul #(str "[" % "]") (range 3))
 CLJ
 (ul (range 3))
+(ul #(str "[" % "]") (range 3))
 
 (h2 "Definition list")
 #-CLJ

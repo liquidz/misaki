@@ -83,6 +83,17 @@
   [& args]
   (apply page/include-css (flatten args)))
 
+(defn heading
+  "Make heading tag"
+  [n s]
+  (let [tag (keyword (str "h" n))]
+    [tag [:span (first s)] (rest s)]))
+(def h1 (partial heading 1))
+(def h2 (partial heading 2))
+(def h3 (partial heading 3))
+(def h4 (partial heading 4))
+(def h4 (partial heading 5))
+(def h4 (partial heading 6))
 
 (defn ul
   "Make unordered list
@@ -214,3 +225,14 @@
     #(link (str (:name %) " (" (:count %) ")")
            (:url %))
     (:tags *site*)))
+
+
+(defn post-tags
+  [& {:keys [class] :or {class "tag"}}]
+  [:div {:class class}
+   (ul #(link (:name %) (:url %)) (:tag *site*))])
+
+(defn post-date
+  []
+  [:p {:class "date"} (-> *site* :date conv/date->string)])
+

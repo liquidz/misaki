@@ -2,7 +2,7 @@
 ; @layout  default
 ; @title   home
 
-;; You can define your function in template
+;; Your own function in template
 (defn page-header [[fs & rs]]
   [:div {:class "page-header"}
    [:h1 [:span fs] rs]])
@@ -30,29 +30,24 @@
 ; @layout  default
 ; @title   home
 
-;; You can define your function in template
+;; Your own function in template
 (defn page-header [[fs & rs]]
   [:div {:class "page-header"}
    [:h1 [:span fs] rs]])
 
-;; Template is compiled with hiccup
-[:header
- [:h1 (link (:title site) "/")]
- [:p (link "Jekyll" "https://github.com/mojombo/jekyll")
-  " inspired static site generator in Clojure"]]
+; Template is compiled with hiccup
+(header
+  (:title site)
+  (link "Jekyll" "https://github.com/mojombo/jekyll")
+  " inspired static site generator in Clojure")
 
 ;; Sample posts
 (page-header "Sample posts")
-(ul
-  #(link (:title %) (:url %))
-  (:posts site))
+(post-list)
 
 ;; Sample post tags
 (page-header "Sample tags")
-(ul
-  #(link (str (:name %) " (" (:count %) ")")
-              (:url %))
-  (:tags site))
+(tag-list)
 
 ;; Template source
 (page-header "Template source")
@@ -63,9 +58,11 @@ CLJ
 
 ;; Document
 (page-header "Document")
-[:p "See " (link "github Wiki" "https://github.com/liquidz/misaki/wiki") "."]
+; Markdown like format with "p" function
+(p "See [github Wiki](https://github.com/liquidz/misaki/wiki).")
 CLOJURE
 
 ;; Document
 (page-header "Document")
+; Markdown like format with "p" function
 (p "See [github Wiki](https://github.com/liquidz/misaki/wiki).")

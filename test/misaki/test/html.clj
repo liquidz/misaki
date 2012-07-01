@@ -63,5 +63,15 @@
     "<p class=\"paragraph\">he<strong>ll</strong>o</p>" (p "he**ll**o")
     "<p class=\"paragraph\">he<em>ll</em>o</p>" (p "he*ll*o")
     "<p class=\"paragraph\"><strong>he</strong>l<em>lo</em></p>" (p "**he**l*lo*")
-    "<p class=\"paragraph\"><a href=\"a.html\">a</a></p>" (p "[a](a.html)")
-    ))
+    "<p class=\"paragraph\"><a href=\"a.html\">a</a></p>" (p "[a](a.html)")))
+
+
+(deftest embed-test
+  (are [x y] (= x y)
+    "hello "        (embed "hello ??")
+    "hello "        (embed "hello ??" nil)
+    "hello world"   (embed "hello ??" "world")
+    "hello 1"       (embed "hello ??" 1)
+    "hello 1"       (embed "hello ??" 1 2)
+    "hello 1 world" (embed "hello ?? ??" 1 "world")
+    "hello aa bb"   (embed "hello ??" '("aa" "bb"))))
