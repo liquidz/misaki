@@ -33,7 +33,7 @@
   [href & {:keys [color position] :or {color :red, position :right}}]
   {:pre [(string? href) (keyword? color) (keyword? position)]}
 
-  [:a {:href href}
+  [:a {:href href :class "github_ribbon"}
    [:img {:style (get ribbon-style position)
           :alt "Fork me on GitHub"
           :src (get (get ribbon-src position) color)}]])

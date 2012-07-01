@@ -17,8 +17,9 @@
  ;; default site data
  :site {:site-title "misaki"
         :twitter    "uochan"
-        :stylesheet ["http://fonts.googleapis.com/css?family=Josefin+Sans" "/css/main.css"]; "/css/bg.css"]
-        :javascript ["/js/main.js"]}
+        :css        ["http://fonts.googleapis.com/css?family=Josefin+Sans" "/css/main.css"]; "/css/bg.css"]
+        :device-css ["/css/smartphone.css"]
+        :js         ["/js/main.js"]}
 
  ;; post file compile hook
  :compile-with-post ["index.html.clj" "atom.xml.clj"]

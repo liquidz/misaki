@@ -17,7 +17,8 @@
          :title (:title site)
          :type  "application/atom-xml"}]
 
- (css ["/css/prettify.css" (:stylesheet site ())])
+ (css ["/css/prettify.css" (:css site ())])
+ (css {:media "only screen and (max-device-width:480px)"} (:device-css site))
  ]
 ; /head
 
@@ -36,5 +37,5 @@
 
  (js ["/js/prettify.js"
       "/js/lang-clj.js"
-      (:javascript site ())])]
+      (:js site ())])]
 ; /body

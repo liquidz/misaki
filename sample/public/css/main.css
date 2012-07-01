@@ -27,9 +27,6 @@ h2 { margin-top: 1em; }
 .page-header p.date { float: right; margin: 20px 0 0 30px; font-weight: bold; letter-spacing: 1px; color: #444; }
 
 .tag ul { margin: 10px 0 0 30px; padding: 0; list-style: none; float: left; }
-/*
-.tag ul li { display: inline; padding-right: 0.5em;
-*/
 .tag ul li { display: inline; margin-right: 10px; }
 .tag ul li a {
     padding: 0.2em 0.5em;

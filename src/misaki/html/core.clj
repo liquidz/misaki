@@ -5,8 +5,7 @@
     [clojure.string :as str]
     [hiccup.core :as hiccup]
     [hiccup.page :as page]
-    [misaki.html.conv :as conv]
-    ))
+    [misaki.html.conv :as conv]))
 
 (declare link)
 
