@@ -1,7 +1,8 @@
 (ns misaki.test.html
   (:use misaki.html.core
         [hiccup.core :only [html]])
-  (:use [clojure.test]))
+  (:use [clojure.test])
+  (:require [clojure.java.io :as io]))
 
 ;; ul
 (deftest ul-test
@@ -65,13 +66,19 @@
     "<p class=\"paragraph\"><strong>he</strong>l<em>lo</em></p>" (p "**he**l*lo*")
     "<p class=\"paragraph\"><a href=\"a.html\">a</a></p>" (p "[a](a.html)")))
 
-
-(deftest embed-test
+(deftest css-test
   (are [x y] (= x y)
-    "hello "        (embed "hello ??")
-    "hello "        (embed "hello ??" nil)
-    "hello world"   (embed "hello ??" "world")
-    "hello 1"       (embed "hello ??" 1)
-    "hello 1"       (embed "hello ??" 1 2)
-    "hello 1 world" (embed "hello ?? ??" 1 "world")
-    "hello aa bb"   (embed "hello ??" '("aa" "bb"))))
+    "<link href=\"a.css\" rel=\"stylesheet\" type=\"text/css\" />" (html (first (css "a.css")))
+    "<link href=\"b.css\" rel=\"stylesheet\" type=\"text/css\" />" (html (second (css "a.css" "b.css")))
+    "<link href=\"a.css\" media=\"screen\" rel=\"stylesheet\" type=\"text/css\" />" (html (first (css {:media "screen"} "a.css")))
+    "<link href=\"b.css\" media=\"screen\" rel=\"stylesheet\" type=\"text/css\" />" (html (second (css {:media "screen"} "a.css" "b.css")))))
+
+;(deftest embed-test
+;  (are [x y] (= x y)
+;    "hello "        (embed "hello ??")
+;    "hello "        (embed "hello ??" nil)
+;    "hello world"   (embed "hello ??" "world")
+;    "hello 1"       (embed "hello ??" 1)
+;    "hello 1"       (embed "hello ??" 1 2)
+;    "hello 1 world" (embed "hello ?? ??" 1 "world")
+;    "hello aa bb"   (embed "hello ??" '("aa" "bb"))))

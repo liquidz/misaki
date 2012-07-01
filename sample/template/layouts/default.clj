@@ -2,6 +2,9 @@
 ; @format html5
 
 [:head
+ [:meta {:name    "viewport"
+         :content "width=device-width, initiali-scale=1.0, user-scalable=yes"}]
+
  [:title
   (if (= (:title site) "home")
     (:site-title site)
@@ -14,7 +17,8 @@
          :title (:title site)
          :type  "application/atom-xml"}]
 
- (css ["/css/prettify.css" (:stylesheet site ())])]
+ (css ["/css/prettify.css" (:stylesheet site ())])
+ ]
 ; /head
 
 [:body

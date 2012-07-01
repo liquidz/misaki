@@ -81,7 +81,10 @@
       ;=> <link rel=\"stylesheet\" type=\"text/css\" href=\"foo.css\" />
       ;=> <link rel=\"stylesheet\" type=\"text/css\" href=\"bar.css\" />"
   [& args]
-  (apply page/include-css (flatten args)))
+  (let [args (flatten args)
+        [opt & hrefs] (if (map? (first args)) args (cons {} args))
+        attrs (map #(merge {:rel "stylesheet" :type "text/css" :href %} opt) hrefs)]
+    (map #(vector :link %) attrs)))
 
 (defn heading
   "Make heading tag"
