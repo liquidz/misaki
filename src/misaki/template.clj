@@ -21,7 +21,7 @@
   (if (or (nil? tags) (str/blank? tags)) ()
     (for [tag (distinct (str/split tags #"[\s\t,]+"))]
       {:name tag
-       :url  (str "/" (make-tag-output-filename tag))})))
+       :url  (make-tag-url tag)})))
 
 ; =parse-template-option
 (defmulti parse-template-option

@@ -59,6 +59,8 @@
 (declare ^:dynamic *cljs-compile-options*)
 ;; Current site data
 (declare ^:dynamic *site*)
+;; URL base
+(def ^:dynamic *url-base* "/")
 
 
 ;; ## Config Data Wrapper
@@ -106,6 +108,7 @@
         *port*         (get config# :port PORT)
         *lang*         (get config# :lang LANGUAGE)
         *site*         (get config# :site {})
+        *url-base*     (normalize-path (get config# :url-base "/"))
         *compile-with-post*    (:compile-with-post config#)
         *post-filename-regexp* (get config# :post-filename-regexp
                                  POST_FILENAME_REGEXP)
@@ -237,5 +240,12 @@
   "Make post url from java.io.File"
   [#^File file]
   {:pre [(file? file)]}
-  (str "/" (make-template-output-filename file)))
+  (str *url-base* (make-template-output-filename file)))
+
+; =make-ta-url
+(defn make-tag-url
+  "Make tag url form tag string."
+  [#^String tag-name]
+  {:pre [(string? tag-name)]}
+  (str *url-base* (make-tag-output-filename tag-name)))
 

@@ -6,6 +6,13 @@
  :post-dir     "posts/"
  :layout-dir   "layouts/"
 
+ ;; posts and tags url setting
+ ;;   default value: "/"
+ ;;   ex)
+ ;;     "/"    => "/YYYY-MM/POST.html"
+ ;;     "/foo" => "/foo/YYYY-MM/POST.html"
+ :url-base     "/"
+
  ;; dev server port
  ;;   default value: 8080
  :port 8080
@@ -17,7 +24,8 @@
  ;; default site data
  :site {:site-title "misaki"
         :twitter    "uochan"
-        :css        ["http://fonts.googleapis.com/css?family=Josefin+Sans" "/css/main.css"]; "/css/bg.css"]
+        :css        ["http://fonts.googleapis.com/css?family=Josefin+Sans"
+                     "/css/main.css"]
         :device-css ["/css/smartphone.css"]
         :js         ["/js/main.js"]}
 
