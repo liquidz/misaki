@@ -1,6 +1,6 @@
 (ns misaki.html.core
   "misaki: HTML utility for template"
-  (:use [misaki.config :only [*site*]])
+  (:use [misaki.config :only [*site* *url-base*]])
   (:require
     [clojure.string :as str]
     [hiccup.core :as hiccup]
@@ -203,7 +203,7 @@
 
 (defn header [h & p]
   [:header
-   [:h1 (link (header-decoration h) "/")]
+   [:h1 (link (header-decoration h) (str *url-base* "index.html"))]
    (if p [:p p])])
 
 (defn container [& body]
