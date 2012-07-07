@@ -34,3 +34,8 @@ SH
 
 
 
+(h2 "See also")
+(ul
+  #(p (str "[" % "](title: " % ")"))
+  ["Directory Structure"
+   "Edit Template"])

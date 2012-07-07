@@ -15,5 +15,6 @@
   (post-date)]
 
  ; contents
- [:div {:class "post"} contents]]
+ [:div {:class "post"} contents
+  [:p {:class "back"} "&raquo; " (link "Back to Top" (:index site))]]]
 

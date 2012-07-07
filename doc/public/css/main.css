@@ -74,3 +74,7 @@ code.prettyprint {
     border: 1px solid #fde3e3;
     background: #fdf3f3;
 }
+
+p.back {
+    margin-top: 2em;
+}

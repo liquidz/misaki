@@ -93,6 +93,7 @@
            :posts    (sort-fn (if with-tag? (get-tagged-posts tags) (get-posts)))
            :tags     (get-tags :count-by-name? true)
            :tag-name (if with-tag? (str/join "," tags))
+           :index    (get-index-filename)
            :date     (get-date-from-file tmpl-file))))
 
 ; =file->template-sexp

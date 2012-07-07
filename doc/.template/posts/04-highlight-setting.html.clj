@@ -3,7 +3,7 @@
 
 (h2 "Highlight Setting")
 
-(p "Code's language is detected by [google-code-prettify](..) automatically,
+(p "Code's language is detected by [google-code-prettify](http://code.google.com/p/google-code-prettify/) automatically,
    however you can specify language with defining highlight setting.")
 
 (h3 "Example")

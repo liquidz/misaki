@@ -192,6 +192,11 @@
 
 ;; ## Filename Generator
 
+(defn get-index-filename
+  "Get index filename string."
+  []
+  (str *url-base* *index-name*))
+
 ; =make-tag-output-filename
 (defn make-tag-output-filename
   "Make tag output filename from tag name."

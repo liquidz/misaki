@@ -1,7 +1,7 @@
 (ns misaki.html.core
   "misaki: HTML utility for template"
   (:use
-    [misaki.config :only [*site* *url-base* *index-name*]]
+    [misaki.config :only [*site* get-index-filename]]
     [misaki.html.conv :only [post-title->url]])
   (:require
     [clojure.string :as str]
@@ -220,7 +220,7 @@
   "Make default header tag."
   [h & p]
   [:header
-   [:h1 (link (header-decoration h) (str *url-base* *index-name*))]
+   [:h1 (link (header-decoration h) (get-index-filename))]
    (if p [:p p])])
 
 (defn container
