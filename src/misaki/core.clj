@@ -7,7 +7,6 @@
     [hiccup.page :only [html5 xhtml html4]]
     [cljs.closure :only [build]])
   (:require
-    misaki.html.conv
     [clojure.string :as str]
     [clojure.java.io :as io])
   (:import [java.io File]))

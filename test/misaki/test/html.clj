@@ -70,9 +70,7 @@
       "<p class=\"paragraph\"><strong>he</strong>l<em>lo</em></p>" (p "**he**l*lo*")
       "<p class=\"paragraph\"><a href=\"a.html\">a</a></p>" (p "[a](a.html)")
       "<p class=\"paragraph\"><a href=\"/2011-01/foo.html\">a</a></p>" (p "[a](title:foo)")
-      "<p class=\"paragraph\"><a href=\"/2011-01/foo.html\">a</a></p>" (p "[a](title: foo)")
-      )
-    ))
+      "<p class=\"paragraph\"><a href=\"/2011-01/foo.html\">a</a></p>" (p "[a](title: foo)"))))
 
 (deftest css-test
   (are [x y] (= x y)

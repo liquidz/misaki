@@ -109,8 +109,8 @@
 (def h2 (partial heading 2))
 (def h3 (partial heading 3))
 (def h4 (partial heading 4))
-(def h4 (partial heading 5))
-(def h4 (partial heading 6))
+(def h5 (partial heading 5))
+(def h6 (partial heading 6))
 
 (defn ul
   "Make unordered list

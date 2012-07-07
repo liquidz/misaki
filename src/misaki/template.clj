@@ -68,7 +68,7 @@
 
 ; =load-template
 (defn load-template
-  "Load template file, and evaluate as function.
+  "Load template file, and return evaluated function.
   Template options are contained as meta data.
 
   If `allow-layout?` option is specified, you can select whether evaluate layout or not."

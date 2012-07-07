@@ -1,6 +1,7 @@
 (ns misaki.html.conv
   "Data converting utilities for template"
   (:use
+    [misaki.core :only [get-posts]]
     [misaki.config :only [*site*]]
     [misaki.util.sequence :only [find-first]]
     [clojure.core.incubator :only [-?>>]])
@@ -63,4 +64,7 @@
 (defn post-title->url
   "Convert post title to post url."
   [#^String post-title]
-  (-?>> *site* :posts (find-first #(= post-title (:title %))) :url))
+  (let [posts (:posts *site*)
+        posts (if posts posts (get-posts))]
+    (-?>> posts (find-first #(= post-title (:title %))) :url)))
+
