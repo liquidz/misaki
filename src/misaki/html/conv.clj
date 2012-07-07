@@ -1,5 +1,9 @@
 (ns misaki.html.conv
   "Data converting utilities for template"
+  (:use
+    [misaki.config :only [*site*]]
+    [misaki.util.sequence :only [find-first]]
+    [clojure.core.incubator :only [-?>>]])
   (:require
     [clojure.string :as str]
     [clj-time.core :as t]
@@ -53,3 +57,10 @@
   [date]
   (if date (format "%02d" (t/day date))))
 
+;; ## Converter for post data
+
+; =post-title->url
+(defn post-title->url
+  "Convert post title to post url."
+  [#^String post-title]
+  (-?>> *site* :posts (find-first #(= post-title (:title %))) :url))

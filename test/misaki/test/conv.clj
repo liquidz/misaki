@@ -1,8 +1,12 @@
 (ns misaki.test.conv
-  (:use [misaki.html conv]
+  (:use misaki.test.common
+        [misaki.html conv]
+        [misaki.core :only [make-site-data]]
+        [misaki.config :only [*tag-layout* *site*]]
         [clj-time.core :only [date-time]]
         misaki.test.common
-        clojure.test))
+        clojure.test)
+  (:require [clojure.java.io :as io]))
 
 ;; date->xml-schema
 (deftest date->xml-schema-test
@@ -27,6 +31,14 @@
   (testing "nil"
     (is (nil? (date->string nil)))))
 
+; =post-title->url
+(deftest* post-title->url-test
+  (binding [*site* (make-site-data (io/file *tag-layout*))]
+    (testing "match pattern"
+      (are [x y] (= x y)
+        "/2011-01/foo.html" (post-title->url "foo")
+        "/2022-02/bar.html" (post-title->url "bar")
+        "/2000-01/foo.html" (post-title->url "baz")))
 
-
-
+    (testing "not match pattern"
+      (is (nil? (post-title->url "unknown"))))))

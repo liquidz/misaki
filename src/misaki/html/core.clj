@@ -1,6 +1,7 @@
 (ns misaki.html.core
   "misaki: HTML utility for template"
-  (:use [misaki.config :only [*site* *url-base* *index-name*]])
+  (:use
+    [misaki.config :only [*site* *url-base* *index-name*]])
   (:require
     [clojure.string :as str]
     [hiccup.core :as hiccup]
@@ -201,20 +202,28 @@
   (list [:span {:class "first_char"} first-char]
         rest-chars))
 
-(defn header [h & p]
+(defn header
+  "Make default header tag."
+  [h & p]
   [:header
    [:h1 (link (header-decoration h) (str *url-base* *index-name*))]
    (if p [:p p])])
 
-(defn container [& body]
+(defn container
+  "Make default container tag."
+  [& body]
   [:div {:class "container"} body])
 
-(defn footer [& p]
+(defn footer
+  "Make default footer."
+  [& p]
   [:footer {:class "footer"}
    [:p {:class "right"} (link "Back to top" "#")]
    [:p p]])
 
-(defn post-list []
+(defn post-list
+  "Make default all posts unordered list."
+  []
   (ul
     #(list
        (conv/date->string (:date %))
@@ -222,7 +231,9 @@
        (link (:title %) (:url %)))
     (:posts *site*)))
 
-(defn tag-list []
+(defn tag-list
+  "Make default all tags unordered list."
+  []
   (ul
     #(link (str (:name %) " (" (:count %) ")")
            (:url %))
@@ -230,11 +241,12 @@
 
 
 (defn post-tags
+  "Make default post tags unordered list."
   [& {:keys [class] :or {class "tag"}}]
   [:div {:class class}
    (ul #(link (:name %) (:url %)) (:tag *site*))])
 
 (defn post-date
+  "Make default post date tag."
   []
   [:p {:class "date"} (-> *site* :date conv/date->string)])
-
