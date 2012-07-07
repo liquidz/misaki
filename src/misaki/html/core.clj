@@ -1,7 +1,8 @@
 (ns misaki.html.core
   "misaki: HTML utility for template"
   (:use
-    [misaki.config :only [*site* *url-base* *index-name*]])
+    [misaki.config :only [*site* *url-base* *index-name*]]
+    [misaki.html.conv :only [post-title->url]])
   (:require
     [clojure.string :as str]
     [hiccup.core :as hiccup]
@@ -33,10 +34,23 @@
        (str/replace arg# ~regexp ~result-fn)
        arg#)))
 
+(defn- link-from-title? [s]
+  (if-let [m (re-seq #"^title:\s*(.+?)$" s)]
+    (-> m first second)))
+
 ;; Parse link
+;;
+;;      [hello](world)
+;;      ;=> <a href="world">hello</a>
+;;
+;;      [hello](title: POST TITLE)
+;;      ;=> <a href="POST URL">hello</a>
 (defparser parse-link
   #"\[(.+?)\]\((.+?)\)"
-  #(hiccup/html (link (nth % 1) (nth % 2))))
+  #(let [[_ alt href] %]
+     (if-let [title (link-from-title? href)]
+       (hiccup/html (link alt (post-title->url title)))
+       (hiccup/html (link alt href)))))
 
 ;; Parse emphasized
 ;;

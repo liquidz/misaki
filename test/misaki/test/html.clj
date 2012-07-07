@@ -1,5 +1,8 @@
 (ns misaki.test.html
-  (:use misaki.html.core
+  (:use misaki.test.common
+        misaki.html.core
+        [misaki.core :only [make-site-data]]
+        [misaki.config :only [*tag-layout* *site*]]
         [hiccup.core :only [html]])
   (:use [clojure.test])
   (:require [clojure.java.io :as io]))
@@ -56,15 +59,20 @@
     "<code class=\"prettyprint\">(+ 1 2)</code>" (html (code (+ 1 2)))
     "<code class=\"prettyprint\">(+ 1 2)</code>" (html (code "(+ 1 2)"))))
 
-(deftest paragraph-test
-  (are [x y] (= x (html y))
-    "<p class=\"paragraph\">hello</p>" (p "hello")
-    "<p class=\"paragraph\">helloworld</p>" (p "hello" "world")
-    "<p class=\"paragraph\">he<code class=\"prettyprint\">ll</code>o</p>" (p "he`ll`o")
-    "<p class=\"paragraph\">he<strong>ll</strong>o</p>" (p "he**ll**o")
-    "<p class=\"paragraph\">he<em>ll</em>o</p>" (p "he*ll*o")
-    "<p class=\"paragraph\"><strong>he</strong>l<em>lo</em></p>" (p "**he**l*lo*")
-    "<p class=\"paragraph\"><a href=\"a.html\">a</a></p>" (p "[a](a.html)")))
+(deftest* paragraph-test
+  (binding [*site* (make-site-data (io/file *tag-layout*))]
+    (are [x y] (= x (html y))
+      "<p class=\"paragraph\">hello</p>" (p "hello")
+      "<p class=\"paragraph\">helloworld</p>" (p "hello" "world")
+      "<p class=\"paragraph\">he<code class=\"prettyprint\">ll</code>o</p>" (p "he`ll`o")
+      "<p class=\"paragraph\">he<strong>ll</strong>o</p>" (p "he**ll**o")
+      "<p class=\"paragraph\">he<em>ll</em>o</p>" (p "he*ll*o")
+      "<p class=\"paragraph\"><strong>he</strong>l<em>lo</em></p>" (p "**he**l*lo*")
+      "<p class=\"paragraph\"><a href=\"a.html\">a</a></p>" (p "[a](a.html)")
+      "<p class=\"paragraph\"><a href=\"/2011-01/foo.html\">a</a></p>" (p "[a](title:foo)")
+      "<p class=\"paragraph\"><a href=\"/2011-01/foo.html\">a</a></p>" (p "[a](title: foo)")
+      )
+    ))
 
 (deftest css-test
   (are [x y] (= x y)
