@@ -61,6 +61,8 @@
 (declare ^:dynamic *site*)
 ;; URL base
 (def ^:dynamic *url-base* "/")
+;; Index file name
+(def ^:dynamic *index-name* "")
 
 
 ;; ## Config Data Wrapper
@@ -109,6 +111,7 @@
         *lang*         (get config# :lang LANGUAGE)
         *site*         (get config# :site {})
         *url-base*     (normalize-path (get config# :url-base "/"))
+        *index-name* (get config# :index-name "")
         *compile-with-post*    (:compile-with-post config#)
         *post-filename-regexp* (get config# :post-filename-regexp
                                  POST_FILENAME_REGEXP)

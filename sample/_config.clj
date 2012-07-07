@@ -12,7 +12,9 @@
  ;;     "/"    => "/YYYY-MM/POST.html"
  ;;     "/foo" => "/foo/YYYY-MM/POST.html"
  :url-base     "/"
- ;:url-base     "/u/14918307/misaki-mac-sample/"
+; :url-base     "/u/14918307/misaki-mac-sample/"
+
+ :index-name "index.html"
 
  ;; dev server port
  ;;   default value: 8080
