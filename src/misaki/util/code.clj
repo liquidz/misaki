@@ -3,7 +3,8 @@
 
   cf. [http://d.hatena.ne.jp/nokturnalmortum/20100527/1274961805](http://d.hatena.ne.jp/nokturnalmortum/20100527/1274961805)
   "
-  (:use misaki.config)
+  (:use misaki.config
+        [misaki.util.string :only [escape-string]])
   (:require [clojure.string :as str]))
 
 (defn get-code-type
@@ -43,7 +44,8 @@
   (let [end-str   (read-until reader "\n")
         css-class (remove nil? ["prettyprint" (get-code-type end-str)])]
     [:pre {:class (str/join " " css-class)}
-    (read-until reader (apply str "\n" end-str))]))
+     (escape-string
+       (read-until reader (apply str "\n" end-str)))]))
 
 ;; Register `#-` reader macro
 (dispatch-reader-macro \- here-code)

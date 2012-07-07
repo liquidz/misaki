@@ -50,6 +50,9 @@ pre.block {
     border: 2px solid #ccc;
     background: #fafafa;
 }
+
+h3 span, h4 span { font-size: 130%; }
+
 h3 {
     color: #58b271;
     margin: 1em 0 0.5em 0;
@@ -57,4 +60,17 @@ h3 {
 h3 + p { text-indent: 1em; }
 
 
-h4 { font-size: 20px; font-weight: bold; }
+h4 { /*font-size: 17px;*/
+    color: #666; font-weight: bold;
+    border-bottom: 1px dotted #eee;
+    margin-top: 0.5em;
+}
+h4 + p { text-indent: 0.5em; }
+
+
+code.prettyprint {
+    padding: 1px 2px;
+    border-radius: 5px;
+    border: 1px solid #fde3e3;
+    background: #fdf3f3;
+}
