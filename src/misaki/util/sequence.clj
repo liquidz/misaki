@@ -20,3 +20,15 @@
    (let [f? (if (= :desc order-key) pos? neg?)]
      (sort #(f? (compare (f %) (f %2))) ls))))
 
+
+; =find-first
+(defn find-first
+  "Returns the first matched entry for pred, or nil if not matched."
+  [pred coll]
+  {:pre [(or (fn? pred) (keyword? pred))
+         (sequential? coll)]}
+  (loop [[x & rst :as ls] coll]
+    (cond
+      (empty? ls) nil
+      (pred x)    x
+      :else       (recur rst))))

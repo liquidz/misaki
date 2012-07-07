@@ -59,3 +59,15 @@
         "c" a
         "b" b
         "a" c))))
+
+;;; find-first
+(deftest find-first-test
+  (testing "match pattern"
+    (are [x y] (= x y)
+      0      (find-first zero? '(1 2 3 0 4))
+      100    (find-first #(= 100 %) (range))
+      {:a 2} (find-first :a (list {:b 1} {:a 2} {:a 3}))))
+  (testing "not match pattern"
+    (are [x y] (= x y)
+      nil (find-first zero? '(1 2 3))
+      nil (find-first :a (list {:b 1} {:c 2} {:d 3})))))
