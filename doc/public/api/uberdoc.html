@@ -3071,7 +3071,8 @@ net.brehaut.ClojureTools = (function (SH) {
 </td><td class="codes"><pre class="brush: clojure">(declare ^:dynamic *post-sort-type*)</pre></td></tr><tr><td class="docs"><p>Compile options for ClojureScript</p>
 </td><td class="codes"><pre class="brush: clojure">(declare ^:dynamic *cljs-compile-options*)</pre></td></tr><tr><td class="docs"><p>Current site data</p>
 </td><td class="codes"><pre class="brush: clojure">(declare ^:dynamic *site*)</pre></td></tr><tr><td class="docs"><p>URL base</p>
-</td><td class="codes"><pre class="brush: clojure">(def ^:dynamic *url-base* &quot;/&quot;)</pre></td></tr><tr><td class="docs"><h2>Config Data Wrapper</h2>
+</td><td class="codes"><pre class="brush: clojure">(def ^:dynamic *url-base* &quot;/&quot;)</pre></td></tr><tr><td class="docs"><p>Index file name</p>
+</td><td class="codes"><pre class="brush: clojure">(def ^:dynamic *index-name* )</pre></td></tr><tr><td class="docs"><h2>Config Data Wrapper</h2>
 </td><td class="codes"></td></tr><tr><td class="docs"><p>Load <code>*config-file*</code> from <code>*base-dir*</code>.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn read-config
   []
@@ -3112,6 +3113,7 @@ net.brehaut.ClojureTools = (function (SH) {
         *lang*         (get config# :lang LANGUAGE)
         *site*         (get config# :site {})
         *url-base*     (normalize-path (get config# :url-base &quot;/&quot;))
+        *index-name* (get config# :index-name &quot;&quot;)
         *compile-with-post*    (:compile-with-post config#)
         *post-filename-regexp* (get config# :post-filename-regexp
                                  POST_FILENAME_REGEXP)
@@ -3425,7 +3427,7 @@ net.brehaut.ClojureTools = (function (SH) {
   [date]
   (if date (format &quot;%02d&quot; (t/day date))))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#misaki.html.core" name="misaki.html.core"><h1 class="project-name">misaki.html.core</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>misaki: HTML utility for template</p>
 </td><td class="codes"><pre class="brush: clojure">(ns misaki.html.core
-  (:use [misaki.config :only [*site*]])
+  (:use [misaki.config :only [*site* *url-base* *index-name*]])
   (:require
     [clojure.string :as str]
     [hiccup.core :as hiccup]
@@ -3595,7 +3597,7 @@ net.brehaut.ClojureTools = (function (SH) {
         rest-chars))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn header [h &amp; p]
   [:header
-   [:h1 (link (header-decoration h) &quot;/&quot;)]
+   [:h1 (link (header-decoration h) (str *url-base* *index-name*))]
    (if p [:p p])])</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn container [&amp; body]
   [:div {:class &quot;container&quot;} body])</pre></td></tr><tr><td class="docs">

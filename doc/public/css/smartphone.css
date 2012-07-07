@@ -1,0 +1,20 @@
+a.github_ribbon { display: none; }
+
+header h1 a {
+    background: transparent url(../img/smp_logo.png) no-repeat top left;
+    width: 150px;
+    height: 52px;
+}
+header p { font-size: 15px; }
+
+.tag ul { float-left: 10px; }
+.tag ul li a { padding: 2px 5px; }
+
+.container {
+    margin: 0;
+    width: 100%;
+    font-size: 90%;
+}
+
+pre.prettyprint { overflow: scroll; }
+
