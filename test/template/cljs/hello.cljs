@@ -1,3 +1,3 @@
-(ns cljs.core)
+(ns hello)
 
 (.alert js/window "hello, world")
