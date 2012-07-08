@@ -98,3 +98,11 @@
   (with-open [w (io/writer filename)]
     (spit w data)))
 
+; =delete-file
+(defmulti delete-file "Delete file." class)
+(defmethod delete-file File
+  [file]
+  (when (.exists file) (.delete file)))
+(defmethod delete-file String
+  [filename]
+  (delete-file (io/file filename)))
