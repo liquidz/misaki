@@ -102,8 +102,7 @@ TEXT
  ;; output-dir base is `:public-dir`
  ;:cljs {:src-dir       "cljs"
  ;       :output-to     "js/main.js"
- ;       :optimizations :simple
- ;       :pretty-print  true}
+ ;       :optimizations :advanced}
 
  ;; highlight setting
  :code-highlight {:CLJ "lang-clj", :CLOJURE "lang-clj"}
