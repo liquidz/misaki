@@ -2,7 +2,7 @@
   :description "Jekyll inspired static site generator in Clojure"
   :dependencies [[org.clojure/clojure "1.4.0"]
                  [org.clojure/core.incubator "0.1.0"]
-                 [org.clojure/clojurescript "0.0-1236"]
+                 [org.clojure/clojurescript "0.0-1443"]
                  [hiccup "1.0.0"]
                  [compojure "1.1.0"]
                  [ring/ring-jetty-adapter "1.1.0"]

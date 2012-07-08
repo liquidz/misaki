@@ -121,7 +121,9 @@
         *cljs-compile-options* (if cljs#
                                  (assoc cljs#
                                    :src-dir    (normalize-path (str template# (:src-dir cljs#)))
-                                   :output-dir (get-parent-path cljs-out#)
+                                   :output-dir (if-let [dir# (:output-dir config#)]
+                                                 (str public# dir#)
+                                                 (get-parent-path cljs-out#))
                                    :output-to  cljs-out#))]
        ~@body)))
 

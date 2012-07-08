@@ -171,6 +171,11 @@
     (when *cljs-compile-options*
       ; make directory if not exists
       (make-directories (:output-to *cljs-compile-options*))
+      ; delete existing files
+      (if-let [file (io/file (:output-to *cljs-compile-options*))]
+        (.delete file))
+      (if-let [file (io/file (str (:output-dir *cljs-compile-options*) "/cljs"))]
+        (.delete file))
       ; build clojurescript
       (build (:src-dir *cljs-compile-options*)
              *cljs-compile-options*)
