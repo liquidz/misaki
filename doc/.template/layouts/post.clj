@@ -1,6 +1,11 @@
 ; @layout  default
 ; @title   post default title
 
+(defn see-also [titles]
+  (list
+    (h2 "See also..")
+    (ul #(p (str "[" % "](title: " % ")")) titles)))
+
 [:article
  ; page header
  [:div {:class "page-header"}

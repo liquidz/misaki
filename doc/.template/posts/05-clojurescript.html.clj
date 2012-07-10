@@ -1,9 +1,9 @@
 ; @layout  post
 ; @title   Clojurescript
 
-(h2 "Setting")
+(h2 "Config setting")
 
-(p "delete comment in `_config.clj`.")
+(p "Delete comment in `_config.clj`.")
 
 #-CLJ
 {
@@ -18,9 +18,11 @@ CLJ
 
 ; /clojurescript setting
 
-(h2 "Edit and compile")
+(h2 "Edit clojurescript source.")
 
-(p "Open template-dir/cljs/hello.cljs")
+(p "Open \"template-dir/cljs/hello.cljs\".
+   Clojurescript source filepath is defined by `:cljs {:src-dir}` in _config.clj
+   ")
 
 #-CLJ
 (ns hello)
@@ -29,7 +31,7 @@ CLJ
   (.alert js/window (str "Hello, " msg)))
 CLJ
 
-(p "To call above function,")
+(p "Edit html file.")
 
 #-HTML
 <button onclick="hello.myalert('clojurescript world!!');">
@@ -37,13 +39,25 @@ Call clojurescript function!
 </button>
 HTML
 
+(p "Demo button.")
 [:button {:onclick "hello.myalert('clojurescript world!!');"} "Call clojurescript function!"]
 
 (h3 "Failed to compile?")
 
 (p "if you failed to compile clojurescript, try followings")
 
-(ul ["java.lang.AssertionError => `cd MISAKI_HOME; rm -rf classes/cljs`"
-     "Another error => `cd CLJS_OUTPUT_DIR; rm hello.js; rm -rf cljs`"])
+(h4 "java.lang.AssertionError")
+#-SH
+cd MISAKI_HOME
+rm -rf classes/cljs
+SH
+
+(h4 "Another errors")
+#-SH
+cd CLJS_OUTPUT_DIR
+rm hello.js
+rm -rf cljs
+SH
+
 
 (js "../js/hello.js")

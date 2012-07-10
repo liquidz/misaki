@@ -163,10 +163,11 @@ CLJ
 (h3 "Tag layout")
 (p "Tag layout which is defined as `:tag-layout` in _config.clj has special `site` keyword.")
 
-(ul [
-     (p "`(:tag-name site)`: Tag name.")
-     (p "`(:posts site)`: Post list which contains the tag.")
-  ])
+(ul [(p "`(:tag-name site)`: Tag name.")
+     (p "`(:posts site)`: Post list which contains the tag.")])
+
+(see-also ["Highlight Setting"
+           "Clojurescript"])
 
 ; @layout  post
 ; @title   Edit Template

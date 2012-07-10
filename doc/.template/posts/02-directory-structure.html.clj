@@ -25,20 +25,19 @@ root/
   +- _config.clj"]
 
 
-;----
 (h3 "root/")
 (p "All public static files such as JavaScripts and StyleSheets are here. Compiled tempates are also putted here.")
-;----
+
 (h3 "tempalte/")
 (p "Template root directory.")
-;----
+
 (h3 "template/posts/")
 (p "Blog posts data directory. All post files should be named **YYYY-MM-DD-posttitle.html.clj** as same as [Jekyll](https://github.com/mojombo/jekyll) filename format.
   This naming format can be configured **_config.clj**")
-;----
+
 (h3 "template/layouts/")
 (p "All layout files are here.")
-;----
+
 (h3 "template/index.html.clj")
 (p "Template file. When misaki compile templates, last extension(`.clj` in this case) is removed.
 
@@ -111,4 +110,5 @@ CLJ
 
 (p "See [Highlight Setting](title: Highlight Setting) about code highlight setting.")
 
-
+(see-also ["Edit Template"
+           "Highlight Setting"])

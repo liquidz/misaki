@@ -22,5 +22,5 @@
             "misaki.html.util" "api/uberdoc.html#misaki.html.util"}))])
 
 (h2 "Demo")
-(ul [(link "http://liquidz.github.com/project/misaki/")])
+(ul [(link "http://liquidz.github.com/misaki/")])
 

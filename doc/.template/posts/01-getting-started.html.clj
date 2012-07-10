@@ -26,16 +26,12 @@ SH
 $ lein run your_blog
 SH
 
-(p "Edit templates. If you update template files, misaki will compile them automatically, and you can preview at " (link "http://localhost:8080") "immediately.")
+(p "Edit templates. If you update template files, misaki will compile them automatically, and you can preview at " (link "http://localhost:8080") " immediately.")
 
 #-SH
-$ vi your_blog/_templates/index.html.clj
+$ vi your_blog/templates/index.html.clj
 SH
 
+(see-also ["Directory Structure"
+           "Edit Template"])
 
-
-(h2 "See also")
-(ul
-  #(p (str "[" % "](title: " % ")"))
-  ["Directory Structure"
-   "Edit Template"])
