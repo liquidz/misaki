@@ -1,6 +1,7 @@
 /pom.xml
 *jar
 /lib
+/target
 /classes
 /native
 /.lein-failures
