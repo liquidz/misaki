@@ -91,6 +91,14 @@
   [& args]
   (apply page/include-js (flatten args)))
 
+(defn js-from-base
+  "Include JavaScript from *url-base* setting."
+  [& args]
+  (let [args (map #(if (zero? (.indexOf % "/")) (apply str (drop 1 %)) %)
+                  (flatten args))
+        args (doall (map #(if (re-seq #"^https?://" %) % (str *url-base* %)) args))]
+    (apply js args)))
+
 (defn css
   "Include Cascading Style Sheet.
 

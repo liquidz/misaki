@@ -94,6 +94,26 @@
         "<p class=\"paragraph\">a\r\nb</p>" (p "a\r\nb")
         "<p class=\"paragraph\">a<br />b</p>" (p "a\r\n\r\nb")))))
 
+(deftest js-test
+  (testing "basic pattern"
+    (are [x y] (= x (html (first y)))
+      "<script src=\"a.js\" type=\"text/javascript\"></script>" (js "a.js")
+      "<script src=\"a.js\" type=\"text/javascript\"></script>" (js ["a.js"])
+      "<script src=\"a.js\" type=\"text/javascript\"></script>" (js "a.js" "b.js")
+      "<script src=\"a.js\" type=\"text/javascript\"></script>" (js ["a.js" "b.js"])))
+  (testing "css from url-base"
+    (are [x y] (= x (html (first y)))
+      "<script src=\"/a.js\" type=\"text/javascript\"></script>" (js-from-base "a.js")
+      "<script src=\"/a.js\" type=\"text/javascript\"></script>" (js-from-base "/a.js")
+      "<script src=\"/bar/a.js\" type=\"text/javascript\"></script>" (js-from-base "/bar/a.js")
+      "<script src=\"http://localhost/a.js\" type=\"text/javascript\"></script>" (js-from-base "http://localhost/a.js"))
+    (binding [*url-base* "/foo/"]
+      (are [x y] (= x (html (first y)))
+        "<script src=\"/foo/a.js\" type=\"text/javascript\"></script>" (js-from-base "a.js")
+        "<script src=\"/foo/a.js\" type=\"text/javascript\"></script>" (js-from-base "/a.js")
+        "<script src=\"/foo/bar/a.js\" type=\"text/javascript\"></script>" (js-from-base "/bar/a.js")
+        "<script src=\"http://localhost/a.js\" type=\"text/javascript\"></script>" (js-from-base "http://localhost/a.js")))))
+
 (deftest css-test
   (testing "basic pattern"
     (are [x y] (= x (html y))
@@ -115,7 +135,8 @@
       (are [x y] (= x (html y))
         "<link href=\"/foo/a.css\" rel=\"stylesheet\" type=\"text/css\" />" (first (css-from-base "a.css"))
         "<link href=\"/foo/a.css\" rel=\"stylesheet\" type=\"text/css\" />" (first (css-from-base "/a.css"))
-        "<link href=\"/foo/bar/a.css\" rel=\"stylesheet\" type=\"text/css\" />" (first (css-from-base "/bar/a.css")))))
+        "<link href=\"/foo/bar/a.css\" rel=\"stylesheet\" type=\"text/css\" />" (first (css-from-base "/bar/a.css"))
+        "<link href=\"http://localhost/a.css\" rel=\"stylesheet\" type=\"text/css\" />" (first (css-from-base "http://localhost/a.css")))))
   (testing "css with media attribute from url base"
     (are [x y] (= x (html y))
       "<link href=\"/a.css\" media=\"screen\" rel=\"stylesheet\" type=\"text/css\" />" (first (css-from-base {:media "screen"} "a.css"))
