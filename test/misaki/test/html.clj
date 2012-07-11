@@ -2,7 +2,7 @@
   (:use misaki.test.common
         misaki.html.core
         [misaki.core :only [make-site-data]]
-        [misaki.config :only [*tag-layout* *site*]]
+        [misaki.config :only [*tag-layout* *site* *url-base*]]
         [hiccup.core :only [html]])
   (:use [clojure.test])
   (:require [clojure.java.io :as io]))
@@ -95,11 +95,32 @@
         "<p class=\"paragraph\">a<br />b</p>" (p "a\r\n\r\nb")))))
 
 (deftest css-test
-  (are [x y] (= x y)
-    "<link href=\"a.css\" rel=\"stylesheet\" type=\"text/css\" />" (html (first (css "a.css")))
-    "<link href=\"b.css\" rel=\"stylesheet\" type=\"text/css\" />" (html (second (css "a.css" "b.css")))
-    "<link href=\"a.css\" media=\"screen\" rel=\"stylesheet\" type=\"text/css\" />" (html (first (css {:media "screen"} "a.css")))
-    "<link href=\"b.css\" media=\"screen\" rel=\"stylesheet\" type=\"text/css\" />" (html (second (css {:media "screen"} "a.css" "b.css")))))
+  (testing "basic pattern"
+    (are [x y] (= x (html y))
+      "<link href=\"a.css\" rel=\"stylesheet\" type=\"text/css\" />" (first (css "a.css"))
+      "<link href=\"b.css\" rel=\"stylesheet\" type=\"text/css\" />" (second (css "a.css" "b.css"))
+      ))
+  (testing "css with media attribute"
+    (are [x y] (= x (html y))
+      "<link href=\"a.css\" media=\"screen\" rel=\"stylesheet\" type=\"text/css\" />" (first (css {:media "screen"} "a.css"))
+      "<link href=\"b.css\" media=\"screen\" rel=\"stylesheet\" type=\"text/css\" />" (second (css {:media "screen"} "a.css" "b.css"))))
+
+  (testing "css from url base"
+    (are [x y] (= x (html y))
+      "<link href=\"/a.css\" rel=\"stylesheet\" type=\"text/css\" />" (first (css-from-base "a.css"))
+      "<link href=\"/a.css\" rel=\"stylesheet\" type=\"text/css\" />" (first (css-from-base "/a.css"))
+      "<link href=\"/bar/a.css\" rel=\"stylesheet\" type=\"text/css\" />" (first (css-from-base "/bar/a.css"))
+      "<link href=\"http://localhost/a.css\" rel=\"stylesheet\" type=\"text/css\" />" (first (css-from-base "http://localhost/a.css")))
+    (binding [*url-base* "/foo/"]
+      (are [x y] (= x (html y))
+        "<link href=\"/foo/a.css\" rel=\"stylesheet\" type=\"text/css\" />" (first (css-from-base "a.css"))
+        "<link href=\"/foo/a.css\" rel=\"stylesheet\" type=\"text/css\" />" (first (css-from-base "/a.css"))
+        "<link href=\"/foo/bar/a.css\" rel=\"stylesheet\" type=\"text/css\" />" (first (css-from-base "/bar/a.css")))))
+  (testing "css with media attribute from url base"
+    (are [x y] (= x (html y))
+      "<link href=\"/a.css\" media=\"screen\" rel=\"stylesheet\" type=\"text/css\" />" (first (css-from-base {:media "screen"} "a.css"))
+      "<link href=\"/a.css\" media=\"screen\" rel=\"stylesheet\" type=\"text/css\" />" (first (css-from-base {:media "screen"} "/a.css"))))
+  )
 
 ;(deftest embed-test
 ;  (are [x y] (= x y)

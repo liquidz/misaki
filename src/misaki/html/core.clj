@@ -1,7 +1,7 @@
 (ns misaki.html.core
   "misaki: HTML utility for template"
   (:use
-    [misaki.config :only [*site* get-index-filename]]
+    [misaki.config :only [*site* *url-base* get-index-filename]]
     [misaki.html.conv :only [post-title->url]])
   (:require
     [clojure.string :as str]
@@ -92,16 +92,37 @@
   (apply page/include-js (flatten args)))
 
 (defn css
-  "Include Cascading Style Sheet
+  "Include Cascading Style Sheet.
 
       (css \"foo.css\" \"bar.css\")
       ;=> <link rel=\"stylesheet\" type=\"text/css\" href=\"foo.css\" />
-      ;=> <link rel=\"stylesheet\" type=\"text/css\" href=\"bar.css\" />"
+      ;=> <link rel=\"stylesheet\" type=\"text/css\" href=\"bar.css\" />
+      (css {:media \"screen\"} \"foo.css\" \"bar.css\")
+      ;=> <link rel=\"stylesheet\" type=\"text/css\" media=\"screen\" href=\"foo.css\" />"
   [& args]
   (let [args (flatten args)
         [opt & hrefs] (if (map? (first args)) args (cons {} args))
         attrs (map #(merge {:rel "stylesheet" :type "text/css" :href %} opt) hrefs)]
     (map #(vector :link %) attrs)))
+
+(defn css-from-base
+  "Include Cascading Style Sheet from *url-base* setting.
+
+   ex) :url-base \"/foo\"
+
+      (css-from-base \"bar.css\")
+      ;=> <link rel=\"stylesheet\" type=\"text/css\" href=\"/foo/bar.css\" />
+      (css-from-base \"/bar.css\")
+      ;=> <link rel=\"stylesheet\" type=\"text/css\" href=\"/foo/bar.css\" />
+      (css-from-base \"http://localhost/bar.css\")
+      ;=> <link rel=\"stylesheet\" type=\"text/css\" href=\"http://localhost/bar.css\" />"
+  [& args]
+  (let [args (flatten args)
+        [opt & args] (if (map? (first args)) args (cons {} args))
+        args (map #(if (zero? (.indexOf % "/"))
+                     (apply str (drop 1 %)) %) args)
+        args (map #(if (re-seq #"^https?://" %) % (str *url-base* %)) args)]
+    (apply css (cons opt args))))
 
 (defn heading
   "Make heading tag"

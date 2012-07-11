@@ -2,6 +2,7 @@
 ; @format html5
 
 [:head
+ [:meta {:charset (:charset site)}]
  [:meta {:name    "viewport"
          :content "width=device-width, initiali-scale=1.0, user-scalable=yes"}]
 

@@ -2,6 +2,7 @@
 ; @format html5
 
 [:head
+ [:meta {:charset (:charset site)}]
  [:meta {:name    "viewport"
          :content "width=device-width, initiali-scale=1.0, user-scalable=yes"}]
 
@@ -17,8 +18,8 @@
          :title (:title site)
          :type  "application/atom-xml"}]
 
- (css ["/css/prettify.css" (:css site ())])
- (css {:media "only screen and (max-device-width:480px)"} (:device-css site))
+ (css-from-base ["/css/prettify.css" (:css site ())])
+ (css-from-base {:media "only screen and (max-device-width:480px)"} (:device-css site))
  ]
 ; /head
 

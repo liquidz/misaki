@@ -3447,7 +3447,7 @@ net.brehaut.ClojureTools = (function (SH) {
     (-?&gt;&gt; posts (find-first #(= post-title (:title %))) :url)))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#misaki.html.core" name="misaki.html.core"><h1 class="project-name">misaki.html.core</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>misaki: HTML utility for template</p>
 </td><td class="codes"><pre class="brush: clojure">(ns misaki.html.core
   (:use
-    [misaki.config :only [*site* get-index-filename]]
+    [misaki.config :only [*site* *url-base* get-index-filename]]
     [misaki.html.conv :only [post-title-&gt;url]])
   (:require
     [clojure.string :as str]
@@ -3506,9 +3506,11 @@ net.brehaut.ClojureTools = (function (SH) {
 ;=&gt; &lt;code class="prettyprint"&gt;hello&lt;/code&gt;
 </code></pre>
 </td><td class="codes"><pre class="brush: clojure">(defparser parse-inline-code
-  #&quot;`([^`]+)`&quot; #(hiccup/html [:code {:class &quot;prettyprint&quot;} (second %)]))</pre></td></tr><tr><td class="docs"><p>Function to apply string parsers</p>
+  #&quot;`([^`]+)`&quot; #(hiccup/html [:code {:class &quot;prettyprint&quot;} (second %)]))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defparser parse-new-line
+  #&quot;(\r?\n){2}&quot; (fn [_] (hiccup/html [:br])))</pre></td></tr><tr><td class="docs"><p>Function to apply string parsers</p>
 </td><td class="codes"><pre class="brush: clojure">(def ^:private parse-string
-  (comp parse-link parse-emphasized parse-strong parse-inline-code))</pre></td></tr><tr><td class="docs"><h2>HTML Tags</h2>
+  (comp parse-new-line parse-link parse-emphasized parse-strong parse-inline-code))</pre></td></tr><tr><td class="docs"><h2>HTML Tags</h2>
 </td><td class="codes"></td></tr><tr><td class="docs"><p>Include JavaScript</p>
 
 <pre><code>  (js "foo.js" "bar.js")
@@ -3517,18 +3519,38 @@ net.brehaut.ClojureTools = (function (SH) {
 </code></pre>
 </td><td class="codes"><pre class="brush: clojure">(defn js
   [&amp; args]
-  (apply page/include-js (flatten args)))</pre></td></tr><tr><td class="docs"><p>Include Cascading Style Sheet</p>
+  (apply page/include-js (flatten args)))</pre></td></tr><tr><td class="docs"><p>Include Cascading Style Sheet.</p>
 
 <pre><code>  (css "foo.css" "bar.css")
   ;=&gt; &lt;link rel="stylesheet" type="text/css" href="foo.css" /&gt;
   ;=&gt; &lt;link rel="stylesheet" type="text/css" href="bar.css" /&gt;
+  (css {:media "screen"} "foo.css" "bar.css")
+  ;=&gt; &lt;link rel="stylesheet" type="text/css" media="screen" href="foo.css" /&gt;
 </code></pre>
 </td><td class="codes"><pre class="brush: clojure">(defn css
   [&amp; args]
   (let [args (flatten args)
         [opt &amp; hrefs] (if (map? (first args)) args (cons {} args))
         attrs (map #(merge {:rel &quot;stylesheet&quot; :type &quot;text/css&quot; :href %} opt) hrefs)]
-    (map #(vector :link %) attrs)))</pre></td></tr><tr><td class="docs"><p>Make heading tag</p>
+    (map #(vector :link %) attrs)))</pre></td></tr><tr><td class="docs"><p>Include Cascading Style Sheet from <em>url-base</em> setting.</p>
+
+<p>   ex) :url-base "/foo"</p>
+
+<pre><code>  (css-from-base "bar.css")
+  ;=&gt; &lt;link rel="stylesheet" type="text/css" href="/foo/bar.css" /&gt;
+  (css-from-base "/bar.css")
+  ;=&gt; &lt;link rel="stylesheet" type="text/css" href="/foo/bar.css" /&gt;
+  (css-from-base "http://localhost/bar.css")
+  ;=&gt; &lt;link rel="stylesheet" type="text/css" href="http://localhost/bar.css" /&gt;
+</code></pre>
+</td><td class="codes"><pre class="brush: clojure">(defn css-from-base
+  [&amp; args]
+  (let [args (flatten args)
+        [opt &amp; args] (if (map? (first args)) args (cons {} args))
+        args (map #(if (zero? (.indexOf % &quot;/&quot;))
+                     (apply str (drop 1 %)) %) args)
+        args (map #(if (re-seq #&quot;^https?://&quot; %) % (str *url-base* %)) args)]
+    (apply css (cons opt args))))</pre></td></tr><tr><td class="docs"><p>Make heading tag</p>
 </td><td class="codes"><pre class="brush: clojure">(defn heading
   [n s]
   (let [tag (keyword (str &quot;h&quot; n))]

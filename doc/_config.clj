@@ -22,7 +22,8 @@
  :lang "en"
 
  ;; default site data
- :site {:site-title "misaki"
+ :site {:charset    "utf-8"
+        :site-title "misaki document"
         :twitter    "uochan"
         :css        ["http://fonts.googleapis.com/css?family=Josefin+Sans"
                      "/css/main.css"]
