@@ -73,9 +73,12 @@
 (defparser parse-inline-code
   #"`([^`]+)`" #(hiccup/html [:code {:class "prettyprint"} (second %)]))
 
+(defparser parse-new-line
+  #"(\r?\n){2}" (fn [_] (hiccup/html [:br])))
+
 ;; Function to apply string parsers
 (def ^:private parse-string
-  (comp parse-link parse-emphasized parse-strong parse-inline-code))
+  (comp parse-new-line parse-link parse-emphasized parse-strong parse-inline-code))
 
 ;; ## HTML Tags
 
