@@ -65,4 +65,4 @@ CLOJURE
 ;; Document
 (page-header "Document")
 ; Markdown like format with "p" function
-(p "See " (link "http://liquidz.github.com/misaki/demo"))
+(p "See " (link "http://liquidz.github.com/misaki/"))

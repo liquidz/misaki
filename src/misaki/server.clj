@@ -92,7 +92,8 @@
         (do-all-compile)
         ; start watching and server
         (do (start-watcher)
+            (println " * starting server: " (blue (str "http://localhost:" *port* *url-base*)))
             (run-jetty
-              (routes (files "/" {:root *public-dir*}))
+              (routes (files *url-base* {:root *public-dir*}))
               {:port *port*}))))))
 

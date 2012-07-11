@@ -19,8 +19,7 @@
          :type  "application/atom-xml"}]
 
  (css-from-base ["/css/prettify.css" (:css site ())])
- (css-from-base {:media "only screen and (max-device-width:480px)"} (:device-css site))
- ]
+ (css-from-base {:media "only screen and (max-device-width:480px)"} (:device-css site))]
 ; /head
 
 [:body
@@ -36,7 +35,7 @@
     "&nbsp; 2012"))
  ; /container
 
- (js ["/js/prettify.js"
-      "/js/lang-clj.js"
-      (:js site ())])]
+ (js-from-base ["/js/prettify.js"
+                "/js/lang-clj.js"
+                (:js site ())])]
 ; /body
