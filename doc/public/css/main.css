@@ -20,16 +20,18 @@ header p { margin-top: 1em; color: #666; font-size: 20px; }
 blockquote { color: #888; font-style: italic; }
 blockquote p:before { content: '> '; }
 
-h2 { margin: 1.5em 0 0.5em 0;
-    border-left: 0.5em solid #eee;
-    padding-left: 0.5em;
+h2 {
+    margin: 1.5em 0 0.5em 0;
+    font-size: 200%;
+    font-weight: bold;
 }
+h2 span { color: #58b271; }
+h2 + p { margin-left: 1.5em; }
 
 ul li { line-height: 130%; }
 
 .page-header { margin-top: 2em; border-bottom: 1px solid #eaeaea; overflow: hidden; }
-.page-header h1 { font-size: 40px; color: #444; font-weight: normal; float: left; }
-.page-header h1 span { color: #58b271; font-weight: bold; }
+.page-header h1 { font-size: 50px; color: #444; font-weight: normal; float: left; }
 .page-header p.date { float: right; margin: 20px 10px 0 30px; font-weight: bold; letter-spacing: 1px; color: #444; }
 
 pre.prettyprint {
@@ -60,7 +62,7 @@ h3 {
 h3 + p { text-indent: 1em; }
 
 
-h4 { /*font-size: 17px;*/
+h4 {
     color: #666; font-weight: bold;
     border-bottom: 1px dotted #eee;
     margin-top: 0.5em;
