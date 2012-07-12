@@ -4,9 +4,16 @@
 
 misaki is a [Jekyll](https://github.com/mojombo/jekyll) inspired static site generator in Clojure.
 
+## What's new in Beta
+
+ * Clojurescript
+ * Output customize
+ * Viewable with smartphone
+ * Expand built-in functions
+
 ## Demo
 
-[Demo page](http://liquidz.github.com/project/misaki/)
+[Demo page](http://liquidz.github.com/misaki/demo/)
 
 ## Example template
 
@@ -56,7 +63,7 @@ $ vi your-blog/_template/index.html.clj
 
 ## Document
 
-[Wiki](https://github.com/liquidz/misaki/wiki)
+[http://liquidz.github.com/misaki/](http://liquidz.github.com/misaki/)
 
 ## "misaki" means..
 
