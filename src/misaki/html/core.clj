@@ -1,7 +1,7 @@
 (ns misaki.html.core
   "misaki: HTML utility for template"
   (:use
-    [misaki.config :only [*site* *url-base* get-index-filename]]
+    [misaki.config :only [*site* *url-base* get-index-filename absolute-path]]
     [misaki.html.conv :only [post-title->url]])
   (:require
     [clojure.string :as str]
@@ -91,12 +91,10 @@
   [& args]
   (apply page/include-js (flatten args)))
 
-(defn js-from-base
+(defn absolute-js
   "Include JavaScript from *url-base* setting."
   [& args]
-  (let [args (map #(if (zero? (.indexOf % "/")) (apply str (drop 1 %)) %)
-                  (flatten args))
-        args (doall (map #(if (re-seq #"^https?://" %) % (str *url-base* %)) args))]
+  (let [args (map #(absolute-path %) (flatten args))]
     (apply js args)))
 
 (defn css
@@ -113,23 +111,21 @@
         attrs (map #(merge {:rel "stylesheet" :type "text/css" :href %} opt) hrefs)]
     (map #(vector :link %) attrs)))
 
-(defn css-from-base
+(defn absolute-css
   "Include Cascading Style Sheet from *url-base* setting.
 
    ex) :url-base \"/foo\"
 
-      (css-from-base \"bar.css\")
+      (absolute-css \"bar.css\")
       ;=> <link rel=\"stylesheet\" type=\"text/css\" href=\"/foo/bar.css\" />
-      (css-from-base \"/bar.css\")
+      (absolute-css \"/bar.css\")
       ;=> <link rel=\"stylesheet\" type=\"text/css\" href=\"/foo/bar.css\" />
-      (css-from-base \"http://localhost/bar.css\")
+      (absolute-css \"http://localhost/bar.css\")
       ;=> <link rel=\"stylesheet\" type=\"text/css\" href=\"http://localhost/bar.css\" />"
   [& args]
   (let [args (flatten args)
         [opt & args] (if (map? (first args)) args (cons {} args))
-        args (map #(if (zero? (.indexOf % "/"))
-                     (apply str (drop 1 %)) %) args)
-        args (map #(if (re-seq #"^https?://" %) % (str *url-base* %)) args)]
+        args (map #(absolute-path %) args)]
     (apply css (cons opt args))))
 
 (defn heading

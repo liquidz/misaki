@@ -259,3 +259,13 @@
   {:pre [(string? tag-name)]}
   (str *url-base* (make-tag-output-filename tag-name)))
 
+; =absolute-path
+(defn absolute-path
+  "Convert path to absolute with *url-base*"
+  [path]
+  (if (re-seq #"^https?://" path)
+    path
+    (let [path (if (.startsWith path "/")
+                 (apply str (drop 1 path))
+                 path)]
+      (str *url-base* path))))

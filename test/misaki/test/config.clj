@@ -59,3 +59,20 @@
         name1 (make-template-output-filename file)
         name2 (make-template-output-filename tmpl-name)]
     (is (= name1 name2))))
+
+;;; absolute-path
+(deftest* absolute-path-test
+  (are [x y] (= x (absolute-path y))
+    "/a.htm" "a.htm"
+    "/bar/a.htm" "bar/a.htm"
+    "/a.htm" "/a.htm"
+    "/bar/a.htm" "/bar/a.htm"
+    "http://localhost/a.htm" "http://localhost/a.htm"
+    "https://localhost/a.htm" "https://localhost/a.htm")
+
+  (binding [*url-base* "/foo/"]
+    (are [x y] (= x (absolute-path y))
+      "/foo/a.htm" "a.htm"
+      "/foo/a.htm" "/a.htm"
+      "/foo/bar/a.htm" "/bar/a.htm"
+      "/foo/bar/a.htm" "bar/a.htm")))

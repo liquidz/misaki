@@ -18,9 +18,9 @@
          :title (:title site)
          :type  "application/atom-xml"}]
 
- (css-from-base
+ (absolute-css
    ["/css/prettify.css" (:css site ())])
- (css-from-base
+ (absolute-css
    {:media "only screen and (max-device-width:480px)"}
    (:device-css site))]
 ; /head
@@ -39,7 +39,7 @@
     [:p (link (img "misaki banner" "/misaki/img/misaki_banner.png") "https://github.com/liquidz/misaki")]])
  ; /container
 
- (js-from-base ["/js/prettify.js"
-                "/js/lang-clj.js"
-                (:js site ())])]
+ (absolute-js ["/js/prettify.js"
+               "/js/lang-clj.js"
+               (:js site ())])]
 ; /body
