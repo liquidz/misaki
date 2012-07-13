@@ -14,14 +14,16 @@
     [ring.adapter.jetty :only [run-jetty]]))
 
 ; =print-result
-(defn print-compile-result
+(defmacro print-compile-result
   "Print colored compile result."
-  [#^String message, result]
-  (let [text (case result
-               true  (blue "DONE")
-               false (red "FAIL")
-               (blue "SKIP"))]
-    (println (str " * compiling " message ": ... " text))))
+  [#^String message, compile-sexp]
+  `(do
+     (print (str " * compiling " ~message ": ... "))
+     (flush)
+     (println (case ~compile-sexp
+                true  (blue "DONE")
+                false (red "FAIL")
+                (blue "SKIP")))))
 
 ;; ## Dev Compiler
 
