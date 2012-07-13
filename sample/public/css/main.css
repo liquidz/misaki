@@ -54,6 +54,11 @@ pre.prettyprint {
     background: #fdf3f3;
 }
 
+/* column style */
+.column { overflow: hidden; }
+.column > div { float: left; }
+.column .w50per { width: 49%; }
+
 /* =footer */
 footer { margin: 20px 0 10px; overflow: hidden; }
 

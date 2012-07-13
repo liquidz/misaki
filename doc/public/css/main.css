@@ -62,7 +62,11 @@ pre.prettyprint, code.prettyprint {
 pre.prettyprint { margin: 10px; padding: 10px; }
 code.prettyprint { padding: 1px 2px; }
 
+/* column style */
+.column { overflow: hidden; }
+.column > div { float: left; }
+.column .w50per { width: 49%; }
+
 /* =footer */
 footer { margin: 20px 0 10px; text-align: right; }
-
 

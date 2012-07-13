@@ -292,3 +292,10 @@
   "Make default post date tag."
   []
   [:p {:class "date"} (-> *site* :date conv/date->string)])
+
+(defn two-column
+  "Make 2 column"
+  [left right]
+  [:div {:class "column"}
+   [:div {:class "w50per"} left]
+   [:div {:class "w50per"} right]])
