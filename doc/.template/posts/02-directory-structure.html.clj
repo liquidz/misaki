@@ -49,7 +49,7 @@ TEXT
 
 (h3 "_config.clj")
 (p "Configuration file for misaki.")
-#-CLOJURE
+#-CLJ
 {
  ;; directory setting
  :public-dir   "public/"
@@ -104,9 +104,9 @@ TEXT
  ;       :optimizations :advanced}
 
  ;; highlight setting
- :code-highlight {:CLJ "lang-clj"}
+ :code-highlight {:CLJ "lang-clj", :CLOJURE "lang-clj"}
  }
-CLOJURE
+CLJ
 
 (p "See [Highlight Setting](title: Highlight Setting) about code highlight setting.")
 
