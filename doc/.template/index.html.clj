@@ -35,7 +35,6 @@ $ cd misaki
 $ lein run sample
 SH
 
-
     (h2 "misaki?")
     (p "\"misaki(美咲)\" is woman's name in Japan, and it means \"Bloom beautifully\".")
 

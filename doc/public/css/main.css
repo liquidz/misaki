@@ -35,7 +35,7 @@ p.back { margin-top: 2em; }
 
 
 /* heading */
-h2 { margin: 1.5em 0 0.5em 0; font-size: 200%; font-weight: bold; }
+h2 { margin: 1em 0 0.5em 0; font-size: 200%; font-weight: bold; }
 h2 span { color: #58b271; }
 h2 + p { margin-left: 1.5em; }
 
