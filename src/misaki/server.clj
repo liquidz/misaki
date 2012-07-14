@@ -7,23 +7,36 @@
   (:use
     [misaki core config template]
     [misaki.util.file   :only [normalize-path has-extension? file?]]
-    [misaki.util.string :only [blue red]]
+    [misaki.util.string :only [blue red msec->string]]
     watchtower.core
     [compojure.core     :only [routes]]
     [compojure.route    :only [files]]
     [ring.adapter.jetty :only [run-jetty]]))
+
+; =elapsing
+(defmacro elapsing
+  [& body]
+  `(let [start-time# (System/currentTimeMillis)
+         ~'get-elapsed-time (fn [] (- (System/currentTimeMillis) start-time#))]
+     ~@body))
 
 ; =print-result
 (defmacro print-compile-result
   "Print colored compile result."
   [#^String message, compile-sexp]
   `(do
-     (print (str " * compiling " ~message ": ... "))
+     (println (str " * Compiling " ~message))
      (flush)
-     (println (case ~compile-sexp
-                true  (blue "DONE")
-                false (red "FAIL")
-                (blue "SKIP")))))
+     (elapsing
+       (let [result#  ~compile-sexp
+             elapsed# (msec->string (~'get-elapsed-time))]
+       (println
+         "  "
+         (case result#
+           true  (blue (str "DONE in " elapsed#))
+           false (red (str "FAIL in " elapsed#))
+           (blue "SKIP")))))))
+
 
 ;; ## Dev Compiler
 
