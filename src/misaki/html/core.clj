@@ -240,9 +240,12 @@
   [& s]
   [:p {:class "paragraph"} (map parse-string s)])
 
-(defn- header-decoration [[first-char & rest-chars]]
-  (list [:span {:class "first_char"} first-char]
-        rest-chars))
+(defn- header-decoration [x]
+  (if (string? x)
+    (let [[first-char & rest-chars] x]
+      (list [:span {:class "first_char"} first-char]
+            rest-chars))
+    x))
 
 (defn header
   "Make default header tag."
