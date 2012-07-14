@@ -3,16 +3,25 @@
         misaki.test.common
         [clj-time.core :only [date-time year month day]]
         clojure.test)
-  (:require [clojure.java.io :as io]))
+  (:require [clojure.java.io :as io])
+  (:import [java.io FileNotFoundException]))
 
 ;;; read-config
 (deftest* read-config-test
-  (let [config (read-config)]
-    (are [x y] (= x y)
-      "public/"   (:public-dir config)
-      "template/" (:template-dir config)
-      "_posts/"   (:post-dir config)
-      "_layouts/" (:layout-dir config))))
+  (testing "normal pattern"
+    (let [config (read-config)]
+      (are [x y] (= x y)
+        "public/"   (:public-dir config)
+        "template/" (:template-dir config)
+        "_posts/"   (:post-dir config)
+        "_layouts/" (:layout-dir config))))
+  (testing "error pattern"
+    (binding [*base-dir* "/foo/bar/"]
+      (is (thrown? FileNotFoundException (read-config)))))
+
+  (testing "specify default value"
+    (binding [*base-dir* "/foo/bar/"]
+      (is (= {} (read-config {}))))))
 
 ;;; get-date-from-file
 (deftest* get-date-from-file-test

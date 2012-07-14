@@ -7,7 +7,7 @@
   (:require
     [clojure.string :as str]
     [clojure.java.io :as io])
-  (:import [java.io File]))
+  (:import [java.io File FileNotFoundException]))
 
 ;; ## Default Value
 (def PORT 8080)
@@ -70,8 +70,12 @@
 ; =read-config
 (defn read-config
   "Load `*config-file*` from `*base-dir*`."
-  []
-  (read-string (slurp (str *base-dir* *config-file*))))
+  ([]
+   (read-string (slurp (str *base-dir* *config-file*))))
+  ([default-value]
+   (try (read-config)
+        (catch FileNotFoundException e
+          default-value))))
 
 ; =with-config
 (defmacro with-config

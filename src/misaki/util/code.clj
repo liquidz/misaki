@@ -11,7 +11,7 @@
   "Get code type from code-highlight setting in `config`."
   [s]
   (let [code-key (keyword s)
-        config   (read-config)]
+        config   (read-config {})]
     (get (:code-highlight config) code-key)))
 
 (defn dispatch-reader-macro
@@ -44,8 +44,9 @@
   (let [end-str   (read-until reader "\n")
         css-class (remove nil? ["prettyprint" (get-code-type end-str)])]
     [:pre {:class (str/join " " css-class)}
-     (escape-string
-       (read-until reader (apply str "\n" end-str)))]))
+     (-> (read-until reader end-str)
+         escape-string
+         str/trim)]))
 
 ;; Register `#-` reader macro
 (dispatch-reader-macro \- here-code)
