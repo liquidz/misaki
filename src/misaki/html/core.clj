@@ -263,7 +263,7 @@
   "Make default footer."
   [& p]
   [:footer {:class "footer"}
-   [:p {:class "right"} (link "Back to top" "#")]
+   [:p {:class "right back_to_top"} (link "Back to top" "#")]
    [:p p]])
 
 (defn post-list
