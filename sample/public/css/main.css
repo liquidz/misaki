@@ -1,34 +1,52 @@
+/* =basic */
 body, h1, h2, h3, h4, p { margin: 0; padding: 0; }
 body, p { font-family: 'Josefin Sans', sans-serif; }
 
-.container { width: 940px; margin: 0 auto; }
+a { color: #04c; }
+a:hover { color: #6af; }
 
+blockquote { color: #888; font-style: italic; }
+blockquote p:before { content: '> '; }
+
+.right { float: right; }
+
+/* =header */
 header { margin-bottom: 20px; }
 header h1 { margin: 0.3em; }
 header h1 a {
     display: block;
     font-size: 0;
     text-indent:200%;
-    background: transparent url(/img/logo.png) no-repeat top left;
+    background: transparent url(../img/logo.png) no-repeat top left;
     width: 200px;
     height: 69px;
 }
 header h1 a:hover { opacity: 0.5; }
 header p { margin-top: 1em; color: #666; font-size: 20px; }
 
-blockquote { color: #888; font-style: italic; }
-blockquote p:before { content: '> '; }
+/* =container */
+.container { width: 940px; margin: 0 auto; }
 
 h2 { margin-top: 1em; }
 
-.page-header { margin-top: 1.5em; border-bottom: 1px solid #eaeaea; overflow: hidden; }
+/* page header style */
+.page-header { margin: 1.5em 0 0.5em 0; border-bottom: 1px solid #eaeaea; overflow: hidden; }
 .page-header h1 { color: #444; font-weight: normal; float: left; }
 .page-header h1 span { color: #58b271; font-weight: bold; }
-.page-header p { float: left; margin: 20px 0 0 30px; }
+.page-header p.date { float: right; margin: 20px 10px 0 30px; font-weight: bold; letter-spacing: 1px; color: #444; }
 
-.tag ul { margin: 0; padding: 0; list-style: none; }
-.tag ul li { display: inline; padding-right: 0.5em; }
+/* tag style */
+.tag ul { margin: 10px 0 0 30px; padding: 0; list-style: none; float: left; }
+.tag ul li { display: inline; margin-right: 10px; }
+.tag ul li a {
+    padding: 0.2em 0.5em;
+    background: #58b271;
+    border-radius: 5px;
+    color: #fff; text-decoration: none;
+}
+.tag ul li a:hover { background: #78d291; }
 
+/* code highlight */
 pre.prettyprint {
     margin: 10px; padding: 10px;
     border-radius: 5px;
@@ -36,8 +54,11 @@ pre.prettyprint {
     background: #fdf3f3;
 }
 
-a { color: #04c; }
-a:hover { color: #6af; }
+/* column style */
+.column { overflow: hidden; }
+.column > div { float: left; }
+.column .w50per { width: 49%; }
 
+/* =footer */
 footer { margin: 20px 0 10px; overflow: hidden; }
-.right { float: right; }
+

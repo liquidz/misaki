@@ -1,6 +1,7 @@
 /pom.xml
 *jar
 /lib
+/target
 /classes
 /native
 /.lein-failures
@@ -8,8 +9,8 @@
 /.lein-deps-sum
 /blog
 /test/public
-/sample/public/2011
-/sample/public/2012
+/sample/public/2011-01
+/sample/public/2012-02
 /sample/public/tag
 /sample/public/atom.xml
 /sample/public/index.html

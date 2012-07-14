@@ -1,21 +1,29 @@
 (ns misaki.server
-  "misaki: Development server"
+  "Development server
+
+  Listen *port* to publish developing blog,
+  and watch template updates.
+  "
   (:use
-    [misaki core config]
-    [misaki.util.file :only [add-path-slash]]
+    [misaki core config template]
+    [misaki.util.file   :only [normalize-path has-extension? file?]]
+    [misaki.util.string :only [blue red]]
     watchtower.core
-    [compojure.core :only [routes]]
-    [compojure.route :only [files]]
+    [compojure.core     :only [routes]]
+    [compojure.route    :only [files]]
     [ring.adapter.jetty :only [run-jetty]]))
 
-(defn- blue [s] (str "\033[36m" s "\033[0m"))
-(defn- red  [s] (str "\033[31m" s "\033[0m"))
-
 ; =print-result
-(defn print-result
+(defmacro print-compile-result
   "Print colored compile result."
-  [result]
-  (println " ..." (if result (blue "DONE") (red "FAIL"))))
+  [#^String message, compile-sexp]
+  `(do
+     (print (str " * compiling " ~message ": ... "))
+     (flush)
+     (println (case ~compile-sexp
+                true  (blue "DONE")
+                false (red "FAIL")
+                (blue "SKIP")))))
 
 ;; ## Dev Compiler
 
@@ -23,32 +31,36 @@
 (defn do-all-compile
   "Compile all templates"
   []
-  (print " * compiling all templates:")
-  (print-result (compile-all-templates))
-  (print " * compiling all tags:")
-  (print-result (compile-all-tags)))
+  (print-compile-result "all templates"  (compile-all-templates))
+  (print-compile-result "all tags"       (compile-all-tags))
+  (print-compile-result "clojurescripts" (compile-clojurescripts)))
 
 ; =do-compile
 (defn do-compile
   "Compile templte file and print status"
   [#^java.io.File file]
+  {:pre [(file? file)]}
+  (cond
+    ; clojurescript
+    (has-extension? ".cljs" file)
+    (print-compile-result "clojurescript" (compile-clojurescripts))
 
-  (if (or (layout-file? file) (config-file? file))
-    ; compile all templates if target file is layout or config
+    ; layout or config
+    (or (layout-file? file) (config-file? file))
     (do-all-compile)
-    ; compile target template
-    (do (print " * compiling:" (.getName file))
-        (print-result (compile-template (file->template-name file)))
-        (when (post-file? file)
-          ; compile with posts
-          (if *compile-with-post*
-            (doseq [tmpl-name *compile-with-post*]
-              (do-compile (template-name->file tmpl-name))))
-          ; compile tag
-          (if-let [tags (-> file get-post-options :tag)]
-            (doseq [{tag-name :name} tags]
-              (print " * compiling tag:" tag-name)
-              (print-result (compile-tag tag-name))))))))
+    ; else
+    :else
+    (do
+      (print-compile-result "template" (compile-template file))
+      (when (post-file? file)
+        ; compile with posts
+        (if *compile-with-post*
+          (doseq [tmpl-name *compile-with-post*]
+            (do-compile (template-name->file tmpl-name))))
+        ; compile tag
+        (if-let [tags (-> file parse-template-option :tag)]
+          (doseq [{tag-name :name} tags]
+            (print-compile-result "tag" (compile-tag tag-name))))))))
 
 ;; ## Template Watcher
 
@@ -61,11 +73,11 @@
 
   (watcher
     [*template-dir*
-     (str *public-dir* "_config.clj")]
+     (str *base-dir* *config-file*)]
     (rate 50)
     (change-first? false) ; do not compile each templates at first
     (file-filter ignore-dotfiles)
-    (file-filter (extensions :clj))
+    (file-filter (extensions :clj :cljs))
     (on-change #(doseq [file %]
                   ; use `wrap-config` to apply config file updates
                   (with-config (do-compile file))))))
@@ -73,11 +85,16 @@
 ;; ## main
 
 ; =main
-(defn -main [& [dir]]
-  (binding [*base-dir* (str "./" (add-path-slash dir))]
+(defn -main [& [dir :as args]]
+  (binding [*base-dir* (normalize-path dir)]
     (with-config
-      (start-watcher)
-      (run-jetty
-        (routes (files "/" {:root *public-dir*}))
-        {:port 8080}))))
+      (if (contains? (set args) "--compile")
+        ; compile all only if '--compile' option is specified
+        (do-all-compile)
+        ; start watching and server
+        (do (start-watcher)
+            (println " * starting server: " (blue (str "http://localhost:" *port* *url-base*)))
+            (run-jetty
+              (routes (files *url-base* {:root *public-dir*}))
+              {:port *port*}))))))
 

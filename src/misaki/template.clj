@@ -1,65 +1,87 @@
 (ns misaki.template
-  "misaki: template"
+  "Template file loader"
   (:use
-    [misaki transform config]
+    [misaki evaluator config]
+    [misaki.util.file :only [file?]]
     [clojure.core.incubator :only [-?>]])
-  (:require [clojure.string :as str]))
+  (:require [clojure.string :as str]
+            [clojure.java.io :as io])
+  (:import [java.io File]))
 
-; =parse-tag
-(defn- parse-tag [tag-data]
-  (if-let [tags (and tag-data (str/split tag-data #"[\s,]+"))]
-    (for [tag (distinct tags)]
+
+; =parse-tag-string
+(defn parse-tag-string
+  "Parse tag string to tag list.
+
+      \"aa,bb\"
+      ;=> [{:name \"aa\", :url TAG-PAGE-URL}
+      ;    {:name \"bb\", :url TAG_PAGE-URL}]
+  "
+  [#^String tags]
+  (if (or (nil? tags) (str/blank? tags)) ()
+    (for [tag (distinct (str/split tags #"[\s\t,]+"))]
       {:name tag
-       :url  (str "/" (make-tag-output-filename tag))})))
+       :url  (make-tag-url tag)})))
 
-; =parse-template-options
-(defn parse-template-options
+; =parse-template-option
+(defmulti parse-template-option
   "Parse template options from slurped data.
-  ex) template file
 
       ; @layout default
       ; @title hello, world
       [:h1 \"hello world\"]
 
       ;=> {:layout \"default\", :title \"hello, world\"}"
-  [data]
-  (let [lines    (map str/trim (str/split-lines data))
-        comments (filter #(= 0 (.indexOf % ";")) lines)
-        params   (remove nil? (map #(re-seq #"^;+\s*@(\w+)\s+(.+)$" %) comments))
-        option   (into {} (for [[[_ k v]] params] [(keyword k) v]))
-        tags     (-?> option :tag parse-tag)]
-    (assoc option :tag tags)))
+  class)
+
+(defmethod parse-template-option File
+  [file] (parse-template-option (slurp file)))
+
+(defmethod parse-template-option String
+  [slurped-data]
+  (let [lines  (map str/trim (str/split-lines slurped-data))
+        params (remove nil? (map #(re-seq #"^;+\s*@(\w+)\s+(.+)$" %) lines))
+        option (into {} (for [[[_ k v]] params] [(keyword k) v]))]
+    (assoc option :tag (-> option :tag parse-tag-string))))
 
 ; =apply-template
 (defn apply-template
   "Apply contents data to template function."
   [f contents]
+  {:pre [(fn? f) (sequential? contents)]}
   (let [option   (merge (meta f) (meta contents))
         contents (with-meta contents option)]
-    (with-meta (f contents) option)))
+    (binding [*site* option]
+      (with-meta (f contents) option))))
+
+; =load-template-data
+(defn load-template-data
+  "Load template slurped body(String) and option."
+  [#^File file]
+  {:pre [(file? file)]}
+  (let [data   (slurp file)
+        option (parse-template-option data)
+        result (list [data option])]
+    (if-let [parent (-?> option :layout make-layout-filename io/file)]
+      (concat (load-template-data parent) result)
+      result)))
 
 ; =load-template
 (defn load-template
-  "Load template file, and transform to function.
+  "Load template file, and return evaluated function.
   Template options are contained as meta data.
-  
+
   If `allow-layout?` option is specified, you can select whether evaluate layout or not."
-  ([filename] (load-template filename true))
-  ([filename allow-layout?]
-   (let [data   (slurp filename)
-         option (parse-template-options data)]
-
-     (if-let [layout-filename (-?> option :layout make-layout-filename)]
-       (let [; at first, evaluate parent layout
-             ; parent layout must be evaluated if layout is not allowded
-             parent-layout-fn (load-template layout-filename)
-             ; second, evaluate this layout
-             layout-fn (transform data)]
-         (if allow-layout?
-           (with-meta
-             #(apply-template parent-layout-fn
-                (apply-template layout-fn %))
-             (merge (meta parent-layout-fn) option))
-           (with-meta layout-fn option)))
-       (with-meta (transform data) option)))))
-
+  ([#^File file] (load-template file true))
+  ([#^File file allow-layout?]
+   {:pre [(file? file)]}
+   (reduce
+     (fn [parent-fn [template-data option]]
+       (let [template-fn (evaluate-to-function template-data)]
+         (with-meta
+           (if (or (nil? parent-fn) (not allow-layout?))
+             template-fn
+             #(apply-template parent-fn (apply-template template-fn %)))
+           (merge (meta parent-fn) option))))
+     nil
+     (load-template-data file))))

@@ -1,11 +1,24 @@
 (ns misaki.util.file
-  "misaki: file control utility"
+  "File control utility"
   (:use
     [clj-time.coerce :only [from-long]])
   (:require
     [clojure.java.io :as io]
     [clojure.string :as str])
   (:import [java.io File]))
+
+; =file?
+(defn file?
+  "Check whether specified data is java.io.File or not."
+  [x]
+  (= java.io.File (class x)))
+
+; =normalize-path
+(defn normalize-path
+  "Normalize file path.
+  If path does not contain '/' at end of string, add '/'."
+  [path]
+  (if path (if (.endsWith path "/") path (str path "/"))))
 
 ; =find-files
 (defn find-files
@@ -19,19 +32,45 @@
   [ext file]
   (.endsWith (.getName file) ext))
 
-; =filter-extension
-(defn filter-extension
+; =extension-filter
+(defn extension-filter
   "Filter file list with `has-extension?`."
   [ext file-list]
   (filter (partial has-extension? ext) file-list))
 
-; =delete-extension
-(defn delete-extension
-  "Delete file extension."
+; =find-clj-files
+(defn find-clj-files
+  "Find *.clj files in `dir` recursively."
+  [dir]
+  (extension-filter ".clj" (find-files dir)))
+
+; =remove-extension
+(defn remove-extension
+  "Remove file extension.
+
+      (remove-extension \"foo.bar\")
+      ;=> \"foo\"
+      (remove-extension \"foo.bar.baz\")
+      ;=> \"foo.bar\"
+  "
   [x]
   (if (= java.io.File (class x))
-    (delete-extension (.getName x))
+    (remove-extension (.getName x))
     (str/replace-first x #"\.[^.]+$" "")))
+
+; =get-parent-path
+(defn get-parent-path
+  "Get parent path name(String).
+  If specified path has no parent, returns the path itself.
+
+      (get-parent-path \"/foo/bar\")
+      ;=> \"/foo\"
+      (get-parent-path \"/foo/\")
+      ;=> \"/foo/\"
+  "
+  [path]
+  (if (.endsWith path "/") path
+    (normalize-path (str/join "/" (drop-last (str/split path #"/"))))))
 
 ; =last-modified-date
 (defn last-modified-date
@@ -49,17 +88,21 @@
             file (io/file name)]
         (if-not (.exists file) (.mkdir file))))))
 
-; =write-data
-(defn write-data
+; =write-file
+(defn write-file
   "Write compiled data as specified filename.
   If filepath is not exists, this function make directories."
-  [filename data]
+  [#^String filename, #^String data]
+  {:pre [(string? filename) (string? data)]}
   (make-directories filename)
   (with-open [w (io/writer filename)]
     (spit w data)))
 
-; =add-path-slash
-(defn add-path-slash
-  "Add slash to end of text."
-  [path]
-  (if path (if (.endsWith path "/") path (str path "/"))))
+; =delete-file
+(defmulti delete-file "Delete file." class)
+(defmethod delete-file File
+  [file]
+  (when (.exists file) (.delete file)))
+(defmethod delete-file String
+  [filename]
+  (delete-file (io/file filename)))

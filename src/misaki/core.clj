@@ -1,110 +1,120 @@
 (ns misaki.core
-  "misaki: Jekyll inspired static site generator in Clojure"
+  "HTML compiler for clojure source."
   (:use
     [misaki template config]
-    [misaki.util file code seq]
+    [misaki.util file code sequence string]
     [hiccup.core :only [html]]
-    [hiccup.page-helpers :only [html5 xhtml html4]])
+    [hiccup.page :only [html5 xhtml html4]]
+    [cljs.closure :only [build]])
   (:require
-    conv
     [clojure.string :as str]
     [clojure.java.io :as io])
   (:import [java.io File]))
 
-(declare generate-html)
+(declare file->template-sexp)
 
-;; ### Utilities
+;; ## Post Functions
 
-; =escape-content
-(defn escape-content
-  "Escape content"
-  [content]
-  (-> content
-      (str/replace #"&" "&amp;")
-      (str/replace #"\"" "&quot;")
-      (str/replace #"<" "&lt;")
-      (str/replace #">" "&gt;")))
+; =generate-post-content
+(defn generate-post-content
+  "Generate post content without layout."
+  [#^File post-file]
+  {:pre [(file? post-file)]}
+  (html (file->template-sexp post-file :allow-layout? false)))
 
-;; ## Templates
+; =get-post-info
+(defn get-post-info
+  "Get post template information from java.io.File.
 
-; =get-post-options
-(defn get-post-options
-  "Get post's template options from post file(java.io.File)"
-  [#^File file]
-  (->> file io/reader slurp parse-template-options))
+  Post content(`:lazy-content`) is delayed."
+  [#^File post-file]
+  {:pre [(file? post-file)]}
+  (assoc (parse-template-option post-file)
+         :file post-file
+         :url  (make-post-url post-file)
+         :date (get-date-from-file post-file)
+         :lazy-content (delay (escape-string (generate-post-content post-file)))))
 
-; =get-content
-(defn get-content
-  "Get post content without layout"
-  [#^File file]
-  (html (generate-html (file->template-name file)
-                       :allow-layout? false)))
+; =post-info-contains-tag?
+(defn post-info-contains-tag?
+  "Check whether post information contains tag or not."
+  [post-info #^String tag-str]
+  {:pre [(map? post-info) (string? tag-str)]}
+  (let [tags      (get post-info :tag [])
+        tag-names (set (map :name tags))]
+    (contains? tag-names tag-str)))
 
 ; =get-posts
 (defn get-posts
-  "Get posts data from *post-dir* directory.
-  Content data is delayed."
-  [& {:keys [tag]}]
-  (for [file  (filter-extension ".clj" (find-files *post-dir*))
-        :let  [option (get-post-options file)
-               tagset (set (map :name (get option :tag [])))]
-        :when (or (nil? tag)
-                  (every? #(contains? tagset %) tag))]
-    (assoc
-      option
-      :file file
-      :url  (make-post-url file)
-      :date (get-date-from-file file)
-      :lazy-content (delay (escape-content (get-content file))))))
+  "Get posts data from *post-dir* directory."
+  []
+  (map get-post-info (find-clj-files *post-dir*)))
 
-;; ## Tags
+; =get-tagged-posts
+(defn get-tagged-posts
+  "Get tagged posts data from *post-dir* directory."
+  [tag-seq]
+  {:pre [(sequential? tag-seq)]}
+  (filter
+    #(every? (partial post-info-contains-tag? %) tag-seq)
+    (get-posts)))
 
-; =get-unfiltered-tags
-(defn get-unfiltered-tags
-  "Get unfiltered all tags from post list."
-  [posts]
-  (remove nil? (mapcat :tag posts)))
+;; ## Tag Functions
 
-; =get-counted-tags
-(defn get-counted-tags
-  "Get counted tags from post list."
-  [posts]
-  (let [tag-group (group-by :name (get-unfiltered-tags posts))]
-    (sort-alphabetically
-      :name (map #(assoc (first %) :count (count %)) (vals tag-group)))))
+; =get-all-tags
+(defn get-all-tags
+  "Get all(unfiltered) tags from post list."
+  []
+  (let [post-files (find-clj-files *post-dir*)]
+    (remove nil? (mapcat (comp :tag parse-template-option) post-files))))
 
 ; =get-tags
 (defn get-tags
-  "Get all tags from post list."
-  ([] (get-tags (get-posts)))
-  ([posts]
-   (->> (get-unfiltered-tags posts)
-        (sort-alphabetically :name)
-        distinct)))
+  "Get tags from post list.
 
-;; ## S-exp HTML Generater
+  Add counting by tag name if true is setted to :count-by-name?"
+  [& {:keys [count-by-name?] :or {count-by-name? false}}]
+  (let [tags (get-all-tags)
+        tags (if count-by-name?
+               (map #(assoc (first %) :count (count %)) (vals (group-by :name tags)))
+               tags)]
+    (distinct (sort-alphabetically :name tags))))
 
-; =generate-html
-(defn generate-html
-  "Generate HTML from template."
-  [tmpl-name & {:keys [allow-layout?] :or {allow-layout? true}}]
-  (let [filename   (str *template-dir* tmpl-name)
-        tmpl-fn    (load-template filename allow-layout?)
-        posts      (sort-by-date (get-posts))
-        site-data  (assoc *site* :posts posts
-                                 :tags  (get-counted-tags posts)
-                                 :date  (get-date-from-file (io/file filename)))
+;; ## S-exp Template Applier
+(defn make-site-data
+  "Make site meta data from template java.io.File for HTML generator."
+  [#^File tmpl-file & {:keys [base-option tags]
+                       :or   {base-option {}, tags nil}}]
+  {:pre [(file? tmpl-file)]}
+  (let [with-tag? (and (not (nil? tags)) (sequential? tags))
+        sort-fn   (sort-type->sort-fn)]
+    (assoc (merge *site* base-option)
+           :file     tmpl-file
+           :posts    (sort-fn (if with-tag? (get-tagged-posts tags) (get-posts)))
+           :tags     (get-tags :count-by-name? true)
+           :tag-name (if with-tag? (str/join "," tags))
+           :index    (get-index-filename)
+           :date     (get-date-from-file tmpl-file))))
+
+; =file->template-sexp
+(defn file->template-sexp
+  "Convert java.io.File to Template s-exp which can be compiled by hiccup"
+  [#^File tmpl-file & {:keys [allow-layout?] :or {allow-layout? true}}]
+  {:pre [(file? tmpl-file)]}
+  (let [tmpl-fn    (load-template tmpl-file allow-layout?)
+        site-data  (make-site-data tmpl-file)
         empty-data (with-meta '("") site-data)]
-
     (apply-template tmpl-fn empty-data)))
 
-; =generate-tag-html
-(defn generate-tag-html
-  "Generate tag HTML from *tag-layout*."
-  [tag-name]
-  (let [tmpl-fn (load-template *tag-layout*)
-        site-data (assoc *site* :posts (sort-by-date (get-posts :tag [tag-name]))
-                                :tag-name tag-name)
+
+; =generate-tag-template-sexp
+(defn generate-tag-template-sexp
+  "Generate tag template s-exp from tag name(String) with `*tag-layout*` layout."
+  [#^String tag-name]
+  {:pre [(string? tag-name)]}
+  (let [file       (io/file *tag-layout*)
+        tmpl-fn    (load-template file)
+        site-data  (make-site-data file :tags [tag-name])
         empty-data (with-meta '("") site-data)]
     (apply-template tmpl-fn empty-data)))
 
@@ -112,40 +122,65 @@
 
 ; =get-compile-fn
 (defn get-compile-fn
-  "Get hiccup functon to compile sexp."
-  [fmt]
-  (case fmt
+  "Get hiccup functon from format option."
+  [#^String format-str]
+  (case format-str
     "html5" #(html5 {:lang *lang*} %)
     "xhtml" #(xhtml {:lang *lang*} %)
     "html4" #(html4 %)
     #(html %)))
 
 ; =compile*
-(defn- compile* [filename data]
-  (let [compile-fn (-> data meta :format get-compile-fn)]
-    (write-data (str *public-dir* filename)
-                (compile-fn data))
+(defn- compile*
+  [#^String output-filename template-sexp]
+  {:pre [(string? output-filename) (sequential? template-sexp)]}
+  (let [compile-fn (-> template-sexp meta :format get-compile-fn)]
+    (write-file (str *public-dir* output-filename)
+                (compile-fn template-sexp))
     true))
 
 ; =compile-tag
 (defn compile-tag
   "Compile a tag page.
   return true if compile succeeded."
-  [tag-name]
+  [#^String tag-name]
+  {:pre [(string? tag-name)]}
   (try
     (compile* (make-tag-output-filename tag-name)
-              (generate-tag-html tag-name))
-    (catch Exception e (.printStackTrace e) false)))
+              (generate-tag-template-sexp tag-name))
+    (catch Exception e
+      (.printStackTrace e) false)))
 
 ; =compile-template
 (defn compile-template
-  "Compile a specified template, and write compiled data to *public-dir*.
+  "Compile a specified template, and write compiled data to `*public-dir*`.
   return true if compile succeeded."
-  [tmpl-name]
+  [#^File tmpl-file]
+  {:pre [(file? tmpl-file)]}
   (try
-    (compile* (make-template-output-filename tmpl-name)
-              (generate-html tmpl-name))
+    (compile* (make-template-output-filename tmpl-file)
+              (file->template-sexp tmpl-file))
     (catch Exception e (.printStackTrace e) false)))
+
+; =compile-clojurescripts
+(defn compile-clojurescripts
+  "Compile clojurescripts.
+  return true if compile succeeded."
+  []
+  (try
+    (when *cljs-compile-options*
+      ; make directory if not exists
+      (make-directories (:output-to *cljs-compile-options*))
+      ; delete existing files
+      (delete-file (:output-to *cljs-compile-options*))
+      (delete-file (str (:output-dir *cljs-compile-options*) "/cljs"))
+      ; build clojurescript
+      (build (:src-dir *cljs-compile-options*)
+             *cljs-compile-options*)
+      true)
+    (catch Exception e (.printStackTrace e) false)))
+
+;; ## Compile Controller
 
 ; =compile-all-tags
 (defn compile-all-tags
@@ -154,18 +189,11 @@
   []
   (every? #(compile-tag (:name %)) (get-tags)))
 
-; =get-template-files
-(defn get-template-files
-  "Get all template files(java.io.File) from *template-dir*."
-  []
-  (remove layout-file?
-          (filter-extension ".clj" (find-files *template-dir*))))
-
 ; =compile-all-templates
 (defn compile-all-templates
   "Compile all template files.
   return true if all compile succeeded."
   []
-  (every? #(compile-template %)
-          (map file->template-name (get-template-files))))
+  (let [files (remove layout-file? (find-clj-files *template-dir*))]
+    (every? #(compile-template %) files)))
 

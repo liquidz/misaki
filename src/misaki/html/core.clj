@@ -1,9 +1,15 @@
 (ns misaki.html.core
   "misaki: HTML utility for template"
+  (:use
+    [misaki.config :only [*site* *url-base* get-index-filename absolute-path]]
+    [misaki.html.conv :only [post-title->url]])
   (:require
     [clojure.string :as str]
     [hiccup.core :as hiccup]
-    [hiccup.page-helpers :as page]))
+    [hiccup.page :as page]
+    [misaki.html.conv :as conv]))
+
+(declare link)
 
 ;; ## Utilities
 
@@ -11,9 +17,12 @@
   (and (vector? x) (keyword? (first x))))
 
 (defn- name*
-  "
-      (name :a/b)  => \"b\"
-      (name* :a/b) => \"a/b\""
+  "`name` function ignoring namespaced keyword
+
+      (name :a/b)
+      ;=> \"b\"
+      (name* :a/b)
+      ;=> \"a/b\""
   [k]
   (if (keyword? k) (apply str (rest (str k))) k))
 
@@ -24,6 +33,24 @@
      (if (string? arg#)
        (str/replace arg# ~regexp ~result-fn)
        arg#)))
+
+(defn- link-from-title? [s]
+  (if-let [m (re-seq #"^title:\s*(.+?)$" s)]
+    (-> m first second)))
+
+;; Parse link
+;;
+;;      [hello](world)
+;;      ;=> <a href="world">hello</a>
+;;
+;;      [hello](title: POST TITLE)
+;;      ;=> <a href="POST URL">hello</a>
+(defparser parse-link
+  #"\[(.+?)\]\((.+?)\)"
+  #(let [[_ alt href] %]
+     (if-let [title (link-from-title? href)]
+       (hiccup/html (link alt (post-title->url title)))
+       (hiccup/html (link alt href)))))
 
 ;; Parse emphasized
 ;;
@@ -46,30 +73,72 @@
 (defparser parse-inline-code
   #"`([^`]+)`" #(hiccup/html [:code {:class "prettyprint"} (second %)]))
 
+(defparser parse-new-line
+  #"(\r?\n){2}" (fn [_] (hiccup/html [:br])))
+
 ;; Function to apply string parsers
 (def ^:private parse-string
-  (comp parse-emphasized parse-strong parse-inline-code))
+  (comp parse-new-line parse-link parse-emphasized parse-strong parse-inline-code))
 
 ;; ## HTML Tags
 
 (defn js
-  "Include JS
+  "Include JavaScript
 
       (js \"foo.js\" \"bar.js\")
       ;=> <script type=\"text/javascript\" src=\"foo.js\"></script>
       ;=> <script type=\"text/javascript\" src=\"bar.js\"></script>"
   [& args]
-  (apply page/include-js args))
+  (apply page/include-js (flatten args)))
+
+(defn absolute-js
+  "Include JavaScript from *url-base* setting."
+  [& args]
+  (let [args (map #(absolute-path %) (flatten args))]
+    (apply js args)))
 
 (defn css
-  "Include CSS
+  "Include Cascading Style Sheet.
 
       (css \"foo.css\" \"bar.css\")
       ;=> <link rel=\"stylesheet\" type=\"text/css\" href=\"foo.css\" />
-      ;=> <link rel=\"stylesheet\" type=\"text/css\" href=\"bar.css\" />"
+      ;=> <link rel=\"stylesheet\" type=\"text/css\" href=\"bar.css\" />
+      (css {:media \"screen\"} \"foo.css\" \"bar.css\")
+      ;=> <link rel=\"stylesheet\" type=\"text/css\" media=\"screen\" href=\"foo.css\" />"
   [& args]
-  (apply page/include-css args))
+  (let [args (flatten args)
+        [opt & hrefs] (if (map? (first args)) args (cons {} args))
+        attrs (map #(merge {:rel "stylesheet" :type "text/css" :href %} opt) hrefs)]
+    (map #(vector :link %) attrs)))
 
+(defn absolute-css
+  "Include Cascading Style Sheet from *url-base* setting.
+
+   ex) :url-base \"/foo\"
+
+      (absolute-css \"bar.css\")
+      ;=> <link rel=\"stylesheet\" type=\"text/css\" href=\"/foo/bar.css\" />
+      (absolute-css \"/bar.css\")
+      ;=> <link rel=\"stylesheet\" type=\"text/css\" href=\"/foo/bar.css\" />
+      (absolute-css \"http://localhost/bar.css\")
+      ;=> <link rel=\"stylesheet\" type=\"text/css\" href=\"http://localhost/bar.css\" />"
+  [& args]
+  (let [args (flatten args)
+        [opt & args] (if (map? (first args)) args (cons {} args))
+        args (map #(absolute-path %) args)]
+    (apply css (cons opt args))))
+
+(defn heading
+  "Make heading tag"
+  [n s]
+  (let [tag (keyword (str "h" n))]
+    [tag [:span (first s)] (rest s)]))
+(def h1 (partial heading 1))
+(def h2 (partial heading 2))
+(def h3 (partial heading 3))
+(def h4 (partial heading 4))
+(def h5 (partial heading 5))
+(def h6 (partial heading 6))
 
 (defn ul
   "Make unordered list
@@ -166,20 +235,67 @@
   [& title-url-pairs]
   (ul #(apply link %) (partition 2 title-url-pairs)))
 
-(defn tweet-button
-  "Make tweet button"
-  [& {:keys [id label lang] :or {id "tweet_button", label "Tweet", lang "en"}}]
-  [:div {:id id}
-    [:a {:href "https://twitter.com/share"
-         :class "twitter-share-button"
-         :data-count "horizontal"
-         :data-lang lang}
-     label]
-    (js "//platform.twitter.com/widgets.js")])
-
-
 (defn p
   "Make paragraph"
   [& s]
   [:p {:class "paragraph"} (map parse-string s)])
 
+(defn- header-decoration [[first-char & rest-chars]]
+  (list [:span {:class "first_char"} first-char]
+        rest-chars))
+
+(defn header
+  "Make default header tag."
+  [h & p]
+  [:header
+   [:h1 (link (header-decoration h) (get-index-filename))]
+   (if p [:p p])])
+
+(defn container
+  "Make default container tag."
+  [& body]
+  [:div {:class "container"} body])
+
+(defn footer
+  "Make default footer."
+  [& p]
+  [:footer {:class "footer"}
+   [:p {:class "right"} (link "Back to top" "#")]
+   [:p p]])
+
+(defn post-list
+  "Make default all posts unordered list."
+  []
+  (ul
+    #(list
+       (conv/date->string (:date %))
+       "&nbsp;-&nbsp;"
+       (link (:title %) (:url %)))
+    (:posts *site*)))
+
+(defn tag-list
+  "Make default all tags unordered list."
+  []
+  (ul
+    #(link (str (:name %) " (" (:count %) ")")
+           (:url %))
+    (:tags *site*)))
+
+
+(defn post-tags
+  "Make default post tags unordered list."
+  [& {:keys [class] :or {class "tag"}}]
+  [:div {:class class}
+   (ul #(link (:name %) (:url %)) (:tag *site*))])
+
+(defn post-date
+  "Make default post date tag."
+  []
+  [:p {:class "date"} (-> *site* :date conv/date->string)])
+
+(defn two-column
+  "Make 2 column"
+  [left right]
+  [:div {:class "column"}
+   [:div {:class "w50per"} left]
+   [:div {:class "w50per"} right]])

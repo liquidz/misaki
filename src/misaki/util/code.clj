@@ -1,16 +1,19 @@
 (ns misaki.util.code
-  "misaki: here document utility
+  "Here document utility
 
-  cf. http://d.hatena.ne.jp/nokturnalmortum/20100527/1274961805"
-  (:use misaki.config))
+  cf. [http://d.hatena.ne.jp/nokturnalmortum/20100527/1274961805](http://d.hatena.ne.jp/nokturnalmortum/20100527/1274961805)
+  "
+  (:use misaki.config
+        [misaki.util.string :only [escape-string]]
+        [clojure.core.incubator :only [-?>>]])
+  (:require [clojure.string :as str]))
 
 (defn get-code-type
   "Get code type from code-highlight setting in `config`."
   [s]
-  (let [key (keyword s)
-        config (load-config)
-        type (get (:code-highlight config) key)]
-    (if type (str " " type) "")))
+  (let [code-key (keyword s)
+        config   (read-config {})]
+    (get (:code-highlight config) code-key)))
 
 (defn dispatch-reader-macro
   [ch fun]
@@ -18,20 +21,42 @@
                    (.setAccessible true))
                  nil)]
     (aset dm (int ch) fun)))
-; http://java.sun.com/j2se/1.3/ja/docs/ja/api/java/lang/reflect/AccessibleObject.html
+
+;(defn read-until
+;  "Read until end text."
+;  [reader end]
+;  (let [end (map int end)]
+;    (->> (loop [res nil e end]
+;           (if (empty? e)
+;             res
+;             (let [c (.read reader)]
+;               (recur (conj res c) (if (= c (first e))
+;                                     (rest e)
+;                                     end)))))
+;      (drop (count end)) reverse (map char) (apply str))))
+
 
 (defn read-until
   "Read until end text."
-  [reader end]
-  (let [end (map int end)]
-    (->> (loop [res nil e end]
-           (if (empty? e)
-             res
-             (let [c (.read reader)]
-               (recur (conj res c) (if (= c (first e))
-                                     (rest e)
-                                     end)))))
-      (drop (count end)) reverse (map char) (apply str))))
+  [reader end-str & {:keys [ignore-started?] :or {ignore-started? false}}]
+  (let [end-seq      (map int end-str)
+        start?       #(= % (int \newline))
+        front-space? #(and (= % (int \space)) (= %2 end-seq))]
+    (-?>>
+      (loop [res nil, e end-seq, started? false]
+        (if (empty? e)
+          res
+          (let [c (.read reader)]
+            (if-not (= -1 c)
+              (if (or started? ignore-started?)
+                (if (= c (first e))
+                  (recur (conj res c) (rest e) true)
+                  ; keep `started?` with front space
+                  (recur (conj res c) end-seq (front-space? c e)))
+                ; start to check end-seq with newline
+                (recur (conj res c) end-seq (start? c)))))))
+
+      (drop (count end-seq)) reverse (map char) (apply str))))
 
 (defn here-code
   "Read here code
@@ -40,10 +65,13 @@
       this is here text
       EOT"
   [reader ch]
-  (let [end (read-until reader "\n")
-        type (get-code-type end)]
-    [:pre {:class (str "prettyprint" type)}
-    (read-until reader (apply str "\n" end))]))
+  (let [end-str   (read-until reader "\n" :ignore-started? true)
+        css-class (remove nil? ["prettyprint" (get-code-type end-str)])]
+    [:pre {:class (str/join " " css-class)}
+     (-?>> end-str
+           (read-until reader)
+           escape-string
+           str/trim)]))
 
 ;; Register `#-` reader macro
 (dispatch-reader-macro \- here-code)
