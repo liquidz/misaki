@@ -62,10 +62,6 @@ CLJ
 (p "See " (link "http://liquidz.github.com/misaki/demo"))
 CLOJURE
 
-    #-SH
-    $ cd ..
-    SH
-
 ;; Document
 (page-header "Document")
 ; Markdown like format with "p" function
