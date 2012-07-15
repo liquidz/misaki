@@ -3028,7 +3028,7 @@ net.brehaut.ClojureTools = (function (SH) {
     build_tree: build_tree
   };
 })(SyntaxHighlighter);
-</script><title>misaki -- Marginalia</title></head><body><table><tr><td class="docs"><div class="header"><h1 class="project-name">misaki</h1><h2 class="project-version">0.1.0-beta</h2><br /><p>Jekyll inspired static site generator in Clojure</p>
+</script><title>misaki -- Marginalia</title></head><body><table><tr><td class="docs"><div class="header"><h1 class="project-name">misaki</h1><h2 class="project-version">0.1.02-beta</h2><br /><p>Jekyll inspired static site generator in Clojure</p>
 </div><div class="dependencies"><h3>dependencies</h3><table><tr><td class="dep-name">org.clojure/clojure</td><td class="dotted"><hr /></td><td class="dep-version">1.4.0</td></tr><tr><td class="dep-name">org.clojure/core.incubator</td><td class="dotted"><hr /></td><td class="dep-version">0.1.0</td></tr><tr><td class="dep-name">org.clojure/clojurescript</td><td class="dotted"><hr /></td><td class="dep-version">0.0-1443</td></tr><tr><td class="dep-name">hiccup</td><td class="dotted"><hr /></td><td class="dep-version">1.0.0</td></tr><tr><td class="dep-name">compojure</td><td class="dotted"><hr /></td><td class="dep-version">1.1.0</td></tr><tr><td class="dep-name">ring/ring-jetty-adapter</td><td class="dotted"><hr /></td><td class="dep-version">1.1.0</td></tr><tr><td class="dep-name">clj-time</td><td class="dotted"><hr /></td><td class="dep-version">0.3.7</td></tr><tr><td class="dep-name">uochan/watchtower</td><td class="dotted"><hr /></td><td class="dep-version">0.1.2</td></tr><tr><td class="dep-name">de.ubercode.clostache/clostache</td><td class="dotted"><hr /></td><td class="dep-version">1.3.0</td></tr></table></div><div class="dependencies"><h3>dev dependencies</h3><table><tr><td class="dep-name">lein-multi</td><td class="dotted"><hr /></td><td class="dep-version">1.1.0</td></tr><tr><td class="dep-name">lein-marginalia</td><td class="dotted"><hr /></td><td class="dep-version">0.7.1</td></tr><tr><td class="dep-name">debug-reader</td><td class="dotted"><hr /></td><td class="dep-version">0.0.1</td></tr><tr><td class="dep-name">lein-autotest-notify</td><td class="dotted"><hr /></td><td class="dep-version">0.0.4</td></tr></table></div></td><td class="codes" style="text-align: center; vertical-align: middle;color: #666;padding-right:20px"><br /><br /><br />(this space intentionally left almost blank)</td></tr><tr><td class="docs"><div class="toc"><a name="toc"><h3>namespaces</h3></a><ul><li><a href="#misaki.config">misaki.config</a></li><li><a href="#misaki.core">misaki.core</a></li><li><a href="#misaki.evaluator">misaki.evaluator</a></li><li><a href="#misaki.html.conv">misaki.html.conv</a></li><li><a href="#misaki.html.core">misaki.html.core</a></li><li><a href="#misaki.html.util">misaki.html.util</a></li><li><a href="#misaki.server">misaki.server</a></li><li><a href="#misaki.template">misaki.template</a></li><li><a href="#misaki.util.code">misaki.util.code</a></li><li><a href="#misaki.util.file">misaki.util.file</a></li><li><a href="#misaki.util.sequence">misaki.util.sequence</a></li><li><a href="#misaki.util.string">misaki.util.string</a></li></ul></div></td><td class="codes">&nbsp;</td></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#misaki.config" name="misaki.config"><h1 class="project-name">misaki.config</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>Configuration Manager</p>
 </td><td class="codes"><pre class="brush: clojure">(ns misaki.config
   (:use [misaki.util file sequence]
@@ -3038,7 +3038,7 @@ net.brehaut.ClojureTools = (function (SH) {
   (:require
     [clojure.string :as str]
     [clojure.java.io :as io])
-  (:import [java.io File]))</pre></td></tr><tr><td class="docs"><h2>Default Value</h2>
+  (:import [java.io File FileNotFoundException]))</pre></td></tr><tr><td class="docs"><h2>Default Value</h2>
 </td><td class="codes"><pre class="brush: clojure">(def PORT 8080)
 (def LANGUAGE &quot;en&quot;)
 (def POST_FILENAME_REGEXP    #&quot;(\d{4})[-_](\d{1,2})[-_](\d{1,2})[-_](.+)$&quot;)
@@ -3072,11 +3072,16 @@ net.brehaut.ClojureTools = (function (SH) {
 </td><td class="codes"><pre class="brush: clojure">(declare ^:dynamic *cljs-compile-options*)</pre></td></tr><tr><td class="docs"><p>Current site data</p>
 </td><td class="codes"><pre class="brush: clojure">(declare ^:dynamic *site*)</pre></td></tr><tr><td class="docs"><p>URL base</p>
 </td><td class="codes"><pre class="brush: clojure">(def ^:dynamic *url-base* &quot;/&quot;)</pre></td></tr><tr><td class="docs"><p>Index file name</p>
-</td><td class="codes"><pre class="brush: clojure">(def ^:dynamic *index-name* )</pre></td></tr><tr><td class="docs"><h2>Config Data Wrapper</h2>
+</td><td class="codes"><pre class="brush: clojure">(def ^:dynamic *index-name* )</pre></td></tr><tr><td class="docs"><p>Flag for detailed compile log</p>
+</td><td class="codes"><pre class="brush: clojure">(def ^:dynamic *detailed-log* false)</pre></td></tr><tr><td class="docs"><h2>Config Data Wrapper</h2>
 </td><td class="codes"></td></tr><tr><td class="docs"><p>Load <code>*config-file*</code> from <code>*base-dir*</code>.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn read-config
-  []
-  (read-string (slurp (str *base-dir* *config-file*))))</pre></td></tr><tr><td class="docs"><p>Declare config data, and wrap sexp body with them.</p>
+  ([]
+   (read-string (slurp (str *base-dir* *config-file*))))
+  ([default-value]
+   (try (read-config)
+        (catch FileNotFoundException e
+          default-value))))</pre></td></tr><tr><td class="docs"><p>Declare config data, and wrap sexp body with them.</p>
 
 <ul>
 <li><p>Configured directory and file setting</p>
@@ -3120,6 +3125,7 @@ net.brehaut.ClojureTools = (function (SH) {
         *post-filename-format* (get config# :post-filename-format
                                  POST_OUTPUT_NAME_FORMAT)
         *post-sort-type*       (get config# :post-sort-type :date-desc)
+        *detailed-log*         (get config# :detailed-log false)
         *cljs-compile-options* (if cljs#
                                  (assoc cljs#
                                    :src-dir    (normalize-path (str template# (:src-dir cljs#)))
@@ -3352,17 +3358,7 @@ net.brehaut.ClojureTools = (function (SH) {
       (build (:src-dir *cljs-compile-options*)
              *cljs-compile-options*)
       true)
-    (catch Exception e (.printStackTrace e) false)))</pre></td></tr><tr><td class="docs"><h2>Compile Controller</h2>
-</td><td class="codes"></td></tr><tr><td class="docs"><p>Compile all tag page.
-  return true if all compile succeeded.</p>
-</td><td class="codes"><pre class="brush: clojure">(defn compile-all-tags
-  []
-  (every? #(compile-tag (:name %)) (get-tags)))</pre></td></tr><tr><td class="docs"><p>Compile all template files.
-  return true if all compile succeeded.</p>
-</td><td class="codes"><pre class="brush: clojure">(defn compile-all-templates
-  []
-  (let [files (remove layout-file? (find-clj-files *template-dir*))]
-    (every? #(compile-template %) files)))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#misaki.evaluator" name="misaki.evaluator"><h1 class="project-name">misaki.evaluator</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>S-exp Template Evaluator.
+    (catch Exception e (.printStackTrace e) false)))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#misaki.evaluator" name="misaki.evaluator"><h1 class="project-name">misaki.evaluator</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>S-exp Template Evaluator.
   Template string is evaluated as Function.</p>
 </td><td class="codes"><pre class="brush: clojure">(ns misaki.evaluator)</pre></td></tr><tr><td class="docs"><p>Check whether <code>def</code> or <code>defn</code> s-exp or not.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn def?
@@ -3658,9 +3654,12 @@ net.brehaut.ClojureTools = (function (SH) {
 </td><td class="codes"><pre class="brush: clojure">(defn p
   [&amp; s]
   [:p {:class &quot;paragraph&quot;} (map parse-string s)])</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn- header-decoration [[first-char &amp; rest-chars]]
-  (list [:span {:class &quot;first_char&quot;} first-char]
-        rest-chars))</pre></td></tr><tr><td class="docs"><p>Make default header tag.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn- header-decoration [x]
+  (if (string? x)
+    (let [[first-char &amp; rest-chars] x]
+      (list [:span {:class &quot;first_char&quot;} first-char]
+            rest-chars))
+    x))</pre></td></tr><tr><td class="docs"><p>Make default header tag.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn header
   [h &amp; p]
   [:header
@@ -3672,7 +3671,7 @@ net.brehaut.ClojureTools = (function (SH) {
 </td><td class="codes"><pre class="brush: clojure">(defn footer
   [&amp; p]
   [:footer {:class &quot;footer&quot;}
-   [:p {:class &quot;right&quot;} (link &quot;Back to top&quot; &quot;#&quot;)]
+   [:p {:class &quot;right back_to_top&quot;} (link &quot;Back to top&quot; &quot;#&quot;)]
    [:p p]])</pre></td></tr><tr><td class="docs"><p>Make default all posts unordered list.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn post-list
   []
@@ -3748,25 +3747,45 @@ net.brehaut.ClojureTools = (function (SH) {
 </td><td class="codes"><pre class="brush: clojure">(ns misaki.server
   (:use
     [misaki core config template]
-    [misaki.util.file   :only [normalize-path has-extension? file?]]
-    [misaki.util.string :only [blue red]]
+    [misaki.util.file   :only [find-clj-files normalize-path has-extension? file?]]
+    [misaki.util.string :only [blue red msec-&gt;string]]
     watchtower.core
     [compojure.core     :only [routes]]
     [compojure.route    :only [files]]
-    [ring.adapter.jetty :only [run-jetty]]))</pre></td></tr><tr><td class="docs"><p>Print colored compile result.</p>
-</td><td class="codes"><pre class="brush: clojure">(defn print-compile-result
-  [#^String message, result]
-  (let [text (case result
-               true  (blue &quot;DONE&quot;)
-               false (red &quot;FAIL&quot;)
-               (blue &quot;SKIP&quot;))]
-    (println (str &quot; * compiling &quot; message &quot;: ... &quot; text))))</pre></td></tr><tr><td class="docs"><h2>Dev Compiler</h2>
+    [ring.adapter.jetty :only [run-jetty]]))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defmacro elapsing
+  [&amp; body]
+  `(let [start-time# (System/currentTimeMillis)
+         ~'get-elapsed-time (fn [] (- (System/currentTimeMillis) start-time#))]
+     ~@body))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn- get-result-text
+  [result &amp; optional-string]
+  (case result
+    true  (blue (apply str &quot;DONE&quot; optional-string))
+    false (red (apply str &quot;FAIL&quot; optional-string))
+    (blue &quot;SKIP&quot;)))</pre></td></tr><tr><td class="docs"><p>Print colored compile result.</p>
+</td><td class="codes"><pre class="brush: clojure">(defmacro print-compile-result
+  [#^String message, compile-sexp]
+  `(do
+     (println (str &quot; * Compiling &quot; ~message))
+     (flush)
+     (elapsing
+       (let [result#  ~compile-sexp
+             elapsed# (msec-&gt;string (~'get-elapsed-time))]
+       (println &quot;  &quot; (get-result-text result# &quot; in &quot; elapsed#))))))</pre></td></tr><tr><td class="docs"><h2>Dev Compiler</h2>
 </td><td class="codes"></td></tr><tr><td class="docs"><p>Compile all templates</p>
 </td><td class="codes"><pre class="brush: clojure">(defn do-all-compile
   []
-  (print-compile-result &quot;all templates&quot;  (compile-all-templates))
-  (print-compile-result &quot;all tags&quot;       (compile-all-tags))
-  (print-compile-result &quot;clojurescripts&quot; (compile-clojurescripts)))</pre></td></tr><tr><td class="docs"><p>Compile templte file and print status</p>
+  (let [tmpls (remove layout-file? (find-clj-files *template-dir*))
+        tags  (get-tags)]
+    (if *detailed-log*
+      (do (doseq [file tmpls]
+            (print-compile-result (.getName file) (compile-template file)))
+          (doseq [{tag-name :name} tags]
+            (print-compile-result (str tag-name &quot; tag&quot;) (compile-tag tag-name))))
+      (do (print-compile-result &quot;all templates&quot; (every? #(compile-template %) tmpls))
+          (print-compile-result &quot;all tags&quot;      (every? #(compile-tag (:name %)) tags))))
+    (print-compile-result &quot;clojurescripts&quot; (compile-clojurescripts))))</pre></td></tr><tr><td class="docs"><p>Compile templte file and print status</p>
 </td><td class="codes"><pre class="brush: clojure">(defn do-compile
   [#^java.io.File file]
   {:pre [(file? file)]}
@@ -3780,7 +3799,8 @@ net.brehaut.ClojureTools = (function (SH) {
     ; else
     :else
     (do
-      (print-compile-result &quot;template&quot; (compile-template file))
+      ;(print-compile-result &quot;template&quot; (compile-template file))
+      (print-compile-result (.getName file) (compile-template file))
       (when (post-file? file)
         ; compile with posts
         (if *compile-with-post*
@@ -3891,30 +3911,51 @@ net.brehaut.ClojureTools = (function (SH) {
 <p>  cf. <a href="http://d.hatena.ne.jp/nokturnalmortum/20100527/1274961805">http://d.hatena.ne.jp/nokturnalmortum/20100527/1274961805</a></p>
 </td><td class="codes"><pre class="brush: clojure">(ns misaki.util.code
   (:use misaki.config
-        [misaki.util.string :only [escape-string]])
+        [misaki.util.string :only [escape-string]]
+        [clojure.core.incubator :only [-?&gt;&gt;]])
   (:require [clojure.string :as str]))</pre></td></tr><tr><td class="docs"><p>Get code type from code-highlight setting in <code>config</code>.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn get-code-type
   [s]
   (let [code-key (keyword s)
-        config   (read-config)]
+        config   (read-config {})]
     (get (:code-highlight config) code-key)))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn dispatch-reader-macro
   [ch fun]
   (let [dm (.get (doto (.getDeclaredField clojure.lang.LispReader &quot;dispatchMacros&quot;)
                    (.setAccessible true))
                  nil)]
-    (aset dm (int ch) fun)))</pre></td></tr><tr><td class="docs"><p>Read until end text.</p>
+    (aset dm (int ch) fun)))</pre></td></tr><tr><td class="docs"><p>(defn read-until
+ "Read until end text."
+ [reader end]
+ (let [end (map int end)]
+   (->> (loop [res nil e end]
+          (if (empty? e)
+            res
+            (let [c (.read reader)]
+              (recur (conj res c) (if (= c (first e))
+                                    (rest e)
+                                    end)))))
+     (drop (count end)) reverse (map char) (apply str))))</p>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>Read until end text.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn read-until
-  [reader end]
-  (let [end (map int end)]
-    (-&gt;&gt; (loop [res nil e end]
-           (if (empty? e)
-             res
-             (let [c (.read reader)]
-               (recur (conj res c) (if (= c (first e))
-                                     (rest e)
-                                     end)))))
-      (drop (count end)) reverse (map char) (apply str))))</pre></td></tr><tr><td class="docs"><p>Read here code</p>
+  [reader end-str &amp; {:keys [ignore-started?] :or {ignore-started? false}}]
+  (let [end-seq      (map int end-str)
+        start?       #(= % (int \newline))
+        front-space? #(and (= % (int \space)) (= %2 end-seq))]
+    (-?&gt;&gt;
+      (loop [res nil, e end-seq, started? false]
+        (if (empty? e)
+          res
+          (let [c (.read reader)]
+            (if-not (= -1 c)
+              (if (or started? ignore-started?)
+                (if (= c (first e))
+                  (recur (conj res c) (rest e) true)
+                  ; keep `started?` with front space
+                  (recur (conj res c) end-seq (front-space? c e)))
+                ; start to check end-seq with newline
+                (recur (conj res c) end-seq (start? c)))))))
+      (drop (count end-seq)) reverse (map char) (apply str))))</pre></td></tr><tr><td class="docs"><p>Read here code</p>
 
 <pre><code>  #-EOT
   this is here text
@@ -3922,11 +3963,13 @@ net.brehaut.ClojureTools = (function (SH) {
 </code></pre>
 </td><td class="codes"><pre class="brush: clojure">(defn here-code
   [reader ch]
-  (let [end-str   (read-until reader &quot;\n&quot;)
+  (let [end-str   (read-until reader &quot;\n&quot; :ignore-started? true)
         css-class (remove nil? [&quot;prettyprint&quot; (get-code-type end-str)])]
     [:pre {:class (str/join &quot; &quot; css-class)}
-     (escape-string
-       (read-until reader (apply str &quot;\n&quot; end-str)))]))</pre></td></tr><tr><td class="docs"><p>Register <code>#-</code> reader macro</p>
+     (-?&gt;&gt; end-str
+           (read-until reader)
+           escape-string
+           str/trim)]))</pre></td></tr><tr><td class="docs"><p>Register <code>#-</code> reader macro</p>
 </td><td class="codes"><pre class="brush: clojure">(dispatch-reader-macro \- here-code)</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#misaki.util.file" name="misaki.util.file"><h1 class="project-name">misaki.util.file</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>File control utility</p>
 </td><td class="codes"><pre class="brush: clojure">(ns misaki.util.file
   (:use
@@ -4024,15 +4067,28 @@ net.brehaut.ClojureTools = (function (SH) {
       (pred x)    x
       :else       (recur rst))))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#misaki.util.string" name="misaki.util.string"><h1 class="project-name">misaki.util.string</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>String utility</p>
 </td><td class="codes"><pre class="brush: clojure">(ns misaki.util.string
-  (:require [clojure.string :as str]))</pre></td></tr><tr><td class="docs"><p>Escape string.</p>
+  (:require [clojure.string :as str]))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def ^:private color-codes
+  {:blue  &quot;\033[36m&quot;
+   :red   &quot;\033[31m&quot;
+   :green &quot;\033[32m&quot;})</pre></td></tr><tr><td class="docs"><p>Escape string.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn escape-string
   [s]
   (-&gt; s (str/replace #&quot;&amp;&quot;  &quot;&amp;amp;&quot;)
         (str/replace #&quot;\&quot;&quot; &quot;&amp;quot;&quot;)
         (str/replace #&quot;&lt;&quot;  &quot;&amp;lt;&quot;)
-        (str/replace #&quot;&gt;&quot;  &quot;&amp;gt;&quot;)))</pre></td></tr><tr><td class="docs"><p>Color string with blue ASCII color code.</p>
-</td><td class="codes"><pre class="brush: clojure">(defn blue
-  [s] (str &quot;\033[36m&quot; s &quot;\033[0m&quot;))</pre></td></tr><tr><td class="docs"><p>Color string with red ASCII color code.</p>
-</td><td class="codes"><pre class="brush: clojure">(defn red
-  [s] (str &quot;\033[31m&quot; s &quot;\033[0m&quot;))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr></table><div class="footer">Generated by <a href="https://github.com/fogus/marginalia">Marginalia</a>.&nbsp;&nbsp;Syntax highlighting provided by Alex Gorbatchev's <a href="http://alexgorbatchev.com/SyntaxHighlighter/">SyntaxHighlighter</a></div><script type="text/javascript">SyntaxHighlighter.defaults['gutter'] = false;
+        (str/replace #&quot;&gt;&quot;  &quot;&amp;gt;&quot;)))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn msec-&gt;string
+  [ms]
+  (let [sec  (int (/ ms 1000))
+        msec (format &quot;%03d&quot; (int (mod ms 1000)))]
+    (str sec &quot;.&quot; msec &quot; sec&quot;)))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn color-string [color-code s]
+  (str color-code s &quot;\033[0m&quot;))</pre></td></tr><tr><td class="docs"><p>Color string with blue ASCII color code.</p>
+</td><td class="codes"><pre class="brush: clojure">(def blue
+  (partial color-string (:blue color-codes)))</pre></td></tr><tr><td class="docs"><p>Color string with red ASCII color code.</p>
+</td><td class="codes"><pre class="brush: clojure">(def red
+  (partial color-string (:red color-codes)))</pre></td></tr><tr><td class="docs"><p>Color string with green ASCII color code.</p>
+</td><td class="codes"><pre class="brush: clojure">(def green
+  (partial color-string (:green color-codes)))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr></table><div class="footer">Generated by <a href="https://github.com/fogus/marginalia">Marginalia</a>.&nbsp;&nbsp;Syntax highlighting provided by Alex Gorbatchev's <a href="http://alexgorbatchev.com/SyntaxHighlighter/">SyntaxHighlighter</a></div><script type="text/javascript">SyntaxHighlighter.defaults['gutter'] = false;
        SyntaxHighlighter.all()</script></body></html>
