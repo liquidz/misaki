@@ -20,7 +20,7 @@ misaki is a [Jekyll](https://github.com/mojombo/jekyll) inspired static site gen
 ```clojure
 ;; Define template options here
 ; @layout  default
-; @title   sample tempalte
+; @title   sample template
 
 ;; You can define function
 (defn h1 [s] [:h1 s])
