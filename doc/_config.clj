@@ -52,7 +52,8 @@
  ;; output-dir base is `:public-dir`
  :cljs {:src-dir       "cljs"
         :output-to     "js/hello.js"
-        :optimizations :advanced}
+        :optimizations :whitespace
+        :pretty-print true}
 
  ;; highlight setting
  :code-highlight {:CLJ "lang-clj", :CLOJURE "lang-clj"}
