@@ -56,5 +56,8 @@
 
  ;; highlight setting
  :code-highlight {:CLJ "lang-clj", :CLOJURE "lang-clj"}
+
+
+ :detailed-log true
  }
 
