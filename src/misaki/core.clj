@@ -3,6 +3,7 @@
   (:use
     [misaki template config]
     [misaki.util file code sequence string]
+    [misaki.util.error  :only [print-pretty-stack-trace]]
     [hiccup.core :only [html]]
     [hiccup.page :only [html5 xhtml html4]]
     [cljs.closure :only [build]])
@@ -149,7 +150,9 @@
     (compile* (make-tag-output-filename tag-name)
               (generate-tag-template-sexp tag-name))
     (catch Exception e
-      (.printStackTrace e) false)))
+      (print-pretty-stack-trace e)
+      ;(.printStackTrace e)
+      false)))
 
 ; =compile-template
 (defn compile-template
@@ -160,7 +163,7 @@
   (try
     (compile* (make-template-output-filename tmpl-file)
               (file->template-sexp tmpl-file))
-    (catch Exception e (.printStackTrace e) false)))
+    (catch Exception e (print-pretty-stack-trace e) #_(.printStackTrace e) false)))
 
 ; =compile-clojurescripts
 (defn compile-clojurescripts
@@ -178,7 +181,7 @@
       (build (:src-dir *cljs-compile-options*)
              *cljs-compile-options*)
       true)
-    (catch Exception e (.printStackTrace e) false)))
+    (catch Exception e (print-pretty-stack-trace e) #_(.printStackTrace e) false)))
 
 ;; ## Compile Controller
 
