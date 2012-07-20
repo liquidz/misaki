@@ -63,7 +63,8 @@
 (def ^:dynamic *url-base* "/")
 ;; Index file name
 (def ^:dynamic *index-name* "")
-
+;; Flag for detailed compile log
+(def ^:dynamic *detailed-log* false)
 
 ;; ## Config Data Wrapper
 
@@ -122,6 +123,7 @@
         *post-filename-format* (get config# :post-filename-format
                                  POST_OUTPUT_NAME_FORMAT)
         *post-sort-type*       (get config# :post-sort-type :date-desc)
+        *detailed-log*         (get config# :detailed-log false)
         *cljs-compile-options* (if cljs#
                                  (assoc cljs#
                                    :src-dir    (normalize-path (str template# (:src-dir cljs#)))

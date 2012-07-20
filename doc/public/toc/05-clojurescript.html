@@ -5,7 +5,8 @@
  ;; output-dir base is `:public-dir`
  :cljs {:src-dir       &quot;cljs&quot;
         :output-to     &quot;js/main.js&quot;
-        :optimizations :advanced}
+        :optimizations :whitespace
+        :pretty-print true}
  }</pre><h2><span>E</span>dit clojurescript source.</h2><p class="paragraph">Open "template-dir/cljs/hello.cljs".
    Clojurescript source filepath is defined by <code class="prettyprint">:cljs {:src-dir}</code> in _config.clj
    </p><pre class="prettyprint lang-clj">(ns hello)

@@ -6,24 +6,40 @@
   "
   (:use
     [misaki core config template]
-    [misaki.util.file   :only [normalize-path has-extension? file?]]
-    [misaki.util.string :only [blue red]]
+    [misaki.util.file   :only [find-clj-files normalize-path has-extension? file?]]
+    [misaki.util.string :only [blue red msec->string]]
     watchtower.core
     [compojure.core     :only [routes]]
     [compojure.route    :only [files]]
     [ring.adapter.jetty :only [run-jetty]]))
+
+; =elapsing
+(defmacro elapsing
+  [& body]
+  `(let [start-time# (System/currentTimeMillis)
+         ~'get-elapsed-time (fn [] (- (System/currentTimeMillis) start-time#))]
+     ~@body))
+
+; =get-result-text
+(defn- get-result-text
+  [result & optional-string]
+  (case result
+    true  (blue (apply str "DONE" optional-string))
+    false (red (apply str "FAIL" optional-string))
+    (blue "SKIP")))
 
 ; =print-result
 (defmacro print-compile-result
   "Print colored compile result."
   [#^String message, compile-sexp]
   `(do
-     (print (str " * compiling " ~message ": ... "))
+     (println (str " * Compiling " ~message))
      (flush)
-     (println (case ~compile-sexp
-                true  (blue "DONE")
-                false (red "FAIL")
-                (blue "SKIP")))))
+     (elapsing
+       (let [result#  ~compile-sexp
+             elapsed# (msec->string (~'get-elapsed-time))]
+       (println "  " (get-result-text result# " in " elapsed#))))))
+
 
 ;; ## Dev Compiler
 
@@ -31,9 +47,16 @@
 (defn do-all-compile
   "Compile all templates"
   []
-  (print-compile-result "all templates"  (compile-all-templates))
-  (print-compile-result "all tags"       (compile-all-tags))
-  (print-compile-result "clojurescripts" (compile-clojurescripts)))
+  (let [tmpls (remove layout-file? (find-clj-files *template-dir*))
+        tags  (get-tags)]
+    (if *detailed-log*
+      (do (doseq [file tmpls]
+            (print-compile-result (.getName file) (compile-template file)))
+          (doseq [{tag-name :name} tags]
+            (print-compile-result (str tag-name " tag") (compile-tag tag-name))))
+      (do (print-compile-result "all templates" (every? #(compile-template %) tmpls))
+          (print-compile-result "all tags"      (every? #(compile-tag (:name %)) tags))))
+    (print-compile-result "clojurescripts" (compile-clojurescripts))))
 
 ; =do-compile
 (defn do-compile
@@ -51,7 +74,8 @@
     ; else
     :else
     (do
-      (print-compile-result "template" (compile-template file))
+      ;(print-compile-result "template" (compile-template file))
+      (print-compile-result (.getName file) (compile-template file))
       (when (post-file? file)
         ; compile with posts
         (if *compile-with-post*

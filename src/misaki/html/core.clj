@@ -104,7 +104,8 @@
       ;=> <link rel=\"stylesheet\" type=\"text/css\" href=\"foo.css\" />
       ;=> <link rel=\"stylesheet\" type=\"text/css\" href=\"bar.css\" />
       (css {:media \"screen\"} \"foo.css\" \"bar.css\")
-      ;=> <link rel=\"stylesheet\" type=\"text/css\" media=\"screen\" href=\"foo.css\" />"
+      ;=> <link rel=\"stylesheet\" type=\"text/css\" media=\"screen\" href=\"foo.css\" />
+      ;=> <link rel=\"stylesheet\" type=\"text/css\" media=\"screen\" href=\"bar.css\" />"
   [& args]
   (let [args (flatten args)
         [opt & hrefs] (if (map? (first args)) args (cons {} args))
@@ -183,7 +184,7 @@
       (link \"foo.html\")
       ;=> <a href=\"foo.html\">foo.html</a>
       (link \"foo\" \"bar.html\")
-      ;=> <a href=\"foo.html\">bar</a>"
+      ;=> <a href=\"bar.html\">foo</a>"
   ([href] (link href href))
   ([label href] [:a {:href href} (parse-string label)]))
 
@@ -240,9 +241,12 @@
   [& s]
   [:p {:class "paragraph"} (map parse-string s)])
 
-(defn- header-decoration [[first-char & rest-chars]]
-  (list [:span {:class "first_char"} first-char]
-        rest-chars))
+(defn- header-decoration [x]
+  (if (string? x)
+    (let [[first-char & rest-chars] x]
+      (list [:span {:class "first_char"} first-char]
+            rest-chars))
+    x))
 
 (defn header
   "Make default header tag."
@@ -260,7 +264,7 @@
   "Make default footer."
   [& p]
   [:footer {:class "footer"}
-   [:p {:class "right"} (link "Back to top" "#")]
+   [:p {:class "right back_to_top"} (link "Back to top" "#")]
    [:p p]])
 
 (defn post-list

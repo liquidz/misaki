@@ -1,4 +1,4 @@
-(defproject misaki "0.1.0-beta"
+(defproject misaki "0.1.02-beta"
   :description "Jekyll inspired static site generator in Clojure"
   :dependencies [[org.clojure/clojure "1.4.0"]
                  [org.clojure/core.incubator "0.1.0"]

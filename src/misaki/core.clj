@@ -183,20 +183,3 @@
       true)
     (catch Exception e (print-pretty-stack-trace e) #_(.printStackTrace e) false)))
 
-;; ## Compile Controller
-
-; =compile-all-tags
-(defn compile-all-tags
-  "Compile all tag page.
-  return true if all compile succeeded."
-  []
-  (every? #(compile-tag (:name %)) (get-tags)))
-
-; =compile-all-templates
-(defn compile-all-templates
-  "Compile all template files.
-  return true if all compile succeeded."
-  []
-  (let [files (remove layout-file? (find-clj-files *template-dir*))]
-    (every? #(compile-template %) files)))
-
