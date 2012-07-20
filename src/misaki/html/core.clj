@@ -104,7 +104,8 @@
       ;=> <link rel=\"stylesheet\" type=\"text/css\" href=\"foo.css\" />
       ;=> <link rel=\"stylesheet\" type=\"text/css\" href=\"bar.css\" />
       (css {:media \"screen\"} \"foo.css\" \"bar.css\")
-      ;=> <link rel=\"stylesheet\" type=\"text/css\" media=\"screen\" href=\"foo.css\" />"
+      ;=> <link rel=\"stylesheet\" type=\"text/css\" media=\"screen\" href=\"foo.css\" />
+      ;=> <link rel=\"stylesheet\" type=\"text/css\" media=\"screen\" href=\"bar.css\" />"
   [& args]
   (let [args (flatten args)
         [opt & hrefs] (if (map? (first args)) args (cons {} args))
@@ -183,7 +184,7 @@
       (link \"foo.html\")
       ;=> <a href=\"foo.html\">foo.html</a>
       (link \"foo\" \"bar.html\")
-      ;=> <a href=\"foo.html\">bar</a>"
+      ;=> <a href=\"bar.html\">foo</a>"
   ([href] (link href href))
   ([label href] [:a {:href href} (parse-string label)]))
 
