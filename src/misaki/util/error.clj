@@ -39,6 +39,11 @@
    })
 
 
+(defn map-color-format [m & pair]
+  (merge m (into {} (for [[key color-fn] (partition 2 pair)]
+                      [key (color-fn (get m key))]))))
+
+
 (defn- print-cause [cause & {:keys [caused?] :or {caused? false}}]
   (let [label (str (if caused? "Caused by " "") (:str cause))]
     (flush)
@@ -51,7 +56,8 @@
         (underline
           (str (:class st) "/"
                (bold (:method st))))
-        (red (str "(" (:filename st) ":" (bold (:line st)) ")"))))))
+        (red (str "(" (:filename st) ":" (bold (:line st)) ")")))
+      )))
 
 (defn print-pretty-stack-trace
   [#^Exception ex]
