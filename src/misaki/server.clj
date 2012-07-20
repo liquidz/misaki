@@ -7,7 +7,7 @@
   (:use
     [misaki core config template]
     [misaki.util.file   :only [find-clj-files normalize-path has-extension? file?]]
-    [misaki.util.string :only [blue red msec->string]]
+    [misaki.util.string :only [blue red bold msec->string]]
     watchtower.core
     [compojure.core     :only [routes]]
     [compojure.route    :only [files]]
@@ -33,7 +33,7 @@
   "Print colored compile result."
   [#^String message, compile-sexp]
   `(do
-     (println (str " * Compiling " ~message))
+     (println (str " * Compiling " (bold ~message)))
      (flush)
      (elapsing
        (let [result#  ~compile-sexp

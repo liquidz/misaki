@@ -41,3 +41,8 @@
 (def green
   "Color string with green ASCII color code."
   (partial color-string (:green color-codes)))
+
+; =bold
+(defn bold
+  "Bold string."
+  [s] (str "\033[1m" s "\033[22m"))

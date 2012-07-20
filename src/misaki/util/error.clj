@@ -1,12 +1,11 @@
 (ns misaki.util.error
-  (:use [misaki.util.string :only [blue red]]
+  (:use [misaki.util.string :only [blue red bold]]
         [clostache.parser :only [render]]))
 
 
 (declare throwable->map)
 
 (defn- green [s] (str "\033[32m" s "\033[0m"))
-(defn- bold [s] (str "\033[1m" s "\033[22m"))
 (defn- underline [s] (str "\033[4m" s "\033[24m"))
 (defn- italic [s] (str "\033[3m" s "\033[23m"))
 (defn- inverse [s] (str "\033[7m" s "\033[27m"))
