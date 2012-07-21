@@ -3029,7 +3029,7 @@ net.brehaut.ClojureTools = (function (SH) {
   };
 })(SyntaxHighlighter);
 </script><title>misaki -- Marginalia</title></head><body><table><tr><td class="docs"><div class="header"><h1 class="project-name">misaki</h1><h2 class="project-version">0.1.1-beta</h2><br /><p>Jekyll inspired static site generator in Clojure</p>
-</div><div class="dependencies"><h3>dependencies</h3><table><tr><td class="dep-name">org.clojure/clojure</td><td class="dotted"><hr /></td><td class="dep-version">1.4.0</td></tr><tr><td class="dep-name">org.clojure/core.incubator</td><td class="dotted"><hr /></td><td class="dep-version">0.1.0</td></tr><tr><td class="dep-name">org.clojure/clojurescript</td><td class="dotted"><hr /></td><td class="dep-version">0.0-1443</td></tr><tr><td class="dep-name">hiccup</td><td class="dotted"><hr /></td><td class="dep-version">1.0.0</td></tr><tr><td class="dep-name">compojure</td><td class="dotted"><hr /></td><td class="dep-version">1.1.0</td></tr><tr><td class="dep-name">ring/ring-jetty-adapter</td><td class="dotted"><hr /></td><td class="dep-version">1.1.0</td></tr><tr><td class="dep-name">clj-time</td><td class="dotted"><hr /></td><td class="dep-version">0.3.7</td></tr><tr><td class="dep-name">clj-text-decoration</td><td class="dotted"><hr /></td><td class="dep-version">0.0.1</td></tr><tr><td class="dep-name">uochan/watchtower</td><td class="dotted"><hr /></td><td class="dep-version">0.1.2</td></tr><tr><td class="dep-name">de.ubercode.clostache/clostache</td><td class="dotted"><hr /></td><td class="dep-version">1.3.0</td></tr></table></div><div class="dependencies"><h3>dev dependencies</h3><table><tr><td class="dep-name">lein-multi</td><td class="dotted"><hr /></td><td class="dep-version">1.1.0</td></tr><tr><td class="dep-name">lein-marginalia</td><td class="dotted"><hr /></td><td class="dep-version">0.7.1</td></tr><tr><td class="dep-name">debug-reader</td><td class="dotted"><hr /></td><td class="dep-version">0.0.1</td></tr><tr><td class="dep-name">lein-autotest-notify</td><td class="dotted"><hr /></td><td class="dep-version">0.0.4</td></tr></table></div></td><td class="codes" style="text-align: center; vertical-align: middle;color: #666;padding-right:20px"><br /><br /><br />(this space intentionally left almost blank)</td></tr><tr><td class="docs"><div class="toc"><a name="toc"><h3>namespaces</h3></a><ul><li><a href="#misaki.config">misaki.config</a></li><li><a href="#misaki.core">misaki.core</a></li><li><a href="#misaki.evaluator">misaki.evaluator</a></li><li><a href="#misaki.html.conv">misaki.html.conv</a></li><li><a href="#misaki.html.core">misaki.html.core</a></li><li><a href="#misaki.html.util">misaki.html.util</a></li><li><a href="#misaki.server">misaki.server</a></li><li><a href="#misaki.template">misaki.template</a></li><li><a href="#misaki.util.code">misaki.util.code</a></li><li><a href="#misaki.util.error">misaki.util.error</a></li><li><a href="#misaki.util.file">misaki.util.file</a></li><li><a href="#misaki.util.sequence">misaki.util.sequence</a></li><li><a href="#misaki.util.string">misaki.util.string</a></li></ul></div></td><td class="codes">&nbsp;</td></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#misaki.config" name="misaki.config"><h1 class="project-name">misaki.config</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>Configuration Manager</p>
+</div><div class="dependencies"><h3>dependencies</h3><table><tr><td class="dep-name">org.clojure/clojure</td><td class="dotted"><hr /></td><td class="dep-version">1.4.0</td></tr><tr><td class="dep-name">org.clojure/core.incubator</td><td class="dotted"><hr /></td><td class="dep-version">0.1.0</td></tr><tr><td class="dep-name">org.clojure/clojurescript</td><td class="dotted"><hr /></td><td class="dep-version">0.0-1443</td></tr><tr><td class="dep-name">hiccup</td><td class="dotted"><hr /></td><td class="dep-version">1.0.0</td></tr><tr><td class="dep-name">compojure</td><td class="dotted"><hr /></td><td class="dep-version">1.1.0</td></tr><tr><td class="dep-name">ring/ring-jetty-adapter</td><td class="dotted"><hr /></td><td class="dep-version">1.1.0</td></tr><tr><td class="dep-name">clj-time</td><td class="dotted"><hr /></td><td class="dep-version">0.3.7</td></tr><tr><td class="dep-name">clj-text-decoration</td><td class="dotted"><hr /></td><td class="dep-version">0.0.1</td></tr><tr><td class="dep-name">uochan/watchtower</td><td class="dotted"><hr /></td><td class="dep-version">0.1.2</td></tr><tr><td class="dep-name">de.ubercode.clostache/clostache</td><td class="dotted"><hr /></td><td class="dep-version">1.3.0</td></tr></table></div><div class="dependencies"><h3>dev dependencies</h3><table><tr><td class="dep-name">lein-multi</td><td class="dotted"><hr /></td><td class="dep-version">1.1.0</td></tr><tr><td class="dep-name">lein-marginalia</td><td class="dotted"><hr /></td><td class="dep-version">0.7.1</td></tr><tr><td class="dep-name">debug-reader</td><td class="dotted"><hr /></td><td class="dep-version">0.0.1</td></tr><tr><td class="dep-name">lein-autotest-notify</td><td class="dotted"><hr /></td><td class="dep-version">0.0.4</td></tr></table></div></td><td class="codes" style="text-align: center; vertical-align: middle;color: #666;padding-right:20px"><br /><br /><br />(this space intentionally left almost blank)</td></tr><tr><td class="docs"><div class="toc"><a name="toc"><h3>namespaces</h3></a><ul><li><a href="#misaki.config">misaki.config</a></li><li><a href="#misaki.core">misaki.core</a></li><li><a href="#misaki.evaluator">misaki.evaluator</a></li><li><a href="#misaki.html.conv">misaki.html.conv</a></li><li><a href="#misaki.html.core">misaki.html.core</a></li><li><a href="#misaki.html.util">misaki.html.util</a></li><li><a href="#misaki.reader">misaki.reader</a></li><li><a href="#misaki.server">misaki.server</a></li><li><a href="#misaki.template">misaki.template</a></li><li><a href="#misaki.util.code">misaki.util.code</a></li><li><a href="#misaki.util.error">misaki.util.error</a></li><li><a href="#misaki.util.file">misaki.util.file</a></li><li><a href="#misaki.util.sequence">misaki.util.sequence</a></li><li><a href="#misaki.util.string">misaki.util.string</a></li></ul></div></td><td class="codes">&nbsp;</td></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#misaki.config" name="misaki.config"><h1 class="project-name">misaki.config</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>Configuration Manager</p>
 </td><td class="codes"><pre class="brush: clojure">(ns misaki.config
   (:use [misaki.util file string sequence]
         [clojure.core.incubator :only [-?&gt; -?&gt;&gt;]]
@@ -3337,7 +3337,6 @@ net.brehaut.ClojureTools = (function (SH) {
               (generate-tag-template-sexp tag-name))
     (catch Exception e
       (print-pretty-stack-trace e)
-      ;(.printStackTrace e)
       false)))</pre></td></tr><tr><td class="docs"><p>Compile a specified template, and write compiled data to <code>*public-dir*</code>.
   return true if compile succeeded.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn compile-template
@@ -3346,7 +3345,7 @@ net.brehaut.ClojureTools = (function (SH) {
   (try
     (compile* (make-template-output-filename tmpl-file)
               (file-&gt;template-sexp tmpl-file))
-    (catch Exception e (print-pretty-stack-trace e) #_(.printStackTrace e) false)))</pre></td></tr><tr><td class="docs"><p>Compile clojurescripts.
+    (catch Exception e (print-pretty-stack-trace e) false)))</pre></td></tr><tr><td class="docs"><p>Compile clojurescripts.
   return true if compile succeeded.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn compile-clojurescripts
   []
@@ -3361,9 +3360,10 @@ net.brehaut.ClojureTools = (function (SH) {
       (build (:src-dir *cljs-compile-options*)
              *cljs-compile-options*)
       true)
-    (catch Exception e (print-pretty-stack-trace e) #_(.printStackTrace e) false)))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#misaki.evaluator" name="misaki.evaluator"><h1 class="project-name">misaki.evaluator</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>S-exp Template Evaluator.
+    (catch Exception e (print-pretty-stack-trace e) false)))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#misaki.evaluator" name="misaki.evaluator"><h1 class="project-name">misaki.evaluator</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>S-exp Template Evaluator.
   Template string is evaluated as Function.</p>
-</td><td class="codes"><pre class="brush: clojure">(ns misaki.evaluator)</pre></td></tr><tr><td class="docs"><p>Check whether <code>def</code> or <code>defn</code> s-exp or not.</p>
+</td><td class="codes"><pre class="brush: clojure">(ns misaki.evaluator
+  (:use [misaki.reader :only [read-from-string]]))</pre></td></tr><tr><td class="docs"><p>Check whether <code>def</code> or <code>defn</code> s-exp or not.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn def?
   [x]
   (and (seq? x)
@@ -3394,14 +3394,19 @@ net.brehaut.ClojureTools = (function (SH) {
 </td><td class="codes"><pre class="brush: clojure">(def ^{:dynamic true
        :doc }
   *eval-functions*
-  [enclose-str-with-list
-   read-string
+  [;read-from-string
+   #(cons 'list %)
+   ;enclose-str-with-list
+   ;read-string
    enclose-sexp-with-function
    eval])</pre></td></tr><tr><td class="docs"><p>Evaluate template's sexp string to template function.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn evaluate-to-function
-  [#^String sexp-str]
-  {:pre [(string? sexp-str)]}
-  (reduce #(%2 %) sexp-str *eval-functions*))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#misaki.html.conv" name="misaki.html.conv"><h1 class="project-name">misaki.html.conv</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>Data converting utilities for template</p>
+  ([#^String sexp-str]
+   (evaluate-to-function sexp-str &quot;&quot;))
+  ([#^String sexp-str, #^String filename]
+   {:pre [(string? sexp-str)]}
+   (let [sexp (read-from-string sexp-str :path filename)]
+     (reduce #(%2 %) sexp *eval-functions*))))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#misaki.html.conv" name="misaki.html.conv"><h1 class="project-name">misaki.html.conv</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>Data converting utilities for template</p>
 </td><td class="codes"><pre class="brush: clojure">(ns misaki.html.conv
   (:use
     [misaki.core :only [get-posts]]
@@ -3744,7 +3749,79 @@ net.brehaut.ClojureTools = (function (SH) {
          :data-lang lang}
      label]
    (page/include-js &quot;//platform.twitter.com/widgets.js&quot;)
-   ])</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#misaki.server" name="misaki.server"><h1 class="project-name">misaki.server</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>Development server</p>
+   ])</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#misaki.reader" name="misaki.reader"><h1 class="project-name">misaki.reader</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>S-exp Reader.</p>
+</td><td class="codes"><pre class="brush: clojure">(ns misaki.reader
+  (:use misaki.util.code)
+  (:import [java.io StringReader PushbackReader]
+           [clojure.lang IDeref]))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def _EOF_ (gensym &quot;end-of-file&quot;))</pre></td></tr><tr><td class="docs"><p>Utility for java.io.Reader</p>
+</td><td class="codes"><pre class="brush: clojure">(defn- read-char [r]
+  (let [c (.read r)]
+    (if-not (= -1 c) (char c))))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn- blank-char? [c]
+  (some #(= c %) [\space \tab \newline (first &quot;\r&quot;)]))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn- skip-to [r ch]
+  (if-let [_ch (read-char r)]
+    (if (not= _ch ch) (recur r ch))))</pre></td></tr><tr><td class="docs"><p>Create an instance extending java.io.PushbackReader and implementing clojure.lang.IDeref.
+  This instance counts 
+ewline and return if you deref instance.</p>
+
+<pre><code>(let [r (create-pushback-reader-with-line (io/reader "test.clj"))]
+  ; basic use
+  (.read r)
+  (.unread r (int \x))
+  ; get newline count
+  (println @r))
+</code></pre>
+</td><td class="codes"><pre class="brush: clojure">(defn create-pushback-reader-with-line
+  &quot;Create an instance extending java.io.PushbackReader and implementing clojure.lang.IDeref.
+  This instance counts \newline and return if you deref instance.
+    (let [r (create-pushback-reader-with-line (io/reader \&quot;test.clj\&quot;))]
+      ; basic use
+      (.read r)
+      (.unread r (int \\x))
+      ; get newline count
+      (println @r))&quot;
+  [in]
+  (let [line-num (atom 1)]
+    (proxy [PushbackReader IDeref] [in]
+      (read []
+            (let [c (proxy-super read)]
+              (if (and (not= -1 c) (= \newline (char c)))
+                (swap! line-num inc))
+              c))
+      (deref [] @line-num))))</pre></td></tr><tr><td class="docs"><p>Skip java.io.Reader to next token.
+  Space, Tab, CR, LN, clojure comment are skipped.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn skip-to-token
+  [rdr]
+  (if-let [ch (read-char rdr)]
+    (cond
+      (blank-char? ch) (recur rdr)
+      (= \; ch)        (do (skip-to rdr \newline) (recur rdr))
+      :else            (do (.unread rdr (int ch)) true))))</pre></td></tr><tr><td class="docs"><p>Create java.lang.RuntimeException with base exception, filename and error line number.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn create-exception
+  [ex filename line]
+  (let [e  (RuntimeException. (str &quot;....&quot; (.getMessage ex)))
+        st (StackTraceElement. &quot;misaki.reader&quot; &quot;read-sexp&quot; filename line)]
+    (.setStackTrace e (into-array (list st)))
+    e))</pre></td></tr><tr><td class="docs"><p>Read one S-exp.
+  If S-exp has format error, throw java.lang.RuntimeException with specified path and line number.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn read-sexp
+  [rdr &amp; {:keys [path]}]
+  (if (skip-to-token rdr)
+    (let [line @rdr]
+      (try
+        (read rdr)
+        (catch Exception ex
+          (throw (create-exception ex path line)))))
+    _EOF_))</pre></td></tr><tr><td class="docs"><p>Read all S-exps from java.io.Reader.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn read-from-reader
+  [rdr &amp; {:keys [path]}]
+  (let [pbr (create-pushback-reader-with-line rdr)]
+    (take-while #(not= % _EOF_) (repeatedly #(read-sexp pbr :path path)))))</pre></td></tr><tr><td class="docs"><p>Read all S-exps from java.lang.String</p>
+</td><td class="codes"><pre class="brush: clojure">(defn read-from-string
+  [s &amp; {:keys [path]}]
+  (read-from-reader (StringReader. s) :path path))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#misaki.server" name="misaki.server"><h1 class="project-name">misaki.server</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>Development server</p>
 
 <p>  Listen <em>port</em> to publish developing blog,
   and watch template updates.</p>
@@ -3904,7 +3981,8 @@ net.brehaut.ClojureTools = (function (SH) {
    {:pre [(file? file)]}
    (reduce
      (fn [parent-fn [template-data option]]
-       (let [template-fn (evaluate-to-function template-data)]
+       ;(let [template-fn (evaluate-to-function template-data)]
+       (let [template-fn (evaluate-to-function template-data (.getName file))]
          (with-meta
            (if (or (nil? parent-fn) (not allow-layout?))
              template-fn

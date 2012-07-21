@@ -36,53 +36,53 @@
         (int \c) (.read r)
         -1       (.read r)))))
 
-(deftest seek-token-start-test
+(deftest skip-to-token-test
   (testing "normal reading"
     (let [r (PushbackReader. (StringReader. "abc"))]
       (are [x y] (= x y)
-        true     (seek-token-start r)
+        true     (skip-to-token r)
         (int \a) (.read r)
-        true     (seek-token-start r)
+        true     (skip-to-token r)
         (int \b) (.read r)
-        true     (seek-token-start r)
+        true     (skip-to-token r)
         (int \c) (.read r)
-        nil      (seek-token-start r))))
+        nil      (skip-to-token r))))
 
   (testing "ignore space"
     (let [r (PushbackReader. (StringReader. "a  b  "))]
       (are [x y] (= x y)
-        true     (seek-token-start r)
+        true     (skip-to-token r)
         (int \a) (.read r)
-        true     (seek-token-start r)
+        true     (skip-to-token r)
         (int \b) (.read r)
-        nil      (seek-token-start r))))
+        nil      (skip-to-token r))))
 
   (testing "ignore tab"
     (let [r (PushbackReader. (StringReader. "a\tb\t\t"))]
       (are [x y] (= x y)
-        true     (seek-token-start r)
+        true     (skip-to-token r)
         (int \a) (.read r)
-        true     (seek-token-start r)
+        true     (skip-to-token r)
         (int \b) (.read r)
-        nil      (seek-token-start r))))
+        nil      (skip-to-token r))))
 
   (testing "ignore cr nl"
     (let [r (PushbackReader. (StringReader. "a\nb\r\n"))]
       (are [x y] (= x y)
-        true     (seek-token-start r)
+        true     (skip-to-token r)
         (int \a) (.read r)
-        true     (seek-token-start r)
+        true     (skip-to-token r)
         (int \b) (.read r)
-        nil      (seek-token-start r))))
+        nil      (skip-to-token r))))
 
   (testing "ignore comments"
     (let [r (PushbackReader. (StringReader. "a;comment\r\nb;tail comment"))]
       (are [x y] (= x y)
-        true     (seek-token-start r)
+        true     (skip-to-token r)
         (int \a) (.read r)
-        true     (seek-token-start r)
+        true     (skip-to-token r)
         (int \b) (.read r)
-        nil      (seek-token-start r)))))
+        nil      (skip-to-token r)))))
 
 (deftest read-sexp-test
   (let [s "(hello) 123 'world [neko] #{1 2} :nuko \"nyan\" {:a 1}"
