@@ -18,12 +18,12 @@
   (juxt (partial filter def?)
         (partial remove def?)))
 
-; =enclose-str-with-list
-(defn enclose-str-with-list
-  "Enclose slurped string with list."
-  [#^String slurped-str]
-  {:pre [(string? slurped-str)]}
-  (str "(list " slurped-str" )"))
+; =enclose-sexp-with-list
+(defn enclose-sexp-with-list
+  "Enclose s-exp with list."
+  [ls]
+  {:pre [(sequential? ls)]}
+  (cons 'list ls))
 
 ; =enclose-sexp-with-function
 (defn enclose-sexp-with-function
@@ -46,10 +46,7 @@
 (def ^{:dynamic true
        :doc "Definition of evaluating functions."}
   *eval-functions*
-  [;read-from-string
-   #(cons 'list %)
-   ;enclose-str-with-list
-   ;read-string
+  [enclose-sexp-with-list
    enclose-sexp-with-function
    eval])
 
