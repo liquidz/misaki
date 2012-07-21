@@ -151,7 +151,6 @@
               (generate-tag-template-sexp tag-name))
     (catch Exception e
       (print-pretty-stack-trace e)
-      ;(.printStackTrace e)
       false)))
 
 ; =compile-template
@@ -163,7 +162,7 @@
   (try
     (compile* (make-template-output-filename tmpl-file)
               (file->template-sexp tmpl-file))
-    (catch Exception e (print-pretty-stack-trace e) #_(.printStackTrace e) false)))
+    (catch Exception e (print-pretty-stack-trace e) false)))
 
 ; =compile-clojurescripts
 (defn compile-clojurescripts
@@ -181,5 +180,5 @@
       (build (:src-dir *cljs-compile-options*)
              *cljs-compile-options*)
       true)
-    (catch Exception e (print-pretty-stack-trace e) #_(.printStackTrace e) false)))
+    (catch Exception e (print-pretty-stack-trace e) false)))
 

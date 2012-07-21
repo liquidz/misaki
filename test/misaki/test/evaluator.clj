@@ -29,6 +29,7 @@
       ; f => (fn [site & contents] (list (apply + site)))
       (is (= '(6) (apply-template f (with-meta '("") {:a 1 :b 2 :c 3}))))))
 
-  (testing "custom evaluate"
+  #_(testing "custom evaluate"
     (binding [*eval-functions* [#(str % "!") #(str % "?")]]
-      (is (= "hello!?" (evaluate-to-function "hello"))))))
+      (is (= "hello!?" (evaluate-to-function "hello")))))
+  )

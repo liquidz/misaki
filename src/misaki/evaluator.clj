@@ -1,6 +1,8 @@
 (ns misaki.evaluator
   "S-exp Template Evaluator.
-  Template string is evaluated as Function.")
+  Template string is evaluated as Function."
+
+  (:use [misaki.reader :only [read-from-string]]))
 
 ; =def?
 (defn def?
@@ -44,15 +46,20 @@
 (def ^{:dynamic true
        :doc "Definition of evaluating functions."}
   *eval-functions*
-  [enclose-str-with-list
-   read-string
+  [;read-from-string
+   #(cons 'list %)
+   ;enclose-str-with-list
+   ;read-string
    enclose-sexp-with-function
    eval])
 
 ; =evaluate-to-function
 (defn evaluate-to-function
   "Evaluate template's sexp string to template function."
-  [#^String sexp-str]
-  {:pre [(string? sexp-str)]}
-  (reduce #(%2 %) sexp-str *eval-functions*))
+  ([#^String sexp-str]
+   (evaluate-to-function sexp-str ""))
+  ([#^String sexp-str, #^String filename]
+   {:pre [(string? sexp-str)]}
+   (let [sexp (read-from-string sexp-str :path filename)]
+     (reduce #(%2 %) sexp *eval-functions*))))
 

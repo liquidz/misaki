@@ -31,4 +31,7 @@
                        [uochan/watchtower "0.1.2"]
                        [de.ubercode.clostache/clostache "1.3.0"]]}
 
+
+;  :java-source-paths ["src/java"]
+
   :main misaki.server)
