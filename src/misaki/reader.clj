@@ -6,7 +6,7 @@
 
 (def _EOF_ (gensym "end-of-file"))
 
-(defn create-pushbask-reader-with-line
+(defn create-pushback-reader-with-line
   [in]
   (let [line-num (atom 1)]
     (proxy [PushbackReader IDeref] [in]
@@ -19,7 +19,7 @@
 
 
 (defn- blank-char? [c]
-  (some #(= c %) [\space \tab \newline]))
+  (some #(= c %) [\space \tab \newline (first "\r")]))
 
 (defn- skip-to [r ch]
   (let [c (.read r)]
@@ -52,7 +52,7 @@
 
 (defn read-from-reader
   [rdr & {:keys [path]}]
-  (let [pbr (create-pushbask-reader-with-line rdr)]
+  (let [pbr (create-pushback-reader-with-line rdr)]
     (take-while #(not= % _EOF_) (repeatedly #(read-sexp pbr :filename path)))))
 
 (defn read-from-string
