@@ -7,6 +7,7 @@
                  [compojure "1.1.0"]
                  [ring/ring-jetty-adapter "1.1.0"]
                  [clj-time "0.3.7"]
+                 [clj-text-decoration "0.0.1"]
                  [uochan/watchtower "0.1.2"]
                  [de.ubercode.clostache/clostache "1.3.0"]]
 

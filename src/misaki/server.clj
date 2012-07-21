@@ -6,12 +6,13 @@
   "
   (:use
     [misaki core config template]
-    [misaki.util.file   :only [find-clj-files normalize-path has-extension? file?]]
-    [misaki.util.string :only [blue red bold msec->string]]
+    [misaki.util.file     :only [find-clj-files normalize-path has-extension? file?]]
+    [misaki.util.string   :only [msec->string]]
+    [text-decoration.core :only [cyan red bold]]
     watchtower.core
-    [compojure.core     :only [routes]]
-    [compojure.route    :only [files]]
-    [ring.adapter.jetty :only [run-jetty]]))
+    [compojure.core       :only [routes]]
+    [compojure.route      :only [files]]
+    [ring.adapter.jetty   :only [run-jetty]]))
 
 ; =elapsing
 (defmacro elapsing
@@ -24,9 +25,9 @@
 (defn- get-result-text
   [result & optional-string]
   (case result
-    true  (blue (apply str "DONE" optional-string))
+    true  (cyan (apply str "DONE" optional-string))
     false (red (apply str "FAIL" optional-string))
-    (blue "SKIP")))
+    (cyan "SKIP")))
 
 ; =print-result
 (defmacro print-compile-result
@@ -117,7 +118,7 @@
         (do-all-compile)
         ; start watching and server
         (do (start-watcher)
-            (println " * starting server: " (blue (str "http://localhost:" *port* *url-base*)))
+            (println " * starting server: " (cyan (str "http://localhost:" *port* *url-base*)))
             (run-jetty
               (routes (files *url-base* {:root *public-dir*}))
               {:port *port*}))))))

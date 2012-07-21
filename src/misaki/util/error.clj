@@ -1,15 +1,10 @@
 (ns misaki.util.error
-  (:use [misaki.util.string :only [blue red bold]]
-        [clostache.parser :only [render]]))
-
+  (:use
+    misaki.util.string
+    [text-decoration.core :only [red bold underline assoc-color]]
+    [clostache.parser     :only [render]]))
 
 (declare throwable->map)
-
-(defn- green [s] (str "\033[32m" s "\033[0m"))
-(defn- underline [s] (str "\033[4m" s "\033[24m"))
-(defn- italic [s] (str "\033[3m" s "\033[23m"))
-(defn- inverse [s] (str "\033[7m" s "\033[27m"))
-(defn- strikethrough [s] (str "\033[9m" s "\033[29m"))
 
 (defn- get-causes [#^Throwable ex]
   (map throwable->map
@@ -33,22 +28,6 @@
    :causes            (get-causes ex)
    :str               (.toString ex)
    :localized-message (.getLocalizedMessage ex)})
-
-
-; =assoc-color
-(defn assoc-color
-  "Associate color-function to hash-map
-
-  ex)
-    (assoc-color {:a \"AAA\", :b \"BBB\"}
-                  :a red
-                  :b blue)"
-  [m & kvs]
-  (merge m (into {} (for [[key color-fn] (partition 2 kvs)]
-                      [key (color-fn (get m key))]))))
-
-(defn- str-contains? [s target]
-  (not= -1 (.indexOf s target)))
 
 (defn- print-cause [cause & {:keys [caused?] :or {caused? false}}]
   (let [label  (str (if caused? "Caused by " "") (:str cause))

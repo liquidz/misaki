@@ -1,6 +1,6 @@
 (ns misaki.config
   "Configuration Manager"
-  (:use [misaki.util file sequence]
+  (:use [misaki.util file string sequence]
         [clojure.core.incubator :only [-?> -?>>]]
         [clj-time.core :only [date-time year month day]]
         [clostache.parser :only [render]])
@@ -147,14 +147,14 @@
   "Check whether file is layout file or not."
   [#^File file]
   {:pre [(file? file)]}
-  (not= -1 (.indexOf (.getAbsolutePath file) *layout-dir*)))
+  (str-contains? (.getAbsolutePath file) *layout-dir*))
 
 ; =post-file?
 (defn post-file?
   "Check whether file is post file or not."
   [#^File file]
   {:pre [(file? file)]}
-  (not= -1 (.indexOf (.getAbsolutePath file) *post-dir*)))
+  (str-contains? (.getAbsolutePath file) *post-dir*))
 
 ;; ## Converter
 
