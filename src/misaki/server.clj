@@ -57,7 +57,8 @@
             (print-compile-result (str tag-name " tag") (compile-tag tag-name))))
       (do (print-compile-result "all templates" (every? #(compile-template %) tmpls))
           (print-compile-result "all tags"      (every? #(compile-tag (:name %)) tags))))
-    (print-compile-result "clojurescripts" (compile-clojurescripts))))
+    (print-compile-result "clojurescripts" (compile-clojurescripts))
+    (println " * Finish Compiling")))
 
 ; =do-compile
 (defn do-compile
@@ -85,7 +86,8 @@
         ; compile tag
         (if-let [tags (-> file parse-template-option :tag)]
           (doseq [{tag-name :name} tags]
-            (print-compile-result "tag" (compile-tag tag-name))))))))
+            (print-compile-result "tag" (compile-tag tag-name)))))
+      (println " * Finish Compiling"))))
 
 ;; ## Template Watcher
 
