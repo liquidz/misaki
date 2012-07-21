@@ -32,11 +32,10 @@
   [in]
   (let [line-num (atom 1)]
     (proxy [PushbackReader IDeref] [in]
-      (read []
-            (let [c (proxy-super read)]
-              (if (and (not= -1 c) (= \newline (char c)))
-                (swap! line-num inc))
-              c))
+      (read [] (let [c (proxy-super read)]
+                 (if (and (not= -1 c) (= \newline (char c)))
+                   (swap! line-num inc))
+                 c))
       (deref [] @line-num))))
 
 ; =skip-to-token
