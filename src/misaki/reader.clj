@@ -1,6 +1,7 @@
 (ns misaki.reader
   "S-exp Reader."
-  (:use misaki.util.code)
+  (:use misaki.util.code
+        [pretty-error.core :only [set-stack-trace-element!]])
   (:import [java.io StringReader PushbackReader]
            [clojure.lang IDeref]))
 
@@ -53,10 +54,12 @@
 (defn create-exception
   "Create java.lang.RuntimeException with base exception, filename and error line number."
   [ex filename line]
-  (let [e  (RuntimeException. (str "...." (.getMessage ex)))
-        st (StackTraceElement. "misaki.reader" "read-sexp" filename line)]
-    (.setStackTrace e (into-array (list st)))
-    e))
+  (set-stack-trace-element!
+    (RuntimeException. (.getMessage ex))
+    {:class    "misaki.reader"
+     :method   "read-sexp"
+     :filename filename
+     :line     line}))
 
 ; =read-sexp
 (defn read-sexp

@@ -3,9 +3,9 @@
   (:use
     [misaki template config]
     [misaki.util file code sequence string]
-    [misaki.util.error  :only [print-pretty-stack-trace]]
     [hiccup.core :only [html]]
     [hiccup.page :only [html5 xhtml html4]]
+    [pretty-error.core :only [print-pretty-stack-trace]]
     [cljs.closure :only [build]])
   (:require
     [clojure.string :as str]
@@ -13,6 +13,10 @@
   (:import [java.io File]))
 
 (declare file->template-sexp)
+
+(defn- print-misaki-stack-trace [e]
+  (print-pretty-stack-trace
+    e :filter #(str-contains? (:str %) "misaki")))
 
 ;; ## Post Functions
 
@@ -149,9 +153,7 @@
   (try
     (compile* (make-tag-output-filename tag-name)
               (generate-tag-template-sexp tag-name))
-    (catch Exception e
-      (print-pretty-stack-trace e)
-      false)))
+    (catch Exception e (print-misaki-stack-trace e) false)))
 
 ; =compile-template
 (defn compile-template
@@ -162,7 +164,7 @@
   (try
     (compile* (make-template-output-filename tmpl-file)
               (file->template-sexp tmpl-file))
-    (catch Exception e (print-pretty-stack-trace e) false)))
+    (catch Exception e (print-misaki-stack-trace e) false)))
 
 ; =compile-clojurescripts
 (defn compile-clojurescripts
@@ -180,5 +182,5 @@
       (build (:src-dir *cljs-compile-options*)
              *cljs-compile-options*)
       true)
-    (catch Exception e (print-pretty-stack-trace e) false)))
+    (catch Exception e (print-misaki-stack-trace e) false)))
 
