@@ -1,4 +1,4 @@
-(ns misaki.html.util
+(ns misaki.compiler.default.html.util
   "HTML Service Utilities"
   (:require
     [hiccup.page :as page]))

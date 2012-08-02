@@ -1,8 +1,8 @@
-(ns misaki.template
+(ns misaki.compiler.default.template
   "Template file loader"
   (:use
-    [misaki evaluator config]
-    [misaki.util.file :only [file?]]
+    [misaki.compiler.default evaluator config]
+    [misaki.compiler.default.util.file :only [file?]]
     [clojure.core.incubator :only [-?>]])
   (:require [clojure.string :as str]
             [clojure.java.io :as io])

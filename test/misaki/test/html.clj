@@ -1,8 +1,8 @@
 (ns misaki.test.html
   (:use misaki.test.common
-        misaki.html.core
-        [misaki.core :only [make-site-data]]
-        [misaki.config :only [*tag-layout* *site* *url-base*]]
+        misaki.compiler.default.html.core
+        [misaki.compiler.default.core :only [make-site-data]]
+        [misaki.compiler.default.config :only [*tag-layout* *site* *url-base*]]
         [hiccup.core :only [html]])
   (:use [clojure.test])
   (:require [clojure.java.io :as io]))

@@ -1,8 +1,8 @@
-(ns misaki.core
+(ns misaki.compiler.default.core
   "HTML compiler for clojure source."
   (:use
-    [misaki template config]
-    [misaki.util file code sequence string]
+    [misaki.compiler.default template config]
+    [misaki.compiler.default.util file code sequence string]
     [hiccup.core :only [html]]
     [hiccup.page :only [html5 xhtml html4]]
     [pretty-error.core :only [print-pretty-stack-trace]]
@@ -13,10 +13,98 @@
   (:import [java.io File]))
 
 (declare file->template-sexp)
+(declare compile-template)
+(declare compile-clojurescripts)
+(declare compile-tag)
+(declare get-tags)
+
+(declare -all-compile)
 
 (defn- print-misaki-stack-trace [e]
   (print-pretty-stack-trace
     e :filter #(str-contains? (:str %) "misaki")))
+
+;; ## Functions for Plugin
+(defn -extension
+  "Set watch target extension as keyword"
+  []
+  {:post [#(sequential? %)]}
+  (list :clj :cljs))
+
+(defn -config
+  [config]
+  {:pre  [(map? config)]
+   :post [#(map? %)]}
+  (plugin-config config))
+
+(defn -compile
+  [config #^File file]
+  {:pre  [(map? config) (instance? File file)]
+   :post [#(or (true? %) (false? %))]}
+
+  (with-config
+    config
+
+    (cond
+      ; clojurescript
+      (has-extension? ".cljs" file)
+      ;(print-compile-result "clojurescript" (compile-clojurescripts))
+      (compile-clojurescripts)
+
+      ; layout
+      ;(or (layout-file? file) (config-file? file))
+      (layout-file? file)
+      ;(do-all-compile)
+      (-all-compile)
+      ; else
+      :else
+      (do
+        ;(print-compile-result (.getName file) (compile-template file))
+        (compile-template file)
+        (when (post-file? file)
+          ; compile with posts
+          (if (:compile-with-post config)
+            (doseq [tmpl-name (:compile-with-post config)]
+              (-compile (template-name->file tmpl-name))))
+          ; compile tag
+          (if-let [tags (-> file parse-template-option :tag)]
+            (doseq [{tag-name :name} tags]
+              ;(print-compile-result "tag" (compile-tag tag-name)))))
+              (compile-tag tag-name))))
+        ;(println " * Finish Compiling")
+        )))
+  )
+
+(defn -all-compile
+  [config]
+  {:pre  [(map? config)]
+   :post [#(or (true? %) (false? %))]}
+
+  (with-config
+    config
+    (let [tmpls (remove layout-file? (-> config :template-dir find-clj-files))
+          tags  (get-tags)]
+      (if (:detailed-log config)
+        (do (doseq [file tmpls]
+              ;(print-compile-result (.getName file) (compile-template file)))
+              (compile-template file))
+          (doseq [{tag-name :name} tags]
+            ;(print-compile-result (str tag-name " tag") (compile-tag tag-name))))
+            (compile-tag tag-name)))
+
+        (do
+          ;(print-compile-result "all templates" (every? #(compile-template %) tmpls))
+          ;(print-compile-result "all tags"      (every? #(compile-tag (:name %)) tags))
+          (every? #(compile-template %) tmpls)
+          (every? #(compile-tag (:name %)) tags)
+          ))
+      ;(print-compile-result "clojurescripts" (compile-clojurescripts))
+      (compile-clojurescripts)
+      ;(println " * Finish Compiling")
+      )
+    true
+    )
+  )
 
 ;; ## Post Functions
 
@@ -53,7 +141,7 @@
 (defn get-posts
   "Get posts data from *post-dir* directory."
   []
-  (map get-post-info (find-clj-files *post-dir*)))
+  (map get-post-info (find-clj-files (:post-dir *config*))))
 
 ; =get-tagged-posts
 (defn get-tagged-posts
@@ -70,7 +158,11 @@
 (defn get-all-tags
   "Get all(unfiltered) tags from post list."
   []
-  (let [post-files (find-clj-files *post-dir*)]
+  ;(println "-----------------------")
+  ;(println *config*) ; FIXME
+  ;(println "-----------------------")
+  (let [post-files (find-clj-files (:post-dir *config*))]
+    ;(println post-files) ; FIXME
     (remove nil? (mapcat (comp :tag parse-template-option) post-files))))
 
 ; =get-tags
@@ -93,7 +185,7 @@
   {:pre [(file? tmpl-file)]}
   (let [with-tag? (and (not (nil? tags)) (sequential? tags))
         sort-fn   (sort-type->sort-fn)]
-    (assoc (merge *site* base-option)
+    (assoc (merge (:site *config*) base-option)
            :file     tmpl-file
            :posts    (sort-fn (if with-tag? (get-tagged-posts tags) (get-posts)))
            :tags     (get-tags :count-by-name? true)
@@ -117,7 +209,7 @@
   "Generate tag template s-exp from tag name(String) with `*tag-layout*` layout."
   [#^String tag-name]
   {:pre [(string? tag-name)]}
-  (let [file       (io/file *tag-layout*)
+  (let [file       (io/file (:tag-layout *config*))
         tmpl-fn    (load-template file)
         site-data  (make-site-data file :tags [tag-name])
         empty-data (with-meta '("") site-data)]
@@ -129,18 +221,19 @@
 (defn get-compile-fn
   "Get hiccup functon from format option."
   [#^String format-str]
-  (case format-str
-    "html5" #(html5 {:lang *lang*} %)
-    "xhtml" #(xhtml {:lang *lang*} %)
-    "html4" #(html4 %)
-    #(html %)))
+  (let [lang (:lang *config*)]
+    (case format-str
+      "html5" #(html5 {:lang lang} %)
+      "xhtml" #(xhtml {:lang lang} %)
+      "html4" #(html4 %)
+      #(html %))))
 
 ; =compile*
 (defn- compile*
   [#^String output-filename template-sexp]
   {:pre [(string? output-filename) (sequential? template-sexp)]}
   (let [compile-fn (-> template-sexp meta :format get-compile-fn)]
-    (write-file (str *public-dir* output-filename)
+    (write-file (str (:public-dir *config*) output-filename)
                 (compile-fn template-sexp))
     true))
 
@@ -172,15 +265,14 @@
   return true if compile succeeded."
   []
   (try
-    (when *cljs-compile-options*
+    (when-let [option (:cljs-compile-options *config*)]
       ; make directory if not exists
-      (make-directories (:output-to *cljs-compile-options*))
+      (make-directories (:output-to option))
       ; delete existing files
-      (delete-file (:output-to *cljs-compile-options*))
-      (delete-file (str (:output-dir *cljs-compile-options*) "/cljs"))
+      (delete-file (:output-to option))
+      (delete-file (str (:output-dir option) "/cljs"))
       ; build clojurescript
-      (build (:src-dir *cljs-compile-options*)
-             *cljs-compile-options*)
+      (build (:src-dir option) option)
       true)
     (catch Exception e (print-misaki-stack-trace e) false)))
 

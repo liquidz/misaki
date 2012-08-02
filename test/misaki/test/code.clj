@@ -1,6 +1,6 @@
 (ns misaki.test.code
-  (:use misaki.config
-        misaki.util.code
+  (:use misaki.compiler.default.config
+        misaki.compiler.default.util.code
         misaki.test.common
         clojure.test)
   (:require [clojure.string :as str])

@@ -1,13 +1,14 @@
-(ns misaki.html.core
+(ns misaki.compiler.default.html.core
   "misaki: HTML utility for template"
   (:use
-    [misaki.config :only [*site* *url-base* get-index-filename absolute-path]]
-    [misaki.html.conv :only [post-title->url]])
+    ;[misaki.compiler.default.config :only [*site* absolute-path]]
+    misaki.compiler.default.config
+    [misaki.compiler.default.html.conv :only [post-title->url]])
   (:require
     [clojure.string :as str]
     [hiccup.core :as hiccup]
     [hiccup.page :as page]
-    [misaki.html.conv :as conv]))
+    [misaki.compiler.default.html.conv :as conv]))
 
 (declare link)
 

@@ -1,8 +1,8 @@
 (ns misaki.test.conv
   (:use misaki.test.common
-        [misaki.html conv]
-        [misaki.core :only [make-site-data]]
-        [misaki.config :only [*tag-layout* *site*]]
+        [misaki.compiler.default.html conv]
+        [misaki.compiler.default.core :only [make-site-data]]
+        [misaki.compiler.default.config :only [*site*]]
         [clj-time.core :only [date-time]]
         misaki.test.common
         clojure.test)

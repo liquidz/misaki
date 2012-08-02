@@ -1,6 +1,6 @@
 (ns misaki.test.core
-  (:use [misaki core template config server]
-        [misaki.util sequence]
+  (:use [misaki.compiler.default core template config server]
+        [misaki.compiler.default.util sequence]
         misaki.test.common
         [hiccup.core :only [html]]
         [clj-time.core :only [date-time]])

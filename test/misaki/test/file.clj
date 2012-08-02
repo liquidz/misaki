@@ -1,6 +1,6 @@
 (ns misaki.test.file
-  (:use [misaki core]
-        [misaki.util file]
+  (:use [misaki.compiler.default core]
+        [misaki.compiler.default.util file]
         [clj-time.core :only [date-time]]
         misaki.test.common
         clojure.test)

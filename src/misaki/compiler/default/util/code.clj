@@ -1,19 +1,18 @@
-(ns misaki.util.code
+(ns misaki.compiler.default.util.code
   "Here document utility
 
   cf. [http://d.hatena.ne.jp/nokturnalmortum/20100527/1274961805](http://d.hatena.ne.jp/nokturnalmortum/20100527/1274961805)
   "
-  (:use misaki.config
-        [misaki.util.string :only [escape-string]]
+  (:use [misaki.compiler.default.config :only [*config*]]
+        [misaki.compiler.default.util.string :only [escape-string]]
         [clojure.core.incubator :only [-?>>]])
   (:require [clojure.string :as str]))
 
 (defn get-code-type
   "Get code type from code-highlight setting in `config`."
   [s]
-  (let [code-key (keyword s)
-        config   (read-config {})]
-    (get (:code-highlight config) code-key)))
+  (let [code-key (keyword s)]
+    (get (:code-highlight *config* {}) code-key)))
 
 (defn dispatch-reader-macro
   [ch fun]
@@ -21,19 +20,6 @@
                    (.setAccessible true))
                  nil)]
     (aset dm (int ch) fun)))
-
-;(defn read-until
-;  "Read until end text."
-;  [reader end]
-;  (let [end (map int end)]
-;    (->> (loop [res nil e end]
-;           (if (empty? e)
-;             res
-;             (let [c (.read reader)]
-;               (recur (conj res c) (if (= c (first e))
-;                                     (rest e)
-;                                     end)))))
-;      (drop (count end)) reverse (map char) (apply str))))
 
 
 (defn read-until

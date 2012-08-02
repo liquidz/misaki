@@ -1,8 +1,8 @@
-(ns misaki.evaluator
+(ns misaki.compiler.default.evaluator
   "S-exp Template Evaluator.
   Template string is evaluated as Function."
 
-  (:use [misaki.reader :only [read-from-string]]))
+  (:use [misaki.compiler.default.reader :only [read-from-string]]))
 
 ; =def?
 (defn def?
@@ -36,9 +36,9 @@
   [sexp]
   {:pre [(sequential? sexp)]}
   (let [[defs sexp] (split-into-def-and-body sexp)]
-    `(do (use 'misaki.html.core
-              'misaki.html.conv
-              'misaki.html.util)
+    `(do (use 'misaki.compiler.default.html.core
+              'misaki.compiler.default.html.conv
+              'misaki.compiler.default.html.util)
          ~@defs
          (fn [~'contents]
            (let [~'site (meta ~'contents)] ~sexp)))))
