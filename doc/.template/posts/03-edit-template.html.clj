@@ -1,5 +1,5 @@
 (h2 "Template file")
-(p "Template files are compiled with [hiccup](aa).")
+(p "Template files are compiled with [hiccup](https://github.com/weavejester/hiccup/).")
 
 
 (h3 "Example")
@@ -8,10 +8,10 @@
 ; @layout  default
 ; @title   misaki
 
-;; definition your clojure function
+;; define a custom clojure function
 (defn header [s] [:header [:h1 s]])
 
-;; "site" variable to access template options
+;; passing the "site" variable for access to template options
 (header (:title site))
 
 [:h2 "Posts"]
@@ -22,7 +22,7 @@ CLJ
 
 ; /Example
 
-(h3 "Tempalte options")
+(h3 "Template options")
 (p "Template option format:")
 
 #-CLJ
@@ -39,9 +39,9 @@ CLJ
    ]
   )
 
-(h4 "Access tepalte options")
+(h4 "Access template options")
 
-(p "misaki provides `site` variable to access defined tempalte options. For example, you can access template title with `(:title site)`.")
+(p "misaki provides a `site` variable with access to various template options. For example, you can access the template title with `(:title site)`.")
 
 
 (h4 "Site updated date")
@@ -52,13 +52,13 @@ CLJ
 
 (h3 "Functions")
 
-(p "You can define your own function in template or layout. However, special variable(e.g., `site` and `contents`) is not accessible in those functions.")
+(p "You can define your own function in template or layout. However, the special misaki variables (e.g., `site` and `contents`) are not accessible in those functions.")
 
 ; /Functions
 
 (h3 "Posts")
 
-(p "`(:posts site)` is post data list.")
+(p "`(:posts site)` contains a list of clojure hash-maps, one for each blog post.")
 
 
 (h4 "Post data format")
@@ -83,7 +83,7 @@ CLJ
 
 (h3 "Post tags")
 
-(p "`(:tags site)` is all post's tag data list.")
+(p "`(:tags site)` contains a list of hash-maps for a post's tags.")
 
 
 (h4 "Tag data format")
@@ -98,7 +98,7 @@ CLJ
 
 (h3 "Code Highlight")
 
-(p "Codes are highlighted by [google-code-prettify](http://code.google.com/p/google-code-prettify/).")
+(p "Code is highlighted using [google-code-prettify](http://code.google.com/p/google-code-prettify/).")
 
 #-CLJ
 #-CODE
@@ -117,7 +117,7 @@ CLJ
 (h2 "Layout file")
 (h3 "Example")
 
-(p "Layout options is same as template options.")
+(p "Layout options are the same as template options.")
 
 #-CLJ
 ; @title  default title
@@ -128,7 +128,7 @@ CLJ
 [:body contents]
 CLJ
 
-(h4 "Special variable")
+(h4 "Special variables")
 
 (ul [
      (p "`site`: Variable to access layout options.")
