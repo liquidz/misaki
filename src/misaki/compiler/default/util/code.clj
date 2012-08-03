@@ -4,7 +4,7 @@
   cf. [http://d.hatena.ne.jp/nokturnalmortum/20100527/1274961805](http://d.hatena.ne.jp/nokturnalmortum/20100527/1274961805)
   "
   (:use [misaki.compiler.default.config :only [*config*]]
-        [misaki.compiler.default.util.string :only [escape-string]]
+        [misaki.util.string :only [escape-string]]
         [clojure.core.incubator :only [-?>>]])
   (:require [clojure.string :as str]))
 

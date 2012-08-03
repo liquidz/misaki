@@ -65,12 +65,12 @@
 ; =start-watcher
 (defn start-watcher
   "Start watchtower watcher to compile changed templates"
-  []
+  [template-dir]
   ; compile all templates at first
   (do-all-compile)
 
   (watcher
-    [*template-dir*
+    [template-dir
      (str *base-dir* *config-file*)]
     (rate 50)
     (change-first? false) ; do not compile each templates at first
@@ -86,17 +86,14 @@
 (defn -main [& [dir :as args]]
   (binding [*base-dir* (normalize-path dir)]
     (with-config
-      (println "base-dir  : " *base-dir*)
-      (println "url-base  : " *url-base*)
-      (println "public-dir: " *public-dir*)
-
       (if (contains? (set args) "--compile")
         ; compile all only if '--compile' option is specified
         (do-all-compile)
         ; start watching and server
-        (do (start-watcher)
-            (println " * starting server: " (cyan (str "http://localhost:" *port* *url-base*)))
-            (run-jetty
-              (routes (files *url-base* {:root *public-dir*}))
-              {:port *port*}))))))
+        (do (start-watcher *template-dir*)
+          (println " * starting server: "
+                   (cyan (str "http://localhost:" *port* *url-base*)))
+          (run-jetty
+            (routes (files *url-base* {:root *public-dir*}))
+            {:port *port*}))))))
 

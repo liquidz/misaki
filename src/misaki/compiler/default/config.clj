@@ -1,6 +1,6 @@
 (ns misaki.compiler.default.config
   "Configuration Manager"
-  (:use [misaki.compiler.default.util file string sequence]
+  (:use [misaki.util file string sequence]
         [clojure.core.incubator :only [-?> -?>>]]
         [clj-time.core :only [date-time year month day]]
         [clostache.parser :only [render]])
