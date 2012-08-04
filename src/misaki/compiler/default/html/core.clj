@@ -1,8 +1,8 @@
 (ns misaki.compiler.default.html.core
   "misaki: HTML utility for template"
   (:use
-    ;[misaki.compiler.default.config :only [*site* absolute-path]]
-    misaki.compiler.default.config
+    [misaki.compiler.default.config :only [*site*]]
+    [misaki.config :only [get-index-filename absolute-path]]
     [misaki.compiler.default.html.conv :only [post-title->url]])
   (:require
     [clojure.string :as str]

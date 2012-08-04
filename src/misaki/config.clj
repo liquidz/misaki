@@ -1,12 +1,11 @@
 (ns misaki.config
   "Configuration Manager"
-  ;(:use [misaki.util file string sequence]
   (:use [misaki.util file string sequence]
         [clojure.core.incubator :only [-?> -?>>]]
         [clj-time.core :only [date-time year month day]]
         [clostache.parser :only [render]])
   (:require
-    [clojure.string :as str]
+    [clojure.string  :as str]
     [clojure.java.io :as io])
   (:import [java.io File FileNotFoundException]))
 
@@ -33,6 +32,7 @@
 (declare ^:dynamic *template-dir*)
 (declare ^:dynamic *port*)
 (declare ^:dynamic *url-base*)
+(declare ^:dynamic *index-name*)
 (declare ^:dynamic *public-dir*)
 (declare ^:dynamic *compiler*)
 
@@ -68,6 +68,7 @@
       :port         (:port config PORT)
       :lang         (:lang config LANGUAGE)
       :site         (:site config {})
+      :index-name   (:index-name config "")
       :url-base     (normalize-path (:url-base config "/"))
       :detailed-log (:detailed-log config false)
       :compiler     (load-compiler-publics (:compiler config COMPILER)))))
@@ -82,6 +83,7 @@
         *public-dir*   (:public-dir config#)
         *port*         (:port config#)
         *url-base*     (:url-base config#)
+        *index-name*   (:index-name config#)
         *compiler*     (:compiler config#)]
        ~@body)))
 
@@ -93,6 +95,24 @@
   [#^File file]
   {:pre [(file? file)]}
   (= *config-file* (.getName file)))
+
+;; ## Filename Generator
+
+(defn get-index-filename
+  "Get index filename string."
+  []
+  (str *url-base* *index-name*))
+
+; =absolute-path
+(defn absolute-path
+  "Convert path to absolute with *url-base*"
+  [path]
+  (if (re-seq #"^https?://" path)
+    path
+    (let [path (if (.startsWith path "/")
+                 (apply str (drop 1 path))
+                 path)]
+      (str *url-base* path))))
 
 ;; ## Compiler config
 (defn- call-compiler-fn [fn-name & args]
