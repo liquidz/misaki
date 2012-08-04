@@ -163,40 +163,56 @@
          (apply str (drop 1 filename))
          filename)))
 
-(defn process-result [result & {:keys [default-filename]}]
+(defn process-compile-result [result default-filename]
   (cond
+    ; output with default filename
+    (string? result)
+    (if default-filename
+      (do (write-file (add-public-dir default-filename) result)
+          true)
+      false)
+
     ; only check status
     (or (true? result) (false? result))
     result
 
     ; output with detailed data
     (map? result)
-    (let [{:keys [status filename body]
-           :or   {status true
+    (let [{:keys [status   filename body]
+           :or   {status   false
                   filename default-filename}} result]
-      (if filename
+      (if (and filename body)
         (do (write-file (add-public-dir filename) body)
             status)
-        false))
+        status))
 
     ; error
     :else false))
+
+(defn stop-compile? [compile-result]
+  (and (map? compile-result)
+       (true? (:stop-compile? compile-result))))
 
 ; =compiler-all-compile
 (defn compiler-all-compile
   "Call plugin's -all-compile function."
   []
-  ; TODO 対象ファイルをfind-filesで抜き出して渡すようにする
   (let [config (update-config)
-        result (call-compiler-fn :-all-compile config)]
+        exts   (get-watch-file-extensions)
+        files  (filter
+                 (fn [file]
+                   (some #(has-extension? % file) exts))
+                 (find-files *template-dir*))]
 
-    (cond
-      (sequential? result)
-      (every? process-result result)
-
-      (bool? result) result
-
-      :else false)))
+    (loop [[file & rest-files] files, success? true]
+      (if file
+        (let [compile-result (call-compiler-fn :-compile config file)
+              process-result (process-compile-result compile-result (.getName file))
+              result     (and success? process-result)]
+          (if (stop-compile? compile-result)
+            result
+            (recur rest-files result)))
+        success?))))
 
 ; =compiler-compile
 (defn compiler-compile
@@ -204,5 +220,5 @@
   [file]
   (let [config (update-config)
         result (call-compiler-fn :-compile config file)]
-    (process-result result :default-filename (.getName file))))
+    (process-compile-result result (.getName file))))
 

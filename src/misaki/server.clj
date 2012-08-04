@@ -1,7 +1,7 @@
 (ns misaki.server
   "Development server
 
-  Listen *port* to publish developing blog,
+  Listen *port* to publish developing site,
   and watch template updates.
   "
   (:use

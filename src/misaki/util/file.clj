@@ -30,7 +30,8 @@
 (defn has-extension?
   "Check whether file has specified extension or not."
   [ext file]
-  (let [ext (if (.startsWith ext ".")
+  (let [ext (if (keyword? ext) (name ext) ext)
+        ext (if (.startsWith ext ".")
               ext (str "." ext))]
     (.endsWith (.getName file) ext)))
 

@@ -56,12 +56,12 @@
       ;(or (layout-file? file) (config-file? file))
       (layout-file? file)
       ;(do-all-compile)
-      (-all-compile)
+      (let [res (-all-compile config)]
+        {:status res :stop-compile? true})
       ; else
       :else
-      (do
+      (let [res (compile-template file)]
         ;(print-compile-result (.getName file) (compile-template file))
-        (compile-template file)
         (when (post-file? file)
           ; compile with posts
           (if (:compile-with-post config)
@@ -72,6 +72,7 @@
             (doseq [{tag-name :name} tags]
               ;(print-compile-result "tag" (compile-tag tag-name)))))
               (compile-tag tag-name))))
+        res
         ;(println " * Finish Compiling")
         )))
   )
