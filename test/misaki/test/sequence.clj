@@ -1,15 +1,19 @@
 (ns misaki.test.sequence
-  (:use [misaki.compiler.default core]
-        [misaki.compiler.default.util sequence]
+  (:use [misaki.util sequence]
         [clj-time.core :only [date-time]]
-        misaki.test.common
         clojure.test)
   (:require [clojure.java.io :as io]))
 
+(defn- make-dummy-posts []
+  (list
+    {:title "foo" :date (date-time 2011 1 1)}
+    {:title "bar" :date (date-time 2022 2 2)}
+    {:title "baz" :date (date-time 2000 1 1)}))
+
 ;;; sort-by-date
-(deftest* sort-by-date-test
+(deftest sort-by-date-test
   (testing "sort date desc"
-    (let [[p1 p2 p3] (sort-by-date (get-posts))]
+    (let [[p1 p2 p3] (sort-by-date (make-dummy-posts))]
       (are [x y] (= x y)
         ; title
         "bar" (:title p1)
@@ -21,7 +25,7 @@
         (date-time 2000 1 1) (:date p3))))
 
   (testing "sort date inc"
-    (let [[p1 p2 p3] (sort-by-date :inc (get-posts))]
+    (let [[p1 p2 p3] (sort-by-date :inc (make-dummy-posts))]
       (are [x y] (= x y)
         ; title
         "baz" (:title p1)

@@ -1,6 +1,8 @@
 (ns misaki.test.core
-  (:use [misaki.compiler.default core template config server]
-        [misaki.compiler.default.util sequence]
+  (:use [misaki.compiler.default core template config]
+        ;[misaki.compiler.default.util sequence]
+        [misaki.util sequence]
+        misaki.server
         misaki.test.common
         [hiccup.core :only [html]]
         [clj-time.core :only [date-time]])
@@ -156,7 +158,8 @@
           (date-time 2011 1 1) (:date site))))
 
     (testing "with *post-sort-type* => :date (inc)"
-      (binding [*post-sort-type* :date]
+      ;(binding [*post-sort-type* :date]
+      (binding [*config* (assoc *config* :post-sort-type :date)]
         (let [[p1 p2 p3] (:posts (make-site-data file1))]
           (are [x y] (= x y)
             "baz" (:title p1)
@@ -164,7 +167,8 @@
             "bar" (:title p3)))))
 
     (testing "with *post-sort-type* => :name (inc)"
-      (binding [*post-sort-type* :name]
+      (binding [*config* (assoc *config* :post-sort-type :name)]
+      ;(binding [*post-sort-type* :name]
         (let [[p1 p2 p3] (:posts (make-site-data file1))]
           (are [x y] (= x y)
             "baz" (:title p1)
@@ -172,7 +176,8 @@
             "bar" (:title p3)))))
 
     (testing "with *post-sort-type* => :name-desc"
-      (binding [*post-sort-type* :name-desc]
+      (binding [*config* (assoc *config* :post-sort-type :name-desc)]
+      ;(binding [*post-sort-type* :name-desc]
         (let [[p1 p2 p3] (:posts (make-site-data file1))]
           (are [x y] (= x y)
             "bar" (:title p1)
@@ -180,7 +185,8 @@
             "baz" (:title p3)))))
 
     (testing "with *post-sort-type* => :title (inc)"
-      (binding [*post-sort-type* :title]
+      ;(binding [*post-sort-type* :title]
+      (binding [*config* (assoc *config* :post-sort-type :title)]
         (let [[p1 p2 p3] (:posts (make-site-data file1))]
           (are [x y] (= x y)
             "bar" (:title p1)
@@ -188,7 +194,8 @@
             "foo" (:title p3)))))
 
     (testing "with *post-sort-type* => :title-desc"
-      (binding [*post-sort-type* :title-desc]
+      ;(binding [*post-sort-type* :title-desc]
+      (binding [*config* (assoc *config* :post-sort-type :title-desc)]
         (let [[p1 p2 p3] (:posts (make-site-data file1))]
           (are [x y] (= x y)
             "foo" (:title p1)

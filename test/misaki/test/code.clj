@@ -27,24 +27,4 @@
 hello
 EOT
 
-    1 [0 0 1]
-    ))
-;
-;    "hello\nworld" #-EOT
-;hello
-;world
-;EOT
-;
-;    "hello" #-EOT
-;    hello
-;    EOT
-;
-;    "hello\n    world" #-EOT
-;    hello
-;    world
-;    EOT
-;
-;    "&lt;hello /&gt;" #-EOT
-;    <hello />
-;    EOT
-;    ))
+    1 [0 0 1]))

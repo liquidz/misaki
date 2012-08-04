@@ -1,6 +1,5 @@
 (ns misaki.test.reader
   (:use misaki.compiler.default.reader
-        misaki.test.common
         clojure.test)
   (:require
     [clojure.string :as str]
