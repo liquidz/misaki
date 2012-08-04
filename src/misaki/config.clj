@@ -1,12 +1,11 @@
 (ns misaki.config
   "Configuration Manager"
-  ;(:use [misaki.util file string sequence]
   (:use [misaki.util file string sequence]
         [clojure.core.incubator :only [-?> -?>>]]
         [clj-time.core :only [date-time year month day]]
         [clostache.parser :only [render]])
   (:require
-    [clojure.string :as str]
+    [clojure.string  :as str]
     [clojure.java.io :as io])
   (:import [java.io File FileNotFoundException]))
 
@@ -33,6 +32,7 @@
 (declare ^:dynamic *template-dir*)
 (declare ^:dynamic *port*)
 (declare ^:dynamic *url-base*)
+(declare ^:dynamic *index-name*)
 (declare ^:dynamic *public-dir*)
 (declare ^:dynamic *compiler*)
 
@@ -48,7 +48,9 @@
         (catch FileNotFoundException e
           default-value))))
 
+; =load-compiler-publics
 (defn load-compiler-publics
+  "Load specified compiler's public method map."
   [name]
   (let [sym (symbol (str "misaki.compiler." name ".core"))]
     (try
@@ -59,7 +61,10 @@
       (catch FileNotFoundException e
         (load-compiler-publics "default")))))
 
-(defn make-basic-config-map []
+; =make-basic-config-map
+(defn make-basic-config-map
+  "Make basic config to pass plugin's configuration."
+  []
   (let [config (read-config)]
     (assoc
       config
@@ -68,6 +73,7 @@
       :port         (:port config PORT)
       :lang         (:lang config LANGUAGE)
       :site         (:site config {})
+      :index-name   (:index-name config "")
       :url-base     (normalize-path (:url-base config "/"))
       :detailed-log (:detailed-log config false)
       :compiler     (load-compiler-publics (:compiler config COMPILER)))))
@@ -76,12 +82,13 @@
 (defmacro with-config
   "Declare config data, and wrap sexp body with them."
   [& body]
-  `(let [config#   (make-basic-config-map)]
+  `(let [config# (make-basic-config-map)]
      (binding
        [*template-dir* (:template-dir config#)
         *public-dir*   (:public-dir config#)
         *port*         (:port config#)
         *url-base*     (:url-base config#)
+        *index-name*   (:index-name config#)
         *compiler*     (:compiler config#)]
        ~@body)))
 
@@ -94,25 +101,56 @@
   {:pre [(file? file)]}
   (= *config-file* (.getName file)))
 
+;; ## Filename Generator
+
+(defn get-index-filename
+  "Get index filename string."
+  []
+  (str *url-base* *index-name*))
+
+; =absolute-path
+(defn absolute-path
+  "Convert path to absolute with *url-base*"
+  [path]
+  (if (re-seq #"^https?://" path)
+    path
+    (let [path (if (.startsWith path "/")
+                 (apply str (drop 1 path))
+                 path)]
+      (str *url-base* path))))
+
 ;; ## Compiler config
+
+; =call-compiler-fn
 (defn- call-compiler-fn [fn-name & args]
   (let [fn-sym (symbol (name fn-name))
         f      (get *compiler* fn-sym)]
     (apply f args)))
 
-(defn get-watch-file-extensions []
+; =get-watch-file-extensions
+(defn get-watch-file-extensions
+  "Get extensions list to watch."
+  []
   (call-compiler-fn :-extension))
 
-(defn update-config []
+; =update-config
+(defn update-config
+  "Update basic config with plugin's -config function."
+  []
   (let [config (make-basic-config-map)
         res    (call-compiler-fn :-config config)]
     (if res res config)))
 
-
-(defn compiler-all-compile []
+; =compiler-all-compile
+(defn compiler-all-compile
+  "Call plugin's -all-compile function."
+  []
   (let [config (update-config)]
     (call-compiler-fn :-all-compile config)))
 
-(defn compiler-compile [file]
+; =compiler-compile
+(defn compiler-compile
+  "Call plugin's -compile function."
+  [file]
   (let [config (update-config)]
     (call-compiler-fn :-compile config file)))

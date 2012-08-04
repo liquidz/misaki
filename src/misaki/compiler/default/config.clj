@@ -32,7 +32,7 @@
       :post-dir   (str template-dir (:post-dir config))
       :post       (:post-dir config)
       :tag-layout (str layout (:tag-layout config) ".clj")
-      :index-name (:index-name config "")
+;      :index-name (:index-name config "")
       :post-filename-regexp (:post-filename-regexp config POST_FILENAME_REGEXP)
       :post-filename-format (:post-filename-format config POST_OUTPUT_NAME_FORMAT)
       :post-sort-type       (:post-sort-type config :date-desc)
@@ -111,11 +111,6 @@
 
 ;; ## Filename Generator
 
-(defn get-index-filename
-  "Get index filename string."
-  []
-  (str (:url-base *config*) (:index-name *config*)))
-
 ; =make-tag-output-filename
 (defn make-tag-output-filename
   "Make tag output filename from tag name."
@@ -175,16 +170,5 @@
   [#^String tag-name]
   {:pre [(string? tag-name)]}
   (str (:url-base *config*) (make-tag-output-filename tag-name)))
-
-; =absolute-path
-(defn absolute-path
-  "Convert path to absolute with *url-base*"
-  [path]
-  (if (re-seq #"^https?://" path)
-    path
-    (let [path (if (.startsWith path "/")
-                 (apply str (drop 1 path))
-                 path)]
-      (str (:url-base *config*) path))))
 
 

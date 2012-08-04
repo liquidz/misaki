@@ -5,7 +5,6 @@
   and watch template updates.
   "
   (:use
-    ;[misaki core config template]
     [misaki config]
     [misaki.util.file     :only [find-clj-files normalize-path has-extension? file?]]
     [misaki.util.string   :only [msec->string]]

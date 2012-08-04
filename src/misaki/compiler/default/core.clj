@@ -2,6 +2,7 @@
   "HTML compiler for clojure source."
   (:use
     [misaki.compiler.default template config]
+    [misaki.config :only [get-index-filename]]
     [misaki.util file sequence string]
     [hiccup.core :only [html]]
     [hiccup.page :only [html5 xhtml html4]]
