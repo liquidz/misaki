@@ -1,5 +1,5 @@
-(ns misaki.test.html
-  (:use misaki.test.common
+(ns misaki.test.compiler.html
+  (:use misaki.test.compiler.common
         misaki.compiler.default.html.core
         ;misaki.tester
         [misaki.compiler.default.core :only [make-site-data]]

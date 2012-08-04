@@ -1,7 +1,7 @@
-(ns misaki.test.template
+(ns misaki.test.compiler.template
   (:use [misaki.compiler.default template config]
         [hiccup.core :only [html]]
-        misaki.test.common
+        misaki.test.compiler.common
         clojure.test)
   (:require
     [clojure.string :as str]

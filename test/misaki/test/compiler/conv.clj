@@ -1,5 +1,5 @@
-(ns misaki.test.conv
-  (:use misaki.test.common
+(ns misaki.test.compiler.conv
+  (:use misaki.test.compiler.common
         [misaki.compiler.default.html conv]
         [misaki.compiler.default.core :only [make-site-data]]
         [misaki.compiler.default.config :only [*site* *config*]]

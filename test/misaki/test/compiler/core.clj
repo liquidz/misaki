@@ -1,9 +1,9 @@
-(ns misaki.test.core
+(ns misaki.test.compiler.core
   (:use [misaki.compiler.default core template config]
         ;[misaki.compiler.default.util sequence]
         [misaki.util sequence]
         misaki.server
-        misaki.test.common
+        misaki.test.compiler.common
         [hiccup.core :only [html]]
         [clj-time.core :only [date-time]])
   (:use [clojure.test])

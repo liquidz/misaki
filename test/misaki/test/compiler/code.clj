@@ -1,7 +1,7 @@
-(ns misaki.test.code
+(ns misaki.test.compiler.code
   (:use misaki.compiler.default.config
         misaki.compiler.default.util.code
-        misaki.test.common
+        misaki.test.compiler.common
         clojure.test)
   (:require [clojure.string :as str])
   (:import [java.io StringReader]))

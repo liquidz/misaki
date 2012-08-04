@@ -1,4 +1,4 @@
-(ns misaki.test.common
+(ns misaki.test.compiler.common
   (:use [misaki.compiler.default.config :only [*config*]]
 ;        clojure.test
         )
