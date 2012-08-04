@@ -121,11 +121,15 @@
 
 ;; ## Compiler config
 
+(defn- compiler-fn-exists? [fn-name]
+  (let [fn-sym (symbol (name fn-name))]
+    (contains? *compiler* fn-sym)))
+
 ; =call-compiler-fn
 (defn- call-compiler-fn [fn-name & args]
   (let [fn-sym (symbol (name fn-name))
         f      (get *compiler* fn-sym)]
-    (apply f args)))
+    (if f (apply f args))))
 
 ; =get-watch-file-extensions
 (defn get-watch-file-extensions
