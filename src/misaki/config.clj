@@ -16,6 +16,8 @@
 (def POST_FILENAME_REGEXP    #"(\d{4})[-_](\d{1,2})[-_](\d{1,2})[-_](.+)$")
 (def POST_OUTPUT_NAME_FORMAT "{{year}}/{{month}}/{{filename}}")
 
+(defn bool? [x] (or (true? x) (false? x)))
+
 ;; ## Declarations
 
 ;; Blog base directory
@@ -94,6 +96,17 @@
 
 ;; ## File Cheker
 
+(defn key->sym [k] (symbol (name k)))
+
+(defn max-arg-num
+  [fn-name]
+  (let [m  (get *compiler* (key->sym fn-name))
+        ls (-> m meta :arglists)]
+    (if (some #(find-first (partial = '&) %) ls)
+      -1
+      (apply max (map count ls)))))
+
+
 ; =config-file?
 (defn config-file?
   "Check whether file is config file or not."
@@ -122,12 +135,11 @@
 ;; ## Compiler config
 
 (defn- compiler-fn-exists? [fn-name]
-  (let [fn-sym (symbol (name fn-name))]
-    (contains? *compiler* fn-sym)))
+  (contains? *compiler* (key->sym fn-name)))
 
 ; =call-compiler-fn
 (defn- call-compiler-fn [fn-name & args]
-  (let [fn-sym (symbol (name fn-name))
+  (let [fn-sym (key->sym fn-name)
         f      (get *compiler* fn-sym)]
     (if f (apply f args))))
 
@@ -145,16 +157,54 @@
         res    (call-compiler-fn :-config config)]
     (if res res config)))
 
+(defn add-public-dir [filename]
+  (str *public-dir*
+       (if (.startsWith filename "/")
+         (apply str (drop 1 filename))
+         filename)))
+
+(defn process-result [result & {:keys [default-filename]}]
+  (cond
+    ; only check status
+    (or (true? result) (false? result))
+    result
+
+    ; output with detailed data
+    (map? result)
+    (let [{:keys [status filename body]
+           :or   {status true
+                  filename default-filename}} result]
+      (if filename
+        (do (write-file (add-public-dir filename) body)
+            status)
+        false))
+
+    ; error
+    :else false))
+
 ; =compiler-all-compile
 (defn compiler-all-compile
   "Call plugin's -all-compile function."
   []
-  (let [config (update-config)]
-    (call-compiler-fn :-all-compile config)))
+  (let [config (update-config)
+        result (call-compiler-fn :-all-compile config)]
+
+    (cond
+      (sequential? result)
+      (do
+        (println "result = " result)
+        (every? process-result result)
+        )
+
+      (bool? result) result
+
+      :else false)))
 
 ; =compiler-compile
 (defn compiler-compile
   "Call plugin's -compile function."
   [file]
-  (let [config (update-config)]
-    (call-compiler-fn :-compile config file)))
+  (let [config (update-config)
+        result (call-compiler-fn :-compile config file)]
+    (process-result result :default-filename (.getName file))))
+
