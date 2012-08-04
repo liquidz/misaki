@@ -186,15 +186,13 @@
 (defn compiler-all-compile
   "Call plugin's -all-compile function."
   []
+  ; TODO 対象ファイルをfind-filesで抜き出して渡すようにする
   (let [config (update-config)
         result (call-compiler-fn :-all-compile config)]
 
     (cond
       (sequential? result)
-      (do
-        (println "result = " result)
-        (every? process-result result)
-        )
+      (every? process-result result)
 
       (bool? result) result
 

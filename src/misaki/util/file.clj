@@ -30,7 +30,9 @@
 (defn has-extension?
   "Check whether file has specified extension or not."
   [ext file]
-  (.endsWith (.getName file) ext))
+  (let [ext (if (.startsWith ext ".")
+              ext (str "." ext))]
+    (.endsWith (.getName file) ext)))
 
 ; =extension-filter
 (defn extension-filter
