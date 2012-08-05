@@ -14,39 +14,40 @@
     [compojure.route      :only [files]]
     [ring.adapter.jetty   :only [run-jetty]]))
 
-; =elapsing
-(defmacro elapsing
-  [& body]
-  `(let [start-time# (System/currentTimeMillis)
-         ~'get-elapsed-time (fn [] (- (System/currentTimeMillis) start-time#))]
-     ~@body))
-
-; =get-result-text
-(defn- get-result-text
-  [result & optional-string]
-  (case result
-    true  (cyan (apply str "DONE" optional-string))
-    false (red (apply str "FAIL" optional-string))
-    (cyan "SKIP")))
-
-; =print-result
-(defmacro print-compile-result
-  "Print colored compile result."
-  [#^String message, compile-sexp]
-  `(do
-     (println (str " * Compiling " (bold ~message)))
-     (flush)
-     (elapsing
-       (let [result#  ~compile-sexp
-             elapsed# (msec->string (~'get-elapsed-time))]
-       (println "  " (get-result-text result# " in " elapsed#))))))
+;; =elapsing
+;(defmacro elapsing
+;  [& body]
+;  `(let [start-time# (System/currentTimeMillis)
+;         ~'get-elapsed-time (fn [] (- (System/currentTimeMillis) start-time#))]
+;     ~@body))
+;
+;; =get-result-text
+;(defn- get-result-text
+;  [result & optional-string]
+;  (case result
+;    true  (cyan (apply str "DONE" optional-string))
+;    false (red (apply str "FAIL" optional-string))
+;    (cyan "SKIP")))
+;
+;; =print-result
+;(defmacro print-compile-result
+;  "Print colored compile result."
+;  [#^String message, compile-sexp]
+;  `(do
+;     (println (str " * Compiling " (bold ~message)))
+;     (flush)
+;     (elapsing
+;       (let [result#  ~compile-sexp
+;             elapsed# (msec->string (~'get-elapsed-time))]
+;       (println "  " (get-result-text result# " in " elapsed#))))))
 
 
 ;; ## Dev Compiler
 
 ; =do-all-compile
 (defn do-all-compile []
-  (print-compile-result "all templates" (compiler-all-compile))
+  ;(print-compile-result "all templates" (compiler-all-compile))
+  (compiler-all-compile)
   (println " * Finish Compiling"))
 
 ; =do-compile
@@ -54,8 +55,10 @@
   [#^java.io.File file]
 
   (if (config-file? file)
-    (print-compile-result "all templates" (compiler-all-compile))
-    (print-compile-result (.getName file) (compiler-compile file)))
+    ;(print-compile-result "all templates" (compiler-all-compile))
+    ;(print-compile-result (.getName file) (compiler-compile file)))
+    (compiler-all-compile)
+    (compiler-compile file))
 
   (println " * Finish Compiling"))
 

@@ -245,10 +245,11 @@
   return true if compile succeeded."
   [#^String tag-name]
   {:pre [(string? tag-name)]}
-  (try
+  ;(try
     (compile* (make-tag-output-filename tag-name)
               (generate-tag-template-sexp tag-name))
-    (catch Exception e (print-misaki-stack-trace e) false)))
+  ;  (catch Exception e (print-misaki-stack-trace e) false))
+  )
 
 ; =compile-template
 (defn compile-template
@@ -256,17 +257,18 @@
   return true if compile succeeded."
   [#^File tmpl-file]
   {:pre [(file? tmpl-file)]}
-  (try
+  ;(try
     (compile* (make-template-output-filename tmpl-file)
               (file->template-sexp tmpl-file))
-    (catch Exception e (print-misaki-stack-trace e) false)))
+  ;  (catch Exception e (print-misaki-stack-trace e) false))
+  )
 
 ; =compile-clojurescripts
 (defn compile-clojurescripts
   "Compile clojurescripts.
   return true if compile succeeded."
   []
-  (try
+  ;(try
     (when-let [option (:cljs-compile-options *config*)]
       ; make directory if not exists
       (make-directories (:output-to option))
@@ -276,5 +278,6 @@
       ; build clojurescript
       (build (:src-dir option) option)
       true)
-    (catch Exception e (print-misaki-stack-trace e) false)))
+  ;  (catch Exception e (print-misaki-stack-trace e) false))
+  )
 

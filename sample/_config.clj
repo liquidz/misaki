@@ -58,7 +58,7 @@
 
  ;; flag for detailed log
  ;;   default value: false
- :detailed-log false
+ :detailed-log true;false
 
  :compiler "default"
  }

@@ -2,8 +2,10 @@
   "Configuration Manager"
   (:use [misaki.util file string sequence]
         [clojure.core.incubator :only [-?> -?>>]]
-        [clj-time.core :only [date-time year month day]]
-        [clostache.parser :only [render]])
+        [clj-time.core          :only [date-time year month day]]
+        [text-decoration.core   :only [cyan red bold]]
+        [pretty-error.core      :only [print-pretty-stack-trace]]
+        [clostache.parser       :only [render]])
   (:require
     [clojure.string  :as str]
     [clojure.java.io :as io])
@@ -37,6 +39,8 @@
 (declare ^:dynamic *index-name*)
 (declare ^:dynamic *public-dir*)
 (declare ^:dynamic *compiler*)
+(declare ^:dynamic *detailed-log*)
+(def     ^:dynamic *nolog* false)
 
 ;; ## Config Data Wrapper
 
@@ -91,6 +95,7 @@
         *port*         (:port config#)
         *url-base*     (:url-base config#)
         *index-name*   (:index-name config#)
+        *detailed-log* (:detailed-log config#)
         *compiler*     (:compiler config#)]
        ~@body)))
 
@@ -189,36 +194,112 @@
     ; error
     :else false))
 
+(defn get-template-files []
+  (let [exts (get-watch-file-extensions)]
+    (filter
+      (fn [file]
+        (some #(has-extension? % file) exts))
+      (find-files *template-dir*))))
+
 (defn stop-compile? [compile-result]
   (and (map? compile-result)
        (true? (:stop-compile? compile-result))))
 
+; {{{
+; =elapsing
+(defmacro elapsing
+  [& body]
+  `(let [start-time# (System/currentTimeMillis)
+         ~'get-elapsed-time (fn [] (- (System/currentTimeMillis) start-time#))]
+     ~@body))
+
+; =get-result-text
+(defn- get-result-text
+  [result & optional-string]
+  (case result
+    true  (cyan (apply str "DONE" optional-string))
+    false (red (apply str "FAIL" optional-string))
+    (cyan "SKIP")))
+
+; =print-result
+(defmacro print-compile-result
+  "Print colored compile result."
+  [#^String message, compile-sexp]
+  `(do
+     (println (str " * Compiling " (bold ~message)))
+     (flush)
+     (elapsing
+       (let [result#  ~compile-sexp
+             elapsed# (msec->string (~'get-elapsed-time))]
+       (println "  " (get-result-text result# " in " elapsed#))))))
+; }}}
+
+(defn compile* [config file]
+  (try
+    (let [compile-result (call-compiler-fn :-compile config file)
+          process-result (process-compile-result compile-result (.getName file))]
+      [process-result compile-result])
+    (catch Exception e
+      (print-pretty-stack-trace
+        e :filter #(str-contains? (:str %) "misaki"))
+      [false {:stop-compile? true}])))
+
 ; =compiler-all-compile
 (defn compiler-all-compile
-  "Call plugin's -all-compile function."
+  "Call plugin's -compile function for all template files."
   []
   (let [config (update-config)
-        exts   (get-watch-file-extensions)
-        files  (filter
-                 (fn [file]
-                   (some #(has-extension? % file) exts))
-                 (find-files *template-dir*))]
+        files  (get-template-files)]
+    (if-not *detailed-log*
+      (do (println (str " * Compiling " (bold "all templates"))) (flush)))
 
-    (loop [[file & rest-files] files, success? true]
-      (if file
-        (let [compile-result (call-compiler-fn :-compile config file)
-              process-result (process-compile-result compile-result (.getName file))
-              result     (and success? process-result)]
-          (if (stop-compile? compile-result)
-            result
-            (recur rest-files result)))
-        success?))))
+    (elapsing
+      (let [res (loop [[file & rest-files] files, success? true]
+                  (if file
+                    (do
+                      (when *detailed-log*
+                        (println (str " * Compiling " (bold (.getName file))))
+                        (flush))
+                      (elapsing
+                        (let [[process-result compile-result] (compile* config file)
+                               result (and success? process-result)]
+                          ; compile-result 内にメッセージを指定できるようにする
+                          ; => stop する場合にそのメッセージを表示する
+                          ;    他に表示するパターンはあってもおｋ
+                          ;    or
+                          ;    detailed-logを廃止にするとすっきりする。。
+
+                          (if *detailed-log*
+                            (println
+                              (str "  " (get-result-text process-result)
+                                   " in " (msec->string (get-elapsed-time)))))
+                          (if (stop-compile? compile-result)
+                            result
+                            (recur rest-files result))
+
+                          )))
+                    success?))]
+        (if-not *detailed-log*
+          (println
+            "  " (get-result-text res)
+            " in " (msec->string (get-elapsed-time)))))
+      )))
 
 ; =compiler-compile
 (defn compiler-compile
   "Call plugin's -compile function."
   [file]
-  (let [config (update-config)
-        result (call-compiler-fn :-compile config file)]
-    (process-compile-result result (.getName file))))
+  (let [config (update-config)]
+    (println (str " * Compiling " (bold (.getName file))))
+    (flush)
+    (elapsing
+      (let [[result] (compile* config file)]
+        (println
+          "  " (get-result-text result)
+          " in " (msec->string (get-elapsed-time)))))))
+
+
+
+
+
 
