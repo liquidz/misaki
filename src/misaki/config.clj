@@ -39,8 +39,6 @@
 (declare ^:dynamic *index-name*)
 (declare ^:dynamic *public-dir*)
 (declare ^:dynamic *compiler*)
-(declare ^:dynamic *detailed-log*)
-(def     ^:dynamic *nolog* false)
 
 ;; ## Config Data Wrapper
 
@@ -81,7 +79,6 @@
       :site         (:site config {})
       :index-name   (:index-name config "")
       :url-base     (normalize-path (:url-base config "/"))
-      :detailed-log (:detailed-log config false)
       :compiler     (load-compiler-publics (:compiler config COMPILER)))))
 
 ; =with-config
@@ -95,7 +92,6 @@
         *port*         (:port config#)
         *url-base*     (:url-base config#)
         *index-name*   (:index-name config#)
-        *detailed-log* (:detailed-log config#)
         *compiler*     (:compiler config#)]
        ~@body)))
 
@@ -205,35 +201,6 @@
   (and (map? compile-result)
        (true? (:stop-compile? compile-result))))
 
-; {{{
-; =elapsing
-(defmacro elapsing
-  [& body]
-  `(let [start-time# (System/currentTimeMillis)
-         ~'get-elapsed-time (fn [] (- (System/currentTimeMillis) start-time#))]
-     ~@body))
-
-; =get-result-text
-(defn- get-result-text
-  [result & optional-string]
-  (case result
-    true  (cyan (apply str "DONE" optional-string))
-    false (red (apply str "FAIL" optional-string))
-    (cyan "SKIP")))
-
-; =print-result
-(defmacro print-compile-result
-  "Print colored compile result."
-  [#^String message, compile-sexp]
-  `(do
-     (println (str " * Compiling " (bold ~message)))
-     (flush)
-     (elapsing
-       (let [result#  ~compile-sexp
-             elapsed# (msec->string (~'get-elapsed-time))]
-       (println "  " (get-result-text result# " in " elapsed#))))))
-; }}}
-
 (defn compile* [config file]
   (try
     (let [compile-result (call-compiler-fn :-compile config file)
@@ -250,53 +217,21 @@
   []
   (let [config (update-config)
         files  (get-template-files)]
-    (if-not *detailed-log*
-      (do (println (str " * Compiling " (bold "all templates"))) (flush)))
-
-    (elapsing
-      (let [res (loop [[file & rest-files] files, success? true]
-                  (if file
-                    (do
-                      (when *detailed-log*
-                        (println (str " * Compiling " (bold (.getName file))))
-                        (flush))
-                      (elapsing
-                        (let [[process-result compile-result] (compile* config file)
-                               result (and success? process-result)]
-                          ; compile-result 内にメッセージを指定できるようにする
-                          ; => stop する場合にそのメッセージを表示する
-                          ;    他に表示するパターンはあってもおｋ
-                          ;    or
-                          ;    detailed-logを廃止にするとすっきりする。。
-
-                          (if *detailed-log*
-                            (println
-                              (str "  " (get-result-text process-result)
-                                   " in " (msec->string (get-elapsed-time)))))
-                          (if (stop-compile? compile-result)
-                            result
-                            (recur rest-files result))
-
-                          )))
-                    success?))]
-        (if-not *detailed-log*
-          (println
-            "  " (get-result-text res)
-            " in " (msec->string (get-elapsed-time)))))
-      )))
+    (loop [[file & rest-files] files, success? true]
+      (if file
+        (let [[process-result compile-result] (compile* config file)
+              result (and success? process-result)]
+          (if (stop-compile? compile-result)
+            result
+            (recur rest-files result)))
+        success?))))
 
 ; =compiler-compile
 (defn compiler-compile
   "Call plugin's -compile function."
   [file]
-  (let [config (update-config)]
-    (println (str " * Compiling " (bold (.getName file))))
-    (flush)
-    (elapsing
-      (let [[result] (compile* config file)]
-        (println
-          "  " (get-result-text result)
-          " in " (msec->string (get-elapsed-time)))))))
+  (let [[result] (compile* (update-config) file)]
+    result))
 
 
 
