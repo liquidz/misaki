@@ -2,6 +2,7 @@
   "HTML compiler for clojure source."
   (:use
     [misaki.compiler.default template config]
+    [misaki.server :only [print-compile-result]]
     [misaki.config :only [get-index-filename]]
     [misaki.util file sequence string]
     [hiccup.core :only [html]]
@@ -49,19 +50,15 @@
     (cond
       ; clojurescript
       (has-extension? ".cljs" file)
-      ;(print-compile-result "clojurescript" (compile-clojurescripts))
       (compile-clojurescripts)
 
       ; layout
-      ;(or (layout-file? file) (config-file? file))
       (layout-file? file)
-      ;(do-all-compile)
-      (let [res (-all-compile config)]
-        {:status res :stop-compile? true})
+      {:status (-all-compile config), :stop-compile? true}
+
       ; else
       :else
       (let [res (compile-template file)]
-        ;(print-compile-result (.getName file) (compile-template file))
         (when (post-file? file)
           ; compile with posts
           (if (:compile-with-post config)
@@ -70,12 +67,8 @@
           ; compile tag
           (if-let [tags (-> file parse-template-option :tag)]
             (doseq [{tag-name :name} tags]
-              ;(print-compile-result "tag" (compile-tag tag-name)))))
               (compile-tag tag-name))))
-        res
-        ;(println " * Finish Compiling")
-        )))
-  )
+        res))))
 
 (defn -all-compile
   [config]
@@ -88,25 +81,16 @@
           tags  (get-tags)]
       (if (:detailed-log config)
         (do (doseq [file tmpls]
-              ;(print-compile-result (.getName file) (compile-template file)))
-              (compile-template file))
-          (doseq [{tag-name :name} tags]
-            ;(print-compile-result (str tag-name " tag") (compile-tag tag-name))))
-            (compile-tag tag-name)))
+              (print-compile-result (.getName file) (compile-template file)))
+            (doseq [{tag-name :name} tags]
+              (print-compile-result (str tag-name " tag") (compile-tag tag-name))))
 
-        (do
-          ;(print-compile-result "all templates" (every? #(compile-template %) tmpls))
-          ;(print-compile-result "all tags"      (every? #(compile-tag (:name %)) tags))
-          (every? #(compile-template %) tmpls)
-          (every? #(compile-tag (:name %)) tags)
-          ))
-      ;(print-compile-result "clojurescripts" (compile-clojurescripts))
-      (compile-clojurescripts)
-      ;(println " * Finish Compiling")
-      )
-    true
-    )
-  )
+        (do (every? #(compile-template %) tmpls)
+            (every? #(compile-tag (:name %)) tags)))
+      (if (:detailed-log config)
+        (print-compile-result "clojurescripts" (compile-clojurescripts))
+        (compile-clojurescripts)))
+    true))
 
 ;; ## Post Functions
 
@@ -245,11 +229,8 @@
   return true if compile succeeded."
   [#^String tag-name]
   {:pre [(string? tag-name)]}
-  ;(try
-    (compile* (make-tag-output-filename tag-name)
-              (generate-tag-template-sexp tag-name))
-  ;  (catch Exception e (print-misaki-stack-trace e) false))
-  )
+  (compile* (make-tag-output-filename tag-name)
+            (generate-tag-template-sexp tag-name)))
 
 ; =compile-template
 (defn compile-template
@@ -257,27 +238,21 @@
   return true if compile succeeded."
   [#^File tmpl-file]
   {:pre [(file? tmpl-file)]}
-  ;(try
-    (compile* (make-template-output-filename tmpl-file)
-              (file->template-sexp tmpl-file))
-  ;  (catch Exception e (print-misaki-stack-trace e) false))
-  )
+  (compile* (make-template-output-filename tmpl-file)
+            (file->template-sexp tmpl-file)))
 
 ; =compile-clojurescripts
 (defn compile-clojurescripts
   "Compile clojurescripts.
   return true if compile succeeded."
   []
-  ;(try
-    (when-let [option (:cljs-compile-options *config*)]
-      ; make directory if not exists
-      (make-directories (:output-to option))
-      ; delete existing files
-      (delete-file (:output-to option))
-      (delete-file (str (:output-dir option) "/cljs"))
-      ; build clojurescript
-      (build (:src-dir option) option)
-      true)
-  ;  (catch Exception e (print-misaki-stack-trace e) false))
-  )
+  (when-let [option (:cljs-compile-options *config*)]
+    ; make directory if not exists
+    (make-directories (:output-to option))
+    ; delete existing files
+    (delete-file (:output-to option))
+    (delete-file (str (:output-dir option) "/cljs"))
+    ; build clojurescript
+    (build (:src-dir option) option)
+    true))
 

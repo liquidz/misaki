@@ -29,10 +29,10 @@
     (assoc
       config
       :layout-dir layout
-      :post-dir   (str template-dir (:post-dir config))
-      :post       (:post-dir config)
-      :tag-layout (str layout (:tag-layout config) ".clj")
-;      :index-name (:index-name config "")
+      :post-dir     (str template-dir (:post-dir config))
+      :post         (:post-dir config)
+      :tag-layout   (str layout (:tag-layout config) ".clj")
+      :detailed-log (:detailed-log config false)
       :post-filename-regexp (:post-filename-regexp config POST_FILENAME_REGEXP)
       :post-filename-format (:post-filename-format config POST_OUTPUT_NAME_FORMAT)
       :post-sort-type       (:post-sort-type config :date-desc)

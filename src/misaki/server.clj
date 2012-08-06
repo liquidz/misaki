@@ -22,7 +22,7 @@
      ~@body))
 
 ; =get-result-text
-(defn- get-result-text
+(defn get-result-text
   [result & optional-string]
   (case result
     true  (cyan (apply str "DONE" optional-string))
