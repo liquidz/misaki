@@ -63,7 +63,7 @@
           ; compile with posts
           (if (:compile-with-post config)
             (doseq [tmpl-name (:compile-with-post config)]
-              (-compile (template-name->file tmpl-name))))
+              (-compile config (template-name->file tmpl-name))))
           ; compile tag
           (if-let [tags (-> file parse-template-option :tag)]
             (doseq [{tag-name :name} tags]

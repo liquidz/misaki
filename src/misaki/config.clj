@@ -4,7 +4,6 @@
         [clojure.core.incubator :only [-?> -?>>]]
         [clj-time.core          :only [date-time year month day]]
         [text-decoration.core   :only [cyan red bold]]
-        [pretty-error.core      :only [print-pretty-stack-trace]]
         [clostache.parser       :only [render]])
   (:require
     [clojure.string  :as str]
@@ -97,17 +96,6 @@
 
 ;; ## File Cheker
 
-(defn key->sym [k] (symbol (name k)))
-
-(defn max-arg-num
-  [fn-name]
-  (let [m  (get *compiler* (key->sym fn-name))
-        ls (-> m meta :arglists)]
-    (if (some #(find-first (partial = '&) %) ls)
-      -1
-      (apply max (map count ls)))))
-
-
 ; =config-file?
 (defn config-file?
   "Check whether file is config file or not."
@@ -117,6 +105,7 @@
 
 ;; ## Filename Generator
 
+; =get-index-filename
 (defn get-index-filename
   "Get index filename string."
   []
@@ -128,113 +117,11 @@
   [path]
   (if (re-seq #"^https?://" path)
     path
-    (let [path (if (.startsWith path "/")
-                 (apply str (drop 1 path))
-                 path)]
-      (str *url-base* path))))
+    (combine-path *url-base* path)))
 
-;; ## Compiler config
-
-(defn- compiler-fn-exists? [fn-name]
-  (contains? *compiler* (key->sym fn-name)))
-
-; =call-compiler-fn
-(defn- call-compiler-fn [fn-name & args]
-  (let [fn-sym (key->sym fn-name)
-        f      (get *compiler* fn-sym)]
-    (if f (apply f args))))
-
-; =get-watch-file-extensions
-(defn get-watch-file-extensions
-  "Get extensions list to watch."
-  []
-  (call-compiler-fn :-extension))
-
-; =update-config
-(defn update-config
-  "Update basic config with plugin's -config function."
-  []
-  (let [config (make-basic-config-map)
-        res    (call-compiler-fn :-config config)]
-    (if res res config)))
-
-(defn add-public-dir [filename]
-  (str *public-dir*
-       (if (.startsWith filename "/")
-         (apply str (drop 1 filename))
-         filename)))
-
-(defn process-compile-result [result default-filename]
-  (cond
-    ; output with default filename
-    (string? result)
-    (if default-filename
-      (do (write-file (add-public-dir default-filename) result)
-          true)
-      false)
-
-    ; only check status
-    (or (true? result) (false? result))
-    result
-
-    ; output with detailed data
-    (map? result)
-    (let [{:keys [status   filename body]
-           :or   {status   false
-                  filename default-filename}} result]
-      (if (and filename body)
-        (do (write-file (add-public-dir filename) body)
-            status)
-        status))
-
-    ; error
-    :else false))
-
-(defn get-template-files []
-  (let [exts (get-watch-file-extensions)]
-    (filter
-      (fn [file]
-        (some #(has-extension? % file) exts))
-      (find-files *template-dir*))))
-
-(defn stop-compile? [compile-result]
-  (and (map? compile-result)
-       (true? (:stop-compile? compile-result))))
-
-(defn compile* [config file]
-  (try
-    (let [compile-result (call-compiler-fn :-compile config file)
-          process-result (process-compile-result compile-result (.getName file))]
-      [process-result compile-result])
-    (catch Exception e
-      (print-pretty-stack-trace
-        e :filter #(str-contains? (:str %) "misaki"))
-      [false {:stop-compile? true}])))
-
-; =compiler-all-compile
-(defn compiler-all-compile
-  "Call plugin's -compile function for all template files."
-  []
-  (let [config (update-config)
-        files  (get-template-files)]
-    (loop [[file & rest-files] files, success? true]
-      (if file
-        (let [[process-result compile-result] (compile* config file)
-              result (and success? process-result)]
-          (if (stop-compile? compile-result)
-            result
-            (recur rest-files result)))
-        success?))))
-
-; =compiler-compile
-(defn compiler-compile
-  "Call plugin's -compile function."
-  [file]
-  (let [[result] (compile* (update-config) file)]
-    result))
-
-
-
-
-
+; =add-public-dir
+(defn add-public-dir
+  "Add public dir to specified path."
+  [filename]
+  (combine-path *public-dir* filename))
 

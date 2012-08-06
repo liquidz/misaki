@@ -5,7 +5,7 @@
   and watch template updates.
   "
   (:use
-    [misaki config]
+    [misaki core config]
     [misaki.util.file     :only [find-clj-files normalize-path has-extension? file?]]
     [misaki.util.string   :only [msec->string]]
     [text-decoration.core :only [cyan red bold]]

@@ -31,12 +31,20 @@
     (binding [*base-dir* "/foo/bar/"]
       (is (= {} (read-config {}))))))
 
+;;; absolute-path
+(deftest* absolute-path-test
+  (with-config
+    (are [x y] (= x (absolute-path y))
+      "/a.htm" "a.htm"
+      "/bar/a.htm" "bar/a.htm"
+      "/a.htm" "/a.htm"
+      "/bar/a.htm" "/bar/a.htm"
+      "http://localhost/a.htm" "http://localhost/a.htm"
+      "https://localhost/a.htm" "https://localhost/a.htm")
 
-(deftest max-arg-num-test
-  (binding [*compiler* (-> 'misaki.test.config find-ns ns-publics)]
-    (are [x y] (= x y)
-      0  (max-arg-num :dummy0)
-      1  (max-arg-num :dummy1)
-      2  (max-arg-num :dummy2)
-      3  (max-arg-num :dummy3)
-      -1 (max-arg-num :dummy4))))
+    (binding [*url-base* "/foo/"]
+      (are [x y] (= x (absolute-path y))
+        "/foo/a.htm" "a.htm"
+        "/foo/a.htm" "/a.htm"
+        "/foo/bar/a.htm" "/bar/a.htm"
+        "/foo/bar/a.htm" "bar/a.htm"))))

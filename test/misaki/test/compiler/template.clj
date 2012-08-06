@@ -33,8 +33,9 @@
           (is (not (contains? option :dummy)))))))
 
   (testing "Parse template option from File"
-    (let [file   (io/file (str *template-dir* "index.html.clj"))
-          option (parse-template-option file)]
+    (let [template-dir (:template-dir *config*)
+          file         (io/file (str template-dir "index.html.clj"))
+          option       (parse-template-option file)]
       (are [x y] (= x y)
         "index"   (:title option)
         "hello"   (:test option)
@@ -55,7 +56,8 @@
 (deftest* load-template-data-test
   (letfn [(del-crln [s] (str/replace s #"[\r\n]" ""))]
     (testing "Single template"
-      (let [file (io/file (str *layout-dir* "div.clj"))
+      (let [layout-dir     (:layout-dir *config*)
+            file           (io/file (str layout-dir "div.clj"))
             [data :as res] (load-template-data file)]
         (are [x y] (= x y)
           true (seq? res)
@@ -66,7 +68,8 @@
           "div title" (-> data second :title))))
 
     (testing "Template with layout"
-      (let [file (io/file (str *template-dir* "index.html.clj"))
+      (let [template-dir  (:template-dir *config*)
+            file (io/file (str template-dir "index.html.clj"))
             [parent child :as res] (load-template-data file)]
         (are [x y] (= x y)
           true (seq? res)
@@ -82,30 +85,31 @@
 
 ;;; load-template
 (deftest* load-template-test
-  (testing "Load single template"
-    (let [f (load-template (io/file (str *template-dir* "single.html.clj")))]
-      (are [x y] (= x y)
-        "<h1>single</h1>"
-        (html (apply-template f '("")))
+  (let [template-dir (:template-dir *config*)]
+    (testing "Load single template"
+      (let [f (load-template (io/file (str template-dir "single.html.clj")))]
+        (are [x y] (= x y)
+          "<h1>single</h1>"
+          (html (apply-template f '("")))
 
-        "<h1>dummy</h1>"
-        (html (apply-template f (with-meta '("") {:title "dummy"}))))))
+          "<h1>dummy</h1>"
+          (html (apply-template f (with-meta '("") {:title "dummy"}))))))
 
-  (testing "Load layouted template"
-    (let [f (load-template (io/file (str *template-dir* "index.html.clj")))]
-      (are [x y] (= x y)
-        "<head><title>index</title></head><body><h1>index</h1><p>world</p></body>"
-        (html (apply-template f '("")))
+    (testing "Load layouted template"
+      (let [f (load-template (io/file (str template-dir "index.html.clj")))]
+        (are [x y] (= x y)
+          "<head><title>index</title></head><body><h1>index</h1><p>world</p></body>"
+          (html (apply-template f '("")))
 
-        "<head><title>dummy</title></head><body><h1>dummy</h1><p>world</p></body>"
-        (html (apply-template f (with-meta '("") {:title "dummy"}))))))
+          "<head><title>dummy</title></head><body><h1>dummy</h1><p>world</p></body>"
+          (html (apply-template f (with-meta '("") {:title "dummy"}))))))
 
-  (testing "Load layouted template with NOT allow-layout flag"
-    (let [f (load-template (io/file (str *template-dir* "index.html.clj")) false)]
-      (are [x y] (= x y)
-        "<h1>index</h1><p>world</p>"
-        (html (apply-template f '("")))
+    (testing "Load layouted template with NOT allow-layout flag"
+      (let [f (load-template (io/file (str template-dir "index.html.clj")) false)]
+        (are [x y] (= x y)
+          "<h1>index</h1><p>world</p>"
+          (html (apply-template f '("")))
 
-        "<h1>dummy</h1><p>world</p>"
-        (html (apply-template f (with-meta '("") {:title "dummy"})))))))
+          "<h1>dummy</h1><p>world</p>"
+          (html (apply-template f (with-meta '("") {:title "dummy"}))))))))
 

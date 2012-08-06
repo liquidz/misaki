@@ -1,10 +1,7 @@
 (ns misaki.test.compiler.html
   (:use misaki.test.compiler.common
         misaki.compiler.default.html.core
-        ;misaki.tester
-        [misaki.compiler.default.core :only [make-site-data]]
-        ;[misaki.compiler.default.config :only [*tag-layout* *site* *url-base*]]
-        ;[misaki.compiler.default.config :only [*site* *url-base*]]
+        [misaki.compiler.default.core   :only [make-site-data]]
         [misaki.compiler.default.config :only [*site* *config*]]
         [misaki.config :only [*url-base*]]
         [hiccup.core :only [html]])
@@ -64,40 +61,39 @@
     "<code class=\"prettyprint\">(+ 1 2)</code>" (html (code "(+ 1 2)"))))
 
 (deftest* paragraph-test
-  (let [config (get-config)]
-    (binding [*site* (make-site-data (io/file (:tag-layout config)))]
-      (testing "normal paragraph"
-        (are [x y] (= x (html y))
-          "<p class=\"paragraph\">hello</p>" (p "hello")
-          "<p class=\"paragraph\">helloworld</p>" (p "hello" "world")))
+  (binding [*site* (make-site-data (io/file (:tag-layout *config*)))]
+    (testing "normal paragraph"
+      (are [x y] (= x (html y))
+        "<p class=\"paragraph\">hello</p>" (p "hello")
+        "<p class=\"paragraph\">helloworld</p>" (p "hello" "world")))
 
-      (testing "inline code"
-        (are [x y] (= x (html y))
-          "<p class=\"paragraph\">he<code class=\"prettyprint\">ll</code>o</p>" (p "he`ll`o")))
+    (testing "inline code"
+      (are [x y] (= x (html y))
+        "<p class=\"paragraph\">he<code class=\"prettyprint\">ll</code>o</p>" (p "he`ll`o")))
 
-      (testing "strong paragraph"
-        (are [x y] (= x (html y))
-          "<p class=\"paragraph\">he<strong>ll</strong>o</p>" (p "he**ll**o")))
+    (testing "strong paragraph"
+      (are [x y] (= x (html y))
+        "<p class=\"paragraph\">he<strong>ll</strong>o</p>" (p "he**ll**o")))
 
-      (testing "emphasized paragraph"
-        (are [x y] (= x (html y))
-          "<p class=\"paragraph\">he<em>ll</em>o</p>" (p "he*ll*o")))
+    (testing "emphasized paragraph"
+      (are [x y] (= x (html y))
+        "<p class=\"paragraph\">he<em>ll</em>o</p>" (p "he*ll*o")))
 
-      (testing "strong and emphasized paragraph"
-        (are [x y] (= x (html y))
-          "<p class=\"paragraph\"><strong>he</strong>l<em>lo</em></p>" (p "**he**l*lo*")))
+    (testing "strong and emphasized paragraph"
+      (are [x y] (= x (html y))
+        "<p class=\"paragraph\"><strong>he</strong>l<em>lo</em></p>" (p "**he**l*lo*")))
 
-      (testing "inline link"
-        (are [x y] (= x (html y))
-          "<p class=\"paragraph\"><a href=\"a.html\">a</a></p>" (p "[a](a.html)")
-          "<p class=\"paragraph\"><a href=\"/2011-01/foo.html\">a</a></p>" (p "[a](title:foo)")))
+    (testing "inline link"
+      (are [x y] (= x (html y))
+        "<p class=\"paragraph\"><a href=\"a.html\">a</a></p>" (p "[a](a.html)")
+        "<p class=\"paragraph\"><a href=\"/2011-01/foo.html\">a</a></p>" (p "[a](title:foo)")))
 
-      (testing "new-line"
-        (are [x y] (= x (html y))
-          "<p class=\"paragraph\">a<br />b</p>" (p "a\n\nb")
-          "<p class=\"paragraph\">a<br />\nb</p>" (p "a\n\n\nb")
-          "<p class=\"paragraph\">a\r\nb</p>" (p "a\r\nb")
-          "<p class=\"paragraph\">a<br />b</p>" (p "a\r\n\r\nb"))))))
+    (testing "new-line"
+      (are [x y] (= x (html y))
+        "<p class=\"paragraph\">a<br />b</p>" (p "a\n\nb")
+        "<p class=\"paragraph\">a<br />\nb</p>" (p "a\n\n\nb")
+        "<p class=\"paragraph\">a\r\nb</p>" (p "a\r\nb")
+        "<p class=\"paragraph\">a<br />b</p>" (p "a\r\n\r\nb")))))
 
 (deftest* js-test
   (testing "basic pattern"
@@ -112,7 +108,7 @@
       "<script src=\"/a.js\" type=\"text/javascript\"></script>" (absolute-js "/a.js")
       "<script src=\"/bar/a.js\" type=\"text/javascript\"></script>" (absolute-js "/bar/a.js")
       "<script src=\"http://localhost/a.js\" type=\"text/javascript\"></script>" (absolute-js "http://localhost/a.js"))
-    (binding [*config* (assoc *config* :url-base "/foo/")]
+    (binding [*url-base* "/foo/"]
       (are [x y] (= x (html (first y)))
         "<script src=\"/foo/a.js\" type=\"text/javascript\"></script>" (absolute-js "a.js")
         "<script src=\"/foo/a.js\" type=\"text/javascript\"></script>" (absolute-js "/a.js")
@@ -136,7 +132,7 @@
       "<link href=\"/a.css\" rel=\"stylesheet\" type=\"text/css\" />" (first (absolute-css "/a.css"))
       "<link href=\"/bar/a.css\" rel=\"stylesheet\" type=\"text/css\" />" (first (absolute-css "/bar/a.css"))
       "<link href=\"http://localhost/a.css\" rel=\"stylesheet\" type=\"text/css\" />" (first (absolute-css "http://localhost/a.css")))
-    (binding [*config* (assoc *config* :url-base "/foo/")]
+    (binding [*url-base* "/foo/"]
       (are [x y] (= x (html y))
         "<link href=\"/foo/a.css\" rel=\"stylesheet\" type=\"text/css\" />" (first (absolute-css "a.css"))
         "<link href=\"/foo/a.css\" rel=\"stylesheet\" type=\"text/css\" />" (first (absolute-css "/a.css"))

@@ -20,6 +20,15 @@
   [path]
   (if path (if (.endsWith path "/") path (str path "/"))))
 
+; =combine-path
+(defn combine-path
+  "Combine two path."
+  [path1 path2]
+  (str path1 (if (.startsWith path2 "/")
+               (apply str (drop 1 path2))
+               path2)))
+
+
 ; =find-files
 (defn find-files
   "Find files in `dir` recursively."

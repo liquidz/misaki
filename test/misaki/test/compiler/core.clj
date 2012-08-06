@@ -11,16 +11,18 @@
 
 ;;; generate-post-content
 (deftest* generate-post-content-test
-  (let [file1 (io/file (str *post-dir* "2000.01.01-foo.html.clj"))
-        file2 (io/file (str *post-dir* "2011.01.01-foo.html.clj"))]
+  (let [post-dir (:post-dir *config*)
+        file1    (io/file (str post-dir "2000.01.01-foo.html.clj"))
+        file2    (io/file (str post-dir "2011.01.01-foo.html.clj"))]
     (are [x y] (= x y)
       "<p>baz</p>" (generate-post-content file1)
       "<p>foo</p>" (generate-post-content file2))))
 
 ;;; get-post-info
 (deftest* get-post-info-test
-  (let [file (io/file (str *post-dir* "2000.01.01-foo.html.clj"))
-        data (get-post-info file)]
+  (let [post-dir (:post-dir *config*)
+        file     (io/file (str post-dir "2000.01.01-foo.html.clj"))
+        data     (get-post-info file)]
     (are [x y] (= x y)
       "baz"   (:title data)
       "world" (:hello data)
@@ -31,8 +33,9 @@
 
 ;;; post-inf-contains-tag?
 (deftest* post-contains-tag?-test
-  (let [file (io/file (str *post-dir* "2011.01.01-foo.html.clj"))
-        data (get-post-info file)]
+  (let [post-dir (:post-dir *config*)
+        file     (io/file (str post-dir "2011.01.01-foo.html.clj"))
+        data     (get-post-info file)]
     (are [x y] (= x y)
       false (post-info-contains-tag? data "tag1")
       true  (post-info-contains-tag? data "tag2")
@@ -113,10 +116,11 @@
 
 ;;; make-site-data
 (deftest* make-site-data-test
-  (let [file1   (io/file (str *post-dir* "2000.01.01-foo.html.clj"))
-        file2   (io/file (str *post-dir* "2011.01.01-foo.html.clj"))
-        option1 (parse-template-option file1)
-        option2 (parse-template-option file2)]
+  (let [post-dir (:post-dir *config*)
+        file1    (io/file (str post-dir "2000.01.01-foo.html.clj"))
+        file2    (io/file (str post-dir "2011.01.01-foo.html.clj"))
+        option1  (parse-template-option file1)
+        option2  (parse-template-option file2)]
 
     (testing "simple site data"
       (let [site (make-site-data file1 :base-option option1)
@@ -205,8 +209,9 @@
 
 ;;; file->template-sexp
 (deftest* file->template-sexp-test
-  (let [file1 (template-name->file "index.html.clj")
-        file2 (io/file (str *post-dir* "2011.01.01-foo.html.clj"))
+  (let [post-dir (:post-dir *config*)
+        file1    (template-name->file "index.html.clj")
+        file2    (io/file (str post-dir "2011.01.01-foo.html.clj"))
         ]
     (are [x y] (= x y)
       ; index.html.clj
@@ -236,18 +241,20 @@
 
 ;;; compile-tag-test
 (deftest* compile-tag-test
-  (let [tag-name "tag1"
-        res (compile-tag tag-name)
-        file (io/file (str *public-dir* *tag-out-dir* tag-name ".html"))]
+  (let [{:keys [public-dir tag-out-dir]} *config*
+        tag-name "tag1"
+        res      (compile-tag tag-name)
+        file     (io/file (str public-dir tag-out-dir tag-name ".html"))]
     (is res)
     (is (.exists file))
     (.delete file)))
 
 ;;; compile-template
 (deftest* compile-template-test
-  (let [tmpl (io/file (str *template-dir* "index.html.clj"))
-        res (compile-template tmpl)
-        file (io/file (str *public-dir* (make-template-output-filename tmpl)))]
+  (let [{:keys [public-dir template-dir]} *config*
+        tmpl (io/file (str template-dir "index.html.clj"))
+        res  (compile-template tmpl)
+        file (io/file (str public-dir (make-template-output-filename tmpl)))]
     (is res)
     (is (.exists file))
     (.delete file)))
@@ -272,22 +279,24 @@
 
 ;; SERVER
 (deftest* compile-cljs-test
-  (do-compile (io/file (str *template-dir* "cljs/hello.cljs")))
-  (let [js-file   (io/file (str *public-dir* "js/main.js"))
-        core-file (io/file (str *public-dir* "js/cljs"))]
-    (is (.exists js-file))
-    (is (.exists core-file))
-    (.delete js-file)
-    (.delete core-file)
-    (.. js-file getParentFile delete)))
+  (let [{:keys [template-dir public-dir]} *config*]
+    (do-compile (io/file (str template-dir "cljs/hello.cljs")))
+    (let [js-file   (io/file (str public-dir "js/main.js"))
+          core-file (io/file (str public-dir "js/cljs"))]
+      (is (.exists js-file))
+      (is (.exists core-file))
+      (.delete js-file)
+      (.delete core-file)
+      (.. js-file getParentFile delete))))
 
 (deftest* server-test
   (testing "compile with post"
-    (do-compile (io/file (str *post-dir* "2011.01.01-foo.html.clj")))
-    (let [post-file (io/file (str *public-dir* "2011-01/foo.html"))
-          test-file (io/file (str *public-dir* "index.html"))]
-      (is (.exists post-file))
-      (.delete post-file)
-      (is (.exists test-file))
-      (.delete test-file))))
+    (let [{:keys [post-dir public-dir]} *config*]
+      (do-compile (io/file (str post-dir "2011.01.01-foo.html.clj")))
+      (let [post-file (io/file (str public-dir "2011-01/foo.html"))
+            test-file (io/file (str public-dir "index.html"))]
+        (is (.exists post-file))
+        (.delete post-file)
+        (is (.exists test-file))
+        (.delete test-file)))))
 
