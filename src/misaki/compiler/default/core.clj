@@ -3,14 +3,15 @@
   (:use
     [misaki.compiler.default template config]
     [misaki.server :only [print-compile-result]]
-    [misaki.config :only [get-index-filename template-name->file post-file?]]
+    ;[misaki.config :only [get-index-filename template-name->file post-file?]]
     [misaki.util file sequence string]
     [hiccup.core :only [html]]
     [hiccup.page :only [html5 xhtml html4]]
     [pretty-error.core :only [print-pretty-stack-trace]]
     [cljs.closure :only [build]])
   (:require
-    [clojure.string :as str]
+    [misaki.config   :as cnf]
+    [clojure.string  :as str]
     [clojure.java.io :as io])
   (:import [java.io File]))
 
@@ -59,11 +60,11 @@
       ; else
       :else
       (let [res (compile-template file)]
-        (when (post-file? file)
+        (when (cnf/post-file? file)
           ; compile with posts
           (if (:compile-with-post config)
             (doseq [tmpl-name (:compile-with-post config)]
-              (-compile config {:file (template-name->file tmpl-name)})))
+              (-compile config {:file (cnf/template-name->file tmpl-name)})))
           ; compile tag
           (if-let [tags (-> file parse-template-option :tag)]
             (doseq [{tag-name :name} tags]
@@ -111,7 +112,7 @@
   (assoc (parse-template-option post-file)
          :file post-file
          :url  (make-post-url post-file)
-         :date (get-date-from-file post-file)
+         :date (cnf/get-date-from-file post-file)
          :lazy-content (delay (escape-string (generate-post-content post-file)))))
 
 ; =post-info-contains-tag?
@@ -172,8 +173,8 @@
            :posts    (sort-fn (if with-tag? (get-tagged-posts tags) (get-posts)))
            :tags     (get-tags :count-by-name? true)
            :tag-name (if with-tag? (str/join "," tags))
-           :index    (get-index-filename)
-           :date     (get-date-from-file tmpl-file))))
+           :index    (cnf/get-index-filename)
+           :date     (cnf/get-date-from-file tmpl-file))))
 
 ; =file->template-sexp
 (defn file->template-sexp

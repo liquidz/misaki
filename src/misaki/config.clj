@@ -38,6 +38,7 @@
 (declare ^:dynamic *index-name*)
 (declare ^:dynamic *public-dir*)
 (declare ^:dynamic *post-dir*)
+(declare ^:dynamic *post-filename-regexp*)
 (declare ^:dynamic *compiler*)
 
 ;; ## Config Data Wrapper
@@ -75,7 +76,6 @@
       config
       :public-dir   (combine-path *base-dir* (:public-dir config))
       :template-dir template-dir
-      :post         (:post-dir config)
       :post-dir     (combine-path template-dir (:post-dir config))
       :post-filename-regexp (:post-filename-regexp config POST_FILENAME_REGEXP)
       :post-filename-format (:post-filename-format config POST_OUTPUT_NAME_FORMAT)
@@ -95,6 +95,7 @@
        [*template-dir* (:template-dir config#)
         *public-dir*   (:public-dir config#)
         *post-dir*     (:post-dir config#)
+        *post-filename-regexp* (:post-filename-regexp config#)
         *port*         (:port config#)
         *url-base*     (:url-base config#)
         *index-name*   (:index-name config#)
@@ -116,6 +117,26 @@
   [#^File file]
   {:pre [(file? file)]}
   (str-contains? (.getAbsolutePath file) *post-dir*))
+
+;; ## Filename Date Utility
+
+; =get-date-from-file
+(defn get-date-from-file
+  "Get date from file(java.io.File) with `*post-filename-regexp*`."
+  [#^File post-file]
+  (let [date-seq (-?>> post-file (.getName)
+                      (re-seq *post-filename-regexp*)
+                      nfirst drop-last)] ; last = filename
+    (if (and date-seq (= 3 (count date-seq))
+             (every? #(re-matches #"^[0-9]+$" %) date-seq))
+      (apply date-time (map #(Integer/parseInt %) date-seq)))))
+
+; =remove-date-from-name
+(defn remove-date-from-name
+  "Remove date string from filename(String)."
+  [#^String filename]
+  {:pre [(string? filename)]}
+  (last (first (re-seq *post-filename-regexp* filename))))
 
 ;; ## Filename Generator
 

@@ -1,12 +1,12 @@
 (ns misaki.compiler.default.config
   "Configuration Manager"
   (:use [misaki.util file string sequence]
-        [misaki.config :only [post-file? template-name->file]]
         [clojure.core.incubator :only [-?> -?>>]]
         [clj-time.core :only [date-time year month day]]
         [clostache.parser :only [render]])
   (:require
-    [clojure.string :as str]
+    [misaki.config   :as cnf]
+    [clojure.string  :as str]
     [clojure.java.io :as io])
   (:import [java.io File FileNotFoundException]))
 
@@ -91,23 +91,23 @@
 
 ;; ## Filename Date Utility
 
-; =get-date-from-file
-(defn get-date-from-file
-  "Get date from file(java.io.File) with `*post-filename-regexp*`."
-  [#^File post-file]
-  (let [date-seq (-?>> post-file (.getName)
-                      (re-seq (:post-filename-regexp *config*))
-                      nfirst drop-last)] ; last = filename
-    (if (and date-seq (= 3 (count date-seq))
-             (every? #(re-matches #"^[0-9]+$" %) date-seq))
-      (apply date-time (map #(Integer/parseInt %) date-seq)))))
-;
-; =remove-date-from-name
-(defn remove-date-from-name
-  "Remove date string from filename(String)."
-  [#^String filename]
-  {:pre [(string? filename)]}
-  (last (first (re-seq (:post-filename-regexp *config*) filename))))
+;;; =get-date-from-file
+;;(defn get-date-from-file
+;;  "Get date from file(java.io.File) with `*post-filename-regexp*`."
+;;  [#^File post-file]
+;;  (let [date-seq (-?>> post-file (.getName)
+;;                      (re-seq (:post-filename-regexp *config*))
+;;                      nfirst drop-last)] ; last = filename
+;;    (if (and date-seq (= 3 (count date-seq))
+;;             (every? #(re-matches #"^[0-9]+$" %) date-seq))
+;;      (apply date-time (map #(Integer/parseInt %) date-seq)))))
+;;;
+;;; =remove-date-from-name
+;;(defn remove-date-from-name
+;;  "Remove date string from filename(String)."
+;;  [#^String filename]
+;;  {:pre [(string? filename)]}
+;;  (last (first (re-seq (:post-filename-regexp *config*) filename))))
 
 ;; ## Filename Generator
 
@@ -123,9 +123,9 @@
   "Make post output filename from java.io.File."
   [#^File file]
   {:pre [(file? file)]}
-  (let [date     (get-date-from-file file)
+  (let [date     (cnf/get-date-from-file file)
         filename (if date
-                   (-?> (.getName file) remove-date-from-name remove-extension)
+                   (-?> (.getName file) cnf/remove-date-from-name remove-extension)
                    (remove-extension (.getName file)))]
     (render (:post-filename-format *config*)
             {:year  (-?> date year str)
@@ -140,11 +140,11 @@
 
 (defmethod make-template-output-filename String
   [tmpl-name]
-  (make-template-output-filename (template-name->file tmpl-name)))
+  (make-template-output-filename (cnf/template-name->file tmpl-name)))
 
 (defmethod make-template-output-filename File
   [file]
-  (if (post-file? file)
+  (if (cnf/post-file? file)
     (make-post-output-filename file)
     (remove-extension (.getName file))))
 
