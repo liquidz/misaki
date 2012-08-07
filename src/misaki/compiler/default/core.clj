@@ -3,7 +3,7 @@
   (:use
     [misaki.compiler.default template config]
     [misaki.server :only [print-compile-result]]
-    [misaki.config :only [get-index-filename]]
+    [misaki.config :only [get-index-filename template-name->file post-file?]]
     [misaki.util file sequence string]
     [hiccup.core :only [html]]
     [hiccup.page :only [html5 xhtml html4]]
@@ -40,7 +40,7 @@
   (plugin-config config))
 
 (defn -compile
-  [config #^File file]
+  [config {:keys [file]}]
   {:pre  [(map? config) (instance? File file)]
    :post [#(or (true? %) (false? %))]}
 
@@ -63,7 +63,7 @@
           ; compile with posts
           (if (:compile-with-post config)
             (doseq [tmpl-name (:compile-with-post config)]
-              (-compile config (template-name->file tmpl-name))))
+              (-compile config {:file (template-name->file tmpl-name)})))
           ; compile tag
           (if-let [tags (-> file parse-template-option :tag)]
             (doseq [{tag-name :name} tags]

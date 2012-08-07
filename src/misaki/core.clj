@@ -77,7 +77,8 @@
 
 (defn compile* [config file]
   (try
-    (let [compile-result (call-compiler-fn :-compile config file)
+    (let [data {:file file}
+          compile-result (call-compiler-fn :-compile config data)
           process-result (process-compile-result compile-result (.getName file))]
       [process-result compile-result])
     (catch Exception e

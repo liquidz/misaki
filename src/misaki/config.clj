@@ -37,6 +37,7 @@
 (declare ^:dynamic *url-base*)
 (declare ^:dynamic *index-name*)
 (declare ^:dynamic *public-dir*)
+(declare ^:dynamic *post-dir*)
 (declare ^:dynamic *compiler*)
 
 ;; ## Config Data Wrapper
@@ -68,11 +69,16 @@
 (defn make-basic-config-map
   "Make basic config to pass plugin's configuration."
   []
-  (let [config (read-config)]
+  (let [config       (read-config)
+        template-dir (combine-path *base-dir* (:template-dir config))]
     (assoc
       config
-      :public-dir   (str *base-dir* (:public-dir config))
-      :template-dir (str *base-dir* (:template-dir config))
+      :public-dir   (combine-path *base-dir* (:public-dir config))
+      :template-dir template-dir
+      :post         (:post-dir config)
+      :post-dir     (combine-path template-dir (:post-dir config))
+      :post-filename-regexp (:post-filename-regexp config POST_FILENAME_REGEXP)
+      :post-filename-format (:post-filename-format config POST_OUTPUT_NAME_FORMAT)
       :port         (:port config PORT)
       :lang         (:lang config LANGUAGE)
       :site         (:site config {})
@@ -88,6 +94,7 @@
      (binding
        [*template-dir* (:template-dir config#)
         *public-dir*   (:public-dir config#)
+        *post-dir*     (:post-dir config#)
         *port*         (:port config#)
         *url-base*     (:url-base config#)
         *index-name*   (:index-name config#)
@@ -103,13 +110,27 @@
   {:pre [(file? file)]}
   (= *config-file* (.getName file)))
 
+; =post-file?
+(defn post-file?
+  "Check whether file is post file or not."
+  [#^File file]
+  {:pre [(file? file)]}
+  (str-contains? (.getAbsolutePath file) *post-dir*))
+
 ;; ## Filename Generator
 
 ; =get-index-filename
 (defn get-index-filename
   "Get index filename string."
   []
-  (str *url-base* *index-name*))
+  (combine-path *url-base* *index-name*))
+
+; =template-name->file
+(defn template-name->file
+  "Convert template name to java.io.File."
+  [#^String tmpl-name]
+  {:pre [(string? tmpl-name)]}
+  (io/file (combine-path *template-dir* tmpl-name)))
 
 ; =absolute-path
 (defn absolute-path

@@ -1,6 +1,7 @@
 (ns misaki.compiler.default.config
   "Configuration Manager"
   (:use [misaki.util file string sequence]
+        [misaki.config :only [post-file? template-name->file]]
         [clojure.core.incubator :only [-?> -?>>]]
         [clj-time.core :only [date-time year month day]]
         [clostache.parser :only [render]])
@@ -29,12 +30,11 @@
     (assoc
       config
       :layout-dir layout
-      :post-dir     (str template-dir (:post-dir config))
-      :post         (:post-dir config)
+;      :post         (:post-dir config)
       :tag-layout   (str layout (:tag-layout config) ".clj")
       :detailed-log (:detailed-log config false)
-      :post-filename-regexp (:post-filename-regexp config POST_FILENAME_REGEXP)
-      :post-filename-format (:post-filename-format config POST_OUTPUT_NAME_FORMAT)
+;      :post-filename-regexp (:post-filename-regexp config POST_FILENAME_REGEXP)
+;      :post-filename-format (:post-filename-format config POST_OUTPUT_NAME_FORMAT)
       :post-sort-type       (:post-sort-type config :date-desc)
       :cljs-compile-options
       (if cljs
@@ -59,22 +59,22 @@
   {:pre [(file? file)]}
   (str-contains? (.getAbsolutePath file) (:layout-dir *config*)))
 
-; =post-file?
-(defn post-file?
-  "Check whether file is post file or not."
-  [#^File file]
-  {:pre [(file? file)]}
-  (str-contains? (.getAbsolutePath file) (:post-dir *config*)))
+;; =post-file?
+;(defn post-file?
+;  "Check whether file is post file or not."
+;  [#^File file]
+;  {:pre [(file? file)]}
+;  (str-contains? (.getAbsolutePath file) (:post-dir *config*)))
 
 ;; ## Converter
 
-; =template-name->file
-(defn template-name->file
-  "Convert template name to java.io.File."
-  [#^String tmpl-name]
-  {:pre [(string? tmpl-name)]}
-  ;(io/file (str *template-dir* tmpl-name)))
-  (io/file (str (:template-dir *config*) tmpl-name)))
+;; =template-name->file
+;(defn template-name->file
+;  "Convert template name to java.io.File."
+;  [#^String tmpl-name]
+;  {:pre [(string? tmpl-name)]}
+;  ;(io/file (str *template-dir* tmpl-name)))
+;  (io/file (str (:template-dir *config*) tmpl-name)))
 
 (defn sort-type->sort-fn
   "Convert sort-type keyword to sort function."

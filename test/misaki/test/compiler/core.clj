@@ -2,6 +2,7 @@
   (:use [misaki.compiler.default core template config]
         ;[misaki.compiler.default.util sequence]
         [misaki.util sequence]
+        [misaki.config :only [template-name->file]]
         misaki.server
         misaki.test.compiler.common
         [hiccup.core :only [html]]
