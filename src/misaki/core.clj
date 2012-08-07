@@ -74,11 +74,18 @@
     ; error
     :else false))
 
+(defn- make-compile-param [file]
+  {:file file
+   :date (get-date-from-file file)
+   :out-name
+     (cond
+       (post-file? file) (make-post-output-filename file)
+       :else             (.getName file))})
 
 (defn compile* [config file]
   (try
-    (let [data {:file file}
-          compile-result (call-compiler-fn :-compile config data)
+    (let [param          (make-compile-param file)
+          compile-result (call-compiler-fn :-compile config param)
           process-result (process-compile-result compile-result (.getName file))]
       [process-result compile-result])
     (catch Exception e

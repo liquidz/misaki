@@ -88,27 +88,6 @@
     :title-desc (partial sort-alphabetically :desc #(:title %))
     sort-by-date))
 
-
-;; ## Filename Date Utility
-
-;;; =get-date-from-file
-;;(defn get-date-from-file
-;;  "Get date from file(java.io.File) with `*post-filename-regexp*`."
-;;  [#^File post-file]
-;;  (let [date-seq (-?>> post-file (.getName)
-;;                      (re-seq (:post-filename-regexp *config*))
-;;                      nfirst drop-last)] ; last = filename
-;;    (if (and date-seq (= 3 (count date-seq))
-;;             (every? #(re-matches #"^[0-9]+$" %) date-seq))
-;;      (apply date-time (map #(Integer/parseInt %) date-seq)))))
-;;;
-;;; =remove-date-from-name
-;;(defn remove-date-from-name
-;;  "Remove date string from filename(String)."
-;;  [#^String filename]
-;;  {:pre [(string? filename)]}
-;;  (last (first (re-seq (:post-filename-regexp *config*) filename))))
-
 ;; ## Filename Generator
 
 ; =make-tag-output-filename
@@ -118,20 +97,20 @@
   {:pre [(string? tag-name)]}
   (str (:tag-out-dir *config*) tag-name ".html"))
 
-; =make-post-output-filename
-(defn make-post-output-filename
-  "Make post output filename from java.io.File."
-  [#^File file]
-  {:pre [(file? file)]}
-  (let [date     (cnf/get-date-from-file file)
-        filename (if date
-                   (-?> (.getName file) cnf/remove-date-from-name remove-extension)
-                   (remove-extension (.getName file)))]
-    (render (:post-filename-format *config*)
-            {:year  (-?> date year str)
-             :month (-?>> date month (format "%02d"))
-             :day   (-?>> date day (format "%02d"))
-             :filename filename})))
+;;;; =make-post-output-filename
+;;;(defn make-post-output-filename
+;;;  "Make post output filename from java.io.File."
+;;;  [#^File file]
+;;;  {:pre [(file? file)]}
+;;;  (let [date     (cnf/get-date-from-file file)
+;;;        filename (if date
+;;;                   (-?> (.getName file) cnf/remove-date-from-name remove-extension)
+;;;                   (remove-extension (.getName file)))]
+;;;    (render (:post-filename-format *config*)
+;;;            {:year  (-?> date year str)
+;;;             :month (-?>> date month (format "%02d"))
+;;;             :day   (-?>> date day (format "%02d"))
+;;;             :filename filename})))
 ;
 ; =make-template-output-filename
 (defmulti make-template-output-filename
@@ -145,7 +124,7 @@
 (defmethod make-template-output-filename File
   [file]
   (if (cnf/post-file? file)
-    (make-post-output-filename file)
+    (remove-extension (cnf/make-post-output-filename file))
     (remove-extension (.getName file))))
 
 ; =make-layout-filename

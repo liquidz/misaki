@@ -39,6 +39,7 @@
 (declare ^:dynamic *public-dir*)
 (declare ^:dynamic *post-dir*)
 (declare ^:dynamic *post-filename-regexp*)
+(declare ^:dynamic *post-filename-format*)
 (declare ^:dynamic *compiler*)
 
 ;; ## Config Data Wrapper
@@ -96,6 +97,7 @@
         *public-dir*   (:public-dir config#)
         *post-dir*     (:post-dir config#)
         *post-filename-regexp* (:post-filename-regexp config#)
+        *post-filename-format* (:post-filename-format config#)
         *port*         (:port config#)
         *url-base*     (:url-base config#)
         *index-name*   (:index-name config#)
@@ -145,6 +147,20 @@
   "Get index filename string."
   []
   (combine-path *url-base* *index-name*))
+
+; =make-post-output-filename
+(defn make-post-output-filename
+  "Make post output filename from java.io.File."
+  [#^File file]
+  {:pre [(file? file)]}
+  (let [date     (get-date-from-file file)
+        filename (if date (remove-date-from-name (.getName file))
+                          (.getName file))]
+    (render *post-filename-format*
+            {:year     (-?>  date year  str)
+             :month    (-?>> date month (format "%02d"))
+             :day      (-?>> date day   (format "%02d"))
+             :filename filename})))
 
 ; =template-name->file
 (defn template-name->file
