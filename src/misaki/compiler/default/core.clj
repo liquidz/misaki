@@ -144,11 +144,7 @@
 (defn get-all-tags
   "Get all(unfiltered) tags from post list."
   []
-  ;(println "-----------------------")
-  ;(println *config*) ; FIXME
-  ;(println "-----------------------")
   (let [post-files (find-clj-files (:post-dir *config*))]
-    ;(println post-files) ; FIXME
     (remove nil? (mapcat (comp :tag parse-template-option) post-files))))
 
 ; =get-tags

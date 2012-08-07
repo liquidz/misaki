@@ -54,7 +54,7 @@
 (defn find-clj-files
   "Find *.clj files in `dir` recursively."
   [dir]
-  (extension-filter ".clj" (find-files dir)))
+  (extension-filter :clj (find-files dir)))
 
 ; =remove-extension
 (defn remove-extension
