@@ -61,10 +61,6 @@
       :else
       (let [res (compile-template file)]
         (when (cnf/post-file? file)
-          ;; compile with posts
-          ;(if (:compile-with-post config)
-          ;  (doseq [tmpl-name (:compile-with-post config)]
-          ;    (-compile config {:file (cnf/template-name->file tmpl-name)})))
           ; compile tag
           (if-let [tags (-> file parse-template-option :tag)]
             (doseq [{tag-name :name} tags]

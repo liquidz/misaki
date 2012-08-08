@@ -294,12 +294,24 @@
 
 (deftest* server-test
   (testing "compile with post"
-    (let [{:keys [post-dir public-dir]} *config*]
+    (let [{:keys [post-dir public-dir tag-out-dir]} *config*]
       (do-compile (io/file (str post-dir "2011.01.01-foo.html.clj")))
       (let [post-file (io/file (str public-dir "2011-01/foo.html"))
-            test-file (io/file (str public-dir "index.html"))]
-        (is (.exists post-file))
+            test-file (io/file (str public-dir "index.html"))
+            tag1-file (io/file (str public-dir tag-out-dir "tag1.html"))
+            tag2-file (io/file (str public-dir tag-out-dir "tag2.html"))
+            tag3-file (io/file (str public-dir tag-out-dir "tag3.html"))
+            ]
+        (are [x file] (= x (.exists file))
+          true  post-file
+          true  test-file
+          false tag1-file
+          true  tag2-file
+          true  tag3-file
+          )
         (.delete post-file)
-        (is (.exists test-file))
-        (.delete test-file)))))
+        (.delete test-file)
+        (.delete tag2-file)
+        (.delete tag3-file)
+        ))))
 
