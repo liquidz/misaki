@@ -9,7 +9,7 @@
         [clj-time.core :only [date-time]])
   (:use [clojure.test])
   (:require
-    [misaki.core :as misaki]
+    [misaki.core :as msk]
     [clojure.java.io :as io]))
 
 ;;; generate-post-content
@@ -246,7 +246,7 @@
 (deftest* compile-tag-test
   (let [{:keys [public-dir tag-out-dir]} *config*
         tag-name "tag1"
-        res      (misaki/process-compile-result (compile-tag tag-name) "")
+        res      (msk/process-compile-result (compile-tag tag-name) "")
         file     (io/file (str public-dir tag-out-dir tag-name ".html"))]
     (is res)
     (is (.exists file))
@@ -256,7 +256,7 @@
 (deftest* compile-template-test
   (let [{:keys [public-dir template-dir]} *config*
         tmpl (io/file (str template-dir "index.html.clj"))
-        res  (misaki/process-compile-result (compile-template tmpl) "")
+        res  (msk/process-compile-result (compile-template tmpl) "")
         file (io/file (str public-dir (make-template-output-filename tmpl)))]
     (is res)
     (is (.exists file))

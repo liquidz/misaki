@@ -24,9 +24,11 @@
 (defn combine-path
   "Combine two path."
   [path1 path2]
-  (str path1 (if (.startsWith path2 "/")
-               (apply str (drop 1 path2))
-               path2)))
+  (let [path1 (normalize-path path1)
+        path2 (if (.startsWith path2 "/")
+                (apply str (drop 1 path2))
+                path2)]
+    (str path1 path2)))
 
 
 ; =find-files

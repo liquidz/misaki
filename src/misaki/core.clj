@@ -1,7 +1,8 @@
 (ns misaki.core
   (:use misaki.config
         [misaki.util file string sequence]
-        [pretty-error.core :only [print-pretty-stack-trace]]))
+        [pretty-error.core :only [print-pretty-stack-trace]])
+  (:import [java.io File]))
 
 ;; util
 (defn key->sym [k] (symbol (name k)))
@@ -18,6 +19,10 @@
   (let [fn-sym (key->sym fn-key)
         f      (get *compiler* fn-sym)]
     (if f (apply f args))))
+
+; =get-post-files
+(defn get-post-files []
+  (find-clj-files *post-dir*))
 
 ;; ## Compiler Functions
 
@@ -74,18 +79,10 @@
     ; error
     :else false))
 
-(defn- make-compile-param [file]
-  {:file file
-   :date (get-date-from-file file)
-   :out-name
-     (cond
-       (post-file? file) (make-post-output-filename file)
-       :else             (.getName file))})
 
 (defn compile* [config file]
   (try
-    (let [param          (make-compile-param file)
-          compile-result (call-compiler-fn :-compile config param)
+    (let [compile-result (call-compiler-fn :-compile config file)
           process-result (process-compile-result compile-result (.getName file))]
       [process-result compile-result])
     (catch Exception e

@@ -30,11 +30,8 @@
     (assoc
       config
       :layout-dir layout
-;      :post         (:post-dir config)
       :tag-layout   (str layout (:tag-layout config) ".clj")
       :detailed-log (:detailed-log config false)
-;      :post-filename-regexp (:post-filename-regexp config POST_FILENAME_REGEXP)
-;      :post-filename-format (:post-filename-format config POST_OUTPUT_NAME_FORMAT)
       :post-sort-type       (:post-sort-type config :date-desc)
       :cljs-compile-options
       (if cljs
@@ -59,22 +56,7 @@
   {:pre [(file? file)]}
   (str-contains? (.getAbsolutePath file) (:layout-dir *config*)))
 
-;; =post-file?
-;(defn post-file?
-;  "Check whether file is post file or not."
-;  [#^File file]
-;  {:pre [(file? file)]}
-;  (str-contains? (.getAbsolutePath file) (:post-dir *config*)))
-
 ;; ## Converter
-
-;; =template-name->file
-;(defn template-name->file
-;  "Convert template name to java.io.File."
-;  [#^String tmpl-name]
-;  {:pre [(string? tmpl-name)]}
-;  ;(io/file (str *template-dir* tmpl-name)))
-;  (io/file (str (:template-dir *config*) tmpl-name)))
 
 (defn sort-type->sort-fn
   "Convert sort-type keyword to sort function."
@@ -95,23 +77,8 @@
   "Make tag output filename from tag name."
   [#^String tag-name]
   {:pre [(string? tag-name)]}
-  (str (:tag-out-dir *config*) tag-name ".html"))
+  (combine-path (:tag-out-dir *config*) (str tag-name ".html")))
 
-;;;; =make-post-output-filename
-;;;(defn make-post-output-filename
-;;;  "Make post output filename from java.io.File."
-;;;  [#^File file]
-;;;  {:pre [(file? file)]}
-;;;  (let [date     (cnf/get-date-from-file file)
-;;;        filename (if date
-;;;                   (-?> (.getName file) cnf/remove-date-from-name remove-extension)
-;;;                   (remove-extension (.getName file)))]
-;;;    (render (:post-filename-format *config*)
-;;;            {:year  (-?> date year str)
-;;;             :month (-?>> date month (format "%02d"))
-;;;             :day   (-?>> date day (format "%02d"))
-;;;             :filename filename})))
-;
 ; =make-template-output-filename
 (defmulti make-template-output-filename
   "Make template output filename from template name."
@@ -132,7 +99,7 @@
   "Make layout filename from layout name(String)."
   [#^String layout-name]
   {:pre [(string? layout-name)]}
-  (str (:layout-dir *config*) layout-name ".clj"))
+  (combine-path (:layout-dir *config*) (str layout-name ".clj")))
 
 ;; ## URL Generator
 
@@ -141,13 +108,16 @@
   "Make post url from java.io.File"
   [#^File file]
   {:pre [(file? file)]}
-  (str (:url-base *config*) (make-template-output-filename file)))
+  (combine-path (:url-base *config*)
+                (remove-extension (cnf/make-post-output-filename file))))
 
 ; =make-tag-url
 (defn make-tag-url
   "Make tag url form tag string."
   [#^String tag-name]
   {:pre [(string? tag-name)]}
-  (str (:url-base *config*) (make-tag-output-filename tag-name)))
+
+  (combine-path (:url-base *config*)
+                (make-tag-output-filename tag-name)))
 
 

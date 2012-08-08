@@ -2,15 +2,15 @@
   "HTML compiler for clojure source."
   (:use
     [misaki.compiler.default template config]
-    [misaki.server :only [print-compile-result]]
-    ;[misaki.config :only [get-index-filename template-name->file post-file?]]
     [misaki.util file sequence string]
     [hiccup.core :only [html]]
     [hiccup.page :only [html5 xhtml html4]]
     [pretty-error.core :only [print-pretty-stack-trace]]
     [cljs.closure :only [build]])
   (:require
+    [misaki.core     :as msk]
     [misaki.config   :as cnf]
+    [misaki.server   :as srv]
     [clojure.string  :as str]
     [clojure.java.io :as io])
   (:import [java.io File]))
@@ -41,13 +41,11 @@
   (plugin-config config))
 
 (defn -compile
-  [config {:keys [file]}]
+  [config file]
   {:pre  [(map? config) (instance? File file)]
-   :post [#(or (true? %) (false? %))]}
+   :post [#(or (true? %) (false? %) (string? %) (map? %))]}
 
-  (with-config
-    config
-
+  (with-config config
     (cond
       ; clojurescript
       (has-extension? ".cljs" file)
@@ -72,20 +70,19 @@
   {:pre  [(map? config)]
    :post [#(or (true? %) (false? %))]}
 
-  (with-config
-    config
+  (with-config config
     (let [tmpls (remove layout-file? (-> config :template-dir find-clj-files))
           tags  (get-tags)]
       ; compile clojurescript
       (if (:detailed-log config)
-        (print-compile-result "clojurescripts" (compile-clojurescripts))
+        (srv/print-compile-result "clojurescripts" (compile-clojurescripts))
         (compile-clojurescripts))
       ; compile templates
       (if (:detailed-log config)
         (do (doseq [file tmpls]
-              (print-compile-result (.getName file) (compile-template file)))
+              (srv/print-compile-result (.getName file) (compile-template file)))
             (doseq [{tag-name :name} tags]
-              (print-compile-result (str tag-name " tag") (compile-tag tag-name))))
+              (srv/print-compile-result (str tag-name " tag") (compile-tag tag-name))))
 
         (do (every? #(compile-template %) tmpls)
             (every? #(compile-tag (:name %)) tags))))
@@ -109,8 +106,8 @@
   {:pre [(file? post-file)]}
   (assoc (parse-template-option post-file)
          :file post-file
-         :url  (make-post-url post-file)
          :date (cnf/get-date-from-file post-file)
+         :url  (make-post-url post-file)
          :lazy-content (delay (escape-string (generate-post-content post-file)))))
 
 ; =post-info-contains-tag?
@@ -126,7 +123,7 @@
 (defn get-posts
   "Get posts data from *post-dir* directory."
   []
-  (map get-post-info (find-clj-files (:post-dir *config*))))
+  (map get-post-info (msk/get-post-files)))
 
 ; =get-tagged-posts
 (defn get-tagged-posts

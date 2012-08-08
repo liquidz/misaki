@@ -17,8 +17,6 @@
 (def POST_FILENAME_REGEXP    #"(\d{4})[-_](\d{1,2})[-_](\d{1,2})[-_](.+)$")
 (def POST_OUTPUT_NAME_FORMAT "{{year}}/{{month}}/{{filename}}")
 
-(defn bool? [x] (or (true? x) (false? x)))
-
 ;; ## Declarations
 
 ;; Blog base directory

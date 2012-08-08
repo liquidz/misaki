@@ -33,3 +33,12 @@
     "/foo/"     "/foo/bar"
     "/foo/bar/" "/foo/bar/"
     "/"         "/foo"))
+
+;; combine-path
+(deftest combine-path-test
+  (are [x y z] (= x (combine-path y z))
+    "a/b.txt"  "a/"  "b.txt"
+    "a/b.txt"  "a"   "/b.txt"
+    "a/b.txt"  "a"   "b.txt"
+    "/b.txt"   ""    "b.txt"
+    "b.txt"    nil   "b.txt"))
