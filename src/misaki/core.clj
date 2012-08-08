@@ -112,8 +112,14 @@
 (defn compiler-compile
   "Call plugin's -compile function."
   [file]
-  (let [[result] (compile* (update-config) file)]
-    result))
+  (let [config   (update-config)
+        [result] (compile* config file)]
+    (if (post-file? file)
+      ; compile with post
+      (every? #(true? (first %))
+              (for [file (map template-name->file *compile-with-post*)]
+                (compile* config file)))
+      result)))
 
 
 

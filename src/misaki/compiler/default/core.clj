@@ -61,10 +61,10 @@
       :else
       (let [res (compile-template file)]
         (when (cnf/post-file? file)
-          ; compile with posts
-          (if (:compile-with-post config)
-            (doseq [tmpl-name (:compile-with-post config)]
-              (-compile config {:file (cnf/template-name->file tmpl-name)})))
+          ;; compile with posts
+          ;(if (:compile-with-post config)
+          ;  (doseq [tmpl-name (:compile-with-post config)]
+          ;    (-compile config {:file (cnf/template-name->file tmpl-name)})))
           ; compile tag
           (if-let [tags (-> file parse-template-option :tag)]
             (doseq [{tag-name :name} tags]
@@ -80,6 +80,11 @@
     config
     (let [tmpls (remove layout-file? (-> config :template-dir find-clj-files))
           tags  (get-tags)]
+      ; compile clojurescript
+      (if (:detailed-log config)
+        (print-compile-result "clojurescripts" (compile-clojurescripts))
+        (compile-clojurescripts))
+      ; compile templates
       (if (:detailed-log config)
         (do (doseq [file tmpls]
               (print-compile-result (.getName file) (compile-template file)))
@@ -87,10 +92,7 @@
               (print-compile-result (str tag-name " tag") (compile-tag tag-name))))
 
         (do (every? #(compile-template %) tmpls)
-            (every? #(compile-tag (:name %)) tags)))
-      (if (:detailed-log config)
-        (print-compile-result "clojurescripts" (compile-clojurescripts))
-        (compile-clojurescripts)))
+            (every? #(compile-tag (:name %)) tags))))
     true))
 
 ;; ## Post Functions

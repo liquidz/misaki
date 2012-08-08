@@ -41,6 +41,7 @@
 (declare ^:dynamic *post-filename-regexp*)
 (declare ^:dynamic *post-filename-format*)
 (declare ^:dynamic *compiler*)
+(declare ^:dynamic *compile-with-post*)
 
 ;; ## Config Data Wrapper
 
@@ -80,6 +81,7 @@
       :post-dir     (combine-path template-dir (:post-dir config))
       :post-filename-regexp (:post-filename-regexp config POST_FILENAME_REGEXP)
       :post-filename-format (:post-filename-format config POST_OUTPUT_NAME_FORMAT)
+      :compile-with-post    (:compile-with-post config ())
       :port         (:port config PORT)
       :lang         (:lang config LANGUAGE)
       :site         (:site config {})
@@ -98,6 +100,7 @@
         *post-dir*     (:post-dir config#)
         *post-filename-regexp* (:post-filename-regexp config#)
         *post-filename-format* (:post-filename-format config#)
+        *compile-with-post*    (:compile-with-post config#)
         *port*         (:port config#)
         *url-base*     (:url-base config#)
         *index-name*   (:index-name config#)

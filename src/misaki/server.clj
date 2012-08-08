@@ -39,7 +39,8 @@
      (elapsing
        (let [result#  ~compile-sexp
              elapsed# (msec->string (~'get-elapsed-time))]
-       (println "  " (get-result-text result# " in " elapsed#))))))
+         (println "  " (get-result-text result# " in " elapsed#))
+         result#))))
 
 
 ;; ## Dev Compiler
