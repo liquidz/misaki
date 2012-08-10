@@ -38,7 +38,8 @@
   (let [[defs sexp] (split-into-def-and-body sexp)]
     `(do (use 'misaki.compiler.default.html.core
               'misaki.compiler.default.html.conv
-              'misaki.compiler.default.html.util)
+              'misaki.compiler.default.html.util
+              'misaki.util.date)
          ~@defs
          (fn [~'contents]
            (let [~'site (meta ~'contents)] ~sexp)))))

@@ -8,7 +8,8 @@
     [clojure.string :as str]
     [hiccup.core :as hiccup]
     [hiccup.page :as page]
-    [misaki.compiler.default.html.conv :as conv]))
+    [misaki.compiler.default.html.conv :as conv]
+    [misaki.util.date :as date]))
 
 (declare link)
 
@@ -273,7 +274,7 @@
   []
   (ul
     #(list
-       (conv/date->string (:date %))
+       (date/date->string (:date %))
        "&nbsp;-&nbsp;"
        (link (:title %) (:url %)))
     (:posts *site*)))
@@ -296,7 +297,7 @@
 (defn post-date
   "Make default post date tag."
   []
-  [:p {:class "date"} (-> *site* :date conv/date->string)])
+  [:p {:class "date"} (-> *site* :date date/date->string)])
 
 (defn two-column
   "Make 2 column"
