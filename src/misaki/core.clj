@@ -4,6 +4,9 @@
         [pretty-error.core :only [print-pretty-stack-trace]])
   (:import [java.io File]))
 
+(declare get-watch-file-extensions)
+
+
 ;; util
 (defn key->sym [k] (symbol (name k)))
 
@@ -20,16 +23,22 @@
         f      (get *compiler* fn-sym)]
     (if f (apply f args))))
 
+; =get-template-files
+(defn get-template-files
+  "Get all template files."
+  [& {:keys [dir] :or {dir *template-dir*}}]
+  (let [exts (get-watch-file-extensions)]
+    (filter
+      (fn [file]
+        (some #(has-extension? % file) exts))
+      (find-files dir))))
+
 ; =get-post-files
 (defn get-post-files [& {:keys [sort?] :or {sort? false}}]
-  (let [files (find-clj-files *post-dir*)]
+  (let [files (get-template-files :dir *post-dir*)]
     (if sort?
       ((sort-type->sort-fn) files)
       files)))
-
-(defn sort-posts [posts]
-
-  )
 
 ;; ## Compiler Functions
 
@@ -39,15 +48,6 @@
   []
   (call-compiler-fn :-extension))
 
-; =get-template-files
-(defn get-template-files
-  "Get all template files."
-  []
-  (let [exts (get-watch-file-extensions)]
-    (filter
-      (fn [file]
-        (some #(has-extension? % file) exts))
-      (find-files *template-dir*))))
 
 ; =update-config
 (defn update-config
@@ -91,7 +91,8 @@
   (try
     (let [default-filename (make-output-filename file)
           compile-result   (call-compiler-fn :-compile config file)
-          process-result   (process-compile-result compile-result (.getName file))]
+          process-result   (process-compile-result
+                             compile-result default-filename)]
       [process-result compile-result])
     (catch Exception e
       (print-pretty-stack-trace

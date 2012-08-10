@@ -12,7 +12,7 @@
   {:pre  [(map? config)]
    :post [#(map? %)]}
 
-  (assoc config :foo "bar"))
+  (assoc config :message "hello! "))
 
 (defn -compile
   "Compile specified java.io.File. (REQUIRED)
@@ -28,6 +28,6 @@
   [config #^File file]
   {:pre  [(map? config) (instance? File file)]}
 
-  (str "hello! " (slurp file)))
+  (str (:message config) " (slurp file)))
 
 

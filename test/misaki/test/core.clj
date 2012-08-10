@@ -13,9 +13,17 @@
 
 ;; get-template-files
 (deftest* get-template-files-test
-  (let [tmpls (get-template-files)]
-    (is (find-first #(= "index.html.clj" (.getName %)) tmpls))
-    (is (= 16 (count tmpls)))))
+  (testing "default template directory"
+    (let [tmpls (get-template-files)]
+      (is (find-first #(= "index.html.clj" (.getName %)) tmpls))
+      (is (= 16 (count tmpls)))))
+
+  (testing "find from specified directory"
+    (let [tmpls (get-template-files :dir *post-dir*)]
+      (is (= 3 (count tmpls)))
+      (is (find-first #(= "2000.01.01-foo.html.clj" (.getName %)) tmpls))
+      (is (find-first #(= "2011.01.01-foo.html.clj" (.getName %)) tmpls))
+      (is (find-first #(= "2022.02.02-bar.html.clj" (.getName %)) tmpls)))))
 
 
 ;; get-post-files
