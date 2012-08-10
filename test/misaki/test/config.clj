@@ -1,5 +1,6 @@
 (ns misaki.test.config
   (:use misaki.config
+        [misaki.util.file :only [normalize-path]]
         [misaki.tester :only [set-base-dir! deftest*]]
         [clj-time.core :only [date-time year month day]]
         clojure.test)
@@ -81,6 +82,16 @@
     (is (= "2000-11/foo.html"
            (make-output-filename
              (io/file "test/template/_posts/2000.11.22-foo.html"))))))
+
+;;; make-output-url
+(deftest* make-output-url-test
+  (let [file (io/file "foo.html")]
+    (testing "default url-base"
+      (is (= "/foo.html" (make-output-url file))))
+
+    (testing "custom url-base"
+      (binding [*url-base* (normalize-path "/bar/baz")]
+        (is (= "/bar/baz/foo.html" (make-output-url file)))))))
 
 ;;; absolute-path
 (deftest* absolute-path-test

@@ -188,6 +188,11 @@
     (make-post-output-filename file)
     (.getName file)))
 
+; =make-output-url
+(defn make-output-url
+  [#^File file]
+  (combine-path *url-base* (make-output-filename file)))
+
 ; =template-name->file
 (defn template-name->file
   "Convert template name to java.io.File."
