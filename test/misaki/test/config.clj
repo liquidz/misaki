@@ -72,6 +72,16 @@
       "-/01.foo.html"    "01.foo.html"
       "-/01.02.foo.html" "01.02.foo.html")))
 
+;;; make-output-filename
+(deftest* make-output-filename-test
+  (testing "normal template file"
+    (is (= "foo.html" (make-output-filename (io/file "foo.html")))))
+
+  (testing "post file"
+    (is (= "2000-11/foo.html"
+           (make-output-filename
+             (io/file "test/template/_posts/2000.11.22-foo.html"))))))
+
 ;;; absolute-path
 (deftest* absolute-path-test
   (with-config

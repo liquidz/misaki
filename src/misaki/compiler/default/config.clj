@@ -90,9 +90,8 @@
 
 (defmethod make-template-output-filename File
   [file]
-  (if (cnf/post-file? file)
-    (remove-extension (cnf/make-post-output-filename file))
-    (remove-extension (.getName file))))
+  (remove-extension
+    (cnf/make-output-filename file)))
 
 ; =make-layout-filename
 (defn make-layout-filename

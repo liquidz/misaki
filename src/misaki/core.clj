@@ -89,8 +89,9 @@
 
 (defn compile* [config file]
   (try
-    (let [compile-result (call-compiler-fn :-compile config file)
-          process-result (process-compile-result compile-result (.getName file))]
+    (let [default-filename (make-output-filename file)
+          compile-result   (call-compiler-fn :-compile config file)
+          process-result   (process-compile-result compile-result (.getName file))]
       [process-result compile-result])
     (catch Exception e
       (print-pretty-stack-trace

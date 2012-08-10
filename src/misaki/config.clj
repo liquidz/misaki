@@ -77,7 +77,8 @@
       config
       :public-dir     (combine-path *base-dir* (:public-dir config))
       :template-dir   template-dir
-      :post-dir       (combine-path template-dir (:post-dir config))
+      :post-dir       (if-let [post-dir (:post-dir config)]
+                        (combine-path template-dir post-dir))
       :post-sort-type (:post-sort-type config :date-desc)
       :port           (:port config PORT)
       :lang           (:lang config LANGUAGE)
@@ -122,7 +123,7 @@
   "Check whether file is post file or not."
   [#^File file]
   {:pre [(file? file)]}
-  (str-contains? (.getAbsolutePath file) *post-dir*))
+  (and *post-dir* (str-contains? (.getAbsolutePath file) *post-dir*)))
 
 ;; ## Filename Date Utility
 
@@ -178,6 +179,14 @@
              :month    (-?>> date month (format "%02d"))
              :day      (-?>> date day   (format "%02d"))
              :filename filename})))
+
+; =make-output-filename
+(defn make-output-filename
+  "Make output filename from java.io.File."
+  [#^File file]
+  (if (post-file? file)
+    (make-post-output-filename file)
+    (.getName file)))
 
 ; =template-name->file
 (defn template-name->file
