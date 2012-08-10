@@ -13,7 +13,7 @@
 ;;; sort-by-date
 (deftest sort-by-date-test
   (testing "sort date desc"
-    (let [[p1 p2 p3] (sort-by-date (make-dummy-posts))]
+    (let [[p1 p2 p3] (sort-by-date :date (make-dummy-posts))]
       (are [x y] (= x y)
         ; title
         "bar" (:title p1)
@@ -25,7 +25,7 @@
         (date-time 2000 1 1) (:date p3))))
 
   (testing "sort date inc"
-    (let [[p1 p2 p3] (sort-by-date :inc (make-dummy-posts))]
+    (let [[p1 p2 p3] (sort-by-date :inc :date (make-dummy-posts))]
       (are [x y] (= x y)
         ; title
         "baz" (:title p1)

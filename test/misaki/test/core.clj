@@ -7,14 +7,36 @@
 
 (set-base-dir! "test/")
 
+;; get-watch-file-extensions
 (deftest* get-watch-file-extensions-test
   (is (= [:clj :cljs] (get-watch-file-extensions))))
 
-;(deftest* get-template-files-test
-;  (let [tmpls (get-template-files)]
-;    (is (find-first #(= "index.html.clj" (.getName %)) tmpls))))
+;; get-template-files
+(deftest* get-template-files-test
+  (let [tmpls (get-template-files)]
+    (is (find-first #(= "index.html.clj" (.getName %)) tmpls))
+    (is (= 16 (count tmpls)))))
 
 
+;; get-post-files
+(deftest* get-post-files-test
+  (testing "without sort"
+    (let [files (get-post-files)]
+      (is (= 3 (count files)))
+      (is (find-first #(= "2000.01.01-foo.html.clj" (.getName %)) files))
+      (is (find-first #(= "2011.01.01-foo.html.clj" (.getName %)) files))
+      (is (find-first #(= "2022.02.02-bar.html.clj" (.getName %)) files))))
+
+  (testing "with sort"
+    (binding [*post-sort-type* :date-desc]
+      (let [[a b c :as files] (get-post-files :sort? true)]
+        (are [x y] (= x y)
+          3 (count files)
+          "2022.02.02-bar.html.clj" (.getName a)
+          "2011.01.01-foo.html.clj" (.getName b)
+          "2000.01.01-foo.html.clj" (.getName c))))))
+
+;; process-compile-result
 (deftest* process-compile-result-test
   (let [filename "bar.txt"]
     (testing "string result"

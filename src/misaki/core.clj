@@ -21,8 +21,15 @@
     (if f (apply f args))))
 
 ; =get-post-files
-(defn get-post-files []
-  (find-clj-files *post-dir*))
+(defn get-post-files [& {:keys [sort?] :or {sort? false}}]
+  (let [files (find-clj-files *post-dir*)]
+    (if sort?
+      ((sort-type->sort-fn) files)
+      files)))
+
+(defn sort-posts [posts]
+
+  )
 
 ;; ## Compiler Functions
 

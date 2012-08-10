@@ -64,6 +64,10 @@
   (case (:post-sort-type *config*)
     :title      (partial sort-alphabetically #(:title %))
     :title-desc (partial sort-alphabetically :desc #(:title %))
+    :date       (partial sort-by-date :inc :date)
+    :name       (partial sort-alphabetically #(.getName (:file %)))
+    :date-desc  (partial sort-by-date :desc :date)
+    :name-desc  (partial sort-alphabetically :desc #(.getName (:file %)))
     (cnf/sort-type->sort-fn)))
 
 ;; ## Filename Generator

@@ -151,10 +151,10 @@
   "Convert sort-type keyword to sort function."
   []
   (case *post-sort-type*
-    :date       (partial sort-by-date :inc)
-    :name       (partial sort-alphabetically #(.getName (:file %)))
-    :date-desc  sort-by-date
-    :name-desc  (partial sort-alphabetically :desc #(.getName (:file %)))
+    :date       (partial sort-by-date :inc get-date-from-file)
+    :name       (partial sort-alphabetically #(.getName %))
+    :date-desc  (partial sort-by-date :desc get-date-from-file)
+    :name-desc  (partial sort-alphabetically :desc #(.getName %))
     sort-by-date))
 
 ;; ## Filename Generator
