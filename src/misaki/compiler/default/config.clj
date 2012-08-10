@@ -38,7 +38,7 @@
         (assoc cljs
                :src-dir    (normalize-path (str template-dir (:src-dir cljs)))
                :output-dir (if-let [dir (:output-dir cljs)]
-                             (str public-dir dir)
+                             (combine-path public-dir dir)
                              (get-parent-path cljs-out))
                :output-to  cljs-out)))))
 
@@ -62,13 +62,9 @@
   "Convert sort-type keyword to sort function."
   []
   (case (:post-sort-type *config*)
-    :date       (partial sort-by-date :inc)
-    :name       (partial sort-alphabetically #(.getName (:file %)))
     :title      (partial sort-alphabetically #(:title %))
-    :date-desc  sort-by-date
-    :name-desc  (partial sort-alphabetically :desc #(.getName (:file %)))
     :title-desc (partial sort-alphabetically :desc #(:title %))
-    sort-by-date))
+    (cnf/sort-type->sort-fn)))
 
 ;; ## Filename Generator
 

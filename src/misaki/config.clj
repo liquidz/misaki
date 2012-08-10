@@ -40,6 +40,7 @@
 (declare ^:dynamic *post-filename-format*)
 (declare ^:dynamic *compiler*)
 (declare ^:dynamic *compile-with-post*)
+(declare ^:dynamic *post-sort-type*)
 
 ;; ## Config Data Wrapper
 
@@ -74,18 +75,19 @@
         template-dir (combine-path *base-dir* (:template-dir config))]
     (assoc
       config
-      :public-dir   (combine-path *base-dir* (:public-dir config))
-      :template-dir template-dir
-      :post-dir     (combine-path template-dir (:post-dir config))
-      :post-filename-regexp (:post-filename-regexp config POST_FILENAME_REGEXP)
-      :post-filename-format (:post-filename-format config POST_OUTPUT_NAME_FORMAT)
+      :public-dir     (combine-path *base-dir* (:public-dir config))
+      :template-dir   template-dir
+      :post-dir       (combine-path template-dir (:post-dir config))
+      :post-sort-type (:post-sort-type config :date-desc)
+      :port           (:port config PORT)
+      :lang           (:lang config LANGUAGE)
+      :site           (:site config {})
+      :index-name     (:index-name config "")
+      :url-base       (normalize-path (:url-base config "/"))
+      :compiler       (load-compiler-publics (:compiler config COMPILER))
       :compile-with-post    (:compile-with-post config ())
-      :port         (:port config PORT)
-      :lang         (:lang config LANGUAGE)
-      :site         (:site config {})
-      :index-name   (:index-name config "")
-      :url-base     (normalize-path (:url-base config "/"))
-      :compiler     (load-compiler-publics (:compiler config COMPILER)))))
+      :post-filename-regexp (:post-filename-regexp config POST_FILENAME_REGEXP)
+      :post-filename-format (:post-filename-format config POST_OUTPUT_NAME_FORMAT))))
 
 ; =with-config
 (defmacro with-config
@@ -99,6 +101,7 @@
         *post-filename-regexp* (:post-filename-regexp config#)
         *post-filename-format* (:post-filename-format config#)
         *compile-with-post*    (:compile-with-post config#)
+        *post-sort-type* (:post-sort-type config#)
         *port*         (:port config#)
         *url-base*     (:url-base config#)
         *index-name*   (:index-name config#)
@@ -140,6 +143,19 @@
   [#^String filename]
   {:pre [(string? filename)]}
   (last (first (re-seq *post-filename-regexp* filename))))
+
+
+;; ## Converter
+
+(defn sort-type->sort-fn
+  "Convert sort-type keyword to sort function."
+  []
+  (case *post-sort-type*
+    :date       (partial sort-by-date :inc)
+    :name       (partial sort-alphabetically #(.getName (:file %)))
+    :date-desc  sort-by-date
+    :name-desc  (partial sort-alphabetically :desc #(.getName (:file %)))
+    sort-by-date))
 
 ;; ## Filename Generator
 

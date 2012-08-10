@@ -1,5 +1,6 @@
 (ns misaki.test.core
   (use [misaki core config]
+       [misaki.util.sequence :only [find-first]]
        misaki.tester
        clojure.test)
   (require [clojure.java.io :as io]))
@@ -8,6 +9,10 @@
 
 (deftest* get-watch-file-extensions-test
   (is (= [:clj :cljs] (get-watch-file-extensions))))
+
+;(deftest* get-template-files-test
+;  (let [tmpls (get-template-files)]
+;    (is (find-first #(= "index.html.clj" (.getName %)) tmpls))))
 
 
 (deftest* process-compile-result-test
