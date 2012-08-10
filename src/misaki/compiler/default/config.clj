@@ -107,8 +107,7 @@
   "Make post url from java.io.File"
   [#^File file]
   {:pre [(file? file)]}
-  (combine-path (:url-base *config*)
-                (remove-extension (cnf/make-post-output-filename file))))
+  (remove-extension (cnf/make-output-url file)))
 
 ; =make-tag-url
 (defn make-tag-url
