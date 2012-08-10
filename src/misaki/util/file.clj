@@ -25,7 +25,7 @@
   "Combine two path."
   [path1 path2]
   (let [path1 (normalize-path path1)
-        path2 (if (.startsWith path2 "/")
+        path2 (if (and (string? path2) (.startsWith path2 "/"))
                 (apply str (drop 1 path2))
                 path2)]
     (str path1 path2)))

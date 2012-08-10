@@ -41,4 +41,8 @@
     "a/b.txt"  "a"   "/b.txt"
     "a/b.txt"  "a"   "b.txt"
     "/b.txt"   ""    "b.txt"
-    "b.txt"    nil   "b.txt"))
+    "b.txt"    nil   "b.txt"
+    "a/"       "a"   nil
+    "a/"       "a/"  nil
+    "/"        ""    nil
+    ""         nil   nil))
