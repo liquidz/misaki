@@ -1,14 +1,15 @@
 (ns misaki.tester
   "Plugin Testing Utilities"
   (:use
-    [misaki.core :only [update-config]]
+    [misaki.core :only [update-config compiler-compile]]
     [misaki.config :only [*base-dir* make-basic-config-map with-config]]
     [misaki.util.file :only [normalize-path]]
     [clojure.test :only [deftest]])
   (:require
     [clojure.string :as str]))
 
-(def _test-base-dir_ (atom "."))
+;; default base-dir for tester is "test/"
+(def _test-base-dir_ (atom "test/"))
 
 (defn set-base-dir!
   [base-dir]
@@ -28,6 +29,11 @@
   []
   (with-test-base-dir
     (update-config)))
+
+(defn test-compile
+  [file]
+  (with-test-base-dir
+    (compiler-compile file)))
 
 (defmacro deftest*
   [name & body]

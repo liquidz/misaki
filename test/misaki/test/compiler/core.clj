@@ -246,7 +246,8 @@
 (deftest* compile-tag-test
   (let [{:keys [public-dir tag-out-dir]} *config*
         tag-name "tag1"
-        res      (msk/process-compile-result (compile-tag tag-name) "")
+        ;res      (msk/process-compile-result (compile-tag tag-name) "")
+        res      (compile-tag tag-name)
         file     (io/file (str public-dir tag-out-dir tag-name ".html"))]
     (is res)
     (is (.exists file))
@@ -256,7 +257,8 @@
 (deftest* compile-template-test
   (let [{:keys [public-dir template-dir]} *config*
         tmpl (io/file (str template-dir "index.html.clj"))
-        res  (msk/process-compile-result (compile-template tmpl) "")
+        ;res  (msk/process-compile-result (compile-template tmpl) "")
+        res  (compile-template tmpl)
         file (io/file (str public-dir (make-template-output-filename tmpl)))]
     (is res)
     (is (.exists file))

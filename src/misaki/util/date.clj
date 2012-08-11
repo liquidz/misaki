@@ -2,6 +2,7 @@
   (:require
     [clj-time.core   :as t]
     [clj-time.format :as fmt]
+    [clj-time.local  :as l]
     [clojure.string  :as str]
     ))
 
@@ -34,6 +35,12 @@
        (nth '(_ Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec)
             (t/month date))
        (.toString date "yyyy")])))
+
+; =now
+(defn now
+  "Get current date"
+  []
+  (l/local-now))
 
 ; =year
 (defn year
