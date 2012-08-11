@@ -21,11 +21,14 @@
 (declare compile-tag)
 (declare get-tags)
 
-(declare -all-compile)
-
 (defn- print-misaki-stack-trace [e]
   (print-pretty-stack-trace
     e :filter #(str-contains? (:str %) "misaki")))
+
+(defmacro log [label body]
+  `(if (and (:detailed-log *config*) (= :all (:-compiling *config*)))
+     (srv/print-compile-result ~label ~body)
+     ~body))
 
 ;; ## Functions for Plugin
 (defn -extension
@@ -49,44 +52,21 @@
     (cond
       ; clojurescript
       (has-extension? ".cljs" file)
-      (compile-clojurescripts)
+      (log "clojurescripts" (compile-clojurescripts))
 
       ; layout
       (layout-file? file)
-      {:status (-all-compile config), :stop-compile? true}
+      {:status 'skip :all-compile?  true}
 
       ; else
       :else
-      (let [res (compile-template file)]
+      (let [res (log (.getName file) (compile-template file))]
         (when (cnf/post-file? file)
           ; compile tag
           (if-let [tags (-> file parse-template-option :tag)]
             (doseq [{tag-name :name} tags]
-              (compile-tag tag-name))))
+              (log tag-name (compile-tag tag-name)))))
         res))))
-
-(defn -all-compile
-  [config]
-  {:pre  [(map? config)]
-   :post [#(or (true? %) (false? %))]}
-
-  (with-config config
-    (let [tmpls (remove layout-file? (-> config :template-dir find-clj-files))
-          tags  (get-tags)]
-      ; compile clojurescript
-      (if (:detailed-log config)
-        (srv/print-compile-result "clojurescripts" (compile-clojurescripts))
-        (compile-clojurescripts))
-      ; compile templates
-      (if (:detailed-log config)
-        (do (doseq [file tmpls]
-              (srv/print-compile-result (.getName file) (compile-template file)))
-            (doseq [{tag-name :name} tags]
-              (srv/print-compile-result (str tag-name " tag") (compile-tag tag-name))))
-
-        (do (every? #(compile-template %) tmpls)
-            (every? #(compile-tag (:name %)) tags))))
-    true))
 
 ;; ## Post Functions
 

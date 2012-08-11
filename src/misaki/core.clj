@@ -1,6 +1,7 @@
 (ns misaki.core
   (:use misaki.config
         [misaki.util file string sequence]
+        [text-decoration.core :only [green]]
         [pretty-error.core :only [print-pretty-stack-trace]])
   (:import [java.io File]))
 
@@ -16,6 +17,10 @@
 (defn- stop-compile? [compile-result]
   (and (map?   compile-result)
        (true? (:stop-compile? compile-result))))
+
+(defn- all-compile? [compile-result]
+  (and (map?   compile-result)
+       (true? (:all-compile? compile-result))))
 
 ; =call-compiler-fn
 (defn- call-compiler-fn [fn-key & args]
@@ -75,8 +80,8 @@
 
     ; output with detailed data
     (map? result)
-    (let [{:keys [status   filename body]
-           :or   {status   false
+    (let [{:keys [status filename body]
+           :or   {status false
                   filename default-filename}} result]
       (if (and filename body)
         (do (write-file (add-public-dir filename) body)
@@ -103,7 +108,8 @@
 (defn compiler-all-compile
   "Call plugin's -compile function for all template files."
   []
-  (let [config (update-config)
+  (let [config (assoc (update-config)
+                      :-compiling :all)
         files  (get-template-files)]
     (loop [[file & rest-files] files, success? true]
       (if file
@@ -118,17 +124,21 @@
 (defn compiler-compile
   "Call plugin's -compile function."
   [file]
-  (let [config   (update-config)
-        [result] (compile* config file)]
-    (if (post-file? file)
+  (let [config   (assoc (update-config)
+                        :-compiling :single)
+        [process-result compile-result] (compile* config file)]
+    (cond
+      ; all compile
+      (all-compile? compile-result)
+        (do (println (green "   Switch to all compiling"))
+            (compiler-all-compile))
+
       ; compile with post
-      (every? #(true? (first %))
-              (for [file (map template-name->file *compile-with-post*)]
-                (compile* config file)))
-      result)))
+      (post-file? file)
+        (every? #(true? (first %))
+                (for [file (map template-name->file *compile-with-post*)]
+                  (compile* config file)))
 
-
-
-
+      :else process-result)))
 
 
