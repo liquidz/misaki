@@ -66,8 +66,6 @@
 (defn start-watcher
   "Start watchtower watcher to compile changed templates"
   [template-dir]
-  ; compile all templates at first
-  ;(do-all-compile)
 
   (watcher
     [template-dir
@@ -91,8 +89,6 @@
 
       ; compile all only if '--compile' option is specified
       (when-not (contains? (set args) "--compile")
-        ;(do-all-compile)
-        ; start watching and server
         (start-watcher *template-dir*)
         (println " * starting server: "
                  (cyan (str "http://localhost:" *port* *url-base*)))
