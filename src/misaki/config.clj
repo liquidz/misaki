@@ -11,36 +11,41 @@
   (:import [java.io File FileNotFoundException]))
 
 ;; ## Default Value
-(def PORT 8080)
-(def LANGUAGE "en")
-(def COMPILER "default")
-(def POST_FILENAME_REGEXP    #"(\d{4})[-_](\d{1,2})[-_](\d{1,2})[-_](.+)$")
-(def POST_OUTPUT_NAME_FORMAT "{{year}}/{{month}}/{{filename}}")
+
+(def PORT     "Default dev server port." 8080)
+(def LANGUAGE "Default language."        "en")
+(def COMPILER "Default compiler."        "default")
+(def POST_FILENAME_REGEXP
+  "Default regexp to parse post filename."
+  #"(\d{4})[-_](\d{1,2})[-_](\d{1,2})[-_](.+)$")
+(def POST_OUTPUT_NAME_FORMAT
+  "Default format to generage post output filename."
+  "{{year}}/{{month}}/{{filename}}")
 
 ;; ## Declarations
 
-;; Blog base directory
-(def ^{:dynamic true
-       :doc "Blog base directory."}
-  *base-dir* "")
-;; Config filename
-(def ^{:dynamic true
-       :doc "Config filename.
-            Default filename is '_config.clj'."}
-  *config-file* "_config.clj")
+(def ^:dynamic *base-dir*
+  "Blog base directory."
+  "")
+(def ^:dynamic *config-file*
+  "Config filename.
+  Default filename is '_config.clj'."
+  "_config.clj")
 
-(declare ^:dynamic *config*)
 (declare ^:dynamic *template-dir*)
 (declare ^:dynamic *port*)
 (declare ^:dynamic *url-base*)
 (declare ^:dynamic *index-name*)
 (declare ^:dynamic *public-dir*)
 (declare ^:dynamic *post-dir*)
-(declare ^:dynamic *post-filename-regexp*)
-(declare ^:dynamic *post-filename-format*)
 (declare ^:dynamic *compiler*)
-(declare ^:dynamic *compile-with-post*)
 (declare ^:dynamic *post-sort-type*)
+;; Regexp to parse post filename -> date and filename
+(declare ^:dynamic *post-filename-regexp*)
+;; Format to generate post output filename
+(declare ^:dynamic *post-filename-format*)
+;; Template list which is compiled with post file.
+(declare ^:dynamic *compile-with-post*)
 
 ;; ## Config Data Wrapper
 
@@ -190,6 +195,7 @@
 
 ; =make-output-url
 (defn make-output-url
+  "Make output url from java.io.File."
   [#^File file]
   (combine-path *url-base* (make-output-filename file)))
 

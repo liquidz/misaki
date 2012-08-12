@@ -1,5 +1,5 @@
 (ns misaki.compiler.default.html.core
-  "misaki: HTML utility for template"
+  "HTML utility for template"
   (:use
     [misaki.compiler.default.config :only [*site*]]
     [misaki.config :only [get-index-filename absolute-path]]

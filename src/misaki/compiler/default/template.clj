@@ -39,10 +39,12 @@
 
 (defmethod parse-template-option String
   [slurped-data]
-  (let [lines  (map str/trim (str/split-lines slurped-data))
-        params (remove nil? (map #(re-seq #"^;+\s*@(\w+)\s+(.+)$" %) lines))
-        option (into {} (for [[[_ k v]] params] [(keyword k) v]))]
-    (assoc option :tag (-> option :tag parse-tag-string))))
+  (if (str/blank? slurped-data)
+    {}
+    (let [lines  (map str/trim (str/split-lines slurped-data))
+          params (remove nil? (map #(re-seq #"^;+\s*@(\w+)\s+(.+)$" %) lines))
+          option (into {} (for [[[_ k v]] params] [(keyword k) v]))]
+      (assoc option :tag (-> option :tag parse-tag-string)))))
 
 ; =apply-template
 (defn apply-template
@@ -77,7 +79,6 @@
    {:pre [(file? file)]}
    (reduce
      (fn [parent-fn [template-data option]]
-       ;(let [template-fn (evaluate-to-function template-data)]
        (let [template-fn (evaluate-to-function template-data (.getName file))]
          (with-meta
            (if (or (nil? parent-fn) (not allow-layout?))

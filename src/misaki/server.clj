@@ -1,7 +1,7 @@
 (ns misaki.server
   "Development server
 
-  Listen *port* to publish developing site,
+  Listen `*port*` to publish developing site,
   and watch template updates.
   "
   (:use
@@ -46,7 +46,8 @@
 ;; ## Dev Compiler
 
 ; =do-all-compile
-(defn do-all-compile []
+(defn do-all-compile
+  []
   (print-compile-result "all templates" (compiler-all-compile))
   (println " * Finish Compiling"))
 

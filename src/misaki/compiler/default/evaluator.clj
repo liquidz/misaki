@@ -44,9 +44,9 @@
          (fn [~'contents]
            (let [~'site (meta ~'contents)] ~sexp)))))
 
-(def ^{:dynamic true
-       :doc "Definition of evaluating functions."}
-  *eval-functions*
+; =*eval-functions*
+(def ^:dynamic *eval-functions*
+  "Definition of evaluating functions."
   [enclose-sexp-with-list
    enclose-sexp-with-function
    eval])

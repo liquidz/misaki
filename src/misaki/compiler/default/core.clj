@@ -1,5 +1,5 @@
 (ns misaki.compiler.default.core
-  "HTML compiler for clojure source."
+  "Default HTML compiler for clojure source."
   (:use
     [misaki.compiler.default template config]
     [misaki.util file sequence string]
@@ -25,24 +25,30 @@
   (print-pretty-stack-trace
     e :filter #(str-contains? (:str %) "misaki")))
 
-(defmacro log [label body]
+; =log
+(defmacro log
+  "Print compile result log with `:detailed-log` option."
+  [label body]
   `(if (and (:detailed-log *config*) (= :all (:-compiling *config*)))
      (srv/print-compile-result ~label ~body)
      ~body))
 
 ;; ## Functions for Plugin
+
+; =-extension
 (defn -extension
-  "Set watch target extension as keyword"
   []
   {:post [#(sequential? %)]}
   (list :clj :cljs))
 
+; =-config
 (defn -config
   [config]
   {:pre  [(map? config)]
    :post [#(map? %)]}
   (plugin-config config))
 
+; =-compile
 (defn -compile
   [config file]
   {:pre  [(map? config) (instance? File file)]
@@ -136,6 +142,8 @@
     (distinct (sort-alphabetically :name tags))))
 
 ;; ## S-exp Template Applier
+
+; =make-site-data
 (defn make-site-data
   "Make site meta data from template java.io.File for HTML generator."
   [#^File tmpl-file & {:keys [base-option tags]

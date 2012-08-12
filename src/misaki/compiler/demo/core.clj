@@ -1,4 +1,5 @@
-(ns misaki.compiler.demo.core)
+(ns misaki.compiler.demo.core
+  (:import [java.io File]))
 
 (defn -extension
   "Set watch target extension as keyword. (REQUIRED)"
@@ -17,17 +18,19 @@
 (defn -compile
   "Compile specified java.io.File. (REQUIRED)
 
-  Return value:
-    string? ----> write string file which has same name with template file
-    true/false -> do nothing
-    map? -------> :status compile-result(true/false)
-                  :filename filename to output
-                  :body     compiled body text. if body is nil, only check status
-                  :stop-compile? flag(true/false) to stop compilation
+  * Return value:
+   * string? : Write string file which has same name with template file.
+   * true/false : Do nothing.
+   * map? :
+     * `:status` : Compile result (true/false).
+     * `:filename` : Filename to output.
+     * `:body` : Compiled body text. If body is nil, only check status.
+     * `:stop-compile?` : Flag(true/false) to stop compilation.
+     * `:all-compile?` : Flag(true/false) to start compiling all templates.
   "
   [config #^File file]
   {:pre  [(map? config) (instance? File file)]}
 
-  (str (:message config) " (slurp file)))
+  (str (:message config) (slurp file)))
 
 

@@ -1,4 +1,5 @@
 (ns misaki.core
+  "Misaki Controll Core"
   (:use misaki.config
         [misaki.util file string sequence]
         [text-decoration.core :only [green]]
@@ -7,8 +8,7 @@
 
 (declare get-watch-file-extensions)
 
-
-;; util
+;; ## Util
 (defn key->sym [k] (symbol (name k)))
 
 ;; ## Compiler Utilities
@@ -23,14 +23,18 @@
        (true? (:all-compile? compile-result))))
 
 ; =call-compiler-fn
-(defn- call-compiler-fn [fn-key & args]
+(defn- call-compiler-fn
+  "Call compiler's function.
+
+      (call-compiler-fn :-compile file)"
+  [fn-key & args]
   (let [fn-sym (key->sym fn-key)
         f      (get *compiler* fn-sym)]
     (if f (apply f args))))
 
 ; =get-template-files
 (defn get-template-files
-  "Get all template files."
+  "Get all template files. Find specified directory with `:dir` option."
   [& {:keys [dir] :or {dir *template-dir*}}]
   (let [exts (get-watch-file-extensions)]
     (filter
@@ -39,7 +43,10 @@
       (find-files dir))))
 
 ; =get-post-files
-(defn get-post-files [& {:keys [sort?] :or {sort? false}}]
+(defn get-post-files
+  "Get all post files.
+  Sort file list with `:sort?` option(default setting is FALSE)."
+  [& {:keys [sort?] :or {sort? false}}]
   (let [files (get-template-files :dir *post-dir*)]
     (if sort?
       ((sort-type->sort-fn) files)
@@ -64,7 +71,12 @@
 
 ; =process-compile-result
 (defn process-compile-result
-  ""
+  "Process compile result and return process result.
+
+  * string? : Write file with default filename.
+  * true/false : Do nothing.
+  * map? : Write file with specified filename if body is passed.
+  "
   [result default-filename]
   (cond
     ; output with default filename
@@ -92,7 +104,10 @@
     :else false))
 
 
-(defn compile* [config file]
+; =compile*
+(defn compile*
+  "Compile java.io.File with config."
+  [config file]
   (try
     (let [default-filename (make-output-filename file)
           compile-result   (call-compiler-fn :-compile config file)

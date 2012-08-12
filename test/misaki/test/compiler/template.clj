@@ -40,7 +40,11 @@
         "index"   (:title option)
         "hello"   (:test option)
         "default" (:layout option)
-        nil       (:dummy option)))))
+        nil       (:dummy option))))
+
+  (testing "Error pattern"
+    (is (= {} (parse-template-option "")))
+    (is (thrown? IllegalArgumentException (parse-template-option nil)))))
 
 ;;; apply-template
 (deftest apply-template-test

@@ -1,5 +1,5 @@
 (ns misaki.compiler.default.config
-  "Configuration Manager"
+  "Default Compiler's Configuration Manager"
   (:use [misaki.util file string sequence]
         [clojure.core.incubator :only [-?> -?>>]]
         [clj-time.core :only [date-time year month day]]
@@ -11,15 +11,27 @@
   (:import [java.io File FileNotFoundException]))
 
 ;; ## Default Value
-(def POST_FILENAME_REGEXP    #"(\d{4})[-_](\d{1,2})[-_](\d{1,2})[-_](.+)$")
-(def POST_OUTPUT_NAME_FORMAT "{{year}}/{{month}}/{{filename}}")
+
+(def POST_FILENAME_REGEXP
+  "Default regexp to parse post filename."
+  #"(\d{4})[-_](\d{1,2})[-_](\d{1,2})[-_](.+)$")
+(def POST_OUTPUT_NAME_FORMAT
+  "Default format to generage post output filename."
+  "{{year}}/{{month}}/{{filename}}")
 
 (def ^:dynamic *config* {})
 (def ^:dynamic *site* {})
 
-;; Public directory path. Compiled html is placed here.
-
+; =plugin-config
 (defn plugin-config
+  "Configure for this compiler.
+
+  * `:layout-dir`: Layout file directory.
+  * `:tag-layout`: Layout file for tag page.
+  * `:detailed-log`: Flag to print detailed log.
+  * `:post-sort-type`: Sort type of posts.
+  * `:cljs-compile-options`: Setting for clojurescript compiling.
+  "
   [config]
   {:pre  [(map? config)]
    :post [#(map? %)]}
@@ -42,7 +54,9 @@
                              (get-parent-path cljs-out))
                :output-to  cljs-out)))))
 
+; =with-config
 (defmacro with-config
+  "Bind specified config to `*config*`."
   [config & body]
   `(binding [*config* ~config]
      ~@body))
