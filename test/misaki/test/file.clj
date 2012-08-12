@@ -34,15 +34,27 @@
     "/foo/bar/" "/foo/bar/"
     "/"         "/foo"))
 
-;; combine-path
-(deftest combine-path-test
-  (are [x y z] (= x (combine-path y z))
-    "a/b.txt"  "a/"  "b.txt"
-    "a/b.txt"  "a"   "/b.txt"
-    "a/b.txt"  "a"   "b.txt"
-    "/b.txt"   ""    "b.txt"
-    "b.txt"    nil   "b.txt"
-    "a/"       "a"   nil
-    "a/"       "a/"  nil
-    "/"        ""    nil
-    ""         nil   nil))
+;; path
+(deftest path-test
+  (testing "combine 2 paths"
+    (are [x y z] (= x (path y z))
+      "a/b.txt"  "a/"  "b.txt"
+      "a/b.txt"  "a"   "/b.txt"
+      "a/b.txt"  "a"   "b.txt"
+      "/b.txt"   ""    "b.txt"
+      "b.txt"    nil   "b.txt"
+      "a/"       "a"   nil
+      "a/"       "a/"  nil
+      "/"        ""    nil
+      ""         nil   nil))
+
+  (testing "combine 3 paths"
+    (are [x y] (= x (apply path y))
+      "a/b/c.txt" ["a"   "b"   "c.txt"]
+      "a/b/c.txt" ["a/"  "b"   "c.txt"]
+      "a/b/c.txt" ["a"   "b/"  "c.txt"]
+      "a/b/c.txt" ["a/"  "b/"  "c.txt"]
+      "a/b/c.txt" ["a"   "b"   "/c.txt"]
+      "a/b/c.txt" ["a/"  "b"   "/c.txt"]
+      "a/b/c.txt" ["a"   "b/"  "/c.txt"]
+      "a/b/c.txt" ["a/"  "b/"  "/c.txt"])))

@@ -20,15 +20,15 @@
   [path]
   (if path (if (.endsWith path "/") path (str path "/"))))
 
-; =combine-path
-(defn combine-path
-  "Combine two path."
-  [path1 path2]
-  (let [path1 (normalize-path path1)
-        path2 (if (and (string? path2) (.startsWith path2 "/"))
-                (apply str (drop 1 path2))
-                path2)]
-    (str path1 path2)))
+; =path
+(defn path
+  "Combine paths."
+  [& paths]
+  (let [dirs (drop-last paths)
+        file (last paths)
+        file (if (and (string? file) (.startsWith file "/"))
+               (apply str (drop 1 file)) file)]
+    (str (str/join "" (map normalize-path dirs)) file)))
 
 
 ; =find-files

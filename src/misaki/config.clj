@@ -77,13 +77,13 @@
   "Make basic config to pass plugin's configuration."
   []
   (let [config       (read-config)
-        template-dir (combine-path *base-dir* (:template-dir config))]
+        template-dir (path *base-dir* (:template-dir config))]
     (assoc
       config
-      :public-dir     (combine-path *base-dir* (:public-dir config))
+      :public-dir     (path *base-dir* (:public-dir config))
       :template-dir   template-dir
       :post-dir       (if-let [post-dir (:post-dir config)]
-                        (combine-path template-dir post-dir))
+                        (path template-dir post-dir))
       :post-sort-type (:post-sort-type config :date-desc)
       :port           (:port config PORT)
       :lang           (:lang config LANGUAGE)
@@ -169,7 +169,7 @@
 (defn get-index-filename
   "Get index filename string."
   []
-  (combine-path *url-base* *index-name*))
+  (path *url-base* *index-name*))
 
 ; =make-post-output-filename
 (defn make-post-output-filename
@@ -197,26 +197,26 @@
 (defn make-output-url
   "Make output url from java.io.File."
   [#^File file]
-  (combine-path *url-base* (make-output-filename file)))
+  (path *url-base* (make-output-filename file)))
 
 ; =template-name->file
 (defn template-name->file
   "Convert template name to java.io.File."
   [#^String tmpl-name]
   {:pre [(string? tmpl-name)]}
-  (io/file (combine-path *template-dir* tmpl-name)))
+  (io/file (path *template-dir* tmpl-name)))
 
 ; =absolute-path
 (defn absolute-path
   "Convert path to absolute with *url-base*"
-  [path]
-  (if (re-seq #"^https?://" path)
-    path
-    (combine-path *url-base* path)))
+  [path-str]
+  (if (re-seq #"^https?://" path-str)
+    path-str
+    (path *url-base* path-str)))
 
 ; =add-public-dir
 (defn add-public-dir
   "Add public dir to specified path."
   [filename]
-  (combine-path *public-dir* filename))
+  (path *public-dir* filename))
 

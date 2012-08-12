@@ -50,7 +50,7 @@
         (assoc cljs
                :src-dir    (normalize-path (str template-dir (:src-dir cljs)))
                :output-dir (if-let [dir (:output-dir cljs)]
-                             (combine-path public-dir dir)
+                             (path public-dir dir)
                              (get-parent-path cljs-out))
                :output-to  cljs-out)))))
 
@@ -91,7 +91,7 @@
   "Make tag output filename from tag name."
   [#^String tag-name]
   {:pre [(string? tag-name)]}
-  (combine-path (:tag-out-dir *config*) (str tag-name ".html")))
+  (path (:tag-out-dir *config*) (str tag-name ".html")))
 
 ; =make-template-output-filename
 (defmulti make-template-output-filename
@@ -112,7 +112,7 @@
   "Make layout filename from layout name(String)."
   [#^String layout-name]
   {:pre [(string? layout-name)]}
-  (combine-path (:layout-dir *config*) (str layout-name ".clj")))
+  (path (:layout-dir *config*) (str layout-name ".clj")))
 
 ;; ## URL Generator
 
@@ -129,7 +129,7 @@
   [#^String tag-name]
   {:pre [(string? tag-name)]}
 
-  (combine-path (:url-base *config*)
+  (path (:url-base *config*)
                 (make-tag-output-filename tag-name)))
 
 
