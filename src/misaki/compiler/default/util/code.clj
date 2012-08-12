@@ -8,12 +8,14 @@
         [clojure.core.incubator :only [-?>>]])
   (:require [clojure.string :as str]))
 
+; =get-code-type
 (defn get-code-type
   "Get code type from code-highlight setting in `config`."
   [s]
   (let [code-key (keyword s)]
     (get (:code-highlight *config* {}) code-key)))
 
+; =dispatch-reader-macro
 (defn dispatch-reader-macro
   [ch fun]
   (let [dm (.get (doto (.getDeclaredField clojure.lang.LispReader "dispatchMacros")
@@ -21,7 +23,7 @@
                  nil)]
     (aset dm (int ch) fun)))
 
-
+; =read-until
 (defn read-until
   "Read until end text."
   [reader end-str & {:keys [ignore-started?] :or {ignore-started? false}}]
@@ -34,7 +36,7 @@
           res
           (let [c (.read reader)]
             (if-not (= -1 c)
-              (if (or started? ignore-started?)
+              (if (or (empty? res) started? ignore-started?)
                 (if (= c (first e))
                   (recur (conj res c) (rest e) true)
                   ; keep `started?` with front space
@@ -44,6 +46,7 @@
 
       (drop (count end-seq)) reverse (map char) (apply str))))
 
+; =here-code
 (defn here-code
   "Read here code
 

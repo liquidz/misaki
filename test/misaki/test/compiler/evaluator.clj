@@ -10,7 +10,9 @@
     true  '(defn x [] nil)
     true  '(def x 10)
     false '[defn x [] nil]
-    false '(a def x 10)))
+    false '(a def x 10)
+    false  "string"
+    false  nil))
 
 ;; enclose-sexp-with-function
 (deftest enclose-sexp-with-function-test

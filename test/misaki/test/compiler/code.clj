@@ -9,9 +9,10 @@
 (deftest read-until-test
   (testing "normal pattern"
     (are [x y] (= x (str/trim (read-until (StringReader. y) "EOT")))
-      "hello" "hello\nEOT"
-      "hello" "hello\n  EOT"
-      "helloEOT" "helloEOT\n  EOT"))
+      "hello"    "hello\nEOT"
+      "hello"    "hello\n  EOT"
+      "helloEOT" "helloEOT\n  EOT"
+      ""         "EOT"))
   (testing "error pattern"
     (are [x] (nil? (read-until (StringReader. x) "EOT"))
       "helloEOT"
