@@ -6,6 +6,7 @@
   (:require
     [clojure.string :as str]))
 
+;;; set-base-dir!
 (deftest set-base-dir!-test
   (testing "default is blank"
     (is (str/blank? *base-dir*)))
@@ -18,3 +19,14 @@
   (with-test-base-dir
     (is (= "foo/" *base-dir*))))
 
+
+;;; get-base-config
+(deftest get-base-config-test
+  (testing "test dir"
+    (set-base-dir! "test")
+    (is (= "default title") (-> (get-base-config) :site :default-title)))
+
+  (testing "sample dir"
+    (set-base-dir! "sample")
+    (is (= "misaki demo page")
+        (-> (get-base-config) :site :site-title))))

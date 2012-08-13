@@ -13,11 +13,14 @@
 
 ; =msec->string
 (defn msec->string
+  "Convert msec to string."
   [ms]
   (let [sec  (int (/ ms 1000))
         msec (format "%03d" (int (mod ms 1000)))]
     (str sec "." msec " sec")))
 
 ; =str-contains?
-(defn str-contains? [s target]
+(defn str-contains?
+  "Check whether specified string contains sub string or not."
+  [s target]
   (not= -1 (.indexOf s target)))
