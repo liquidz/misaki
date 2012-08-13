@@ -5,7 +5,7 @@
                  [org.clojure/clojurescript "0.0-1443"]
                  [hiccup "1.0.0"]
                  [compojure "1.1.1"]
-                 [ring/ring-jetty-adapter "1.1.0"]
+                 [ring/ring-jetty-adapter "1.1.2"]
                  [clj-time "0.4.3"]
                  [clj-text-decoration "0.0.1"]
                  [clj-pretty-error "0.0.5"]
@@ -26,7 +26,7 @@
                        [org.clojure/clojurescript "0.0-1236"]
                        [hiccup "1.0.0"]
                        [compojure "1.1.1"]
-                       [ring/ring-jetty-adapter "1.1.0"]
+                       [ring/ring-jetty-adapter "1.1.2"]
                        [clj-time "0.4.3"]
                        [uochan/watchtower "0.1.2"]
                        [de.ubercode.clostache/clostache "1.3.0"]]}

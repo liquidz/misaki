@@ -60,6 +60,8 @@
  ;;   default value: false
  :detailed-log true;false
 
+ ;; compiler setting
+ ;;   default value: "default"
  :compiler "default"
  }
 
