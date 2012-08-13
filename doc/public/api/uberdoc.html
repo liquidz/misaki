@@ -3076,7 +3076,7 @@ net.brehaut.ClojureTools = (function (SH) {
         (assoc cljs
                :src-dir    (normalize-path (str template-dir (:src-dir cljs)))
                :output-dir (if-let [dir (:output-dir cljs)]
-                             (combine-path public-dir dir)
+                             (path public-dir dir)
                              (get-parent-path cljs-out))
                :output-to  cljs-out)))))</pre></td></tr><tr><td class="docs"><p>Bind specified config to <code>*config*</code>.</p>
 </td><td class="codes"><pre class="brush: clojure">(defmacro with-config
@@ -3103,7 +3103,7 @@ net.brehaut.ClojureTools = (function (SH) {
 </td><td class="codes"><pre class="brush: clojure">(defn make-tag-output-filename
   [#^String tag-name]
   {:pre [(string? tag-name)]}
-  (combine-path (:tag-out-dir *config*) (str tag-name &quot;.html&quot;)))</pre></td></tr><tr><td class="docs"><p>Make template output filename from template name.</p>
+  (path (:tag-out-dir *config*) (str tag-name &quot;.html&quot;)))</pre></td></tr><tr><td class="docs"><p>Make template output filename from template name.</p>
 </td><td class="codes"><pre class="brush: clojure">(defmulti make-template-output-filename
   class)</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defmethod make-template-output-filename String
@@ -3116,7 +3116,7 @@ net.brehaut.ClojureTools = (function (SH) {
 </td><td class="codes"><pre class="brush: clojure">(defn make-layout-filename
   [#^String layout-name]
   {:pre [(string? layout-name)]}
-  (combine-path (:layout-dir *config*) (str layout-name &quot;.clj&quot;)))</pre></td></tr><tr><td class="docs"><h2>URL Generator</h2>
+  (path (:layout-dir *config*) (str layout-name &quot;.clj&quot;)))</pre></td></tr><tr><td class="docs"><h2>URL Generator</h2>
 </td><td class="codes"></td></tr><tr><td class="docs"><p>Make post url from java.io.File</p>
 </td><td class="codes"><pre class="brush: clojure">(defn make-post-url
   [#^File file]
@@ -3125,7 +3125,7 @@ net.brehaut.ClojureTools = (function (SH) {
 </td><td class="codes"><pre class="brush: clojure">(defn make-tag-url
   [#^String tag-name]
   {:pre [(string? tag-name)]}
-  (combine-path (:url-base *config*)
+  (path (:url-base *config*)
                 (make-tag-output-filename tag-name)))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#misaki.compiler.default.core" name="misaki.compiler.default.core"><h1 class="project-name">misaki.compiler.default.core</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>Default HTML compiler for clojure source.</p>
 </td><td class="codes"><pre class="brush: clojure">(ns misaki.compiler.default.core
   (:use
@@ -3825,7 +3825,7 @@ ewline and return if you deref instance.</p>
           res
           (let [c (.read reader)]
             (if-not (= -1 c)
-              (if (or started? ignore-started?)
+              (if (or (empty? res) started? ignore-started?)
                 (if (= c (first e))
                   (recur (conj res c) (rest e) true)
                   ; keep `started?` with front space
@@ -3941,13 +3941,13 @@ ewline and return if you deref instance.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn make-basic-config-map
   []
   (let [config       (read-config)
-        template-dir (combine-path *base-dir* (:template-dir config))]
+        template-dir (path *base-dir* (:template-dir config))]
     (assoc
       config
-      :public-dir     (combine-path *base-dir* (:public-dir config))
+      :public-dir     (path *base-dir* (:public-dir config))
       :template-dir   template-dir
       :post-dir       (if-let [post-dir (:post-dir config)]
-                        (combine-path template-dir post-dir))
+                        (path template-dir post-dir))
       :post-sort-type (:post-sort-type config :date-desc)
       :port           (:port config PORT)
       :lang           (:lang config LANGUAGE)
@@ -4008,7 +4008,7 @@ ewline and return if you deref instance.</p>
 </td><td class="codes"></td></tr><tr><td class="docs"><p>Get index filename string.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn get-index-filename
   []
-  (combine-path *url-base* *index-name*))</pre></td></tr><tr><td class="docs"><p>Make post output filename from java.io.File.</p>
+  (path *url-base* *index-name*))</pre></td></tr><tr><td class="docs"><p>Make post output filename from java.io.File.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn make-post-output-filename
   [#^File file]
   {:pre [(file? file)]}
@@ -4027,19 +4027,19 @@ ewline and return if you deref instance.</p>
     (.getName file)))</pre></td></tr><tr><td class="docs"><p>Make output url from java.io.File.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn make-output-url
   [#^File file]
-  (combine-path *url-base* (make-output-filename file)))</pre></td></tr><tr><td class="docs"><p>Convert template name to java.io.File.</p>
+  (path *url-base* (make-output-filename file)))</pre></td></tr><tr><td class="docs"><p>Convert template name to java.io.File.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn template-name-&gt;file
   [#^String tmpl-name]
   {:pre [(string? tmpl-name)]}
-  (io/file (combine-path *template-dir* tmpl-name)))</pre></td></tr><tr><td class="docs"><p>Convert path to absolute with <em>url-base</em></p>
+  (io/file (path *template-dir* tmpl-name)))</pre></td></tr><tr><td class="docs"><p>Convert path to absolute with <em>url-base</em></p>
 </td><td class="codes"><pre class="brush: clojure">(defn absolute-path
-  [path]
-  (if (re-seq #&quot;^https?://&quot; path)
-    path
-    (combine-path *url-base* path)))</pre></td></tr><tr><td class="docs"><p>Add public dir to specified path.</p>
+  [path-str]
+  (if (re-seq #&quot;^https?://&quot; path-str)
+    path-str
+    (path *url-base* path-str)))</pre></td></tr><tr><td class="docs"><p>Add public dir to specified path.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn add-public-dir
   [filename]
-  (combine-path *public-dir* filename))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#misaki.core" name="misaki.core"><h1 class="project-name">misaki.core</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>Misaki Controll Core</p>
+  (path *public-dir* filename))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#misaki.core" name="misaki.core"><h1 class="project-name">misaki.core</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>Misaki Controll Core</p>
 </td><td class="codes"><pre class="brush: clojure">(ns misaki.core
   (:use misaki.config
         [misaki.util file string sequence]
@@ -4319,14 +4319,14 @@ ewline and return if you deref instance.</p>
   If path does not contain '/' at end of string, add '/'.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn normalize-path
   [path]
-  (if path (if (.endsWith path &quot;/&quot;) path (str path &quot;/&quot;))))</pre></td></tr><tr><td class="docs"><p>Combine two path.</p>
-</td><td class="codes"><pre class="brush: clojure">(defn combine-path
-  [path1 path2]
-  (let [path1 (normalize-path path1)
-        path2 (if (and (string? path2) (.startsWith path2 &quot;/&quot;))
-                (apply str (drop 1 path2))
-                path2)]
-    (str path1 path2)))</pre></td></tr><tr><td class="docs"><p>Find files in <code>dir</code> recursively.</p>
+  (if path (if (.endsWith path &quot;/&quot;) path (str path &quot;/&quot;))))</pre></td></tr><tr><td class="docs"><p>Combine paths.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn path
+  [&amp; paths]
+  (let [dirs (drop-last paths)
+        file (last paths)
+        file (if (and (string? file) (.startsWith file &quot;/&quot;))
+               (apply str (drop 1 file)) file)]
+    (str (str/join &quot;&quot; (map normalize-path dirs)) file)))</pre></td></tr><tr><td class="docs"><p>Find files in <code>dir</code> recursively.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn find-files
   [dir]
   (file-seq (io/file dir)))</pre></td></tr><tr><td class="docs"><p>Check whether file has specified extension or not.</p>
@@ -4420,12 +4420,13 @@ ewline and return if you deref instance.</p>
   (-&gt; s (str/replace #&quot;&amp;&quot;  &quot;&amp;amp;&quot;)
         (str/replace #&quot;\&quot;&quot; &quot;&amp;quot;&quot;)
         (str/replace #&quot;&lt;&quot;  &quot;&amp;lt;&quot;)
-        (str/replace #&quot;&gt;&quot;  &quot;&amp;gt;&quot;)))</pre></td></tr><tr><td class="docs">
+        (str/replace #&quot;&gt;&quot;  &quot;&amp;gt;&quot;)))</pre></td></tr><tr><td class="docs"><p>Convert msec to string.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn msec-&gt;string
   [ms]
   (let [sec  (int (/ ms 1000))
         msec (format &quot;%03d&quot; (int (mod ms 1000)))]
-    (str sec &quot;.&quot; msec &quot; sec&quot;)))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn str-contains? [s target]
+    (str sec &quot;.&quot; msec &quot; sec&quot;)))</pre></td></tr><tr><td class="docs"><p>Check whether specified string contains sub string or not.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn str-contains?
+  [s target]
   (not= -1 (.indexOf s target)))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr></table><div class="footer">Generated by <a href="https://github.com/fogus/marginalia">Marginalia</a>.&nbsp;&nbsp;Syntax highlighting provided by Alex Gorbatchev's <a href="http://alexgorbatchev.com/SyntaxHighlighter/">SyntaxHighlighter</a></div><script type="text/javascript">SyntaxHighlighter.defaults['gutter'] = false;
        SyntaxHighlighter.all()</script></body></html>
