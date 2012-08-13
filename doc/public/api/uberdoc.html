@@ -4127,10 +4127,9 @@ ewline and return if you deref instance.</p>
       (print-pretty-stack-trace
         e :filter #(str-contains? (:str %) &quot;misaki&quot;))
       [false {:stop-compile? true}])))</pre></td></tr><tr><td class="docs"><p>Call plugin's -compile function for all template files.</p>
-</td><td class="codes"><pre class="brush: clojure">(defn compiler-all-compile
+</td><td class="codes"><pre class="brush: clojure">(defn call-all-compile
   []
-  (let [config (assoc (update-config)
-                      :-compiling :all)
+  (let [config (assoc (update-config) :-compiling :all)
         files  (get-template-files)]
     (loop [[file &amp; rest-files] files, success? true]
       (if file
@@ -4140,16 +4139,15 @@ ewline and return if you deref instance.</p>
             result
             (recur rest-files result)))
         success?))))</pre></td></tr><tr><td class="docs"><p>Call plugin's -compile function.</p>
-</td><td class="codes"><pre class="brush: clojure">(defn compiler-compile
+</td><td class="codes"><pre class="brush: clojure">(defn call-compile
   [file]
-  (let [config   (assoc (update-config)
-                        :-compiling :single)
+  (let [config (assoc (update-config) :-compiling :single)
         [process-result compile-result] (compile* config file)]
     (cond
       ; all compile
       (all-compile? compile-result)
         (do (println (green &quot;   Switch to all compiling&quot;))
-            (compiler-all-compile))
+            (call-all-compile))
       ; compile with post
       (post-file? file)
         (every? #(true? (first %))
@@ -4193,13 +4191,13 @@ ewline and return if you deref instance.</p>
 </td><td class="codes"></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn do-all-compile
   []
-  (print-compile-result &quot;all templates&quot; (compiler-all-compile))
+  (print-compile-result &quot;all templates&quot; (call-all-compile))
   (println &quot; * Finish Compiling&quot;))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn do-compile
   [#^java.io.File file]
   (if (config-file? file)
-    (print-compile-result &quot;all templates&quot; (compiler-all-compile))
-    (print-compile-result (.getName file) (compiler-compile file)))
+    (print-compile-result &quot;all templates&quot; (call-all-compile))
+    (print-compile-result (.getName file) (call-compile file)))
   (println &quot; * Finish Compiling&quot;))</pre></td></tr><tr><td class="docs"><h2>Template Watcher</h2>
 </td><td class="codes"></td></tr><tr><td class="docs"><p>Start watchtower watcher to compile changed templates</p>
 </td><td class="codes"><pre class="brush: clojure">(defn start-watcher
@@ -4230,7 +4228,7 @@ ewline and return if you deref instance.</p>
           {:port *port*})))))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#misaki.tester" name="misaki.tester"><h1 class="project-name">misaki.tester</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>Compiler Testing Utilities</p>
 </td><td class="codes"><pre class="brush: clojure">(ns misaki.tester
   (:use
-    [misaki.core :only [update-config compiler-compile]]
+    [misaki.core :only [update-config call-compile]]
     [misaki.config :only [*base-dir* make-basic-config-map with-config]]
     [misaki.util.file :only [normalize-path]]
     [clojure.test :only [deftest]])
@@ -4256,7 +4254,7 @@ ewline and return if you deref instance.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn test-compile
   [file]
   (with-test-base-dir
-    (compiler-compile file)))</pre></td></tr><tr><td class="docs"><p>Define test macro for using test base directory and config.</p>
+    (call-compile file)))</pre></td></tr><tr><td class="docs"><p>Define test macro for using test base directory and config.</p>
 </td><td class="codes"><pre class="brush: clojure">(defmacro deftest*
   [name &amp; body]
   `(deftest ~name
