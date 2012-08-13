@@ -48,7 +48,7 @@
 ; =do-all-compile
 (defn do-all-compile
   []
-  (print-compile-result "all templates" (compiler-all-compile))
+  (print-compile-result "all templates" (call-all-compile))
   (println " * Finish Compiling"))
 
 ; =do-compile
@@ -56,8 +56,8 @@
   [#^java.io.File file]
 
   (if (config-file? file)
-    (print-compile-result "all templates" (compiler-all-compile))
-    (print-compile-result (.getName file) (compiler-compile file)))
+    (print-compile-result "all templates" (call-all-compile))
+    (print-compile-result (.getName file) (call-compile file)))
 
   (println " * Finish Compiling"))
 

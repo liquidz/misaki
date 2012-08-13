@@ -119,12 +119,11 @@
         e :filter #(str-contains? (:str %) "misaki"))
       [false {:stop-compile? true}])))
 
-; =compiler-all-compile
-(defn compiler-all-compile
+; =call-all-compile
+(defn call-all-compile
   "Call plugin's -compile function for all template files."
   []
-  (let [config (assoc (update-config)
-                      :-compiling :all)
+  (let [config (assoc (update-config) :-compiling :all)
         files  (get-template-files)]
     (loop [[file & rest-files] files, success? true]
       (if file
@@ -135,18 +134,17 @@
             (recur rest-files result)))
         success?))))
 
-; =compiler-compile
-(defn compiler-compile
+; =call-compile
+(defn call-compile
   "Call plugin's -compile function."
   [file]
-  (let [config   (assoc (update-config)
-                        :-compiling :single)
+  (let [config (assoc (update-config) :-compiling :single)
         [process-result compile-result] (compile* config file)]
     (cond
       ; all compile
       (all-compile? compile-result)
         (do (println (green "   Switch to all compiling"))
-            (compiler-all-compile))
+            (call-all-compile))
 
       ; compile with post
       (post-file? file)
