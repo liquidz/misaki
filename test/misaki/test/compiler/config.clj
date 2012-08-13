@@ -1,23 +1,76 @@
 (ns misaki.test.compiler.config
   (:use [misaki.compiler.default config]
-        [misaki.util file]
+        [misaki.util file sequence]
         misaki.test.compiler.common
         [clj-time.core :only [date-time year month day]]
         clojure.test)
-  (:require [clojure.java.io :as io]))
+  (:require [clojure.java.io :as io])
+  (:import [java.io FileNotFoundException])
+  )
 
-;(deftest* layout-file?-test
-;  (testing "success"
-;    (are [x y] (= x (layout-file? y))
-;      (io/file )
-;      )
-;    )
-;  (testing "error"
-;    (are [x y] (= x (layout-file? y))
-;      false nil
-;      )
-;    )
-;  )
+(def sample-posts
+  (list
+    {:file (io/file "b") :title "a" :date (date-time 2022 2 2)}
+    {:file (io/file "c") :title "c" :date (date-time 2000 1 1)}
+    {:file (io/file "a") :title "b" :date (date-time 2011 1 1)}))
+
+;;; layout-file?
+(deftest* layout-file?-test
+  (testing "normal pattern"
+    (are [x y] (= x (layout-file? (io/file y)))
+      true  (path (:layout-dir *config*) "default.clj")
+      false (path (:template-dir *config*) "index.html.clj")
+      false ""))
+
+  (testing "error"
+    (is (thrown? AssertionError (layout-file? nil)))))
+
+
+(deftest* sort-type->sort-fn-test
+  (testing "title sort"
+    (binding [*config* (assoc *config* :post-sort-type :title)]
+      (let [[p1 p2 p3] ((sort-type->sort-fn) sample-posts)]
+        (are [x y] (= x (:title y))
+          "a" p1
+          "b" p2
+          "c" p3))))
+  (testing "title-desc sort"
+    (binding [*config* (assoc *config* :post-sort-type :title-desc)]
+      (let [[p1 p2 p3] ((sort-type->sort-fn) sample-posts)]
+        (are [x y] (= x (:title y))
+          "c" p1
+          "b" p2
+          "a" p3))))
+
+  (testing "date sort"
+    (binding [*config* (assoc *config* :post-sort-type :date)]
+      (let [[p1 p2 p3] ((sort-type->sort-fn) sample-posts)]
+        (are [x y] (= x (:title y))
+          "c" p1
+          "b" p2
+          "a" p3))))
+  (testing "date-desc sort"
+    (binding [*config* (assoc *config* :post-sort-type :date-desc)]
+      (let [[p1 p2 p3] ((sort-type->sort-fn) sample-posts)]
+        (are [x y] (= x (:title y))
+          "a" p1
+          "b" p2
+          "c" p3))))
+
+  (testing "name sort"
+    (binding [*config* (assoc *config* :post-sort-type :name)]
+      (let [[p1 p2 p3] ((sort-type->sort-fn) sample-posts)]
+        (are [x y] (= x (:title y))
+          "b" p1
+          "a" p2
+          "c" p3))))
+  (testing "name-desc sort"
+    (binding [*config* (assoc *config* :post-sort-type :name-desc)]
+      (let [[p1 p2 p3] ((sort-type->sort-fn) sample-posts)]
+        (are [x y] (= x (:title y))
+          "c" p1
+          "a" p2
+          "b" p3)))))
 
 ;;; make-template-output-filename
 (deftest* make-template-output-filename-test
