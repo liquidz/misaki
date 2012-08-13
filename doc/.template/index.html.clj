@@ -23,9 +23,12 @@
        (list "Built in functions"
              (ul
                (fn [[k v]] (link k v))
-               {"misaki.html.core" "api/uberdoc.html#misaki.html.core"
-                "misaki.html.conv" "api/uberdoc.html#misaki.html.conv"
-                "misaki.html.util" "api/uberdoc.html#misaki.html.util"}))]))
+               {"misaki.compiler.default.html.core"
+                    "api/uberdoc.html#misaki.compiler.default.html.core"
+                "misaki.compiler.default.html.conv"
+                    "api/uberdoc.html#misaki.compiler.default.html.conv"
+                "misaki.compiler.default.html.util"
+                    "api/uberdoc.html#misaki.compiler.default.html.util"}))]))
 
   (list
     (h2 "Try sample")

@@ -10,7 +10,10 @@
                  [clj-text-decoration "0.0.1"]
                  [clj-pretty-error "0.0.5"]
                  [uochan/watchtower "0.1.2"]
-                 [de.ubercode.clostache/clostache "1.3.0"]]
+                 [de.ubercode.clostache/clostache "1.3.0"]
+
+                 ;; compiler
+                 [misaki-clostache "0.0.1-alpha"]]
 
   :dev-dependencies [[lein-multi "1.1.0"]
                      [lein-marginalia "0.7.1"]
