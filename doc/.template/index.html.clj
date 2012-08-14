@@ -42,6 +42,6 @@ SH
     (p "\"misaki(美咲)\" is woman's name in Japan, and it means \"Bloom beautifully\".")
 
     (h2 "License")
-    (p "Copyright (C) 2012 Masashi Iizuka([@uochan](http://twitter.com/uochan/))
+    (p "Copyright (C) 2012 Masashi Iizuka ([@uochan](http://twitter.com/uochan/))
 
        Distributed under the Eclipse Public License, the same as Clojure.")))

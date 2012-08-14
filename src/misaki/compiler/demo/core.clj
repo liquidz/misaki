@@ -19,14 +19,14 @@
   "Compile specified java.io.File. (REQUIRED)
 
   * Return value:
-   * string? : Write string file which has same name with template file.
+   * string? : Write string to file named as same as template file.
    * true/false : Do nothing.
-   * map? :
-     * `:status` : Compile result (true/false).
-     * `:filename` : Filename to output.
-     * `:body` : Compiled body text. If body is nil, only check status.
+   * map? : Write file with detailed setting.
+     * `:status`   : Compile result (true/false).
+     * `:filename` : Filename to write
+     * `:body`     : Compiled body text. If body is nil, only status is checked.
      * `:stop-compile?` : Flag(true/false) to stop compilation.
-     * `:all-compile?` : Flag(true/false) to start compiling all templates.
+     * `:all-compile?`  : Flag(true/false) to force compiling all templates.
   "
   [config #^File file]
   {:pre  [(map? config) (instance? File file)]}
