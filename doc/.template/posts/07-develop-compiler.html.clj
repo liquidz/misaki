@@ -12,6 +12,32 @@
 
 ;;;;;;;
 
+(h2 "Start to develop")
+
+(p "At first, normally make new clojure template.")
+#-SH
+$ lein new misaki-new-compiler
+SH
+
+(p "Add [misaki module](https://clojars.org/misaki) dependency.")
+
+#-CLJ
+:dependencies [[org.clojure/clojure "1.4.0"]
+               ; add
+               [misaki "0.2.0-beta"]]
+CLJ
+
+(p "Namespace of core.clj must be **misaki.compiler.YOUR-COMPIER-NAME.core**")
+
+#-SH
+$ mkdir -p src/misaki/compiler/YOUR_COMPILER_NAME
+$ mv src/misaki_new_compiler/core.clj src/misaki/compiler/YOUR_COMPILER_NAME/core.clj
+SH
+
+(p "Then, edit core.clj as follows!")
+
+;;;;;;;
+
 (h2 "Simplest compiler sample")
 
 (p "Following compiler append `(:text config)` to head of template file.")
@@ -46,4 +72,6 @@
   [config file]
   (str (:text config) (slurp file)))
 CLJ
+
+(p "You can [misaki-clostache](https://github.com/liquidz/misaki-clostache) as reference of developing misaki compiler.")
 
