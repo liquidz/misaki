@@ -73,5 +73,7 @@ SH
   (str (:text config) (slurp file)))
 CLJ
 
-(p "You can [misaki-clostache](https://github.com/liquidz/misaki-clostache) as reference of developing misaki compiler.")
+(p "You can use [misaki-clostache](https://github.com/liquidz/misaki-clostache) and [misaki API](../api/uberdoc.html) as reference of developing misaki compiler.")
 
+
+(see-also ["Switch Compiler"])

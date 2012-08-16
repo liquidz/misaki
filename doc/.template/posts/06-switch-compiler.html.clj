@@ -33,6 +33,5 @@
 CLJ
 
 
-;(see-also ["Directory Structure"
-;           "Edit Template"])
+(see-also ["Develop Compiler"])
 
