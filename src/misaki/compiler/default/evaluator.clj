@@ -1,16 +1,17 @@
 (ns misaki.compiler.default.evaluator
   "S-exp Template Evaluator.
   Template string is evaluated as Function."
-
   (:use [misaki.compiler.default.reader :only [read-from-string]]))
 
 ; =def?
 (defn def?
   "Check whether `def` or `defn` s-exp or not."
   [x]
+
   (and (seq? x)
-       (or (= 'def (first x))
-           (= 'defn (first x)))))
+       (case (first x)
+         (def defn defn- defmacro) true
+         false)))
 
 ; =split-into-def-and-body
 (def split-into-def-and-body

@@ -9,6 +9,8 @@
   (are [x y] (= x (def? y))
     true  '(defn x [] nil)
     true  '(def x 10)
+    true  '(defn- x [] nil)
+    true  '(defmacro x [] nil)
     false '[defn x [] nil]
     false '(a def x 10)
     false  "string"
