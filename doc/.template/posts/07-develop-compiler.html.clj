@@ -62,7 +62,8 @@ SH
   "Called when watched files are updated.
   If you returns...
      * string : Write string to file named as same as template file.
-     * boolean: Do nothing.
+     * boolean: Do nothing(true = success, false = fail).
+     * symbol : Do nothing(skip)
      * map    : Write file with detailed setting.
                 `:status`   -> Compile result(true(success), false(fail) or something else(skip))
                 `:filename` -> Filename to write

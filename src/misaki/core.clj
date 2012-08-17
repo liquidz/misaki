@@ -73,12 +73,18 @@
 (defn process-compile-result
   "Process compile result and return process result.
 
-  * string? : Write file with default filename.
-  * true/false : Do nothing.
-  * map? : Write file with detailed setting.
-           `:status`   -> true(success), false(fail) or something else(skip)
-           `:filename` -> Filename to write
-           `:body`     -> Compiled body text. if body is nil, only status is checked
+  * string?
+    * Write file with default filename.
+  * true? or false? or symbol?
+    * Do nothing.
+      * `true`  : Success
+      * `false` : Fail
+      * `symbol`: Skip
+  * map?
+    * Write file with detailed setting.
+      * `:status`  : True(success), false(fail) or something else(skip)
+      * `:filename`: Filename to write
+      * `:body`    : Compiled body text. if body is nil, only status is checked
   "
   [result default-filename]
   (cond

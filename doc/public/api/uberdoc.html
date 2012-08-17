@@ -3305,8 +3305,9 @@ net.brehaut.ClojureTools = (function (SH) {
 </td><td class="codes"><pre class="brush: clojure">(defn def?
   [x]
   (and (seq? x)
-       (or (= 'def (first x))
-           (= 'defn (first x)))))</pre></td></tr><tr><td class="docs"><p>Split s-exp into definition and template body using <code>def?</code>.</p>
+       (case (first x)
+         (def defn defn- defmacro) true
+         false)))</pre></td></tr><tr><td class="docs"><p>Split s-exp into definition and template body using <code>def?</code>.</p>
 </td><td class="codes"><pre class="brush: clojure">(def split-into-def-and-body
   (juxt (partial filter def?)
         (partial remove def?)))</pre></td></tr><tr><td class="docs"><p>Enclose s-exp with list.</p>
@@ -3657,15 +3658,17 @@ net.brehaut.ClojureTools = (function (SH) {
         [pretty-error.core :only [set-stack-trace-element!]])
   (:import [java.io StringReader PushbackReader]
            [clojure.lang IDeref]))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(def _EOF_ (gensym &quot;end-of-file&quot;))</pre></td></tr><tr><td class="docs"><p>Utility for java.io.Reader</p>
+</td><td class="codes"><pre class="brush: clojure">(def _EOF_   (gensym &quot;end-of-file&quot;))
+(def _CR_    (first &quot;\r&quot;))
+(def _LFint_ (int \newline))</pre></td></tr><tr><td class="docs"><p>Utility for java.io.Reader</p>
 </td><td class="codes"><pre class="brush: clojure">(defn- read-char [r]
   (let [c (.read r)]
     (if-not (= -1 c) (char c))))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn- blank-char? [c]
-  (some #(= c %) [\space \tab \newline (first &quot;\r&quot;)]))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn- skip-to [r ch]
-  (if-let [_ch (read-char r)]
-    (if (not= _ch ch) (recur r ch))))</pre></td></tr><tr><td class="docs"><p>Create an instance extending java.io.PushbackReader and implementing clojure.lang.IDeref.
+</td><td class="codes"><pre class="brush: clojure">(defn- blank-char? [ch]
+  (some #(= ch %) [\space \tab \newline _CR_]))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn- skip-to [r target-ch]
+  (if-let [ch (read-char r)]
+    (if (not= ch target-ch) (recur r target-ch))))</pre></td></tr><tr><td class="docs"><p>Create an instance extending java.io.PushbackReader and implementing clojure.lang.IDeref.
   This instance counts 
 ewline and return if you deref instance.</p>
 
@@ -3689,7 +3692,7 @@ ewline and return if you deref instance.</p>
   (let [line-num (atom 1)]
     (proxy [PushbackReader IDeref] [in]
       (read [] (let [c (proxy-super read)]
-                 (if (and (not= -1 c) (= \newline (char c)))
+                 (if (and (not= -1 c) (= _LFint_ c))
                    (swap! line-num inc))
                  c))
       (deref [] @line-num))))</pre></td></tr><tr><td class="docs"><p>Skip java.io.Reader to next token.
@@ -4088,9 +4091,18 @@ ewline and return if you deref instance.</p>
     (if res res config)))</pre></td></tr><tr><td class="docs"><p>Process compile result and return process result.</p>
 
 <ul>
-<li>string? : Write file with default filename.</li>
-<li>true/false : Do nothing.</li>
-<li>map? : Write file with specified filename if body is passed.</li>
+<li>string?
+<ul><li>Write file with default filename.</li></ul></li>
+<li>true? or false? or symbol?
+<ul><li>Do nothing.
+<ul><li><code>true</code>  : Success</li>
+<li><code>false</code> : Fail</li>
+<li><code>symbol</code>: Skip</li></ul></li></ul></li>
+<li>map?
+<ul><li>Write file with detailed setting.
+<ul><li><code>:status</code>  : True(success), false(fail) or something else(skip)</li>
+<li><code>:filename</code>: Filename to write</li>
+<li><code>:body</code>    : Compiled body text. if body is nil, only status is checked</li></ul></li></ul></li>
 </ul>
 </td><td class="codes"><pre class="brush: clojure">(defn process-compile-result
   [result default-filename]
@@ -4114,7 +4126,7 @@ ewline and return if you deref instance.</p>
             status)
         status))
     ; error
-    :else false))</pre></td></tr><tr><td class="docs"><p>Compile java.io.File with config.</p>
+    :else false))</pre></td></tr><tr><td class="docs"><p>Common function to compile java.io.File with config.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn compile*
   [config file]
   (try

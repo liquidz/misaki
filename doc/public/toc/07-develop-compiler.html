@@ -22,9 +22,10 @@ $ mv src/misaki_new_compiler/core.clj src/misaki/compiler/YOUR_COMPILER_NAME/cor
   &quot;Called when watched files are updated.
   If you returns...
      * string : Write string to file named as same as template file.
-     * boolean: Do nothing.
+     * boolean: Do nothing(true = success, false = fail).
+     * symbol : Do nothing(skip)
      * map    : Write file with detailed setting.
-                `:status`   -&gt; Compile result(true/false)
+                `:status`   -&gt; Compile result(true(success), false(fail) or something else(skip))
                 `:filename` -&gt; Filename to write
                 `:body`     -&gt; Compiled body text. if body is nil, only status is checked
                 `:stop-compile?` -&gt; Flag(true/false) to stop all compilation
