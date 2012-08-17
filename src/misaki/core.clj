@@ -75,7 +75,10 @@
 
   * string? : Write file with default filename.
   * true/false : Do nothing.
-  * map? : Write file with specified filename if body is passed.
+  * map? : Write file with detailed setting.
+           `:status`   -> true(success), false(fail) or something else(skip)
+           `:filename` -> Filename to write
+           `:body`     -> Compiled body text. if body is nil, only status is checked
   "
   [result default-filename]
   (cond
@@ -106,7 +109,7 @@
 
 ; =compile*
 (defn compile*
-  "Compile java.io.File with config."
+  "Common function to compile java.io.File with config."
   [config file]
   (try
     (let [default-filename (make-output-filename file)

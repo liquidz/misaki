@@ -3,8 +3,7 @@
     [clj-time.core   :as t]
     [clj-time.format :as fmt]
     [clj-time.local  :as l]
-    [clojure.string  :as str]
-    ))
+    [clojure.string  :as str]))
 
 ;; ## Converter for org.joda.time.DateTime
 

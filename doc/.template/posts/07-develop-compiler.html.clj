@@ -64,7 +64,7 @@ SH
      * string : Write string to file named as same as template file.
      * boolean: Do nothing.
      * map    : Write file with detailed setting.
-                `:status`   -> Compile result(true/false)
+                `:status`   -> Compile result(true(success), false(fail) or something else(skip))
                 `:filename` -> Filename to write
                 `:body`     -> Compiled body text. if body is nil, only status is checked
                 `:stop-compile?` -> Flag(true/false) to stop all compilation
