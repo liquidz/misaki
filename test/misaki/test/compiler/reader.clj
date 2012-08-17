@@ -1,12 +1,11 @@
 (ns misaki.test.compiler.reader
-  (:use misaki.compiler.default.reader
-        clojure.test)
+  (:use
+    misaki.compiler.default.reader
+    clojure.test)
   (:require
-    [clojure.string :as str]
+    [clojure.string  :as str]
     [clojure.java.io :as io])
-  (:import [java.io StringReader PushbackReader])
-  )
-
+  (:import [java.io StringReader PushbackReader]))
 
 (deftest create-pushback-reader-with-line-test
   (testing "Normal reader test"
