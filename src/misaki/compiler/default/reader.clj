@@ -5,19 +5,22 @@
   (:import [java.io StringReader PushbackReader]
            [clojure.lang IDeref]))
 
-(def _EOF_ (gensym "end-of-file"))
+(def _EOF_   (gensym "end-of-file"))
+(def _CR_    (first "\r"))
+(def _LFint_ (int \newline))
+
 
 ;; Utility for java.io.Reader
 (defn- read-char [r]
   (let [c (.read r)]
     (if-not (= -1 c) (char c))))
 
-(defn- blank-char? [c]
-  (some #(= c %) [\space \tab \newline (first "\r")]))
+(defn- blank-char? [ch]
+  (some #(= ch %) [\space \tab \newline _CR_]))
 
-(defn- skip-to [r ch]
-  (if-let [_ch (read-char r)]
-    (if (not= _ch ch) (recur r ch))))
+(defn- skip-to [r target-ch]
+  (if-let [ch (read-char r)]
+    (if (not= ch target-ch) (recur r target-ch))))
 
 ; =create-pushback-reader-with-line
 (defn create-pushback-reader-with-line
@@ -34,7 +37,7 @@
   (let [line-num (atom 1)]
     (proxy [PushbackReader IDeref] [in]
       (read [] (let [c (proxy-super read)]
-                 (if (and (not= -1 c) (= \newline (char c)))
+                 (if (and (not= -1 c) (= _LFint_ c))
                    (swap! line-num inc))
                  c))
       (deref [] @line-num))))
