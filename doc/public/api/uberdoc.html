@@ -3563,9 +3563,17 @@ net.brehaut.ClojureTools = (function (SH) {
 </td><td class="codes"><pre class="brush: clojure">(defn links
   [&amp; title-url-pairs]
   (ul #(apply link %) (partition 2 title-url-pairs)))</pre></td></tr><tr><td class="docs"><p>Make paragraph</p>
+
+<pre><code>  (p "hello")
+  ;=&gt; &lt;p class="paragraph"&gt;hello&lt;/p&gt;
+  (p {:class "foo"} "hello")
+  ;=&gt; &lt;p class="paragraph foo"&gt;hello&lt;/p&gt;
+</code></pre>
 </td><td class="codes"><pre class="brush: clojure">(defn p
   [&amp; s]
-  [:p {:class &quot;paragraph&quot;} (map parse-string s)])</pre></td></tr><tr><td class="docs">
+  (let [[opt &amp; s] (if (-&gt; s first map?) s (cons {} s))
+        attr (merge-with #(str/join &quot; &quot; %&amp;) {:class &quot;paragraph&quot;} opt)]
+    [:p attr (map parse-string s)]))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn- header-decoration [x]
   (if (string? x)
     (let [[first-char &amp; rest-chars] x]

@@ -93,7 +93,15 @@
         "<p class=\"paragraph\">a<br />b</p>" (p "a\n\nb")
         "<p class=\"paragraph\">a<br />\nb</p>" (p "a\n\n\nb")
         "<p class=\"paragraph\">a\r\nb</p>" (p "a\r\nb")
-        "<p class=\"paragraph\">a<br />b</p>" (p "a\r\n\r\nb")))))
+        "<p class=\"paragraph\">a<br />b</p>" (p "a\r\n\r\nb")))
+
+    (testing "paragraph with attribute"
+      (are [x y] (= x (html y))
+        "<p class=\"paragraph foo\">bar</p>"(p {:class "foo"} "bar")
+        "<p class=\"paragraph\" id=\"foo\">bar</p>"(p {:id "foo"} "bar")
+        )
+      )
+    ))
 
 (deftest* js-test
   (testing "basic pattern"

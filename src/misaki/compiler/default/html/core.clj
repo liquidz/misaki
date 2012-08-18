@@ -239,9 +239,17 @@
   (ul #(apply link %) (partition 2 title-url-pairs)))
 
 (defn p
-  "Make paragraph"
+  "Make paragraph
+
+      (p \"hello\")
+      ;=> <p class=\"paragraph\">hello</p>
+      (p {:class \"foo\"} \"hello\")
+      ;=> <p class=\"paragraph foo\">hello</p>
+  "
   [& s]
-  [:p {:class "paragraph"} (map parse-string s)])
+  (let [[opt & s] (if (-> s first map?) s (cons {} s))
+        attr (merge-with #(str/join " " %&) {:class "paragraph"} opt)]
+    [:p attr (map parse-string s)]))
 
 (defn- header-decoration [x]
   (if (string? x)
