@@ -8,6 +8,17 @@
   (:use [clojure.test])
   (:require [clojure.java.io :as io]))
 
+;; heading
+(deftest heading-test
+  (testing "no attributes"
+    (are [x y] (= x (html y))
+      "<h1><span>f</span>oo</h1>" (heading 1 "foo")
+      "<h1><span>f</span>oo</h1>" (h1 "foo")))
+  (testing "with attributes"
+    (are [x y] (= x (html y))
+      "<h1 class=\"bar\"><span>f</span>oo</h1>" (heading 1 {:class "bar"} "foo")
+      "<h1 class=\"bar\"><span>f</span>oo</h1>" (h1 {:class "bar"} "foo"))))
+
 ;; ul
 (deftest ul-test
   (are [x y] (= x (html y))

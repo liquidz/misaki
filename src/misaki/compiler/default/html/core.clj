@@ -132,10 +132,18 @@
     (apply css (cons opt args))))
 
 (defn heading
-  "Make heading tag"
-  [n s]
-  (let [tag (keyword (str "h" n))]
-    [tag [:span (first s)] (rest s)]))
+  "Make heading tag
+
+      (heading 1 \"hello\")
+      ;=> <h1><span>h</span>ello</h1>
+      (heading 1 {:class \"foo\"} \"hello\")
+      ;=> <h1 class=\"foo\"><span>h</span>ello</h1>
+  "
+  ([n s]
+   (heading n {} s))
+  ([n attr s]
+   (let [tag (keyword (str "h" n))]
+     [tag attr [:span (first s)] (rest s)])))
 (def h1 (partial heading 1))
 (def h2 (partial heading 2))
 (def h3 (partial heading 3))

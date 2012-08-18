@@ -3469,10 +3469,18 @@ net.brehaut.ClojureTools = (function (SH) {
         [opt &amp; args] (if (map? (first args)) args (cons {} args))
         args (map #(absolute-path %) args)]
     (apply css (cons opt args))))</pre></td></tr><tr><td class="docs"><p>Make heading tag</p>
+
+<pre><code>  (heading 1 "hello")
+  ;=&gt; &lt;h1&gt;&lt;span&gt;h&lt;/span&gt;ello&lt;/h1&gt;
+  (heading 1 {:class "foo"} "hello")
+  ;=&gt; &lt;h1 class="foo"&gt;&lt;span&gt;h&lt;/span&gt;ello&lt;/h1&gt;
+</code></pre>
 </td><td class="codes"><pre class="brush: clojure">(defn heading
-  [n s]
-  (let [tag (keyword (str &quot;h&quot; n))]
-    [tag [:span (first s)] (rest s)]))
+  ([n s]
+   (heading n {} s))
+  ([n attr s]
+   (let [tag (keyword (str &quot;h&quot; n))]
+     [tag attr [:span (first s)] (rest s)])))
 (def h1 (partial heading 1))
 (def h2 (partial heading 2))
 (def h3 (partial heading 3))
