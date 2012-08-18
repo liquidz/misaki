@@ -241,14 +241,21 @@
   "Make blockquote
 
       (blockquote \"foo\" \"bar\")
-      ;=> <blockquote><p>foo</p><p>bar</p></blockquote>"
+      ;=> <blockquote><p>foo</p><p>bar</p></blockquote>
+      (blockquote \"foo\\nbar\")
+      ;=> <blockquote><p>foo</p><p>bar</p></blockquote>
+      (blockquote {:class \"bar\"} \"foo\")
+      ;=> <blockquote class=\"bar\"><p>foo</p></blockquote>
+  "
   [& xs]
-  [:blockquote
-   (map
-     #(if (string? %)
-        (map (fn [x] [:p x]) (str/split-lines %))
-        [:p %])
-     xs)])
+  (let [[attr & xs] (if (-> xs first map?) xs (cons {} xs))]
+    [:blockquote
+     attr
+     (map
+       #(if (string? %)
+          (map (fn [x] [:p x]) (str/split-lines %))
+          [:p %])
+       xs)]))
 
 (defmacro code
   "Make inline code

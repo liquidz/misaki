@@ -3567,15 +3567,29 @@ net.brehaut.ClojureTools = (function (SH) {
 
 <pre><code>  (blockquote "foo" "bar")
   ;=&gt; &lt;blockquote&gt;&lt;p&gt;foo&lt;/p&gt;&lt;p&gt;bar&lt;/p&gt;&lt;/blockquote&gt;
+  (blockquote "foo\nbar")
+  ;=&gt; &lt;blockquote&gt;&lt;p&gt;foo&lt;/p&gt;&lt;p&gt;bar&lt;/p&gt;&lt;/blockquote&gt;
+  (blockquote {:class "bar"} "foo")
+  ;=&gt; &lt;blockquote class="bar"&gt;&lt;p&gt;foo&lt;/p&gt;&lt;/blockquote&gt;
 </code></pre>
 </td><td class="codes"><pre class="brush: clojure">(defn blockquote
+  &quot;Make blockquote
+      (blockquote \&quot;foo\&quot; \&quot;bar\&quot;)
+      ;=&gt; &lt;blockquote&gt;&lt;p&gt;foo&lt;/p&gt;&lt;p&gt;bar&lt;/p&gt;&lt;/blockquote&gt;
+      (blockquote \&quot;foo\\nbar\&quot;)
+      ;=&gt; &lt;blockquote&gt;&lt;p&gt;foo&lt;/p&gt;&lt;p&gt;bar&lt;/p&gt;&lt;/blockquote&gt;
+      (blockquote {:class \&quot;bar\&quot;} \&quot;foo\&quot;)
+      ;=&gt; &lt;blockquote class=\&quot;bar\&quot;&gt;&lt;p&gt;foo&lt;/p&gt;&lt;/blockquote&gt;
+  &quot;
   [&amp; xs]
-  [:blockquote
-   (map
-     #(if (string? %)
-        (map (fn [x] [:p x]) (str/split-lines %))
-        [:p %])
-     xs)])</pre></td></tr><tr><td class="docs"><p>Make inline code</p>
+  (let [[attr &amp; xs] (if (-&gt; xs first map?) xs (cons {} xs))]
+    [:blockquote
+     attr
+     (map
+       #(if (string? %)
+          (map (fn [x] [:p x]) (str/split-lines %))
+          [:p %])
+       xs)]))</pre></td></tr><tr><td class="docs"><p>Make inline code</p>
 
 <pre><code>  (code hello)
   ;=&gt; &lt;code class="prettyprint"&gt;hello&lt;/code&gt;

@@ -86,6 +86,21 @@
     (are [x y] (= x (html y))
       "<dl class=\"foo\"><dt>a</dt><dd>1</dd></dl>" (dl {:class "foo"} {:a 1}))))
 
+;; blockquote
+(deftest blockquote-test
+  (testing "without attribute"
+    (are [x y] (= x (html y))
+      "<blockquote><p>a</p></blockquote>" (blockquote "a")
+      "<blockquote><p>a</p><p>b</p></blockquote>" (blockquote "a" "b")
+      "<blockquote><p>a</p><p>b</p></blockquote>" (blockquote "a\nb")))
+
+  (testing "with attribute"
+    (are [x y] (= x (html y))
+      "<blockquote class=\"foo\"><p>a</p></blockquote>"
+        (blockquote {:class "foo"} "a")
+      "<blockquote class=\"foo\"><p>a</p><p>b</p></blockquote>"
+        (blockquote {:class "foo"} "a" "b"))))
+
 ;; table
 (deftest table-test
   (are [x y] (= x (html y))
