@@ -155,7 +155,15 @@
   "Make unordered list
 
       (ul [1 2])
-      ;=> <ul><li><span>1</span></li><li><span>2</span></li></ul> "
+      ;=> <ul><li><span>1</span></li><li><span>2</span></li></ul>
+      (ul inc [1 2])
+      ;=> <ul><li><span>2</span></li><li><span>3</span></li></ul>
+      (ul {:class \"foo\"} [1 2])
+      ;=> <ul class=\"foo\"><li><span>1</span></li><li><span>2</span></li></ul>
+      (ul inc {:class \"foo\"} [1 2])
+      ;=> <ul class=\"foo\"><li><span>2</span></li><li><span>3</span></li></ul>
+  ;
+  "
   ([ls] (ul parse-string {} ls))
   ([x ls]
    (cond
@@ -163,8 +171,7 @@
      (map? x) (ul parse-string x ls)
      :else    (ul parse-string {} ls)))
   ([f attr ls]
-   [:ul attr (for [x ls] [:li [:span (f x)]])])
-  )
+   [:ul attr (for [x ls] [:li [:span (f x)]])]))
 
 
 (defn dl

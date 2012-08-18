@@ -3490,11 +3490,24 @@ net.brehaut.ClojureTools = (function (SH) {
 
 <pre><code>  (ul [1 2])
   ;=&gt; &lt;ul&gt;&lt;li&gt;&lt;span&gt;1&lt;/span&gt;&lt;/li&gt;&lt;li&gt;&lt;span&gt;2&lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;
+  (ul inc [1 2])
+  ;=&gt; &lt;ul&gt;&lt;li&gt;&lt;span&gt;2&lt;/span&gt;&lt;/li&gt;&lt;li&gt;&lt;span&gt;3&lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;
+  (ul {:class "foo"} [1 2])
+  ;=&gt; &lt;ul class="foo"&gt;&lt;li&gt;&lt;span&gt;1&lt;/span&gt;&lt;/li&gt;&lt;li&gt;&lt;span&gt;2&lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;
+  (ul inc {:class "foo"} [1 2])
+  ;=&gt; &lt;ul class="foo"&gt;&lt;li&gt;&lt;span&gt;2&lt;/span&gt;&lt;/li&gt;&lt;li&gt;&lt;span&gt;3&lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;
 </code></pre>
+
+<p>  ;</p>
 </td><td class="codes"><pre class="brush: clojure">(defn ul
-  ([ls] (ul parse-string ls))
-  ([f ls]
-   [:ul (for [x ls] [:li [:span (f x)]])]))</pre></td></tr><tr><td class="docs"><p>Make definition list</p>
+  ([ls] (ul parse-string {} ls))
+  ([x ls]
+   (cond
+     (fn? x)  (ul x {} ls)
+     (map? x) (ul parse-string x ls)
+     :else    (ul parse-string {} ls)))
+  ([f attr ls]
+   [:ul attr (for [x ls] [:li [:span (f x)]])]))</pre></td></tr><tr><td class="docs"><p>Make definition list</p>
 
 <pre><code>  (dl {:foo "bar"})
   ;=&gt; &lt;dl&gt;&lt;dt&gt;foo&lt;/dt&gt;&lt;dd&gt;bar&lt;/dd&gt;&lt;/dl&gt;
