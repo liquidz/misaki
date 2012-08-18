@@ -116,9 +116,14 @@
     (table [["`a`" "b"]])))
 
 (deftest code-test
-  (are [x y] (= x y)
-    "<code class=\"prettyprint\">(+ 1 2)</code>" (html (code (+ 1 2)))
-    "<code class=\"prettyprint\">(+ 1 2)</code>" (html (code "(+ 1 2)"))))
+  (testing "without attribute"
+    (are [x y] (= x y)
+      "<code class=\"prettyprint\">(+ 1 2)</code>" (html (code (+ 1 2)))
+      "<code class=\"prettyprint\">(+ 1 2)</code>" (html (code "(+ 1 2)"))))
+  (testing "withattribute"
+    (are [x y] (= x y)
+      "<code class=\"prettyprint foo\">(+ 1 2)</code>"
+        (html (code {:class "foo"} (+ 1 2))))))
 
 (deftest* paragraph-test
   (binding [*site* (make-site-data (io/file (:tag-layout *config*)))]

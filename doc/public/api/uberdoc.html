@@ -3593,10 +3593,14 @@ net.brehaut.ClojureTools = (function (SH) {
 
 <pre><code>  (code hello)
   ;=&gt; &lt;code class="prettyprint"&gt;hello&lt;/code&gt;
+  (code {:class "foo"} hello)
+  ;=&gt; &lt;code class="prettyprint foo"&gt;hello&lt;/code&gt;
 </code></pre>
 </td><td class="codes"><pre class="brush: clojure">(defmacro code
-  [s]
-  [:code {:class &quot;prettyprint&quot;} (str s)])</pre></td></tr><tr><td class="docs"><p>Make table</p>
+  ([s] `(code {} ~s))
+  ([attr s]
+   [:code
+    (merge-with #(str % &quot; &quot; %2) {:class &quot;prettyprint&quot;} attr) (str s)]))</pre></td></tr><tr><td class="docs"><p>Make table</p>
 
 <pre><code>  (table [[1 2]])
   ;=&gt; &lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;1&lt;/td&gt;&lt;td&gt;2&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;

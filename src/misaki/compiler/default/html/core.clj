@@ -261,9 +261,14 @@
   "Make inline code
 
       (code hello)
-      ;=> <code class=\"prettyprint\">hello</code>"
-  [s]
-  [:code {:class "prettyprint"} (str s)])
+      ;=> <code class=\"prettyprint\">hello</code>
+      (code {:class \"foo\"} hello)
+      ;=> <code class=\"prettyprint foo\">hello</code>
+  "
+  ([s] `(code {} ~s))
+  ([attr s]
+   [:code
+    (merge-with #(str % " " %2) {:class "prettyprint"} attr) (str s)]))
 
 (defn table
   "Make table
