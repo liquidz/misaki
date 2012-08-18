@@ -350,7 +350,11 @@
    [:p p]])
 
 (defn post-list
-  "Make default all posts unordered list."
+  "Make default all posts unordered list.
+
+      (post-list)
+      (post-list {:class \"foo \"})
+  "
   ([] (post-list {}))
   ([attr]
    (ul
@@ -362,7 +366,11 @@
      (:posts *site*))))
 
 (defn tag-list
-  "Make default all tags unordered list."
+  "Make default all tags unordered list.
+
+      (tag-list)
+      (tag-list {:class \"foo\"})
+  "
   ([] (tag-list {}))
   ([attr]
    (ul

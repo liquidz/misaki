@@ -3667,20 +3667,32 @@ net.brehaut.ClojureTools = (function (SH) {
   [:footer {:class &quot;footer&quot;}
    [:p {:class &quot;right back_to_top&quot;} (link &quot;Back to top&quot; &quot;#&quot;)]
    [:p p]])</pre></td></tr><tr><td class="docs"><p>Make default all posts unordered list.</p>
+
+<pre><code>  (post-list)
+  (post-list {:class "foo "})
+</code></pre>
 </td><td class="codes"><pre class="brush: clojure">(defn post-list
-  []
-  (ul
-    #(list
-       (date/date-&gt;string (:date %))
-       &quot;&amp;nbsp;-&amp;nbsp;&quot;
-       (link (:title %) (:url %)))
-    (:posts *site*)))</pre></td></tr><tr><td class="docs"><p>Make default all tags unordered list.</p>
+  ([] (post-list {}))
+  ([attr]
+   (ul
+     #(list
+        (date/date-&gt;string (:date %))
+        &quot;&amp;nbsp;-&amp;nbsp;&quot;
+        (link (:title %) (:url %)))
+     attr
+     (:posts *site*))))</pre></td></tr><tr><td class="docs"><p>Make default all tags unordered list.</p>
+
+<pre><code>  (tag-list)
+  (tag-list {:class "foo"})
+</code></pre>
 </td><td class="codes"><pre class="brush: clojure">(defn tag-list
-  []
-  (ul
-    #(link (str (:name %) &quot; (&quot; (:count %) &quot;)&quot;)
-           (:url %))
-    (:tags *site*)))</pre></td></tr><tr><td class="docs"><p>Make default post tags unordered list.</p>
+  ([] (tag-list {}))
+  ([attr]
+   (ul
+     #(link (str (:name %) &quot; (&quot; (:count %) &quot;)&quot;)
+            (:url %))
+     attr
+     (:tags *site*))))</pre></td></tr><tr><td class="docs"><p>Make default post tags unordered list.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn post-tags
   [&amp; {:keys [class] :or {class &quot;tag&quot;}}]
   [:div {:class class}
