@@ -103,18 +103,30 @@
 
 ;; table
 (deftest table-test
-  (are [x y] (= x (html y))
-    "<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table>"
-    (table '[[a b]])
-    "<table><tbody><tr><td>a</td><td>b</td></tr><tr><td>c</td><td>d</td></tr></tbody></table>"
-    (table '[[a b] [c d]])
+  (testing "without attribute"
+    (are [x y] (= x (html y))
+      "<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table>"
+      (table '[[a b]])
+      "<table><tbody><tr><td>a</td><td>b</td></tr><tr><td>c</td><td>d</td></tr></tbody></table>"
+      (table '[[a b] [c d]])
 
-    "<table><thead><tr><th>1</th><th>2</th></tr></thead><tbody><tr><td>a</td><td>b</td></tr></tbody></table>"
-    (table [1 2] '[[a b]])
+      "<table><thead><tr><th>1</th><th>2</th></tr></thead><tbody><tr><td>a</td><td>b</td></tr></tbody></table>"
+      (table [1 2] '[[a b]])
 
-    "<table><tbody><tr><td><code class=\"prettyprint\">a</code></td><td>b</td></tr></tbody></table>"
-    (table [["`a`" "b"]])))
+      "<table><tbody><tr><td><code class=\"prettyprint\">a</code></td><td>b</td></tr></tbody></table>"
+      (table [["`a`" "b"]])))
 
+  (testing "with attribute"
+    (are [x y] (= x (html y))
+      "<table class=\"foo\"><tbody><tr><td>a</td><td>b</td></tr></tbody></table>"
+      (table {:class "foo"} '[[a b]])
+
+      "<table class=\"foo\"><thead><tr><th>1</th><th>2</th></tr></thead><tbody><tr><td>a</td><td>b</td></tr></tbody></table>"
+      (table {:class "foo"} [1 2] '[[a b]])
+      ))
+  )
+
+;; code
 (deftest code-test
   (testing "without attribute"
     (are [x y] (= x y)

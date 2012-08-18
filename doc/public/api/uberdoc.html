@@ -3607,12 +3607,24 @@ net.brehaut.ClojureTools = (function (SH) {
   (table '[a b] [[1 2]])
   ;=&gt; &lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;a&lt;/th&gt;&lt;th&gt;b&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;
   ;          &lt;tbody&gt;&lt;tr&gt;&lt;td&gt;1&lt;/td&gt;&lt;td&gt;2&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+  (table {:class "foo"} [[1 2]])
+  ;=&gt; &lt;table class="foo"&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;1&lt;/td&gt;&lt;td&gt;2&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+  (table {:class "foo"} '[a b] [[1 2]])
+  ;=&gt; &lt;table class="foo"&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;a&lt;/th&gt;&lt;th&gt;b&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;
+  ;          &lt;tbody&gt;&lt;tr&gt;&lt;td&gt;1&lt;/td&gt;&lt;td&gt;2&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
 </code></pre>
 </td><td class="codes"><pre class="brush: clojure">(defn table
-  ([bodies] (table nil bodies))
-  ([head bodies]
+  ([bodies] (table {} nil bodies))
+  ([x bodies]
+   (cond
+     (sequential? x) (table {} x bodies)
+     (map? x)        (table x nil bodies)
+     :else           (table {} nil bodies)))
+  ([attr head bodies]
    [:table
-    (if head [:thead [:tr (for [h head] [:th h])]])
+    attr
+    (if (and head (sequential? head))
+      [:thead [:tr (for [h head] [:th h])]])
     [:tbody
      (for [body bodies]
        [:tr (for [b body] [:td (parse-string b)])])]]))</pre></td></tr><tr><td class="docs"><p>Make link list</p>

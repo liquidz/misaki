@@ -277,11 +277,24 @@
       ;=> <table><tbody><tr><td>1</td><td>2</td></tr></tbody></table>
       (table '[a b] [[1 2]])
       ;=> <table><thead><tr><th>a</th><th>b</th></tr></thead>
-      ;          <tbody><tr><td>1</td><td>2</td></tr></tbody></table>"
-  ([bodies] (table nil bodies))
-  ([head bodies]
+      ;          <tbody><tr><td>1</td><td>2</td></tr></tbody></table>
+      (table {:class \"foo\"} [[1 2]])
+      ;=> <table class=\"foo\"><tbody><tr><td>1</td><td>2</td></tr></tbody></table>
+      (table {:class \"foo\"} '[a b] [[1 2]])
+      ;=> <table class=\"foo\"><thead><tr><th>a</th><th>b</th></tr></thead>
+      ;          <tbody><tr><td>1</td><td>2</td></tr></tbody></table>
+  "
+  ([bodies] (table {} nil bodies))
+  ([x bodies]
+   (cond
+     (sequential? x) (table {} x bodies)
+     (map? x)        (table x nil bodies)
+     :else           (table {} nil bodies)))
+  ([attr head bodies]
    [:table
-    (if head [:thead [:tr (for [h head] [:th h])]])
+    attr
+    (if (and head (sequential? head))
+      [:thead [:tr (for [h head] [:th h])]])
     [:tbody
      (for [body bodies]
        [:tr (for [b body] [:td (parse-string b)])])]]))
