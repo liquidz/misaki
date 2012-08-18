@@ -351,21 +351,25 @@
 
 (defn post-list
   "Make default all posts unordered list."
-  []
-  (ul
-    #(list
-       (date/date->string (:date %))
-       "&nbsp;-&nbsp;"
-       (link (:title %) (:url %)))
-    (:posts *site*)))
+  ([] (post-list {}))
+  ([attr]
+   (ul
+     #(list
+        (date/date->string (:date %))
+        "&nbsp;-&nbsp;"
+        (link (:title %) (:url %)))
+     attr
+     (:posts *site*))))
 
 (defn tag-list
   "Make default all tags unordered list."
-  []
-  (ul
-    #(link (str (:name %) " (" (:count %) ")")
-           (:url %))
-    (:tags *site*)))
+  ([] (tag-list {}))
+  ([attr]
+   (ul
+     #(link (str (:name %) " (" (:count %) ")")
+            (:url %))
+     attr
+     (:tags *site*))))
 
 
 (defn post-tags

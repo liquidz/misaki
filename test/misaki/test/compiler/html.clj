@@ -122,9 +122,7 @@
       (table {:class "foo"} '[[a b]])
 
       "<table class=\"foo\"><thead><tr><th>1</th><th>2</th></tr></thead><tbody><tr><td>a</td><td>b</td></tr></tbody></table>"
-      (table {:class "foo"} [1 2] '[[a b]])
-      ))
-  )
+      (table {:class "foo"} [1 2] '[[a b]]))))
 
 ;; code
 (deftest code-test
