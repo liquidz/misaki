@@ -3513,15 +3513,19 @@ net.brehaut.ClojureTools = (function (SH) {
   ;=&gt; &lt;dl&gt;&lt;dt&gt;foo&lt;/dt&gt;&lt;dd&gt;bar&lt;/dd&gt;&lt;/dl&gt;
   (dl [:foo "bar"])
   ;=&gt; &lt;dl&gt;&lt;dt&gt;foo&lt;/dt&gt;&lt;dd&gt;bar&lt;/dd&gt;&lt;/dl&gt;
+  (dl {:class "foo"} {:foo "bar"})
+  ;=&gt; &lt;dl class="foo"&gt;&lt;dt&gt;foo&lt;/dt&gt;&lt;dd&gt;bar&lt;/dd&gt;&lt;/dl&gt;
 </code></pre>
 </td><td class="codes"><pre class="brush: clojure">(defn dl
-  [x]
-  (if (map? x) (dl (mapcat identity x))
-    [:dl
-     (map (fn [[dt dd]]
-            (list [:dt (parse-string (name* dt))]
-                  [:dd (parse-string dd)]))
-          (partition 2 x))]))</pre></td></tr><tr><td class="docs"><p>Make image</p>
+  ([x] (dl {} x))
+  ([attr x]
+   (if (map? x) (dl attr (mapcat identity x))
+     [:dl
+      attr
+      (map (fn [[dt dd]]
+             (list [:dt (parse-string (name* dt))]
+                   [:dd (parse-string dd)]))
+           (partition 2 x))])))</pre></td></tr><tr><td class="docs"><p>Make image</p>
 
 <pre><code>  (img "bar.jpg")
   ;=&gt; &lt;img src="bar.jpg" /&gt;

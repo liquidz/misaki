@@ -180,14 +180,19 @@
       (dl {:foo \"bar\"})
       ;=> <dl><dt>foo</dt><dd>bar</dd></dl>
       (dl [:foo \"bar\"])
-      ;=> <dl><dt>foo</dt><dd>bar</dd></dl>"
-  [x]
-  (if (map? x) (dl (mapcat identity x))
-    [:dl
-     (map (fn [[dt dd]]
-            (list [:dt (parse-string (name* dt))]
-                  [:dd (parse-string dd)]))
-          (partition 2 x))]))
+      ;=> <dl><dt>foo</dt><dd>bar</dd></dl>
+      (dl {:class \"foo\"} {:foo \"bar\"})
+      ;=> <dl class=\"foo\"><dt>foo</dt><dd>bar</dd></dl>
+  "
+  ([x] (dl {} x))
+  ([attr x]
+   (if (map? x) (dl attr (mapcat identity x))
+     [:dl
+      attr
+      (map (fn [[dt dd]]
+             (list [:dt (parse-string (name* dt))]
+                   [:dd (parse-string dd)]))
+           (partition 2 x))])))
 
 
 (defn img

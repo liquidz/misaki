@@ -57,16 +57,21 @@
     "<a href=\"a.html\"><code class=\"prettyprint\">link</code></a>" (link "`link`" "a.html")))
 
 
+;; dl
 (deftest dl-test
-  (are [x y] (= x (html y))
-    "<dl><dt>a</dt><dd>1</dd></dl>" (dl {:a 1})
-    "<dl><dt>a</dt><dd>1</dd></dl>" (dl [:a 1])
-    "<dl><dt>a</dt><dd>1</dd><dt>b</dt><dd>2</dd></dl>" (dl [:a 1 :b 2])
+  (testing "without attribute"
+    (are [x y] (= x (html y))
+      "<dl><dt>a</dt><dd>1</dd></dl>" (dl {:a 1})
+      "<dl><dt>a</dt><dd>1</dd></dl>" (dl [:a 1])
+      "<dl><dt>a</dt><dd>1</dd><dt>b</dt><dd>2</dd></dl>" (dl [:a 1 :b 2])
 
-    "<dl><dt>a/b</dt><dd>1</dd></dl>" (dl {:a/b 1})
+      "<dl><dt>a/b</dt><dd>1</dd></dl>" (dl {:a/b 1})
 
-    "<dl><dt><code class=\"prettyprint\">a</code></dt><dd>1</dd></dl>" (dl ["`a`" 1])
-    "<dl><dt>a</dt><dd><code class=\"prettyprint\">1</code></dd></dl>" (dl {:a "`1`"})))
+      "<dl><dt><code class=\"prettyprint\">a</code></dt><dd>1</dd></dl>" (dl ["`a`" 1])
+      "<dl><dt>a</dt><dd><code class=\"prettyprint\">1</code></dd></dl>" (dl {:a "`1`"})))
+  (testing "withattribute"
+    (are [x y] (= x (html y))
+      "<dl class=\"foo\"><dt>a</dt><dd>1</dd></dl>" (dl {:class "foo"} {:a 1}))))
 
 (deftest table-test
   (are [x y] (= x (html y))
