@@ -46,9 +46,16 @@
       "<ul class=\"foo\"><li><span>2</span></li><li><span>3</span></li></ul>"
       (ul inc {:class "foo"} [1 2]))))
 
+;; img
 (deftest img-test
-  (is (= "<img alt=\"\" src=\"a.png\" />" (html (img "a.png"))))
-  (is (= "<img alt=\"neko\" src=\"a.png\" />" (html (img "neko" "a.png")))))
+  (testing "without attribute"
+    (is (= "<img alt=\"\" src=\"a.png\" />" (html (img "a.png"))))
+    (is (= "<img alt=\"neko\" src=\"a.png\" />" (html (img "neko" "a.png")))))
+  (testing "with attribute"
+    (is (= "<img alt=\"\" class=\"foo\" src=\"a.png\" />"
+           (html (img {:class "foo"} "a.png"))))
+    (is (= "<img alt=\"neko\" class=\"foo\" src=\"a.png\" />"
+           (html (img {:class "foo"} "neko" "a.png"))))))
 
 (deftest link-test
   (are [x y] (= x (html y))

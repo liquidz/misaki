@@ -3531,11 +3531,20 @@ net.brehaut.ClojureTools = (function (SH) {
   ;=&gt; &lt;img src="bar.jpg" /&gt;
   (img "foo" "bar.jpg")
   ;=&gt; &lt;img alt="foo" src="bar.jpg" /&gt;
+  (img {:class "foo"} "bar.jpg")
+  ;=&gt; &lt;img class="foo" src="bar.jpg" /&gt;
+  (img {:class "foo"} "foo" "bar.jpg")
+  ;=&gt; &lt;img alt="foo" class="foo" src="bar.jpg" /&gt;
 </code></pre>
 </td><td class="codes"><pre class="brush: clojure">(defn img
-  ([src] (img &quot;&quot; src))
-  ([alt src]
-   [:img {:alt alt :src src}]))</pre></td></tr><tr><td class="docs"><p>Make link</p>
+  ([src] (img {} &quot;&quot; src))
+  ([x src]
+   (cond
+     (string? x) (img {} x src)
+     (map? x)    (img x &quot;&quot; src)
+     :else       (img {} &quot;&quot; src)))
+  ([attr alt src]
+   [:img (merge attr {:alt alt :src src})]))</pre></td></tr><tr><td class="docs"><p>Make link</p>
 
 <pre><code>  (link "foo.html")
   ;=&gt; &lt;a href="foo.html"&gt;foo.html&lt;/a&gt;

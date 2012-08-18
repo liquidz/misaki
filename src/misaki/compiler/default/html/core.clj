@@ -201,10 +201,20 @@
       (img \"bar.jpg\")
       ;=> <img src=\"bar.jpg\" />
       (img \"foo\" \"bar.jpg\")
-      ;=> <img alt=\"foo\" src=\"bar.jpg\" />"
-  ([src] (img "" src))
-  ([alt src]
-   [:img {:alt alt :src src}]))
+      ;=> <img alt=\"foo\" src=\"bar.jpg\" />
+      (img {:class \"foo\"} \"bar.jpg\")
+      ;=> <img class=\"foo\" src=\"bar.jpg\" />
+      (img {:class \"foo\"} \"foo\" \"bar.jpg\")
+      ;=> <img alt=\"foo\" class=\"foo\" src=\"bar.jpg\" />
+  "
+  ([src] (img {} "" src))
+  ([x src]
+   (cond
+     (string? x) (img {} x src)
+     (map? x)    (img x "" src)
+     :else       (img {} "" src)))
+  ([attr alt src]
+   [:img (merge attr {:alt alt :src src})]))
 
 (defn link
   "Make link
