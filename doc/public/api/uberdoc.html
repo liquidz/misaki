@@ -3550,10 +3550,20 @@ net.brehaut.ClojureTools = (function (SH) {
   ;=&gt; &lt;a href="foo.html"&gt;foo.html&lt;/a&gt;
   (link "foo" "bar.html")
   ;=&gt; &lt;a href="bar.html"&gt;foo&lt;/a&gt;
+  (link {:class "foo"} "foo.html")
+  ;=&gt; &lt;a class="foo" href="foo.html"&gt;foo.html&lt;/a&gt;
+  (link {:class "foo"} "foo" "bar.html")
+  ;=&gt; &lt;a class="foo" href="bar.html"&gt;foo&lt;/a&gt;
 </code></pre>
 </td><td class="codes"><pre class="brush: clojure">(defn link
-  ([href] (link href href))
-  ([label href] [:a {:href href} (parse-string label)]))</pre></td></tr><tr><td class="docs"><p>Make blockquote</p>
+  ([href] (link {} href href))
+  ([x href]
+   (cond
+     (string? x) (link {} x href)
+     (map? x)    (link x href href)
+     :else       (link {} href href)))
+  ([attr label href]
+   [:a (merge attr {:href href}) (parse-string label)]))</pre></td></tr><tr><td class="docs"><p>Make blockquote</p>
 
 <pre><code>  (blockquote "foo" "bar")
   ;=&gt; &lt;blockquote&gt;&lt;p&gt;foo&lt;/p&gt;&lt;p&gt;bar&lt;/p&gt;&lt;/blockquote&gt;

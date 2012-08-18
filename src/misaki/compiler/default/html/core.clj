@@ -222,9 +222,20 @@
       (link \"foo.html\")
       ;=> <a href=\"foo.html\">foo.html</a>
       (link \"foo\" \"bar.html\")
-      ;=> <a href=\"bar.html\">foo</a>"
-  ([href] (link href href))
-  ([label href] [:a {:href href} (parse-string label)]))
+      ;=> <a href=\"bar.html\">foo</a>
+      (link {:class \"foo\"} \"foo.html\")
+      ;=> <a class=\"foo\" href=\"foo.html\">foo.html</a>
+      (link {:class \"foo\"} \"foo\" \"bar.html\")
+      ;=> <a class=\"foo\" href=\"bar.html\">foo</a>
+  "
+  ([href] (link {} href href))
+  ([x href]
+   (cond
+     (string? x) (link {} x href)
+     (map? x)    (link x href href)
+     :else       (link {} href href)))
+  ([attr label href]
+   [:a (merge attr {:href href}) (parse-string label)]))
 
 (defn blockquote
   "Make blockquote

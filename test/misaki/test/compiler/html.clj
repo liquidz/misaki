@@ -57,11 +57,17 @@
     (is (= "<img alt=\"neko\" class=\"foo\" src=\"a.png\" />"
            (html (img {:class "foo"} "neko" "a.png"))))))
 
+;; link
 (deftest link-test
-  (are [x y] (= x (html y))
-    "<a href=\"a.html\">a.html</a>" (link "a.html")
-    "<a href=\"a.html\">link</a>" (link "link" "a.html")
-    "<a href=\"a.html\"><code class=\"prettyprint\">link</code></a>" (link "`link`" "a.html")))
+  (testing "without attribute"
+    (are [x y] (= x (html y))
+      "<a href=\"a.html\">a.html</a>" (link "a.html")
+      "<a href=\"a.html\">link</a>" (link "link" "a.html")
+      "<a href=\"a.html\"><code class=\"prettyprint\">link</code></a>" (link "`link`" "a.html")))
+  (testing "with attribute"
+    (are [x y] (= x (html y))
+      "<a class=\"foo\" href=\"a.html\">a.html</a>" (link {:class "foo"} "a.html")
+      "<a class=\"foo\" href=\"a.html\">link</a>" (link {:class "foo"} "link" "a.html"))))
 
 
 ;; dl
@@ -80,6 +86,7 @@
     (are [x y] (= x (html y))
       "<dl class=\"foo\"><dt>a</dt><dd>1</dd></dl>" (dl {:class "foo"} {:a 1}))))
 
+;; table
 (deftest table-test
   (are [x y] (= x (html y))
     "<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table>"
