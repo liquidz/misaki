@@ -21,15 +21,30 @@
 
 ;; ul
 (deftest ul-test
-  (are [x y] (= x (html y))
-    "<ul><li><span>1</span></li><li><span>2</span></li></ul>"
-    (ul [1 2])
-    "<ul><li><span>2</span></li><li><span>3</span></li></ul>"
-    (ul inc [1 2])
-    "<ul><li><span>1</span></li><li><span><ul><li><span>2</span></li></ul></span></li></ul>"
-    (ul [1 (ul [2])])
-    "<ul><li><span>a</span></li><li><span><code class=\"prettyprint\">b</code></span></li></ul>"
-    (ul ["a" "`b`"])))
+  (testing "normal pattern"
+    (are [x y] (= x (html y))
+      "<ul><li><span>1</span></li><li><span>2</span></li></ul>"
+      (ul [1 2])))
+  (testing "specify function"
+    (are [x y] (= x (html y))
+      "<ul><li><span>2</span></li><li><span>3</span></li></ul>"
+      (ul inc [1 2])))
+  (testing "list in list"
+    (are [x y] (= x (html y))
+      "<ul><li><span>1</span></li><li><span><ul><li><span>2</span></li></ul></span></li></ul>"
+      (ul [1 (ul [2])])))
+  (testing "list with markdown"
+    (are [x y] (= x (html y))
+      "<ul><li><span>a</span></li><li><span><code class=\"prettyprint\">b</code></span></li></ul>"
+      (ul ["a" "`b`"])))
+  (testing "list with attribute"
+    (are [x y] (= x (html y))
+      "<ul class=\"foo\"><li><span>1</span></li><li><span>2</span></li></ul>"
+      (ul {:class "foo"} [1 2])))
+  (testing "list with attribute and function"
+    (are [x y] (= x (html y))
+      "<ul class=\"foo\"><li><span>2</span></li><li><span>3</span></li></ul>"
+      (ul inc {:class "foo"} [1 2]))))
 
 (deftest img-test
   (is (= "<img alt=\"\" src=\"a.png\" />" (html (img "a.png"))))

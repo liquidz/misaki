@@ -156,9 +156,15 @@
 
       (ul [1 2])
       ;=> <ul><li><span>1</span></li><li><span>2</span></li></ul> "
-  ([ls] (ul parse-string ls))
-  ([f ls]
-   [:ul (for [x ls] [:li [:span (f x)]])]))
+  ([ls] (ul parse-string {} ls))
+  ([x ls]
+   (cond
+     (fn? x)  (ul x {} ls)
+     (map? x) (ul parse-string x ls)
+     :else    (ul parse-string {} ls)))
+  ([f attr ls]
+   [:ul attr (for [x ls] [:li [:span (f x)]])])
+  )
 
 
 (defn dl
