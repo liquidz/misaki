@@ -35,7 +35,7 @@
 #-SH
 $ git clone git://github.com/liquidz/misaki.git
 $ cd misaki
-$ lein run sample
+$ lein run samples/blog
 SH
 
     (h2 "misaki?")

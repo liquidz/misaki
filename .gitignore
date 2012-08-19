@@ -9,10 +9,10 @@
 /.lein-deps-sum
 /blog
 /test/public
-/sample/public/2011-01
-/sample/public/2012-02
-/sample/public/tag
-/sample/public/atom.xml
-/sample/public/index.html
+/samples/*/public/2011-01
+/samples/*/public/2012-02
+/samples/*/public/tag
+/samples/*/public/atom.xml
+/samples/*/public/index.html
 /doc/public/js/hello.js
 /doc/public/js/cljs
