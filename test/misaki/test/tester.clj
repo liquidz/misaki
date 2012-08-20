@@ -27,6 +27,6 @@
     (is (= "default title") (-> (get-base-config) :site :default-title)))
 
   (testing "sample dir"
-    (set-base-dir! "sample")
+    (set-base-dir! "samples/blog")
     (is (= "misaki demo page")
         (-> (get-base-config) :site :site-title))))
