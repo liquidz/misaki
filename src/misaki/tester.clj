@@ -2,7 +2,7 @@
   "Compiler Testing Utilities"
   (:use
     [misaki.core      :only [update-config call-compile]]
-    [misaki.config    :only [*base-dir* make-basic-config-map with-config]]
+    [misaki.config    :only [*base-dir* *config* make-basic-config-map with-config]]
     [misaki.util.file :only [normalize-path]]
     [clojure.test     :only [deftest]])
   (:require
@@ -54,4 +54,15 @@
      (with-test-base-dir
        (with-config
          ~@body))))
+
+; =bind-config
+(defmacro bind-config
+  "Binding config value.
+
+      (bind-config [:post-dir \"foo/bar\"]
+        (println (:post-dir *config*)))
+  "
+  [bind-vec & body]
+  `(binding [*config* (assoc *config* ~@bind-vec)]
+     ~@body))
 

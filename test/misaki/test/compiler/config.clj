@@ -2,6 +2,7 @@
   (:use [misaki.compiler.default config]
         [misaki.config :only [*config*]]
         [misaki.util file sequence]
+        [misaki.tester :only [bind-config]]
         misaki.test.compiler.common
         [clj-time.core :only [date-time year month day]]
         clojure.test)
@@ -29,14 +30,14 @@
 
 (deftest* sort-type->sort-fn-test
   (testing "title sort"
-    (binding [*config* (assoc *config* :post-sort-type :title)]
+    (bind-config [:post-sort-type :title]
       (let [[p1 p2 p3] ((sort-type->sort-fn) sample-posts)]
         (are [x y] (= x (:title y))
           "a" p1
           "b" p2
           "c" p3))))
   (testing "title-desc sort"
-    (binding [*config* (assoc *config* :post-sort-type :title-desc)]
+    (bind-config [:post-sort-type :title-desc]
       (let [[p1 p2 p3] ((sort-type->sort-fn) sample-posts)]
         (are [x y] (= x (:title y))
           "c" p1
@@ -44,14 +45,14 @@
           "a" p3))))
 
   (testing "date sort"
-    (binding [*config* (assoc *config* :post-sort-type :date)]
+    (bind-config [:post-sort-type :date]
       (let [[p1 p2 p3] ((sort-type->sort-fn) sample-posts)]
         (are [x y] (= x (:title y))
           "c" p1
           "b" p2
           "a" p3))))
   (testing "date-desc sort"
-    (binding [*config* (assoc *config* :post-sort-type :date-desc)]
+    (bind-config [:post-sort-type :date-desc]
       (let [[p1 p2 p3] ((sort-type->sort-fn) sample-posts)]
         (are [x y] (= x (:title y))
           "a" p1
@@ -59,14 +60,14 @@
           "c" p3))))
 
   (testing "name sort"
-    (binding [*config* (assoc *config* :post-sort-type :name)]
+    (bind-config [:post-sort-type :name]
       (let [[p1 p2 p3] ((sort-type->sort-fn) sample-posts)]
         (are [x y] (= x (:title y))
           "b" p1
           "a" p2
           "c" p3))))
   (testing "name-desc sort"
-    (binding [*config* (assoc *config* :post-sort-type :name-desc)]
+    (bind-config [:post-sort-type :name-desc]
       (let [[p1 p2 p3] ((sort-type->sort-fn) sample-posts)]
         (are [x y] (= x (:title y))
           "c" p1

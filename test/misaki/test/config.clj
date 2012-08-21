@@ -1,7 +1,7 @@
 (ns misaki.test.config
   (:use misaki.config
         [misaki.util.file :only [normalize-path]]
-        [misaki.tester :only [set-base-dir! deftest*]]
+        [misaki.tester :only [set-base-dir! deftest* bind-config]]
         [clj-time.core :only [date-time year month day]]
         clojure.test)
   (:require [clojure.java.io :as io])
@@ -90,7 +90,7 @@
       (is (= "/foo.html" (make-output-url file))))
 
     (testing "custom url-base"
-      (binding [*config* (assoc *config* :url-base (normalize-path "/bar/baz"))]
+      (bind-config [:url-base (normalize-path "/bar/baz")]
         (is (= "/bar/baz/foo.html" (make-output-url file)))))))
 
 ;;; absolute-path
@@ -104,7 +104,7 @@
       "http://localhost/a.htm" "http://localhost/a.htm"
       "https://localhost/a.htm" "https://localhost/a.htm")
 
-    (binding [*config* (assoc *config* :url-base "/foo/")]
+    (bind-config [:url-base "/foo/"]
       (are [x y] (= x (absolute-path y))
         "/foo/a.htm" "a.htm"
         "/foo/a.htm" "/a.htm"

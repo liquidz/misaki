@@ -1,6 +1,6 @@
 (ns misaki.test.tester
   (:use
-    [misaki.config :only [*base-dir*]]
+    [misaki.config :only [*base-dir* *config*]]
     misaki.tester
     clojure.test)
   (:require
@@ -30,3 +30,10 @@
     (set-base-dir! "samples/blog")
     (is (= "misaki demo page")
         (-> (get-base-config) :site :site-title))))
+
+
+;;; bind-config
+(deftest bind-config-test
+  (is (nil? (:foo *config*)))
+  (bind-config [:foo "hello"]
+    (is (= "hello" (:foo *config*)))))

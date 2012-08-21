@@ -31,8 +31,9 @@
   "Config filename.
   Default filename is '_config.clj'."
   "_config.clj")
-
-(def ^:dynamic *config* {})
+(def ^:dynamic *config*
+  "Current config map."
+  {})
 
 ;; ## Config Data Wrapper
 

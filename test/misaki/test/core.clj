@@ -36,7 +36,7 @@
       (is (find-first #(= "2022.02.02-bar.html.clj" (.getName %)) files))))
 
   (testing "with sort"
-    (binding [*config* (assoc *config* :post-sort-type :date-desc)]
+    (bind-config [:post-sort-type :date-desc]
       (let [[a b c :as files] (get-post-files :sort? true)]
         (are [x y] (= x y)
           3 (count files)
