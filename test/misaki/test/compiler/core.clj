@@ -1,8 +1,9 @@
 (ns misaki.test.compiler.core
   (:use [misaki.compiler.default core template config]
-        ;[misaki.compiler.default.util sequence]
         [misaki.util sequence]
-        [misaki.config :only [template-name->file *post-sort-type*]]
+        [misaki.config :only [template-name->file
+                              *post-sort-type*
+                              *post-dir*]]
         misaki.server
         misaki.test.compiler.common
         [hiccup.core :only [html]]
@@ -83,15 +84,20 @@
 
 ;;; get-all-tags
 (deftest* get-all-tags-test
-  (let [[t1 t2 _ t3 :as tags] (sort-alphabetically :name (get-all-tags))]
-    (are [x y] (= x y)
-      4      (count tags)
-      "tag1" (:name t1)
-      "tag2" (:name t2)
-      "tag3" (:name t3)
-      "/tag/tag1.html" (:url t1)
-      "/tag/tag2.html" (:url t2)
-      "/tag/tag3.html" (:url t3))))
+  (testing "normal pattern"
+    (let [[t1 t2 _ t3 :as tags] (sort-alphabetically :name (get-all-tags))]
+      (are [x y] (= x y)
+        4      (count tags)
+        "tag1" (:name t1)
+        "tag2" (:name t2)
+        "tag3" (:name t3)
+        "/tag/tag1.html" (:url t1)
+        "/tag/tag2.html" (:url t2)
+        "/tag/tag3.html" (:url t3))))
+  (testing "error pattern"
+    (binding [*config* (dissoc *config* :post-dir)
+              *post-dir* nil]
+      (is (empty? (get-all-tags))))))
 
 ;;; get-tags
 (deftest* get-tags-test
@@ -208,7 +214,18 @@
             "foo" (:title p1)
             "baz" (:title p2)
             "bar" (:title p3)))))
-    ))
+
+    (testing "no post-dir"
+      (binding [*config* (dissoc *config* :post-dir)
+                *post-dir* nil]
+        (let [site (make-site-data file1 :base-option option1)]
+          (are [x y] (= x y)
+            file1   (:file site)
+            "baz"   (:title site)
+            "world" (:hello site)
+            0       (count (:posts site))
+            0       (count (:tags site))
+            ))))))
 
 ;;; file->template-sexp
 (deftest* file->template-sexp-test

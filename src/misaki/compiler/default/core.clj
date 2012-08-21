@@ -3,6 +3,7 @@
   (:use
     [misaki.compiler.default template config]
     [misaki.util file sequence string]
+    [clojure.core.incubator :only [-?>>]]
     [hiccup.core :only [html]]
     [hiccup.page :only [html5 xhtml html4]]
     [pretty-error.core :only [print-pretty-stack-trace]]
@@ -124,10 +125,21 @@
 
 ; =get-all-tags
 (defn get-all-tags
-  "Get all(unfiltered) tags from post list."
+  "Get all(unfiltered) tags from post list.
+  Return nil if :post-dir option is nil."
   []
-  (let [post-files (find-clj-files (:post-dir *config*))]
-    (remove nil? (mapcat (comp :tag parse-template-option) post-files))))
+  (remove nil?
+          (mapcat (comp :tag parse-template-option)
+                  (msk/get-post-files)
+                  ;(find-clj-files (:post-dir *config*))
+                  )
+          )
+  ;;;(-?>>
+  ;;;  (:post-dir *config*)
+  ;;;  find-clj-files
+  ;;;  (mapcat (comp :tag parse-template-option))
+  ;;;  (remove nil?))
+  )
 
 ; =get-tags
 (defn get-tags

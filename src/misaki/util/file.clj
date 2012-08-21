@@ -35,7 +35,9 @@
 (defn find-files
   "Find files in `dir` recursively."
   [dir]
-  (file-seq (io/file dir)))
+  (if dir
+    (file-seq (io/file dir))
+    []))
 
 ; =has-extension?
 (defn has-extension?

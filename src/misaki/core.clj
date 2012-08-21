@@ -47,6 +47,7 @@
   "Get all post files.
   Sort file list with `:sort?` option(default setting is FALSE)."
   [& {:keys [sort?] :or {sort? false}}]
+
   (let [files (get-template-files :dir *post-dir*)]
     (if sort?
       ((sort-type->sort-fn) files)

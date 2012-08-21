@@ -2,7 +2,7 @@
  ;; directory setting
  :public-dir   "public/"
  :template-dir "template/"
- :post-dir     "posts/"
+; :post-dir     "posts/"
  :layout-dir   "layouts/"
 
  ;; posts and tags url setting
