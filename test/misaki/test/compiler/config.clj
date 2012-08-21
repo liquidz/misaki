@@ -1,5 +1,6 @@
 (ns misaki.test.compiler.config
   (:use [misaki.compiler.default config]
+        [misaki.config :only [*config*]]
         [misaki.util file sequence]
         misaki.test.compiler.common
         [clj-time.core :only [date-time year month day]]

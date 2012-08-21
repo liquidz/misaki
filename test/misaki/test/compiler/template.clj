@@ -1,5 +1,6 @@
 (ns misaki.test.compiler.template
   (:use [misaki.compiler.default template config]
+        [misaki.config :only [*config*]]
         [hiccup.core :only [html]]
         misaki.test.compiler.common
         clojure.test)

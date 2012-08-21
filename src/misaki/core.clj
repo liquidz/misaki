@@ -3,7 +3,7 @@
   (:use misaki.config
         [misaki.util file string sequence]
         [text-decoration.core :only [green]]
-        [pretty-error.core :only [print-pretty-stack-trace]])
+        [pretty-error.core    :only [print-pretty-stack-trace]])
   (:import [java.io File]))
 
 (declare get-watch-file-extensions)
@@ -29,13 +29,13 @@
       (call-compiler-fn :-compile file)"
   [fn-key & args]
   (let [fn-sym (key->sym fn-key)
-        f      (get *compiler* fn-sym)]
+        f      (get (:compiler *config*) fn-sym)]
     (if f (apply f args))))
 
 ; =get-template-files
 (defn get-template-files
   "Get all template files. Find specified directory with `:dir` option."
-  [& {:keys [dir] :or {dir *template-dir*}}]
+  [& {:keys [dir] :or {dir (:template-dir *config*)}}]
   (let [exts (get-watch-file-extensions)]
     (filter
       (fn [file]
@@ -48,7 +48,7 @@
   Sort file list with `:sort?` option(default setting is FALSE)."
   [& {:keys [sort?] :or {sort? false}}]
 
-  (let [files (get-template-files :dir *post-dir*)]
+  (let [files (get-template-files :dir (:post-dir *config*))]
     (if sort?
       ((sort-type->sort-fn) files)
       files)))
@@ -159,7 +159,7 @@
       ; compile with post
       (post-file? file)
         (every? #(true? (first %))
-                (for [file (map template-name->file *compile-with-post*)]
+                (for [file (map template-name->file (:compile-with-post *config*))]
                   (compile* config file)))
 
       :else process-result)))

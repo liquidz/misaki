@@ -1,15 +1,15 @@
 (ns misaki.compiler.default.html.core
   "HTML utility for template"
   (:use
-    [misaki.compiler.default.config :only [*site*]]
-    [misaki.config :only [get-index-filename absolute-path]]
+    [misaki.compiler.default.config    :only [*site*]]
     [misaki.compiler.default.html.conv :only [post-title->url]])
   (:require
-    [clojure.string :as str]
-    [hiccup.core :as hiccup]
-    [hiccup.page :as page]
-    [misaki.compiler.default.html.conv :as conv]
-    [misaki.util.date :as date]))
+    [clojure.string   :as str]
+    [hiccup.core      :as hiccup]
+    [hiccup.page      :as page]
+    [misaki.config    :as cnf]
+    [misaki.util.date :as date]
+    [misaki.compiler.default.html.conv :as conv]))
 
 (declare link)
 
@@ -94,9 +94,9 @@
   (apply page/include-js (flatten args)))
 
 (defn absolute-js
-  "Include JavaScript from *url-base* setting."
+  "Include JavaScript from `(:url-base *config*)` setting."
   [& args]
-  (let [args (map #(absolute-path %) (flatten args))]
+  (let [args (map #(cnf/absolute-path %) (flatten args))]
     (apply js args)))
 
 (defn css
@@ -115,7 +115,7 @@
     (map #(vector :link %) attrs)))
 
 (defn absolute-css
-  "Include Cascading Style Sheet from *url-base* setting.
+  "Include Cascading Style Sheet from `(:url-base *config*)` setting.
 
    ex) :url-base \"/foo\"
 
@@ -128,7 +128,7 @@
   [& args]
   (let [args (flatten args)
         [opt & args] (if (map? (first args)) args (cons {} args))
-        args (map #(absolute-path %) args)]
+        args (map #(cnf/absolute-path %) args)]
     (apply css (cons opt args))))
 
 (defn heading
@@ -334,7 +334,7 @@
   "Make default header tag."
   [h & p]
   [:header
-   [:h1 (link (header-decoration h) (get-index-filename))]
+   [:h1 (link (header-decoration h) (cnf/get-index-filename))]
    (if p [:p p])])
 
 (defn container

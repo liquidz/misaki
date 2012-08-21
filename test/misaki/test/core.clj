@@ -19,7 +19,7 @@
       (is (= 16 (count tmpls)))))
 
   (testing "find from specified directory"
-    (let [tmpls (get-template-files :dir *post-dir*)]
+    (let [tmpls (get-template-files :dir (:post-dir *config*))]
       (is (= 3 (count tmpls)))
       (is (find-first #(= "2000.01.01-foo.html.clj" (.getName %)) tmpls))
       (is (find-first #(= "2011.01.01-foo.html.clj" (.getName %)) tmpls))
@@ -36,7 +36,7 @@
       (is (find-first #(= "2022.02.02-bar.html.clj" (.getName %)) files))))
 
   (testing "with sort"
-    (binding [*post-sort-type* :date-desc]
+    (binding [*config* (assoc *config* :post-sort-type :date-desc)]
       (let [[a b c :as files] (get-post-files :sort? true)]
         (are [x y] (= x y)
           3 (count files)
@@ -57,7 +57,7 @@
     (testing "boolean result"
       (is (process-compile-result true filename))
       (is (not (process-compile-result false filename)))
-      (let [f (io/file (str *public-dir* filename))]
+      (let [f (io/file (str (:public-dir *config*) filename))]
         (is (not (.exists f)))))
 
     (testing "detailed result"

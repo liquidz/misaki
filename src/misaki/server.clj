@@ -90,10 +90,13 @@
 
       ; compile all only if '--compile' option is specified
       (when-not (contains? (set args) "--compile")
-        (start-watcher *template-dir*)
+        (start-watcher (:template-dir *config*))
         (println " * starting server: "
-                 (cyan (str "http://localhost:" *port* *url-base*)))
+                 (cyan (str "http://localhost:"
+                            (:port *config*)
+                            (:url-base *config*))))
         (run-jetty
-          (routes (files *url-base* {:root *public-dir*}))
-          {:port *port*})))))
+          (routes (files (:url-base *config*)
+                         {:root (:public-dir *config*)}))
+          {:port (:port *config*)})))))
 

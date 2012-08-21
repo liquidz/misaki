@@ -1,9 +1,10 @@
 (ns misaki.compiler.default.config
   "Default Compiler's Configuration Manager"
   (:use [misaki.util file string sequence]
-        [clojure.core.incubator :only [-?> -?>>]]
-        [clj-time.core :only [date-time year month day]]
-        [clostache.parser :only [render]])
+        [misaki.config    :only [*config*]]
+        [clj-time.core    :only [date-time year month day]]
+        [clostache.parser :only [render]]
+        [clojure.core.incubator :only [-?> -?>>]])
   (:require
     [misaki.config   :as cnf]
     [clojure.string  :as str]
@@ -19,7 +20,6 @@
   "Default format to generage post output filename."
   "{{year}}/{{month}}/{{filename}}")
 
-(def ^:dynamic *config* {})
 (def ^:dynamic *site* {})
 
 ; =plugin-config

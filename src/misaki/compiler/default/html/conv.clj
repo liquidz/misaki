@@ -1,10 +1,10 @@
 (ns misaki.compiler.default.html.conv
   "Data converting utilities for template"
   (:use
-    [misaki.compiler.default.core :only [get-posts]]
+    [misaki.compiler.default.core   :only [get-posts]]
     [misaki.compiler.default.config :only [*site*]]
-    [misaki.util.sequence :only [find-first]]
-    [clojure.core.incubator :only [-?>>]])
+    [misaki.util.sequence           :only [find-first]]
+    [clojure.core.incubator         :only [-?>>]])
   (:require
     [clojure.string :as str]
     [clj-time.core :as t]

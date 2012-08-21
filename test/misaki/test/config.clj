@@ -90,7 +90,7 @@
       (is (= "/foo.html" (make-output-url file))))
 
     (testing "custom url-base"
-      (binding [*url-base* (normalize-path "/bar/baz")]
+      (binding [*config* (assoc *config* :url-base (normalize-path "/bar/baz"))]
         (is (= "/bar/baz/foo.html" (make-output-url file)))))))
 
 ;;; absolute-path
@@ -104,7 +104,7 @@
       "http://localhost/a.htm" "http://localhost/a.htm"
       "https://localhost/a.htm" "https://localhost/a.htm")
 
-    (binding [*url-base* "/foo/"]
+    (binding [*config* (assoc *config* :url-base "/foo/")]
       (are [x y] (= x (absolute-path y))
         "/foo/a.htm" "a.htm"
         "/foo/a.htm" "/a.htm"

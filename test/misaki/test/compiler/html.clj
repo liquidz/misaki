@@ -2,8 +2,9 @@
   (:use misaki.test.compiler.common
         misaki.compiler.default.html.core
         [misaki.compiler.default.core   :only [make-site-data]]
-        [misaki.compiler.default.config :only [*site* *config*]]
-        [misaki.config :only [*url-base*]]
+        [misaki.compiler.default.config :only [*site*]]
+        [misaki.config :only [*config*]]
+;        [misaki.config :only [*url-base*]]
         [hiccup.core :only [html]])
   (:use [clojure.test])
   (:require [clojure.java.io :as io]))
@@ -193,7 +194,7 @@
       "<script src=\"/a.js\" type=\"text/javascript\"></script>" (absolute-js "/a.js")
       "<script src=\"/bar/a.js\" type=\"text/javascript\"></script>" (absolute-js "/bar/a.js")
       "<script src=\"http://localhost/a.js\" type=\"text/javascript\"></script>" (absolute-js "http://localhost/a.js"))
-    (binding [*url-base* "/foo/"]
+    (binding [*config* (assoc *config* :url-base "/foo/")]
       (are [x y] (= x (html (first y)))
         "<script src=\"/foo/a.js\" type=\"text/javascript\"></script>" (absolute-js "a.js")
         "<script src=\"/foo/a.js\" type=\"text/javascript\"></script>" (absolute-js "/a.js")
@@ -217,7 +218,7 @@
       "<link href=\"/a.css\" rel=\"stylesheet\" type=\"text/css\" />" (first (absolute-css "/a.css"))
       "<link href=\"/bar/a.css\" rel=\"stylesheet\" type=\"text/css\" />" (first (absolute-css "/bar/a.css"))
       "<link href=\"http://localhost/a.css\" rel=\"stylesheet\" type=\"text/css\" />" (first (absolute-css "http://localhost/a.css")))
-    (binding [*url-base* "/foo/"]
+    (binding [*config* (assoc *config* :url-base "/foo/")]
       (are [x y] (= x (html y))
         "<link href=\"/foo/a.css\" rel=\"stylesheet\" type=\"text/css\" />" (first (absolute-css "a.css"))
         "<link href=\"/foo/a.css\" rel=\"stylesheet\" type=\"text/css\" />" (first (absolute-css "/a.css"))

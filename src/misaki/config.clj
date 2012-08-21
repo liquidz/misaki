@@ -32,20 +32,7 @@
   Default filename is '_config.clj'."
   "_config.clj")
 
-(declare ^:dynamic *template-dir*)
-(declare ^:dynamic *port*)
-(declare ^:dynamic *url-base*)
-(declare ^:dynamic *index-name*)
-(declare ^:dynamic *public-dir*)
-(declare ^:dynamic *post-dir*)
-(declare ^:dynamic *compiler*)
-(declare ^:dynamic *post-sort-type*)
-;; Regexp to parse post filename -> date and filename
-(declare ^:dynamic *post-filename-regexp*)
-;; Format to generate post output filename
-(declare ^:dynamic *post-filename-format*)
-;; Template list which is compiled with post file.
-(declare ^:dynamic *compile-with-post*)
+(def ^:dynamic *config* {})
 
 ;; ## Config Data Wrapper
 
@@ -99,20 +86,8 @@
 (defmacro with-config
   "Declare config data, and wrap sexp body with them."
   [& body]
-  `(let [config# (make-basic-config-map)]
-     (binding
-       [*template-dir* (:template-dir config#)
-        *public-dir*   (:public-dir config#)
-        *post-dir*     (:post-dir config#)
-        *post-filename-regexp* (:post-filename-regexp config#)
-        *post-filename-format* (:post-filename-format config#)
-        *compile-with-post*    (:compile-with-post config#)
-        *post-sort-type* (:post-sort-type config#)
-        *port*         (:port config#)
-        *url-base*     (:url-base config#)
-        *index-name*   (:index-name config#)
-        *compiler*     (:compiler config#)]
-       ~@body)))
+  `(binding [*config* (make-basic-config-map)]
+     ~@body))
 
 ;; ## File Cheker
 
@@ -128,16 +103,17 @@
   "Check whether file is post file or not."
   [#^File file]
   {:pre [(file? file)]}
-  (and *post-dir* (str-contains? (.getAbsolutePath file) *post-dir*)))
+  (and (:post-dir *config*) (str-contains? (.getAbsolutePath file)
+                                           (:post-dir *config*))))
 
 ;; ## Filename Date Utility
 
 ; =get-date-from-file
 (defn get-date-from-file
-  "Get date from file(java.io.File) with `*post-filename-regexp*`."
+  "Get date from file(java.io.File) with `(:post-filename-regexp *config*)`."
   [#^File post-file]
   (let [date-seq (-?>> post-file (.getName)
-                      (re-seq *post-filename-regexp*)
+                      (re-seq (:post-filename-regexp *config*))
                       nfirst drop-last)] ; last = filename
     (if (and date-seq (= 3 (count date-seq))
              (every? #(re-matches #"^[0-9]+$" %) date-seq))
@@ -148,7 +124,7 @@
   "Remove date string from filename(String)."
   [#^String filename]
   {:pre [(string? filename)]}
-  (last (first (re-seq *post-filename-regexp* filename))))
+  (last (first (re-seq (:post-filename-regexp *config*) filename))))
 
 
 ;; ## Converter
@@ -156,7 +132,7 @@
 (defn sort-type->sort-fn
   "Convert sort-type keyword to sort function."
   []
-  (case *post-sort-type*
+  (case (:post-sort-type *config*)
     :date       (partial sort-by-date :inc get-date-from-file)
     :name       (partial sort-alphabetically #(.getName %))
     :date-desc  (partial sort-by-date :desc get-date-from-file)
@@ -169,7 +145,7 @@
 (defn get-index-filename
   "Get index filename string."
   []
-  (path *url-base* *index-name*))
+  (path (:url-base *config*) (:index-name *config*)))
 
 ; =make-post-output-filename
 (defn make-post-output-filename
@@ -179,7 +155,7 @@
   (let [date     (get-date-from-file file)
         filename (if date (remove-date-from-name (.getName file))
                           (.getName file))]
-    (render *post-filename-format*
+    (render (:post-filename-format *config*)
             {:year     (-?>  date year  str)
              :month    (-?>> date month (format "%02d"))
              :day      (-?>> date day   (format "%02d"))
@@ -197,26 +173,26 @@
 (defn make-output-url
   "Make output url from java.io.File."
   [#^File file]
-  (path *url-base* (make-output-filename file)))
+  (path (:url-base *config*) (make-output-filename file)))
 
 ; =template-name->file
 (defn template-name->file
   "Convert template name to java.io.File."
   [#^String tmpl-name]
   {:pre [(string? tmpl-name)]}
-  (io/file (path *template-dir* tmpl-name)))
+  (io/file (path (:template-dir *config*) tmpl-name)))
 
 ; =absolute-path
 (defn absolute-path
-  "Convert path to absolute with *url-base*"
+  "Convert path to absolute with `(:url-base *config*)`"
   [path-str]
   (if (re-seq #"^https?://" path-str)
     path-str
-    (path *url-base* path-str)))
+    (path (:url-base *config*) path-str)))
 
 ; =add-public-dir
 (defn add-public-dir
   "Add public dir to specified path."
   [filename]
-  (path *public-dir* filename))
+  (path (:public-dir *config*) filename))
 

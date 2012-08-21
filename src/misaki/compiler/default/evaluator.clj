@@ -7,10 +7,9 @@
 (defn def?
   "Check whether `def` or `defn` s-exp or not."
   [x]
-
   (and (seq? x)
        (case (first x)
-         (def defn defn- defmacro) true
+         (def defn defn- defmacro defmacro-) true
          false)))
 
 ; =split-into-def-and-body

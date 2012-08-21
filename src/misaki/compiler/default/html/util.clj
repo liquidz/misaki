@@ -1,7 +1,6 @@
 (ns misaki.compiler.default.html.util
   "HTML Service Utilities"
-  (:require
-    [hiccup.page :as page]))
+  (:require [hiccup.page :as page]))
 
 ;; ## GitHub
 

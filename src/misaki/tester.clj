@@ -1,10 +1,10 @@
 (ns misaki.tester
   "Compiler Testing Utilities"
   (:use
-    [misaki.core :only [update-config call-compile]]
-    [misaki.config :only [*base-dir* make-basic-config-map with-config]]
+    [misaki.core      :only [update-config call-compile]]
+    [misaki.config    :only [*base-dir* make-basic-config-map with-config]]
     [misaki.util.file :only [normalize-path]]
-    [clojure.test :only [deftest]])
+    [clojure.test     :only [deftest]])
   (:require
     [clojure.string :as str]))
 

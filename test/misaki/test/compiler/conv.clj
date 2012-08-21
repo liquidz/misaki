@@ -2,7 +2,8 @@
   (:use misaki.test.compiler.common
         [misaki.compiler.default.html conv]
         [misaki.compiler.default.core :only [make-site-data]]
-        [misaki.compiler.default.config :only [*site* *config*]]
+        [misaki.compiler.default.config :only [*site*]]
+        [misaki.config :only [*config*]]
         [clj-time.core :only [date-time]]
         clojure.test)
   (:require [clojure.java.io :as io]))

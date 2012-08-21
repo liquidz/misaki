@@ -2,9 +2,9 @@
   "Template file loader"
   (:use
     [misaki.compiler.default evaluator config]
-    [misaki.util.file :only [file?]]
+    [misaki.util.file       :only [file?]]
     [clojure.core.incubator :only [-?>]])
-  (:require [clojure.string :as str]
+  (:require [clojure.string  :as str]
             [clojure.java.io :as io])
   (:import [java.io File]))
 
