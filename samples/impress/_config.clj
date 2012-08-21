@@ -2,7 +2,6 @@
  ;; directory setting
  :public-dir   "public/"
  :template-dir "template/"
-; :post-dir     "posts/"
  :layout-dir   "layouts/"
 
  ;; posts and tags url setting
@@ -28,10 +27,6 @@
 
  ;; highlight setting
  :code-highlight {:CLJ "lang-clj", :CLOJURE "lang-clj"}
-
- ;; flag for detailed log
- ;;   default value: false
- :detailed-log true;false
 
  ;; compiler setting
  ;;   default value: "default"
