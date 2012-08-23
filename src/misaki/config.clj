@@ -49,7 +49,9 @@
 
 ; =load-compiler-publics
 (defn load-compiler-publics
-  "Load specified compiler's public method map."
+  "Load specified compiler's public method map.
+  Compiler's namespace must be **misaki.compiler.FOO.core**.
+  "
   [name]
   (let [sym (symbol (str "misaki.compiler." name ".core"))]
     (try
@@ -58,6 +60,8 @@
         (ns-publics target-ns)
         (load-compiler-publics "default"))
       (catch FileNotFoundException e
+        (println (red (str " * Compiler \"" name "\" is not found."
+                           " Default compiler is used.")))
         (load-compiler-publics "default")))))
 
 ; =make-basic-config-map

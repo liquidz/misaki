@@ -3945,7 +3945,8 @@ ewline and return if you deref instance.</p>
            (read-until reader)
            escape-string
            str/trim)]))</pre></td></tr><tr><td class="docs"><p>Register <code>#-</code> reader macro</p>
-</td><td class="codes"><pre class="brush: clojure">(dispatch-reader-macro \- here-code)</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#misaki.compiler.demo.core" name="misaki.compiler.demo.core"><h1 class="project-name">misaki.compiler.demo.core</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(dispatch-reader-macro \- here-code)
+(dispatch-reader-macro \# here-code)</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#misaki.compiler.demo.core" name="misaki.compiler.demo.core"><h1 class="project-name">misaki.compiler.demo.core</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(ns misaki.compiler.demo.core
   (:import [java.io File]))</pre></td></tr><tr><td class="docs"><p>Set watch target extension as keyword. (REQUIRED)</p>
 </td><td class="codes"><pre class="brush: clojure">(defn -extension
@@ -4019,6 +4020,8 @@ ewline and return if you deref instance.</p>
    (try (read-config)
         (catch FileNotFoundException e
           default-value))))</pre></td></tr><tr><td class="docs"><p>Load specified compiler's public method map.</p>
+
+<p>  Compiler's namespace must be <strong>misaki.compiler.FOO.core</strong>.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn load-compiler-publics
   [name]
   (let [sym (symbol (str &quot;misaki.compiler.&quot; name &quot;.core&quot;))]

@@ -64,4 +64,5 @@
 
 ;; Register `#-` reader macro
 (dispatch-reader-macro \- here-code)
+(dispatch-reader-macro \# here-code)
 
