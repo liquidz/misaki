@@ -54,13 +54,6 @@
                              (get-parent-path cljs-out))
                :output-to  cljs-out)))))
 
-; =with-config
-(defmacro with-config
-  "Bind specified config to `*config*`."
-  [config & body]
-  `(binding [*config* ~config]
-     ~@body))
-
 ;; ## File Cheker
 
 ; =layout-file?
