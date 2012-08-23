@@ -62,6 +62,6 @@
 
  ;; compiler setting
  ;;   default value: "default"
- :compiler "defaultxxxx"
+ :compiler "default"
  }
 

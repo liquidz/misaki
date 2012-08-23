@@ -53,6 +53,7 @@
   Compiler's namespace must be **misaki.compiler.FOO.core**.
   "
   [name]
+  {:pre [(string? name)]}
   (let [sym (symbol (str "misaki.compiler." name ".core"))]
     (try
       (require sym)
@@ -117,6 +118,7 @@
 (defn get-date-from-file
   "Get date from file(java.io.File) with `(:post-filename-regexp *config*)`."
   [#^File post-file]
+  {:pre [(or (nil? post-file) (file? post-file))]}
   (let [date-seq (-?>> post-file (.getName)
                       (re-seq (:post-filename-regexp *config*))
                       nfirst drop-last)] ; last = filename
@@ -170,6 +172,7 @@
 (defn make-output-filename
   "Make output filename from java.io.File."
   [#^File file]
+  {:pre [(file? file)]}
   (if (post-file? file)
     (make-post-output-filename file)
     (.getName file)))
@@ -178,6 +181,7 @@
 (defn make-output-url
   "Make output url from java.io.File."
   [#^File file]
+  {:pre [(file? file)]}
   (path (:url-base *config*) (make-output-filename file)))
 
 ; =template-name->file
@@ -191,6 +195,7 @@
 (defn absolute-path
   "Convert path to absolute with `(:url-base *config*)`"
   [path-str]
+  {:pre [(string? path-str)]}
   (if (re-seq #"^https?://" path-str)
     path-str
     (path (:url-base *config*) path-str)))
@@ -199,5 +204,6 @@
 (defn add-public-dir
   "Add public dir to specified path."
   [filename]
+  {:pre (string? filename)}
   (path (:public-dir *config*) filename))
 
