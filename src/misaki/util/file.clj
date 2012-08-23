@@ -61,18 +61,20 @@
   (extension-filter :clj (find-files dir)))
 
 ; =remove-extension
-(defn remove-extension
+(defmulti remove-extension
   "Remove file extension.
 
       (remove-extension \"foo.bar\")
       ;=> \"foo\"
       (remove-extension \"foo.bar.baz\")
-      ;=> \"foo.bar\"
-  "
-  [x]
-  (if (= java.io.File (class x))
-    (remove-extension (.getName x))
-    (str/replace-first x #"\.[^.]+$" "")))
+      ;=> \"foo.bar\""
+  class)
+(defmethod remove-extension File
+  [file]
+  (remove-extension (.getName file)))
+(defmethod remove-extension String
+  [s]
+  (str/replace-first s #"\.[^.]+$" ""))
 
 ; =get-parent-path
 (defn get-parent-path
