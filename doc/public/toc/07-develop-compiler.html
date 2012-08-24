@@ -30,4 +30,48 @@ $ mv src/misaki_new_compiler/core.clj src/misaki/compiler/YOUR_COMPILER_NAME/cor
                 `:stop-compile?` -&gt; Flag(true/false) to stop all compilation
                 `:all-compile?`  -&gt; Flag(true/false) to force compiling all templates&quot;
   [config file]
-  (str (:text config) (slurp file)))</pre><p class="paragraph">You can use <a href="https://github.com/liquidz/misaki-clostache">misaki-clostache</a> and <a href="../api/uberdoc.html">misaki API</a> as reference of developing misaki compiler.</p><h2><span>S</span>ee also..</h2><ul><li><span><p class="paragraph"><a href="/misaki/toc/06-switch-compiler.html">Switch Compiler</a></p></span></li></ul><p class="back">&raquo; <a href="/misaki/">Back to Top</a></p></div></article><footer class="footer"><p><a href="http://twitter.com/uochan">@uochan</a>&nbsp; 2012</p><p><a href="https://github.com/liquidz/misaki"><img alt="misaki banner" src="/misaki/img/misaki_banner.png"></a></p></footer></div><script src="/misaki/js/prettify.js" type="text/javascript"></script><script src="/misaki/js/lang-clj.js" type="text/javascript"></script><script src="/misaki/js/main.js" type="text/javascript"></script></body></html>
+  (str (:text config) (slurp file)))</pre><h3><span>-</span>extension</h3><p class="paragraph">Return file extension list to watch template file.
+   This function is <strong>REQUIRED</strong>.</p><h3><span>-</span>config</h3><p class="paragraph">Basic config data is passed, and return customized config data.
+   This function is <strong>OPTIONAL</strong>.</p><h3><span>-</span>compile</h3><p class="paragraph">Updated file(java.io.File) is passed, and return compile result.
+   This function is <strong>REQUIRED</strong>.</p><p class="paragraph">Return value specification is following.</p><dl><dt>string</dt><dd><p class="paragraph">Write string to file which is named as same as template file.</p><pre class="prettyprint lang-clj">(defn -compile [file]
+  (str &quot;hello &quot; (slurp file)))
+; foo.txt whose body is &quot;world&quot; is passed,
+; result file is *public-dir*/foo.txt whose body is &quot;hello world&quot;</pre></dd><dt>boolean</dt><dd><p class="paragraph">misaki.core does not write file, only check compile result.</p><pre class="prettyprint lang-clj">(defn -compile [file]
+  (compile-in-compiler file)
+  true)
+; true  =&gt; compile success
+; false =&gt; compile failed</pre></dd><dt>symbol</dt><dd><p class="paragraph">misaki.core skip the file.</p><pre class="prettyprint lang-clj">(defn -compile [file]
+  (if-not (valid-file? file) 'skip))
+; Skip to compile file</pre></dd><dt>map</dt><dd><p class="paragraph">Write file with detailed setting.</p><pre class="prettyprint lang-clj">(defn -compile [file]
+  {; compile result
+   :status        true
+   ; output filename
+   :filename      (str (.getName file) &quot;.html&quot;)
+   ; output body
+   :body          (str &quot;hello &quot; (slurp file))
+   ; flag to stop compilation
+   :stop-compile? false
+   ; flat to force compiling all templates
+   :all-compile?  false})</pre></dd></dl><h2><span>T</span>est your compiler</h2><p class="paragraph">misaki provides utilities to test your own compiler.</p><pre class="prettyprint lang-clj">(ns foo.test
+  (:use misaki.tester))
+
+; set base directory which include _config.clj
+; default testing base directory is &quot;test&quot;
+(set-base-dir! &quot;test&quot;)
+
+; get compiler's config which is customized by `-config`
+(get-config)
+
+; call `-compile` to test your compling
+(let [file (io/file &quot;testtemplate&quot;)]
+  (test-compile file))
+
+; define test wrapping config data as *config*
+;
+; This code is same as following:
+;   (deftest foo-test
+;     (binding [*base-dir* &quot;test&quot;
+;               *config* (get-config)]
+;       (is (= &quot;hello&quot;) (:template-dir *config*))))
+(deftest* foo-test
+  (is (= &quot;hello&quot;) (:template-dir *config*)))</pre><p class="paragraph">Check <a href="/misaki/api/uberdoc.html#misaki.tester">misaki.tester</a> to get detailed document.</p><h2><span>A</span>nother compiler sample</h2><p class="paragraph">You can use <a href="https://github.com/liquidz/misaki-clostache">misaki-clostache</a> and <a href="../api/uberdoc.html">misaki API</a> as reference of developing misaki compiler.</p><h2><span>S</span>ee also..</h2><ul><li><span><p class="paragraph"><a href="/misaki/toc/06-switch-compiler.html">Switch Compiler</a></p></span></li></ul><p class="back">&raquo; <a href="/misaki/">Back to Top</a></p></div></article><footer class="footer"><p><a href="http://twitter.com/uochan">@uochan</a>&nbsp; 2012</p><p><a href="https://github.com/liquidz/misaki"><img alt="misaki banner" src="/misaki/img/misaki_banner.png"></a></p></footer></div><script src="/misaki/js/prettify.js" type="text/javascript"></script><script src="/misaki/js/lang-clj.js" type="text/javascript"></script><script src="/misaki/js/main.js" type="text/javascript"></script></body></html>
