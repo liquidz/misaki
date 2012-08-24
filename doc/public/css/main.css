@@ -2,7 +2,14 @@
 body, h1, h2, h3, h4, p { margin: 0; padding: 0; }
 h1, h2, h3, h4, footer { font-family: 'Josefin Sans', sans-serif; }
 
-a { color: #04c; }
+a {
+    color: #04c;
+    -webkit-transition: color 0.5s;
+    -moz-transition:    color 0.5s;
+    -ms-transition:     color 0.5s;
+    -o-transition:      color 0.5s;
+    transition:         color 0.5s;
+}
 a:hover { color: #6af; }
 
 blockquote { color: #888; font-style: italic; }
@@ -46,7 +53,18 @@ h3 + p { text-indent: 1em; }
 h4 { color: #666; font-weight: bold; border-bottom: 1px dotted #eee; margin-top: 0.5em; }
 h4 + p { text-indent: 0.5em; }
 
-ul li { line-height: 130%; }
+ul li {
+    line-height: 150%;
+    /*
+    -webkit-transition: opacity 0.5s;
+    -moz-transition:    opacity 0.5s;
+    -ms-transition:     opacity 0.5s;
+    -o-transition:      opacity 0.5s;
+    transition:         opacity 0.5s;
+    */
+}
+
+ul li:hover { list-style-type: circle; }
 
 /* page header style*/
 .page-header { margin-top: 2em; border-bottom: 1px solid #eaeaea; overflow: hidden; }

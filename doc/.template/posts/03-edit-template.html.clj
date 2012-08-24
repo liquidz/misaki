@@ -14,10 +14,12 @@
 ;; passing the "site" variable for access to template options
 (header (:title site))
 
-[:h2 "Posts"]
-[:ul
- (for [p (:posts site)]
-   [:li (:title p)])]
+(h2 "Posts")
+(post-list)
+;; or you can write posts list manually
+;    [:ul
+;     (for [p (:posts site)]
+;       [:li (:title p)])]
 CLJ
 
 ; /Example
@@ -102,6 +104,12 @@ CLJ
 
 #-CLJ
 #-CODE
+(println "hello")
+CODE
+
+or
+
+##CODE
 (println "hello")
 CODE
 CLJ

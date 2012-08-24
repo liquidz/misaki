@@ -15,20 +15,19 @@
       (:posts site))
 
     (h2 "Demo")
-    (ul [(link "http://liquidz.github.com/misaki/demo/")])
+    (ul [(link "Blog" "/misaki/demo/blog/")
+         (link "Presentation" "/misaki/demo/presentation/")])
 
     (h2 "API")
     (ul
       [(link "API Index" "api/uberdoc.html")
        (list "Built in functions"
              (ul
-               (fn [[k v]] (link k v))
-               {"misaki.compiler.default.html.core"
-                    "api/uberdoc.html#misaki.compiler.default.html.core"
-                "misaki.compiler.default.html.conv"
-                    "api/uberdoc.html#misaki.compiler.default.html.conv"
-                "misaki.compiler.default.html.util"
-                    "api/uberdoc.html#misaki.compiler.default.html.util"}))]))
+               #(let [s (name %)]
+                  (link
+                    (str "misaki.compiler.default.html." s)
+                    (str "api/uberdoc.html#misaki.compiler.default.html." s)))
+               [:core :conv :util]))]))
 
   (list
     (h2 "Try sample")

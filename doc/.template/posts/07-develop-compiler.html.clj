@@ -23,8 +23,7 @@ SH
 
 #-CLJ
 :dependencies [[org.clojure/clojure "1.4.0"]
-               ; add
-               [misaki "0.2.0-beta"]]
+               [misaki "0.2.0-beta"]] ; add
 CLJ
 
 (p "Namespace of core.clj must be **misaki.compiler.YOUR-COMPIER-NAME.core**")
@@ -65,9 +64,9 @@ SH
      * boolean: Do nothing(true = success, false = fail).
      * symbol : Do nothing(skip)
      * map    : Write file with detailed setting.
-                `:status`   -> Compile result(true(success), false(fail) or something else(skip))
-                `:filename` -> Filename to write
-                `:body`     -> Compiled body text. if body is nil, only status is checked
+                `:status`        -> Compile result(true(success), false(fail) or something else(skip))
+                `:filename`      -> Filename to write
+                `:body`          -> Compiled body text. if body is nil, only status is checked
                 `:stop-compile?` -> Flag(true/false) to stop all compilation
                 `:all-compile?`  -> Flag(true/false) to force compiling all templates"
   [config file]

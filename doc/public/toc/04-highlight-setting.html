@@ -6,12 +6,12 @@
 
  ; highlight setting
  :code-highlight {:CLJ &quot;lang-clj&quot;}
- }</pre><p class="paragraph">With above setting, following code has <code class="prettyprint">lang-clj</code> css class.</p><pre class="prettyprint lang-clj">#-CLJ
+ }</pre><p class="paragraph">With above setting, following code has <code class="prettyprint">lang-clj</code> css class.</p><pre class="prettyprint lang-clj">##CLJ
 (println &quot;hello, world&quot;)
 CLJ
 ; =&gt; &lt;pre class=&quot;prettyprint lang-clj&quot;&gt;
 ;    (println &quot;hello, world&quot;)
-;    &lt;/pre&gt;</pre><p class="paragraph">With not defined string, class contains <code class="prettyprint">prettyprint</code> simply.</p><pre class="prettyprint lang-clj">#-NOTDEFINED
+;    &lt;/pre&gt;</pre><p class="paragraph">With not defined string, class contains <code class="prettyprint">prettyprint</code> simply.</p><pre class="prettyprint lang-clj">##NOTDEFINED
 (println &quot;hello, world&quot;)
 NOTDEFINED
 ; =&gt; &lt;pre class=&quot;prettyprint&quot;&gt;

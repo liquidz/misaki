@@ -9,7 +9,16 @@ h1, h2, h3, h4 { font-weight: normal; }
 h1 span { color: #d454bf; }
 h2 span { color: #58b271; }
 
-a { color: #04c; }
+a {
+    color: #04c;
+    -webkit-transition: color 0.5s;
+    -moz-transition:    color 0.5s;
+    -ms-transition:     color 0.5s;
+    -o-transition:      color 0.5s;
+    transition:         color 0.5s;
+}
+a:hover { color: #6af; }
+
 
 div.code_sample pre {
     width: auto;

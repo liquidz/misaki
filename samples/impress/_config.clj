@@ -9,7 +9,7 @@
  ;;   ex)
  ;;     "/"    => "/YYYY-MM/POST.html"
  ;;     "/foo" => "/foo/YYYY-MM/POST.html"
- :url-base     "/"
+ :url-base     "/misaki/demo/presentation"
 
  ;; dev server port
  ;;   default value: 8080

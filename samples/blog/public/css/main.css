@@ -2,7 +2,14 @@
 body, h1, h2, h3, h4, p { margin: 0; padding: 0; }
 body, p { font-family: 'Josefin Sans', sans-serif; }
 
-a { color: #04c; }
+a {
+    color: #04c;
+    -webkit-transition: color 0.5s;
+    -moz-transition:    color 0.5s;
+    -ms-transition:     color 0.5s;
+    -o-transition:      color 0.5s;
+    transition:         color 0.5s;
+}
 a:hover { color: #6af; }
 
 blockquote { color: #888; font-style: italic; }

@@ -10,7 +10,7 @@
 
 (code "_config.clj")
 
-#-CLJ
+##CLJ
 {
  ; directory setting
  ; ....
@@ -23,8 +23,8 @@ CLJ
 (p "With above setting, following code has `lang-clj` css class.")
 
 
-#-CLOJURE
-#-CLJ
+##CLOJURE
+##CLJ
 (println "hello, world")
 CLJ
 ; => <pre class="prettyprint lang-clj">
@@ -34,8 +34,8 @@ CLOJURE
 
 (p "With not defined string, class contains `prettyprint` simply.")
 
-#-CLJ
-#-NOTDEFINED
+##CLJ
+##NOTDEFINED
 (println "hello, world")
 NOTDEFINED
 ; => <pre class="prettyprint">
