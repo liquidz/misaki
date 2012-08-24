@@ -63,10 +63,10 @@
   (testing "without attribute"
     (are [x y] (= x (html y))
       "<a href=\"a.html\">a.html</a>" (link "a.html")
-      "<a href=\"a.html\">link</a>" (link "link" "a.html")
+      "<a href=\"a.html\">link</a>"   (link "link" "a.html")
+      "<a href=\"a.html\">link</a>"   (link (list "li" "nk") "a.html")
       "<a href=\"a.html\"><code class=\"prettyprint\">link</code></a>" (link "`link`" "a.html")
-      "<a href=\"a.html\"><span>span</span></a>" (link [:span "span"] "a.html")
-      ))
+      "<a href=\"a.html\"><span>span</span></a>" (link [:span "span"] "a.html")))
   (testing "with attribute"
     (are [x y] (= x (html y))
       "<a class=\"foo\" href=\"a.html\">a.html</a>" (link {:class "foo"} "a.html")

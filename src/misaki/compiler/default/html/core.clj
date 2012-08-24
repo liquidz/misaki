@@ -231,7 +231,7 @@
   ([href] (link {} href href))
   ([x href]
    (cond
-     (or (string? x) (vector? x)) (link {} x href)
+     (or (string? x) (sequential? x)) (link {} x href)
      (map? x)    (link x href href)
      :else       (link {} href href)))
   ([attr label href]
