@@ -56,24 +56,25 @@
   {:pre  [(map? config) (instance? File file)]
    :post [#(or (true? %) (false? %) (string? %) (map? %))]}
 
-  (cond
-    ; clojurescript
-    (has-extension? ".cljs" file)
-    (log "clojurescripts" (compile-clojurescripts))
+  (with-config config
+    (cond
+      ; clojurescript
+      (has-extension? ".cljs" file)
+      (log "clojurescripts" (compile-clojurescripts))
 
-    ; layout
-    (layout-file? file)
-    {:status 'skip :all-compile?  true}
+      ; layout
+      (layout-file? file)
+      {:status 'skip :all-compile?  true}
 
-    ; else
-    :else
-    (let [res (log (.getName file) (compile-template file))]
-      (when (cnf/post-file? file)
-        ; compile tag
-        (if-let [tags (-> file parse-template-option :tag)]
-          (doseq [{tag-name :name} tags]
-            (log tag-name (compile-tag tag-name)))))
-      res)))
+      ; else
+      :else
+      (let [res (log (.getName file) (compile-template file))]
+        (when (cnf/post-file? file)
+          ; compile tag
+          (if-let [tags (-> file parse-template-option :tag)]
+            (doseq [{tag-name :name} tags]
+              (log tag-name (compile-tag tag-name)))))
+        res))))
 
 ;; ## Post Functions
 

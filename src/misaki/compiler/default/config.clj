@@ -36,9 +36,9 @@
   {:pre  [(map? config)]
    :post [#(map? %)]}
   (let [{:keys [template-dir public-dir url-base detailed-log]} config
-        layout   (str template-dir (:layout-dir config))
+        layout   (path template-dir (:layout-dir config))
         cljs     (:cljs config)
-        cljs-out (if cljs (str public-dir (:output-to cljs)))]
+        cljs-out (if cljs (path public-dir (:output-to cljs)))]
     (assoc
       config
       :layout-dir layout
@@ -53,6 +53,12 @@
                              (path public-dir dir)
                              (get-parent-path cljs-out))
                :output-to  cljs-out)))))
+
+; =with-config
+(defmacro with-config
+  "Bind local config to `*config*`"
+  [config & body]
+  `(binding [*config* ~config] ~@body))
 
 ;; ## File Cheker
 
