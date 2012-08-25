@@ -40,7 +40,7 @@
                 (if (= c (first e))
                   (recur (conj res c) (rest e) true)
                   ; keep `started?` with front space
-                  (recur (conj res c) end-seq (front-space? c e)))
+                  (recur (conj res c) end-seq (or (start? c) (front-space? c e))))
                 ; start to check end-seq with newline
                 (recur (conj res c) end-seq (start? c)))))))
 

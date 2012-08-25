@@ -11,6 +11,8 @@
     (are [x y] (= x (str/trim (read-until (StringReader. y) "EOT")))
       "hello"    "hello\nEOT"
       "hello"    "hello\n  EOT"
+      "hello"    "hello\n\nEOT"
+      "hello"    "hello\n\n\nEOT"
       "helloEOT" "helloEOT\n  EOT"
       ""         "EOT"))
   (testing "error pattern"
