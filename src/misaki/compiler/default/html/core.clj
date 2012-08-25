@@ -142,8 +142,10 @@
   ([n s]
    (heading n {} s))
   ([n attr s]
-   (let [tag (keyword (str "h" n))]
-     [tag attr [:span (first s)] (rest s)])))
+   (let [tag  (keyword (str "h" n))]
+     (if (string? s)
+       [tag attr [:span (first s)] (rest s)]
+       [tag attr s]))))
 (def h1 (partial heading 1))
 (def h2 (partial heading 2))
 (def h3 (partial heading 3))

@@ -4,11 +4,11 @@ h1, h2, h3, h4, footer { font-family: 'Josefin Sans', sans-serif; }
 
 a {
     color: #04c;
-    -webkit-transition: color 0.5s;
-    -moz-transition:    color 0.5s;
-    -ms-transition:     color 0.5s;
-    -o-transition:      color 0.5s;
-    transition:         color 0.5s;
+    -webkit-transition: color 0.3s;
+    -moz-transition:    color 0.3s;
+    -ms-transition:     color 0.3s;
+    -o-transition:      color 0.3s;
+    transition:         color 0.3s;
 }
 a:hover { color: #6af; }
 
@@ -22,6 +22,15 @@ pre.block {
 }
 
 /* =header */
+
+header h1 a, .page-header h1 a {
+    -webkit-transition: opacity 0.3s;
+    -moz-transition:    opacity 0.3s;
+    -ms-transition:     opacity 0.3s;
+    -o-transition:      opacity 0.3s;
+    transition:         opacity 0.3s;
+}
+
 header { margin-bottom: 20px; }
 header h1 { margin: 0.3em; }
 header h1 a {
@@ -55,20 +64,15 @@ h4 + p { text-indent: 0.5em; }
 
 ul li {
     line-height: 150%;
-    /*
-    -webkit-transition: opacity 0.5s;
-    -moz-transition:    opacity 0.5s;
-    -ms-transition:     opacity 0.5s;
-    -o-transition:      opacity 0.5s;
-    transition:         opacity 0.5s;
-    */
 }
 
 ul li:hover { list-style-type: circle; }
 
 /* page header style*/
 .page-header { margin-top: 2em; border-bottom: 1px solid #eaeaea; overflow: hidden; }
-.page-header h1 { font-size: 50px; color: #444; font-weight: normal; float: left; }
+.page-header h1 { font-size: 50px; font-weight: normal; float: left; }
+.page-header h1 a { text-decoration: none; color: #444; }
+.page-header h1 a:hover { opacity: 0.5; }
 .page-header p.date { float: right; margin: 20px 10px 0 30px; font-weight: bold; letter-spacing: 1px; color: #444; }
 
 /* code highlight */

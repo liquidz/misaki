@@ -18,7 +18,9 @@
   (testing "with attributes"
     (are [x y] (= x (html y))
       "<h1 class=\"bar\"><span>f</span>oo</h1>" (heading 1 {:class "bar"} "foo")
-      "<h1 class=\"bar\"><span>f</span>oo</h1>" (h1 {:class "bar"} "foo"))))
+      "<h1 class=\"bar\"><span>f</span>oo</h1>" (h1 {:class "bar"} "foo")))
+  (testing "contains html"
+    "<h1><a href=\"\">a.html</a></h1>"(heading 1 (link "a.html"))))
 
 ;; ul
 (deftest ul-test
