@@ -3382,12 +3382,34 @@ net.brehaut.ClojureTools = (function (SH) {
 </code></pre>
 </td><td class="codes"><pre class="brush: clojure">(defn- name*
   [k]
-  (if (keyword? k) (apply str (rest (str k))) k))</pre></td></tr><tr><td class="docs"><p>Macro to define string parser.</p>
+  (if (keyword? k) (apply str (rest (str k))) k))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def ^:private markdown-map
+  {&quot;*&quot; (str (gensym &quot;asterisk&quot;))
+   &quot;[&quot; (str (gensym &quot;bracket_start&quot;))
+   &quot;]&quot; (str (gensym &quot;bracket_end&quot;))
+   &quot;(&quot; (str (gensym &quot;parenthesis_start&quot;))
+   &quot;)&quot; (str (gensym &quot;parenthesis_end&quot;))})</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn- escape-markdown [s]
+  (if (string? s)
+    (reduce
+      (fn [res [from to]]
+        (str/replace res (re-pattern (str &quot;\\&quot; from)) to))
+      s markdown-map)
+    s))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn- unescape-markdown [s]
+  (if (string? s)
+    (reduce
+      (fn [res [to from]]
+        (str/replace res (re-pattern from) to))
+      s markdown-map)
+    s))</pre></td></tr><tr><td class="docs"><p>Macro to define string parser.</p>
 </td><td class="codes"><pre class="brush: clojure">(defmacro defparser
   [name regexp result-fn]
   `(defn- ~name [arg#]
      (if (string? arg#)
-       (str/replace arg# ~regexp ~result-fn)
+       (if (.startsWith arg# &quot;&lt;code class=\&quot;prettyprint\&quot;&quot;)
+         arg#
+         (str/replace arg# ~regexp ~result-fn))
        arg#)))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn- link-from-title? [s]
   (if-let [m (re-seq #&quot;^title:\s*(.+?)$&quot; s)]
@@ -3422,11 +3444,17 @@ net.brehaut.ClojureTools = (function (SH) {
 ;=&gt; &lt;code class="prettyprint"&gt;hello&lt;/code&gt;
 </code></pre>
 </td><td class="codes"><pre class="brush: clojure">(defparser parse-inline-code
-  #&quot;`([^`]+)`&quot; #(hiccup/html [:code {:class &quot;prettyprint&quot;} (second %)]))</pre></td></tr><tr><td class="docs">
+  #&quot;`([^`]+)`&quot;
+  #(hiccup/html [:code {:class &quot;prettyprint&quot;}
+                 (escape-markdown (second %))]))</pre></td></tr><tr><td class="docs"><p>Parse new line</p>
+
+<pre><code>\n\nhello
+;=&gt; &lt;br /&gt;hello
+</code></pre>
 </td><td class="codes"><pre class="brush: clojure">(defparser parse-new-line
   #&quot;(\r?\n){2}&quot; (fn [_] (hiccup/html [:br])))</pre></td></tr><tr><td class="docs"><p>Function to apply string parsers</p>
 </td><td class="codes"><pre class="brush: clojure">(def ^:private parse-string
-  (comp parse-new-line parse-link parse-emphasized parse-strong parse-inline-code))</pre></td></tr><tr><td class="docs"><h2>HTML Tags</h2>
+  (comp unescape-markdown parse-new-line parse-link parse-emphasized parse-strong parse-inline-code))</pre></td></tr><tr><td class="docs"><h2>HTML Tags</h2>
 </td><td class="codes"></td></tr><tr><td class="docs"><p>Include JavaScript</p>
 
 <pre><code>  (js "foo.js" "bar.js")

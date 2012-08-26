@@ -104,6 +104,10 @@
   #(hiccup/html [:code {:class "prettyprint"}
                  (escape-markdown (second %))]))
 
+;; Parse new line
+;;
+;;     \n\nhello
+;;     ;=> <br />hello
 (defparser parse-new-line
   #"(\r?\n){2}" (fn [_] (hiccup/html [:br])))
 
