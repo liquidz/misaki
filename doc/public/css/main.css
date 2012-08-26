@@ -2,35 +2,20 @@
 body, h1, h2, h3, h4, p { margin: 0; padding: 0; }
 h1, h2, h3, h4, footer { font-family: 'Josefin Sans', sans-serif; }
 
-a {
-    color: #04c;
-    -webkit-transition: color 0.3s;
-    -moz-transition:    color 0.3s;
-    -ms-transition:     color 0.3s;
-    -o-transition:      color 0.3s;
-    transition:         color 0.3s;
-}
+a { color: #04c; }
 a:hover { color: #6af; }
 
 blockquote { color: #888; font-style: italic; }
 blockquote p:before { content: '> '; }
 
 pre.block {
-    background: #fafafa;
+    background: #fbfbfb;
     margin: 10px; padding: 10px;
-    border-radius: 5px; border: 2px solid #ccc;
+    border-radius: 5px;
+    border: 1px solid #ccc;
 }
 
 /* =header */
-
-header h1 a, .page-header h1 a {
-    -webkit-transition: opacity 0.3s;
-    -moz-transition:    opacity 0.3s;
-    -ms-transition:     opacity 0.3s;
-    -o-transition:      opacity 0.3s;
-    transition:         opacity 0.3s;
-}
-
 header { margin-bottom: 20px; }
 header h1 { margin: 0.3em; }
 header h1 a {
@@ -62,11 +47,10 @@ h3 + p { text-indent: 1em; }
 h4 { color: #666; font-weight: bold; border-bottom: 1px dotted #eee; margin-top: 0.5em; }
 h4 + p { text-indent: 0.5em; }
 
-ul li {
-    line-height: 150%;
-}
+ul li { line-height: 150%; }
 
 ul li:hover { list-style-type: circle; }
+ul li ul li:hover { list-style-type: disc; }
 
 /* page header style*/
 .page-header { margin-top: 2em; border-bottom: 1px solid #eaeaea; overflow: hidden; }
@@ -79,7 +63,7 @@ ul li:hover { list-style-type: circle; }
 pre.prettyprint, code.prettyprint {
     border-radius: 5px;
     border: 1px solid #fde3e3;
-    background: #fdf3f3;
+    background: #fff5f5;
 }
 pre.prettyprint { margin: 10px; padding: 10px; }
 code.prettyprint { padding: 1px 2px; }

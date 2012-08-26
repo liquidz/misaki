@@ -1,0 +1,21 @@
+body { -webkit-font-smoothing: antialiased; }
+h1 a {
+    -webkit-transition: opacity 0.3s;
+    -moz-transition:    opacity 0.3s;
+    -ms-transition:     opacity 0.3s;
+    -o-transition:      opacity 0.3s;
+    transition:         opacity 0.3s;
+}
+
+a {
+    -webkit-transition: color 0.3s;
+    -moz-transition:    color 0.3s;
+    -ms-transition:     color 0.3s;
+    -o-transition:      color 0.3s;
+    transition:         color 0.3s;
+}
+
+a:hover { text-shadow: 0 0 2px rgba(120, 200, 255, 0.2); }
+
+pre.block { box-shadow: 0 0 5px #ddd; }
+pre.prettyprint { box-shadow: 0 0 5px #fde3e3; }

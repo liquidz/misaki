@@ -26,7 +26,8 @@
         :site-title "misaki demo page"
         :twitter    "uochan"
         :css        ["http://fonts.googleapis.com/css?family=Josefin+Sans"
-                     "/css/main.css"]
+                     "/css/main.css"
+                     "/css/extra.css"]
         :device-css ["/css/smartphone.css"]
         :js         ["/js/main.js"]}
 

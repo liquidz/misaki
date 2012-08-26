@@ -2,14 +2,7 @@
 body, h1, h2, h3, h4, p { margin: 0; padding: 0; }
 body, p { font-family: 'Josefin Sans', sans-serif; }
 
-a {
-    color: #04c;
-    -webkit-transition: color 0.5s;
-    -moz-transition:    color 0.5s;
-    -ms-transition:     color 0.5s;
-    -o-transition:      color 0.5s;
-    transition:         color 0.5s;
-}
+a { color: #04c; }
 a:hover { color: #6af; }
 
 blockquote { color: #888; font-style: italic; }
@@ -58,7 +51,7 @@ pre.prettyprint {
     margin: 10px; padding: 10px;
     border-radius: 5px;
     border: 1px solid #fde3e3;
-    background: #fdf3f3;
+    background: #fff5f5;
 }
 
 /* column style */
