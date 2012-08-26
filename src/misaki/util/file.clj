@@ -20,17 +20,33 @@
   [path]
   (if path (if (.endsWith path "/") path (str path "/"))))
 
+; =path
+(defn path
+  "Combine paths."
+  [& paths]
+  (let [dirs (drop-last paths)
+        file (last paths)
+        file (if (and (string? file) (.startsWith file "/"))
+               (apply str (drop 1 file)) file)]
+    (str (str/join "" (map normalize-path dirs)) file)))
+
+
 ; =find-files
 (defn find-files
   "Find files in `dir` recursively."
   [dir]
-  (file-seq (io/file dir)))
+  (if dir
+    (file-seq (io/file dir))
+    []))
 
 ; =has-extension?
 (defn has-extension?
   "Check whether file has specified extension or not."
   [ext file]
-  (.endsWith (.getName file) ext))
+  (let [ext (if (keyword? ext) (name ext) ext)
+        ext (if (.startsWith ext ".")
+              ext (str "." ext))]
+    (.endsWith (.getName file) ext)))
 
 ; =extension-filter
 (defn extension-filter
@@ -42,21 +58,23 @@
 (defn find-clj-files
   "Find *.clj files in `dir` recursively."
   [dir]
-  (extension-filter ".clj" (find-files dir)))
+  (extension-filter :clj (find-files dir)))
 
 ; =remove-extension
-(defn remove-extension
+(defmulti remove-extension
   "Remove file extension.
 
       (remove-extension \"foo.bar\")
       ;=> \"foo\"
       (remove-extension \"foo.bar.baz\")
-      ;=> \"foo.bar\"
-  "
-  [x]
-  (if (= java.io.File (class x))
-    (remove-extension (.getName x))
-    (str/replace-first x #"\.[^.]+$" "")))
+      ;=> \"foo.bar\""
+  class)
+(defmethod remove-extension File
+  [file]
+  (remove-extension (.getName file)))
+(defmethod remove-extension String
+  [s]
+  (str/replace-first s #"\.[^.]+$" ""))
 
 ; =get-parent-path
 (defn get-parent-path

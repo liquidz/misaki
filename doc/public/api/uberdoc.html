@@ -3028,217 +3028,165 @@ net.brehaut.ClojureTools = (function (SH) {
     build_tree: build_tree
   };
 })(SyntaxHighlighter);
-</script><title>misaki -- Marginalia</title></head><body><table><tr><td class="docs"><div class="header"><h1 class="project-name">misaki</h1><h2 class="project-version">0.1.2-beta</h2><br /><p>Jekyll inspired static site generator in Clojure</p>
-</div><div class="dependencies"><h3>dependencies</h3><table><tr><td class="dep-name">org.clojure/clojure</td><td class="dotted"><hr /></td><td class="dep-version">1.4.0</td></tr><tr><td class="dep-name">org.clojure/core.incubator</td><td class="dotted"><hr /></td><td class="dep-version">0.1.0</td></tr><tr><td class="dep-name">org.clojure/clojurescript</td><td class="dotted"><hr /></td><td class="dep-version">0.0-1443</td></tr><tr><td class="dep-name">hiccup</td><td class="dotted"><hr /></td><td class="dep-version">1.0.0</td></tr><tr><td class="dep-name">compojure</td><td class="dotted"><hr /></td><td class="dep-version">1.1.0</td></tr><tr><td class="dep-name">ring/ring-jetty-adapter</td><td class="dotted"><hr /></td><td class="dep-version">1.1.0</td></tr><tr><td class="dep-name">clj-time</td><td class="dotted"><hr /></td><td class="dep-version">0.3.7</td></tr><tr><td class="dep-name">clj-text-decoration</td><td class="dotted"><hr /></td><td class="dep-version">0.0.1</td></tr><tr><td class="dep-name">uochan/watchtower</td><td class="dotted"><hr /></td><td class="dep-version">0.1.2</td></tr><tr><td class="dep-name">de.ubercode.clostache/clostache</td><td class="dotted"><hr /></td><td class="dep-version">1.3.0</td></tr></table></div><div class="dependencies"><h3>dev dependencies</h3><table><tr><td class="dep-name">lein-multi</td><td class="dotted"><hr /></td><td class="dep-version">1.1.0</td></tr><tr><td class="dep-name">lein-marginalia</td><td class="dotted"><hr /></td><td class="dep-version">0.7.1</td></tr><tr><td class="dep-name">debug-reader</td><td class="dotted"><hr /></td><td class="dep-version">0.0.1</td></tr><tr><td class="dep-name">lein-autotest-notify</td><td class="dotted"><hr /></td><td class="dep-version">0.0.4</td></tr></table></div></td><td class="codes" style="text-align: center; vertical-align: middle;color: #666;padding-right:20px"><br /><br /><br />(this space intentionally left almost blank)</td></tr><tr><td class="docs"><div class="toc"><a name="toc"><h3>namespaces</h3></a><ul><li><a href="#misaki.config">misaki.config</a></li><li><a href="#misaki.core">misaki.core</a></li><li><a href="#misaki.evaluator">misaki.evaluator</a></li><li><a href="#misaki.html.conv">misaki.html.conv</a></li><li><a href="#misaki.html.core">misaki.html.core</a></li><li><a href="#misaki.html.util">misaki.html.util</a></li><li><a href="#misaki.reader">misaki.reader</a></li><li><a href="#misaki.server">misaki.server</a></li><li><a href="#misaki.template">misaki.template</a></li><li><a href="#misaki.util.code">misaki.util.code</a></li><li><a href="#misaki.util.error">misaki.util.error</a></li><li><a href="#misaki.util.file">misaki.util.file</a></li><li><a href="#misaki.util.sequence">misaki.util.sequence</a></li><li><a href="#misaki.util.string">misaki.util.string</a></li></ul></div></td><td class="codes">&nbsp;</td></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#misaki.config" name="misaki.config"><h1 class="project-name">misaki.config</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>Configuration Manager</p>
-</td><td class="codes"><pre class="brush: clojure">(ns misaki.config
+</script><title>misaki -- Marginalia</title></head><body><table><tr><td class="docs"><div class="header"><h1 class="project-name">misaki</h1><h2 class="project-version">0.2.0-beta</h2><br /><p>Jekyll inspired static site generator in Clojure</p>
+</div><div class="dependencies"><h3>dependencies</h3><table><tr><td class="dep-name">org.clojure/clojure</td><td class="dotted"><hr /></td><td class="dep-version">1.4.0</td></tr><tr><td class="dep-name">org.clojure/core.incubator</td><td class="dotted"><hr /></td><td class="dep-version">0.1.0</td></tr><tr><td class="dep-name">org.clojure/clojurescript</td><td class="dotted"><hr /></td><td class="dep-version">0.0-1443</td></tr><tr><td class="dep-name">hiccup</td><td class="dotted"><hr /></td><td class="dep-version">1.0.0</td></tr><tr><td class="dep-name">compojure</td><td class="dotted"><hr /></td><td class="dep-version">1.1.1</td></tr><tr><td class="dep-name">ring/ring-jetty-adapter</td><td class="dotted"><hr /></td><td class="dep-version">1.1.2</td></tr><tr><td class="dep-name">clj-time</td><td class="dotted"><hr /></td><td class="dep-version">0.4.3</td></tr><tr><td class="dep-name">clj-text-decoration</td><td class="dotted"><hr /></td><td class="dep-version">0.0.1</td></tr><tr><td class="dep-name">clj-pretty-error</td><td class="dotted"><hr /></td><td class="dep-version">0.0.5</td></tr><tr><td class="dep-name">uochan/watchtower</td><td class="dotted"><hr /></td><td class="dep-version">0.1.2</td></tr><tr><td class="dep-name">de.ubercode.clostache/clostache</td><td class="dotted"><hr /></td><td class="dep-version">1.3.0</td></tr></table></div><div class="dependencies"><h3>dev dependencies</h3><table><tr><td class="dep-name">lein-multi</td><td class="dotted"><hr /></td><td class="dep-version">1.1.0</td></tr><tr><td class="dep-name">lein-marginalia</td><td class="dotted"><hr /></td><td class="dep-version">0.7.1</td></tr><tr><td class="dep-name">debug-reader</td><td class="dotted"><hr /></td><td class="dep-version">0.0.1</td></tr><tr><td class="dep-name">lein-autotest-notify</td><td class="dotted"><hr /></td><td class="dep-version">0.0.4</td></tr></table></div></td><td class="codes" style="text-align: center; vertical-align: middle;color: #666;padding-right:20px"><br /><br /><br />(this space intentionally left almost blank)</td></tr><tr><td class="docs"><div class="toc"><a name="toc"><h3>namespaces</h3></a><ul><li><a href="#misaki.compiler.default.config">misaki.compiler.default.config</a></li><li><a href="#misaki.compiler.default.core">misaki.compiler.default.core</a></li><li><a href="#misaki.compiler.default.evaluator">misaki.compiler.default.evaluator</a></li><li><a href="#misaki.compiler.default.html.conv">misaki.compiler.default.html.conv</a></li><li><a href="#misaki.compiler.default.html.core">misaki.compiler.default.html.core</a></li><li><a href="#misaki.compiler.default.html.util">misaki.compiler.default.html.util</a></li><li><a href="#misaki.compiler.default.reader">misaki.compiler.default.reader</a></li><li><a href="#misaki.compiler.default.template">misaki.compiler.default.template</a></li><li><a href="#misaki.compiler.default.util.code">misaki.compiler.default.util.code</a></li><li><a href="#misaki.compiler.demo.core">misaki.compiler.demo.core</a></li><li><a href="#misaki.config">misaki.config</a></li><li><a href="#misaki.core">misaki.core</a></li><li><a href="#misaki.server">misaki.server</a></li><li><a href="#misaki.tester">misaki.tester</a></li><li><a href="#misaki.util.date">misaki.util.date</a></li><li><a href="#misaki.util.file">misaki.util.file</a></li><li><a href="#misaki.util.sequence">misaki.util.sequence</a></li><li><a href="#misaki.util.string">misaki.util.string</a></li></ul></div></td><td class="codes">&nbsp;</td></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#misaki.compiler.default.config" name="misaki.compiler.default.config"><h1 class="project-name">misaki.compiler.default.config</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>Default Compiler's Configuration Manager</p>
+</td><td class="codes"><pre class="brush: clojure">(ns misaki.compiler.default.config
   (:use [misaki.util file string sequence]
-        [clojure.core.incubator :only [-?&gt; -?&gt;&gt;]]
-        [clj-time.core :only [date-time year month day]]
-        [clostache.parser :only [render]])
+        [misaki.config    :only [*config*]]
+        [clj-time.core    :only [date-time year month day]]
+        [clostache.parser :only [render]]
+        [clojure.core.incubator :only [-?&gt; -?&gt;&gt;]])
   (:require
-    [clojure.string :as str]
+    [misaki.config   :as cnf]
+    [clojure.string  :as str]
     [clojure.java.io :as io])
   (:import [java.io File FileNotFoundException]))</pre></td></tr><tr><td class="docs"><h2>Default Value</h2>
-</td><td class="codes"><pre class="brush: clojure">(def PORT 8080)
-(def LANGUAGE &quot;en&quot;)
-(def POST_FILENAME_REGEXP    #&quot;(\d{4})[-_](\d{1,2})[-_](\d{1,2})[-_](.+)$&quot;)
-(def POST_OUTPUT_NAME_FORMAT &quot;{{year}}/{{month}}/{{filename}}&quot;)</pre></td></tr><tr><td class="docs"><h2>Declarations</h2>
-</td><td class="codes"></td></tr><tr><td class="docs"><p>Blog base directory.</p>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>Default regexp to parse post filename.</p>
 
-<p>Blog base directory</p>
-</td><td class="codes"><pre class="brush: clojure">(def ^{:dynamic true
-       :doc }
-  *base-dir* &quot;&quot;)</pre></td></tr><tr><td class="docs"><p>Config filename.
-            Default filename is '_config.clj'.</p>
-
-<p>Config filename</p>
-</td><td class="codes"><pre class="brush: clojure">(def ^{:dynamic true
-       :doc }
-  *config-file* &quot;_config.clj&quot;)</pre></td></tr><tr><td class="docs"><p>Public directory path. Compiled html is placed here.</p>
-</td><td class="codes"><pre class="brush: clojure">(declare ^:dynamic *public-dir*)</pre></td></tr><tr><td class="docs"><p>Template directory path.</p>
-</td><td class="codes"><pre class="brush: clojure">(declare ^:dynamic *template-dir*)</pre></td></tr><tr><td class="docs"><p>Posts placed directory name.</p>
-</td><td class="codes"><pre class="brush: clojure">(declare ^:dynamic *post*)</pre></td></tr><tr><td class="docs"><p>Layouts placed directory path.</p>
-</td><td class="codes"><pre class="brush: clojure">(declare ^:dynamic *layout-dir*)</pre></td></tr><tr><td class="docs"><p>Posts placed directory path.</p>
-</td><td class="codes"><pre class="brush: clojure">(declare ^:dynamic *post-dir*)</pre></td></tr><tr><td class="docs"><p>Tag index placed directory path.</p>
-</td><td class="codes"><pre class="brush: clojure">(declare ^:dynamic *tag-out-dir*)</pre></td></tr><tr><td class="docs"><p>Tag layout name.</p>
-</td><td class="codes"><pre class="brush: clojure">(declare ^:dynamic *tag-layout*)</pre></td></tr><tr><td class="docs"><p>Default site data.</p>
-</td><td class="codes"><pre class="brush: clojure">(declare ^:dynamic *site*)</pre></td></tr><tr><td class="docs"><p>Template names which compiled with post templates.</p>
-</td><td class="codes"><pre class="brush: clojure">(declare ^:dynamic *compile-with-post*)</pre></td></tr><tr><td class="docs"><p>Server port.</p>
-</td><td class="codes"><pre class="brush: clojure">(declare ^:dynamic *port*)</pre></td></tr><tr><td class="docs"><p>Site language.</p>
-</td><td class="codes"><pre class="brush: clojure">(declare ^:dynamic *lang*)</pre></td></tr><tr><td class="docs"><p>Regexp for parse post filename.</p>
-</td><td class="codes"><pre class="brush: clojure">(declare ^:dynamic *post-filename-regexp*)</pre></td></tr><tr><td class="docs"><p>Format rule for post filename.</p>
-</td><td class="codes"><pre class="brush: clojure">(declare ^:dynamic *post-filename-format*)</pre></td></tr><tr><td class="docs"><p>Sort type of post list.</p>
-</td><td class="codes"><pre class="brush: clojure">(declare ^:dynamic *post-sort-type*)</pre></td></tr><tr><td class="docs"><p>Compile options for ClojureScript</p>
-</td><td class="codes"><pre class="brush: clojure">(declare ^:dynamic *cljs-compile-options*)</pre></td></tr><tr><td class="docs"><p>Current site data</p>
-</td><td class="codes"><pre class="brush: clojure">(declare ^:dynamic *site*)</pre></td></tr><tr><td class="docs"><p>URL base</p>
-</td><td class="codes"><pre class="brush: clojure">(def ^:dynamic *url-base* &quot;/&quot;)</pre></td></tr><tr><td class="docs"><p>Index file name</p>
-</td><td class="codes"><pre class="brush: clojure">(def ^:dynamic *index-name* )</pre></td></tr><tr><td class="docs"><p>Flag for detailed compile log</p>
-</td><td class="codes"><pre class="brush: clojure">(def ^:dynamic *detailed-log* false)</pre></td></tr><tr><td class="docs"><h2>Config Data Wrapper</h2>
-</td><td class="codes"></td></tr><tr><td class="docs"><p>Load <code>*config-file*</code> from <code>*base-dir*</code>.</p>
-</td><td class="codes"><pre class="brush: clojure">(defn read-config
-  ([]
-   (read-string (slurp (str *base-dir* *config-file*))))
-  ([default-value]
-   (try (read-config)
-        (catch FileNotFoundException e
-          default-value))))</pre></td></tr><tr><td class="docs"><p>Declare config data, and wrap sexp body with them.</p>
+<p>Default format to generage post output filename.</p>
+</td><td class="codes"><pre class="brush: clojure">(def POST_FILENAME_REGEXP
+  #&quot;(\d{4})[-_](\d{1,2})[-_](\d{1,2})[-_](.+)$&quot;)
+(def POST_OUTPUT_NAME_FORMAT
+  &quot;{{year}}/{{month}}/{{filename}}&quot;)</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def ^:dynamic *site* {})</pre></td></tr><tr><td class="docs"><p>Configure for this compiler.</p>
 
 <ul>
-<li><p>Configured directory and file setting</p>
-
-<ul><li>pubic directory: <code>*base-dir*</code> + <code>*public-dir*</code></li>
-<li>template directory : <code>*base-dir*</code> + <code>*template-dir*</code></li>
-<li>layout directory : <code>*base-dir*</code> + <code>*template-dir*</code> + <code>*layout-dir*</code></li>
-<li>post directory : <code>*base-dir*</code> + <code>*template-dir*</code> + <code>*post-dir*</code></li>
-<li>tag output directory : <code>*tag-out-dir*</code></li>
-<li>tag layout file : <code>*base-dir*</code> + <code>*template-dir*</code> + <code>*layout-dir*</code> + <code>*tag-layout*</code> + '.clj'</li></ul></li>
-<li><p>Configured clojurescript setting</p>
-
-<ul><li>source directory : <code>*base-dir*</code> + <code>*template-dir*</code> + <code>*src-dir*</code></li>
-<li>output directory : <code>*base-dir*</code> + <code>*public-dir*</code> + (get-parent-path <code>*output-to*</code>)</li>
-<li>output to : <code>*base-dir*</code> + <code>*public-dir*</code> + <code>*output-to*</code></li></ul></li>
+<li><code>:layout-dir</code>: Layout file directory.</li>
+<li><code>:tag-layout</code>: Layout file for tag page.</li>
+<li><code>:detailed-log</code>: Flag to print detailed log.</li>
+<li><code>:post-sort-type</code>: Sort type of posts.</li>
+<li><code>:cljs-compile-options</code>: Setting for clojurescript compiling.</li>
 </ul>
+</td><td class="codes"><pre class="brush: clojure">(defn plugin-config
+  [config]
+  {:pre  [(map? config)]
+   :post [#(map? %)]}
+  (let [{:keys [template-dir public-dir url-base detailed-log]} config
+        layout   (path template-dir (:layout-dir config))
+        cljs     (:cljs config)
+        cljs-out (if cljs (path public-dir (:output-to cljs)))]
+    (assoc
+      config
+      :layout-dir layout
+      :tag-layout   (str layout (:tag-layout config) &quot;.clj&quot;)
+      :detailed-log (:detailed-log config false)
+      :post-sort-type       (:post-sort-type config :date-desc)
+      :cljs-compile-options
+      (if cljs
+        (assoc cljs
+               :src-dir    (normalize-path (str template-dir (:src-dir cljs)))
+               :output-dir (if-let [dir (:output-dir cljs)]
+                             (path public-dir dir)
+                             (get-parent-path cljs-out))
+               :output-to  cljs-out)))))</pre></td></tr><tr><td class="docs"><p>Bind local config to <code>*config*</code></p>
 </td><td class="codes"><pre class="brush: clojure">(defmacro with-config
-  [&amp; body]
-  `(let [config#   (read-config)
-         public#   (str *base-dir* (:public-dir config#))
-         template# (str *base-dir* (:template-dir config#))
-         layout#   (str template#  (:layout-dir config#))
-         cljs#     (:cljs config#)
-         cljs-out# (if cljs# (str public# (:output-to cljs#)))]
-     (binding
-       [*public-dir*   public#
-        *template-dir* template#
-        *post*         (:post-dir config#)
-        *layout-dir*   layout#
-        *post-dir*     (str template# (:post-dir config#))
-        *tag-out-dir*  (:tag-out-dir config#)
-        *tag-layout*   (str layout# (:tag-layout config#) &quot;.clj&quot;)
-        *port*         (get config# :port PORT)
-        *lang*         (get config# :lang LANGUAGE)
-        *site*         (get config# :site {})
-        *url-base*     (normalize-path (get config# :url-base &quot;/&quot;))
-        *index-name* (get config# :index-name &quot;&quot;)
-        *compile-with-post*    (:compile-with-post config#)
-        *post-filename-regexp* (get config# :post-filename-regexp
-                                 POST_FILENAME_REGEXP)
-        *post-filename-format* (get config# :post-filename-format
-                                 POST_OUTPUT_NAME_FORMAT)
-        *post-sort-type*       (get config# :post-sort-type :date-desc)
-        *detailed-log*         (get config# :detailed-log false)
-        *cljs-compile-options* (if cljs#
-                                 (assoc cljs#
-                                   :src-dir    (normalize-path (str template# (:src-dir cljs#)))
-                                   :output-dir (if-let [dir# (:output-dir config#)]
-                                                 (str public# dir#)
-                                                 (get-parent-path cljs-out#))
-                                   :output-to  cljs-out#))]
-       ~@body)))</pre></td></tr><tr><td class="docs"><h2>File Cheker</h2>
-</td><td class="codes"></td></tr><tr><td class="docs"><p>Check whether file is config file or not.</p>
-</td><td class="codes"><pre class="brush: clojure">(defn config-file?
-  [#^File file]
-  {:pre [(file? file)]}
-  (= *config-file* (.getName file)))</pre></td></tr><tr><td class="docs"><p>Check whether file is layout file or not.</p>
+  [config &amp; body]
+  `(binding [*config* ~config] ~@body))</pre></td></tr><tr><td class="docs"><h2>File Cheker</h2>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>Check whether file is layout file or not.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn layout-file?
   [#^File file]
   {:pre [(file? file)]}
-  (str-contains? (.getAbsolutePath file) *layout-dir*))</pre></td></tr><tr><td class="docs"><p>Check whether file is post file or not.</p>
-</td><td class="codes"><pre class="brush: clojure">(defn post-file?
-  [#^File file]
-  {:pre [(file? file)]}
-  (str-contains? (.getAbsolutePath file) *post-dir*))</pre></td></tr><tr><td class="docs"><h2>Converter</h2>
-</td><td class="codes"></td></tr><tr><td class="docs"><p>Convert template name to java.io.File.</p>
-</td><td class="codes"><pre class="brush: clojure">(defn template-name-&gt;file
-  [#^String tmpl-name]
-  {:pre [(string? tmpl-name)]}
-  (io/file (str *template-dir* tmpl-name)))</pre></td></tr><tr><td class="docs"><p>Convert sort-type keyword to sort function.</p>
+  (str-contains? (.getAbsolutePath file) (:layout-dir *config*)))</pre></td></tr><tr><td class="docs"><h2>Converter</h2>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>Convert sort-type keyword to sort function.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn sort-type-&gt;sort-fn
   []
-  (case *post-sort-type*
-    :date       (partial sort-by-date :inc)
-    :name       (partial sort-alphabetically #(.getName (:file %)))
+  (case (:post-sort-type *config*)
     :title      (partial sort-alphabetically #(:title %))
-    :date-desc  sort-by-date
-    :name-desc  (partial sort-alphabetically :desc #(.getName (:file %)))
     :title-desc (partial sort-alphabetically :desc #(:title %))
-    sort-by-date))</pre></td></tr><tr><td class="docs"><h2>Filename Date Utility</h2>
-</td><td class="codes"></td></tr><tr><td class="docs"><p>Get date from file(java.io.File) with <code>*post-filename-regexp*</code>.</p>
-</td><td class="codes"><pre class="brush: clojure">(defn get-date-from-file
-  [#^File post-file]
-  (let [date-seq (-?&gt;&gt; post-file (.getName)
-                      (re-seq *post-filename-regexp*)
-                      nfirst drop-last)] ; last = filename
-    (if (and date-seq (= 3 (count date-seq))
-             (every? #(re-matches #&quot;^[0-9]+$&quot; %) date-seq))
-      (apply date-time (map #(Integer/parseInt %) date-seq)))))</pre></td></tr><tr><td class="docs"><p>Remove date string from filename(String).</p>
-</td><td class="codes"><pre class="brush: clojure">(defn remove-date-from-name
-  [#^String filename]
-  {:pre [(string? filename)]}
-  (last (first (re-seq *post-filename-regexp* filename))))</pre></td></tr><tr><td class="docs"><h2>Filename Generator</h2>
-</td><td class="codes"></td></tr><tr><td class="docs"><p>Get index filename string.</p>
-</td><td class="codes"><pre class="brush: clojure">(defn get-index-filename
-  []
-  (str *url-base* *index-name*))</pre></td></tr><tr><td class="docs"><p>Make tag output filename from tag name.</p>
+    :date       (partial sort-by-date :inc :date)
+    :name       (partial sort-alphabetically #(.getName (:file %)))
+    :date-desc  (partial sort-by-date :desc :date)
+    :name-desc  (partial sort-alphabetically :desc #(.getName (:file %)))
+    (cnf/sort-type-&gt;sort-fn)))</pre></td></tr><tr><td class="docs"><h2>Filename Generator</h2>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>Make tag output filename from tag name.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn make-tag-output-filename
   [#^String tag-name]
   {:pre [(string? tag-name)]}
-  (str *tag-out-dir* tag-name &quot;.html&quot;))</pre></td></tr><tr><td class="docs"><p>Make post output filename from java.io.File.</p>
-</td><td class="codes"><pre class="brush: clojure">(defn make-post-output-filename
-  [#^File file]
-  {:pre [(file? file)]}
-  (let [date     (get-date-from-file file)
-        filename (if date
-                   (-?&gt; (.getName file) remove-date-from-name remove-extension)
-                   (remove-extension (.getName file)))]
-    (render *post-filename-format*
-            {:year  (-?&gt; date year str)
-             :month (-?&gt;&gt; date month (format &quot;%02d&quot;))
-             :day   (-?&gt;&gt; date day (format &quot;%02d&quot;))
-             :filename filename})))</pre></td></tr><tr><td class="docs"><p>Make template output filename from template name.</p>
+  (path (:tag-out-dir *config*) (str tag-name &quot;.html&quot;)))</pre></td></tr><tr><td class="docs"><p>Make template output filename from template name.</p>
 </td><td class="codes"><pre class="brush: clojure">(defmulti make-template-output-filename
   class)</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defmethod make-template-output-filename String
   [tmpl-name]
-  (make-template-output-filename (template-name-&gt;file tmpl-name)))</pre></td></tr><tr><td class="docs">
+  (make-template-output-filename (cnf/template-name-&gt;file tmpl-name)))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defmethod make-template-output-filename File
   [file]
-  (if (post-file? file)
-    (make-post-output-filename file)
-    (remove-extension (.getName file))))</pre></td></tr><tr><td class="docs"><p>Make layout filename from layout name(String).</p>
+  (remove-extension
+    (cnf/make-output-filename file)))</pre></td></tr><tr><td class="docs"><p>Make layout filename from layout name(String).</p>
 </td><td class="codes"><pre class="brush: clojure">(defn make-layout-filename
   [#^String layout-name]
   {:pre [(string? layout-name)]}
-  (str *layout-dir* layout-name &quot;.clj&quot;))</pre></td></tr><tr><td class="docs"><h2>URL Generator</h2>
+  (path (:layout-dir *config*) (str layout-name &quot;.clj&quot;)))</pre></td></tr><tr><td class="docs"><h2>URL Generator</h2>
 </td><td class="codes"></td></tr><tr><td class="docs"><p>Make post url from java.io.File</p>
 </td><td class="codes"><pre class="brush: clojure">(defn make-post-url
   [#^File file]
   {:pre [(file? file)]}
-  (str *url-base* (make-template-output-filename file)))</pre></td></tr><tr><td class="docs"><p>Make tag url form tag string.</p>
+  (remove-extension (cnf/make-output-url file)))</pre></td></tr><tr><td class="docs"><p>Make tag url form tag string.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn make-tag-url
   [#^String tag-name]
   {:pre [(string? tag-name)]}
-  (str *url-base* (make-tag-output-filename tag-name)))</pre></td></tr><tr><td class="docs"><p>Convert path to absolute with <em>url-base</em></p>
-</td><td class="codes"><pre class="brush: clojure">(defn absolute-path
-  [path]
-  (if (re-seq #&quot;^https?://&quot; path)
-    path
-    (let [path (if (.startsWith path &quot;/&quot;)
-                 (apply str (drop 1 path))
-                 path)]
-      (str *url-base* path))))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#misaki.core" name="misaki.core"><h1 class="project-name">misaki.core</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>HTML compiler for clojure source.</p>
-</td><td class="codes"><pre class="brush: clojure">(ns misaki.core
+  (path (:url-base *config*)
+                (make-tag-output-filename tag-name)))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#misaki.compiler.default.core" name="misaki.compiler.default.core"><h1 class="project-name">misaki.compiler.default.core</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>Default HTML compiler for clojure source.</p>
+</td><td class="codes"><pre class="brush: clojure">(ns misaki.compiler.default.core
   (:use
-    [misaki template config]
-    [misaki.util file code sequence string]
-    [misaki.util.error  :only [print-pretty-stack-trace]]
-    [hiccup.core :only [html]]
-    [hiccup.page :only [html5 xhtml html4]]
-    [cljs.closure :only [build]])
+    [misaki.compiler.default template config]
+    [misaki.util file sequence string]
+    [misaki.config :only [*config*]]
+    [cljs.closure  :only [build]]
+    [hiccup.core   :only [html]]
+    [hiccup.page   :only [html5 xhtml html4]]
+    [clojure.core.incubator :only [-?&gt;&gt;]]
+    [pretty-error.core      :only [print-pretty-stack-trace]])
   (:require
-    [clojure.string :as str]
+    [misaki.core     :as msk]
+    [misaki.config   :as cnf]
+    [misaki.server   :as srv]
+    [clojure.string  :as str]
     [clojure.java.io :as io])
   (:import [java.io File]))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(declare file-&gt;template-sexp)</pre></td></tr><tr><td class="docs"><h2>Post Functions</h2>
+</td><td class="codes"><pre class="brush: clojure">(declare file-&gt;template-sexp)
+(declare compile-template)
+(declare compile-clojurescripts)
+(declare compile-tag)
+(declare get-tags)</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn- print-misaki-stack-trace [e]
+  (print-pretty-stack-trace
+    e :filter #(str-contains? (:str %) &quot;misaki&quot;)))</pre></td></tr><tr><td class="docs"><p>Print compile result log with <code>:detailed-log</code> option.</p>
+</td><td class="codes"><pre class="brush: clojure">(defmacro log
+  [label body]
+  `(if (and (:detailed-log *config*) (= :all (:-compiling *config*)))
+     (srv/print-compile-result ~label ~body)
+     ~body))</pre></td></tr><tr><td class="docs"><h2>Functions for Plugin</h2>
+</td><td class="codes"></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn -extension
+  []
+  {:post [#(sequential? %)]}
+  (list :clj :cljs))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn -config
+  [config]
+  {:pre  [(map? config)]
+   :post [#(map? %)]}
+  (plugin-config config))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn -compile
+  [config file]
+  {:pre  [(map? config) (instance? File file)]
+   :post [#(or (true? %) (false? %) (string? %) (map? %))]}
+  (with-config config
+    (cond
+      ; clojurescript
+      (has-extension? &quot;.cljs&quot; file)
+      (log &quot;clojurescripts&quot; (compile-clojurescripts))
+      ; layout
+      (layout-file? file)
+      {:status 'skip :all-compile?  true}
+      ; else
+      :else
+      (let [res (log (.getName file) (compile-template file))]
+        (when (cnf/post-file? file)
+          ; compile tag
+          (if-let [tags (-&gt; file parse-template-option :tag)]
+            (doseq [{tag-name :name} tags]
+              (log tag-name (compile-tag tag-name)))))
+        res))))</pre></td></tr><tr><td class="docs"><h2>Post Functions</h2>
 </td><td class="codes"></td></tr><tr><td class="docs"><p>Generate post content without layout.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn generate-post-content
   [#^File post-file]
@@ -3251,29 +3199,29 @@ net.brehaut.ClojureTools = (function (SH) {
   {:pre [(file? post-file)]}
   (assoc (parse-template-option post-file)
          :file post-file
+         :date (cnf/get-date-from-file post-file)
          :url  (make-post-url post-file)
-         :date (get-date-from-file post-file)
          :lazy-content (delay (escape-string (generate-post-content post-file)))))</pre></td></tr><tr><td class="docs"><p>Check whether post information contains tag or not.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn post-info-contains-tag?
   [post-info #^String tag-str]
   {:pre [(map? post-info) (string? tag-str)]}
   (let [tags      (get post-info :tag [])
         tag-names (set (map :name tags))]
-    (contains? tag-names tag-str)))</pre></td></tr><tr><td class="docs"><p>Get posts data from <em>post-dir</em> directory.</p>
+    (contains? tag-names tag-str)))</pre></td></tr><tr><td class="docs"><p>Get posts data from (:post-dir <em>config</em>) directory.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn get-posts
   []
-  (map get-post-info (find-clj-files *post-dir*)))</pre></td></tr><tr><td class="docs"><p>Get tagged posts data from <em>post-dir</em> directory.</p>
+  (map get-post-info (msk/get-post-files)))</pre></td></tr><tr><td class="docs"><p>Get tagged posts data from (:post-dir <em>config</em>) directory.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn get-tagged-posts
   [tag-seq]
   {:pre [(sequential? tag-seq)]}
   (filter
     #(every? (partial post-info-contains-tag? %) tag-seq)
     (get-posts)))</pre></td></tr><tr><td class="docs"><h2>Tag Functions</h2>
-</td><td class="codes"></td></tr><tr><td class="docs"><p>Get all(unfiltered) tags from post list.</p>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>Get all(unfiltered) tags from post list.
+  Return nil if :post-dir option is nil.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn get-all-tags
   []
-  (let [post-files (find-clj-files *post-dir*)]
-    (remove nil? (mapcat (comp :tag parse-template-option) post-files))))</pre></td></tr><tr><td class="docs"><p>Get tags from post list.</p>
+  (remove nil?  (mapcat (comp :tag parse-template-option) (msk/get-post-files))))</pre></td></tr><tr><td class="docs"><p>Get tags from post list.</p>
 
 <p>  Add counting by tag name if true is setted to :count-by-name?</p>
 </td><td class="codes"><pre class="brush: clojure">(defn get-tags
@@ -3282,22 +3230,21 @@ net.brehaut.ClojureTools = (function (SH) {
         tags (if count-by-name?
                (map #(assoc (first %) :count (count %)) (vals (group-by :name tags)))
                tags)]
-    (distinct (sort-alphabetically :name tags))))</pre></td></tr><tr><td class="docs"><p>Make site meta data from template java.io.File for HTML generator.</p>
-
-<h2>S-exp Template Applier</h2>
+    (distinct (sort-alphabetically :name tags))))</pre></td></tr><tr><td class="docs"><h2>S-exp Template Applier</h2>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>Make site meta data from template java.io.File for HTML generator.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn make-site-data
   [#^File tmpl-file &amp; {:keys [base-option tags]
                        :or   {base-option {}, tags nil}}]
   {:pre [(file? tmpl-file)]}
   (let [with-tag? (and (not (nil? tags)) (sequential? tags))
         sort-fn   (sort-type-&gt;sort-fn)]
-    (assoc (merge *site* base-option)
+    (assoc (merge (:site *config*) base-option)
            :file     tmpl-file
            :posts    (sort-fn (if with-tag? (get-tagged-posts tags) (get-posts)))
            :tags     (get-tags :count-by-name? true)
            :tag-name (if with-tag? (str/join &quot;,&quot; tags))
-           :index    (get-index-filename)
-           :date     (get-date-from-file tmpl-file))))</pre></td></tr><tr><td class="docs"><p>Convert java.io.File to Template s-exp which can be compiled by hiccup</p>
+           :index    (cnf/get-index-filename)
+           :date     (cnf/get-date-from-file tmpl-file))))</pre></td></tr><tr><td class="docs"><p>Convert java.io.File to Template s-exp which can be compiled by hiccup</p>
 </td><td class="codes"><pre class="brush: clojure">(defn file-&gt;template-sexp
   [#^File tmpl-file &amp; {:keys [allow-layout?] :or {allow-layout? true}}]
   {:pre [(file? tmpl-file)]}
@@ -3308,7 +3255,7 @@ net.brehaut.ClojureTools = (function (SH) {
 </td><td class="codes"><pre class="brush: clojure">(defn generate-tag-template-sexp
   [#^String tag-name]
   {:pre [(string? tag-name)]}
-  (let [file       (io/file *tag-layout*)
+  (let [file       (io/file (:tag-layout *config*))
         tmpl-fn    (load-template file)
         site-data  (make-site-data file :tags [tag-name])
         empty-data (with-meta '(&quot;&quot;) site-data)]
@@ -3316,59 +3263,52 @@ net.brehaut.ClojureTools = (function (SH) {
 </td><td class="codes"></td></tr><tr><td class="docs"><p>Get hiccup functon from format option.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn get-compile-fn
   [#^String format-str]
-  (case format-str
-    &quot;html5&quot; #(html5 {:lang *lang*} %)
-    &quot;xhtml&quot; #(xhtml {:lang *lang*} %)
-    &quot;html4&quot; #(html4 %)
-    #(html %)))</pre></td></tr><tr><td class="docs">
+  (let [lang (:lang *config*)]
+    (case format-str
+      &quot;html5&quot; #(html5 {:lang lang} %)
+      &quot;xhtml&quot; #(xhtml {:lang lang} %)
+      &quot;html4&quot; #(html4 %)
+      #(html %))))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn- compile*
   [#^String output-filename template-sexp]
   {:pre [(string? output-filename) (sequential? template-sexp)]}
   (let [compile-fn (-&gt; template-sexp meta :format get-compile-fn)]
-    (write-file (str *public-dir* output-filename)
+    (write-file (str (:public-dir *config*) output-filename)
                 (compile-fn template-sexp))
     true))</pre></td></tr><tr><td class="docs"><p>Compile a tag page.
   return true if compile succeeded.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn compile-tag
   [#^String tag-name]
   {:pre [(string? tag-name)]}
-  (try
-    (compile* (make-tag-output-filename tag-name)
-              (generate-tag-template-sexp tag-name))
-    (catch Exception e
-      (print-pretty-stack-trace e)
-      false)))</pre></td></tr><tr><td class="docs"><p>Compile a specified template, and write compiled data to <code>*public-dir*</code>.
+  (compile* (make-tag-output-filename tag-name)
+            (generate-tag-template-sexp tag-name)))</pre></td></tr><tr><td class="docs"><p>Compile a specified template, and write compiled data to <code>*public-dir*</code>.
   return true if compile succeeded.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn compile-template
   [#^File tmpl-file]
   {:pre [(file? tmpl-file)]}
-  (try
-    (compile* (make-template-output-filename tmpl-file)
-              (file-&gt;template-sexp tmpl-file))
-    (catch Exception e (print-pretty-stack-trace e) false)))</pre></td></tr><tr><td class="docs"><p>Compile clojurescripts.
+  (compile* (make-template-output-filename tmpl-file)
+            (file-&gt;template-sexp tmpl-file)))</pre></td></tr><tr><td class="docs"><p>Compile clojurescripts.
   return true if compile succeeded.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn compile-clojurescripts
   []
-  (try
-    (when *cljs-compile-options*
-      ; make directory if not exists
-      (make-directories (:output-to *cljs-compile-options*))
-      ; delete existing files
-      (delete-file (:output-to *cljs-compile-options*))
-      (delete-file (str (:output-dir *cljs-compile-options*) &quot;/cljs&quot;))
-      ; build clojurescript
-      (build (:src-dir *cljs-compile-options*)
-             *cljs-compile-options*)
-      true)
-    (catch Exception e (print-pretty-stack-trace e) false)))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#misaki.evaluator" name="misaki.evaluator"><h1 class="project-name">misaki.evaluator</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>S-exp Template Evaluator.
+  (when-let [option (:cljs-compile-options *config*)]
+    ; make directory if not exists
+    (make-directories (:output-to option))
+    ; delete existing files
+    (delete-file (:output-to option))
+    (delete-file (str (:output-dir option) &quot;/cljs&quot;))
+    ; build clojurescript
+    (build (:src-dir option) option)
+    true))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#misaki.compiler.default.evaluator" name="misaki.compiler.default.evaluator"><h1 class="project-name">misaki.compiler.default.evaluator</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>S-exp Template Evaluator.
   Template string is evaluated as Function.</p>
-</td><td class="codes"><pre class="brush: clojure">(ns misaki.evaluator
-  (:use [misaki.reader :only [read-from-string]]))</pre></td></tr><tr><td class="docs"><p>Check whether <code>def</code> or <code>defn</code> s-exp or not.</p>
+</td><td class="codes"><pre class="brush: clojure">(ns misaki.compiler.default.evaluator
+  (:use [misaki.compiler.default.reader :only [read-from-string]]))</pre></td></tr><tr><td class="docs"><p>Check whether <code>def</code> or <code>defn</code> s-exp or not.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn def?
   [x]
   (and (seq? x)
-       (or (= 'def (first x))
-           (= 'defn (first x)))))</pre></td></tr><tr><td class="docs"><p>Split s-exp into definition and template body using <code>def?</code>.</p>
+       (case (first x)
+         (def defn defn- defmacro defmacro-) true
+         false)))</pre></td></tr><tr><td class="docs"><p>Split s-exp into definition and template body using <code>def?</code>.</p>
 </td><td class="codes"><pre class="brush: clojure">(def split-into-def-and-body
   (juxt (partial filter def?)
         (partial remove def?)))</pre></td></tr><tr><td class="docs"><p>Enclose s-exp with list.</p>
@@ -3385,15 +3325,14 @@ net.brehaut.ClojureTools = (function (SH) {
   [sexp]
   {:pre [(sequential? sexp)]}
   (let [[defs sexp] (split-into-def-and-body sexp)]
-    `(do (use 'misaki.html.core
-              'misaki.html.conv
-              'misaki.html.util)
+    `(do (use 'misaki.compiler.default.html.core
+              'misaki.compiler.default.html.conv
+              'misaki.compiler.default.html.util
+              'misaki.util.date)
          ~@defs
          (fn [~'contents]
            (let [~'site (meta ~'contents)] ~sexp)))))</pre></td></tr><tr><td class="docs"><p>Definition of evaluating functions.</p>
-</td><td class="codes"><pre class="brush: clojure">(def ^{:dynamic true
-       :doc }
-  *eval-functions*
+</td><td class="codes"><pre class="brush: clojure">(def ^:dynamic *eval-functions*
   [enclose-sexp-with-list
    enclose-sexp-with-function
    eval])</pre></td></tr><tr><td class="docs"><p>Evaluate template's sexp string to template function.</p>
@@ -3403,66 +3342,34 @@ net.brehaut.ClojureTools = (function (SH) {
   ([#^String sexp-str, #^String filename]
    {:pre [(string? sexp-str)]}
    (let [sexp (read-from-string sexp-str :path filename)]
-     (reduce #(%2 %) sexp *eval-functions*))))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#misaki.html.conv" name="misaki.html.conv"><h1 class="project-name">misaki.html.conv</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>Data converting utilities for template</p>
-</td><td class="codes"><pre class="brush: clojure">(ns misaki.html.conv
+     (reduce #(%2 %) sexp *eval-functions*))))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#misaki.compiler.default.html.conv" name="misaki.compiler.default.html.conv"><h1 class="project-name">misaki.compiler.default.html.conv</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>Data converting utilities for template</p>
+</td><td class="codes"><pre class="brush: clojure">(ns misaki.compiler.default.html.conv
   (:use
-    [misaki.core :only [get-posts]]
-    [misaki.config :only [*site*]]
-    [misaki.util.sequence :only [find-first]]
-    [clojure.core.incubator :only [-?&gt;&gt;]])
+    [misaki.compiler.default.core   :only [get-posts]]
+    [misaki.compiler.default.config :only [*site*]]
+    [misaki.util.sequence           :only [find-first]]
+    [clojure.core.incubator         :only [-?&gt;&gt;]])
   (:require
     [clojure.string :as str]
     [clj-time.core :as t]
-    [clj-time.format :as fmt]))</pre></td></tr><tr><td class="docs"><h2>Converter for org.joda.time.DateTime</h2>
-</td><td class="codes"></td></tr><tr><td class="docs"><p>Convert org.joda.time.DateTime to XML Schema.</p>
-
-<pre><code>  (date-&gt;xml-scheme (clj-time.core/now))
-  ;=&gt; "2012-01-01T01:01:01"
-</code></pre>
-</td><td class="codes"><pre class="brush: clojure">(defn date-&gt;xml-schema
-  [date]
-  (if date
-    (fmt/unparse
-      (fmt/formatter &quot;yyyy-MM-dd'T'HH:mm:ss&quot;)
-      date)))</pre></td></tr><tr><td class="docs"><p>Convert org.joda.time.DateTime to String</p>
-
-<pre><code>  (date-&gt;string (clj-time.core/now))
-  ;=&gt; "01 Jan 2012"
-</code></pre>
-</td><td class="codes"><pre class="brush: clojure">(defn date-&gt;string
-  [date]
-  (if date
-    (str/join
-      &quot; &quot;
-      [(.toString date &quot;dd&quot;)
-       ; Joda: &quot;MMM&quot; is not worked in my environment
-       (nth '(_ Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec)
-            (t/month date))
-       (.toString date &quot;yyyy&quot;)])))</pre></td></tr><tr><td class="docs"><p>Get year from org.joda.time.DateTime</p>
-</td><td class="codes"><pre class="brush: clojure">(defn year
-  [date]
-  (if date (t/year date)))</pre></td></tr><tr><td class="docs"><p>Get month from org.joda.time.DateTime</p>
-</td><td class="codes"><pre class="brush: clojure">(defn month
-  [date]
-  (if date (format &quot;%02d&quot; (t/month date))))</pre></td></tr><tr><td class="docs"><p>Get day from org.joda.time.DateTime</p>
-</td><td class="codes"><pre class="brush: clojure">(defn day
-  [date]
-  (if date (format &quot;%02d&quot; (t/day date))))</pre></td></tr><tr><td class="docs"><h2>Converter for post data</h2>
+    [clj-time.format :as fmt]))</pre></td></tr><tr><td class="docs"><h2>Converter for post data</h2>
 </td><td class="codes"></td></tr><tr><td class="docs"><p>Convert post title to post url.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn post-title-&gt;url
   [#^String post-title]
   (let [posts (:posts *site*)
         posts (if posts posts (get-posts))]
-    (-?&gt;&gt; posts (find-first #(= post-title (:title %))) :url)))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#misaki.html.core" name="misaki.html.core"><h1 class="project-name">misaki.html.core</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>misaki: HTML utility for template</p>
-</td><td class="codes"><pre class="brush: clojure">(ns misaki.html.core
+    (-?&gt;&gt; posts (find-first #(= post-title (:title %))) :url)))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#misaki.compiler.default.html.core" name="misaki.compiler.default.html.core"><h1 class="project-name">misaki.compiler.default.html.core</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>HTML utility for template</p>
+</td><td class="codes"><pre class="brush: clojure">(ns misaki.compiler.default.html.core
   (:use
-    [misaki.config :only [*site* *url-base* get-index-filename absolute-path]]
-    [misaki.html.conv :only [post-title-&gt;url]])
+    [misaki.compiler.default.config    :only [*site*]]
+    [misaki.compiler.default.html.conv :only [post-title-&gt;url]])
   (:require
-    [clojure.string :as str]
-    [hiccup.core :as hiccup]
-    [hiccup.page :as page]
-    [misaki.html.conv :as conv]))</pre></td></tr><tr><td class="docs">
+    [clojure.string   :as str]
+    [hiccup.core      :as hiccup]
+    [hiccup.page      :as page]
+    [misaki.config    :as cnf]
+    [misaki.util.date :as date]
+    [misaki.compiler.default.html.conv :as conv]))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(declare link)</pre></td></tr><tr><td class="docs"><h2>Utilities</h2>
 </td><td class="codes"></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn- tag? [x]
@@ -3528,10 +3435,10 @@ net.brehaut.ClojureTools = (function (SH) {
 </code></pre>
 </td><td class="codes"><pre class="brush: clojure">(defn js
   [&amp; args]
-  (apply page/include-js (flatten args)))</pre></td></tr><tr><td class="docs"><p>Include JavaScript from <em>url-base</em> setting.</p>
+  (apply page/include-js (flatten args)))</pre></td></tr><tr><td class="docs"><p>Include JavaScript from <code>(:url-base *config*)</code> setting.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn absolute-js
   [&amp; args]
-  (let [args (map #(absolute-path %) (flatten args))]
+  (let [args (map #(cnf/absolute-path %) (flatten args))]
     (apply js args)))</pre></td></tr><tr><td class="docs"><p>Include Cascading Style Sheet.</p>
 
 <pre><code>  (css "foo.css" "bar.css")
@@ -3546,7 +3453,7 @@ net.brehaut.ClojureTools = (function (SH) {
   (let [args (flatten args)
         [opt &amp; hrefs] (if (map? (first args)) args (cons {} args))
         attrs (map #(merge {:rel &quot;stylesheet&quot; :type &quot;text/css&quot; :href %} opt) hrefs)]
-    (map #(vector :link %) attrs)))</pre></td></tr><tr><td class="docs"><p>Include Cascading Style Sheet from <em>url-base</em> setting.</p>
+    (map #(vector :link %) attrs)))</pre></td></tr><tr><td class="docs"><p>Include Cascading Style Sheet from <code>(:url-base *config*)</code> setting.</p>
 
 <p>   ex) :url-base "/foo"</p>
 
@@ -3561,12 +3468,22 @@ net.brehaut.ClojureTools = (function (SH) {
   [&amp; args]
   (let [args (flatten args)
         [opt &amp; args] (if (map? (first args)) args (cons {} args))
-        args (map #(absolute-path %) args)]
+        args (map #(cnf/absolute-path %) args)]
     (apply css (cons opt args))))</pre></td></tr><tr><td class="docs"><p>Make heading tag</p>
+
+<pre><code>  (heading 1 "hello")
+  ;=&gt; &lt;h1&gt;&lt;span&gt;h&lt;/span&gt;ello&lt;/h1&gt;
+  (heading 1 {:class "foo"} "hello")
+  ;=&gt; &lt;h1 class="foo"&gt;&lt;span&gt;h&lt;/span&gt;ello&lt;/h1&gt;
+</code></pre>
 </td><td class="codes"><pre class="brush: clojure">(defn heading
-  [n s]
-  (let [tag (keyword (str &quot;h&quot; n))]
-    [tag [:span (first s)] (rest s)]))
+  ([n s]
+   (heading n {} s))
+  ([n attr s]
+   (let [tag  (keyword (str &quot;h&quot; n))]
+     (if (string? s)
+       [tag attr [:span (first s)] (rest s)]
+       [tag attr s]))))
 (def h1 (partial heading 1))
 (def h2 (partial heading 2))
 (def h3 (partial heading 3))
@@ -3576,75 +3493,141 @@ net.brehaut.ClojureTools = (function (SH) {
 
 <pre><code>  (ul [1 2])
   ;=&gt; &lt;ul&gt;&lt;li&gt;&lt;span&gt;1&lt;/span&gt;&lt;/li&gt;&lt;li&gt;&lt;span&gt;2&lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;
+  (ul inc [1 2])
+  ;=&gt; &lt;ul&gt;&lt;li&gt;&lt;span&gt;2&lt;/span&gt;&lt;/li&gt;&lt;li&gt;&lt;span&gt;3&lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;
+  (ul {:class "foo"} [1 2])
+  ;=&gt; &lt;ul class="foo"&gt;&lt;li&gt;&lt;span&gt;1&lt;/span&gt;&lt;/li&gt;&lt;li&gt;&lt;span&gt;2&lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;
+  (ul inc {:class "foo"} [1 2])
+  ;=&gt; &lt;ul class="foo"&gt;&lt;li&gt;&lt;span&gt;2&lt;/span&gt;&lt;/li&gt;&lt;li&gt;&lt;span&gt;3&lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;
 </code></pre>
+
+<p>  ;</p>
 </td><td class="codes"><pre class="brush: clojure">(defn ul
-  ([ls] (ul parse-string ls))
-  ([f ls]
-   [:ul (for [x ls] [:li [:span (f x)]])]))</pre></td></tr><tr><td class="docs"><p>Make definition list</p>
+  ([ls] (ul parse-string {} ls))
+  ([x ls]
+   (cond
+     (fn? x)  (ul x {} ls)
+     (map? x) (ul parse-string x ls)
+     :else    (ul parse-string {} ls)))
+  ([f attr ls]
+   [:ul attr (for [x ls] [:li [:span (f x)]])]))</pre></td></tr><tr><td class="docs"><p>Make definition list</p>
 
 <pre><code>  (dl {:foo "bar"})
   ;=&gt; &lt;dl&gt;&lt;dt&gt;foo&lt;/dt&gt;&lt;dd&gt;bar&lt;/dd&gt;&lt;/dl&gt;
   (dl [:foo "bar"])
   ;=&gt; &lt;dl&gt;&lt;dt&gt;foo&lt;/dt&gt;&lt;dd&gt;bar&lt;/dd&gt;&lt;/dl&gt;
+  (dl {:class "foo"} {:foo "bar"})
+  ;=&gt; &lt;dl class="foo"&gt;&lt;dt&gt;foo&lt;/dt&gt;&lt;dd&gt;bar&lt;/dd&gt;&lt;/dl&gt;
 </code></pre>
 </td><td class="codes"><pre class="brush: clojure">(defn dl
-  [x]
-  (if (map? x) (dl (mapcat identity x))
-    [:dl
-     (map (fn [[dt dd]]
-            (list [:dt (parse-string (name* dt))]
-                  [:dd (parse-string dd)]))
-          (partition 2 x))]))</pre></td></tr><tr><td class="docs"><p>Make image</p>
+  ([x] (dl {} x))
+  ([attr x]
+   (if (map? x) (dl attr (mapcat identity x))
+     [:dl
+      attr
+      (map (fn [[dt dd]]
+             (list [:dt (parse-string (name* dt))]
+                   [:dd (parse-string dd)]))
+           (partition 2 x))])))</pre></td></tr><tr><td class="docs"><p>Make image</p>
 
 <pre><code>  (img "bar.jpg")
   ;=&gt; &lt;img src="bar.jpg" /&gt;
   (img "foo" "bar.jpg")
   ;=&gt; &lt;img alt="foo" src="bar.jpg" /&gt;
+  (img {:class "foo"} "bar.jpg")
+  ;=&gt; &lt;img class="foo" src="bar.jpg" /&gt;
+  (img {:class "foo"} "foo" "bar.jpg")
+  ;=&gt; &lt;img alt="foo" class="foo" src="bar.jpg" /&gt;
 </code></pre>
 </td><td class="codes"><pre class="brush: clojure">(defn img
-  ([src] (img &quot;&quot; src))
-  ([alt src]
-   [:img {:alt alt :src src}]))</pre></td></tr><tr><td class="docs"><p>Make link</p>
+  ([src] (img {} &quot;&quot; src))
+  ([x src]
+   (cond
+     (string? x) (img {} x src)
+     (map? x)    (img x &quot;&quot; src)
+     :else       (img {} &quot;&quot; src)))
+  ([attr alt src]
+   [:img (merge attr {:alt alt :src src})]))</pre></td></tr><tr><td class="docs"><p>Make link</p>
 
 <pre><code>  (link "foo.html")
   ;=&gt; &lt;a href="foo.html"&gt;foo.html&lt;/a&gt;
   (link "foo" "bar.html")
   ;=&gt; &lt;a href="bar.html"&gt;foo&lt;/a&gt;
+  (link {:class "foo"} "foo.html")
+  ;=&gt; &lt;a class="foo" href="foo.html"&gt;foo.html&lt;/a&gt;
+  (link {:class "foo"} "foo" "bar.html")
+  ;=&gt; &lt;a class="foo" href="bar.html"&gt;foo&lt;/a&gt;
 </code></pre>
 </td><td class="codes"><pre class="brush: clojure">(defn link
-  ([href] (link href href))
-  ([label href] [:a {:href href} (parse-string label)]))</pre></td></tr><tr><td class="docs"><p>Make blockquote</p>
+  ([href] (link {} href href))
+  ([x href]
+   (cond
+     (or (string? x) (sequential? x)) (link {} x href)
+     (map? x)    (link x href href)
+     :else       (link {} href href)))
+  ([attr label href]
+   [:a (merge attr {:href href}) (parse-string label)]))</pre></td></tr><tr><td class="docs"><p>Make blockquote</p>
 
 <pre><code>  (blockquote "foo" "bar")
   ;=&gt; &lt;blockquote&gt;&lt;p&gt;foo&lt;/p&gt;&lt;p&gt;bar&lt;/p&gt;&lt;/blockquote&gt;
+  (blockquote "foo\nbar")
+  ;=&gt; &lt;blockquote&gt;&lt;p&gt;foo&lt;/p&gt;&lt;p&gt;bar&lt;/p&gt;&lt;/blockquote&gt;
+  (blockquote {:class "bar"} "foo")
+  ;=&gt; &lt;blockquote class="bar"&gt;&lt;p&gt;foo&lt;/p&gt;&lt;/blockquote&gt;
 </code></pre>
 </td><td class="codes"><pre class="brush: clojure">(defn blockquote
+  &quot;Make blockquote
+      (blockquote \&quot;foo\&quot; \&quot;bar\&quot;)
+      ;=&gt; &lt;blockquote&gt;&lt;p&gt;foo&lt;/p&gt;&lt;p&gt;bar&lt;/p&gt;&lt;/blockquote&gt;
+      (blockquote \&quot;foo\\nbar\&quot;)
+      ;=&gt; &lt;blockquote&gt;&lt;p&gt;foo&lt;/p&gt;&lt;p&gt;bar&lt;/p&gt;&lt;/blockquote&gt;
+      (blockquote {:class \&quot;bar\&quot;} \&quot;foo\&quot;)
+      ;=&gt; &lt;blockquote class=\&quot;bar\&quot;&gt;&lt;p&gt;foo&lt;/p&gt;&lt;/blockquote&gt;
+  &quot;
   [&amp; xs]
-  [:blockquote
-   (map
-     #(if (string? %)
-        (map (fn [x] [:p x]) (str/split-lines %))
-        [:p %])
-     xs)])</pre></td></tr><tr><td class="docs"><p>Make inline code</p>
+  (let [[attr &amp; xs] (if (-&gt; xs first map?) xs (cons {} xs))]
+    [:blockquote
+     attr
+     (map
+       #(if (string? %)
+          (map (fn [x] [:p x]) (str/split-lines %))
+          [:p %])
+       xs)]))</pre></td></tr><tr><td class="docs"><p>Make inline code</p>
 
 <pre><code>  (code hello)
   ;=&gt; &lt;code class="prettyprint"&gt;hello&lt;/code&gt;
+  (code {:class "foo"} hello)
+  ;=&gt; &lt;code class="prettyprint foo"&gt;hello&lt;/code&gt;
 </code></pre>
 </td><td class="codes"><pre class="brush: clojure">(defmacro code
-  [s]
-  [:code {:class &quot;prettyprint&quot;} (str s)])</pre></td></tr><tr><td class="docs"><p>Make table</p>
+  ([s] `(code {} ~s))
+  ([attr s]
+   [:code
+    (merge-with #(str % &quot; &quot; %2) {:class &quot;prettyprint&quot;} attr) (str s)]))</pre></td></tr><tr><td class="docs"><p>Make table</p>
 
 <pre><code>  (table [[1 2]])
   ;=&gt; &lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;1&lt;/td&gt;&lt;td&gt;2&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
   (table '[a b] [[1 2]])
   ;=&gt; &lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;a&lt;/th&gt;&lt;th&gt;b&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;
   ;          &lt;tbody&gt;&lt;tr&gt;&lt;td&gt;1&lt;/td&gt;&lt;td&gt;2&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+  (table {:class "foo"} [[1 2]])
+  ;=&gt; &lt;table class="foo"&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;1&lt;/td&gt;&lt;td&gt;2&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+  (table {:class "foo"} '[a b] [[1 2]])
+  ;=&gt; &lt;table class="foo"&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;a&lt;/th&gt;&lt;th&gt;b&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;
+  ;          &lt;tbody&gt;&lt;tr&gt;&lt;td&gt;1&lt;/td&gt;&lt;td&gt;2&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
 </code></pre>
 </td><td class="codes"><pre class="brush: clojure">(defn table
-  ([bodies] (table nil bodies))
-  ([head bodies]
+  ([bodies] (table {} nil bodies))
+  ([x bodies]
+   (cond
+     (sequential? x) (table {} x bodies)
+     (map? x)        (table x nil bodies)
+     :else           (table {} nil bodies)))
+  ([attr head bodies]
    [:table
-    (if head [:thead [:tr (for [h head] [:th h])]])
+    attr
+    (if (and head (sequential? head))
+      [:thead [:tr (for [h head] [:th h])]])
     [:tbody
      (for [body bodies]
        [:tr (for [b body] [:td (parse-string b)])])]]))</pre></td></tr><tr><td class="docs"><p>Make link list</p>
@@ -3657,9 +3640,17 @@ net.brehaut.ClojureTools = (function (SH) {
 </td><td class="codes"><pre class="brush: clojure">(defn links
   [&amp; title-url-pairs]
   (ul #(apply link %) (partition 2 title-url-pairs)))</pre></td></tr><tr><td class="docs"><p>Make paragraph</p>
+
+<pre><code>  (p "hello")
+  ;=&gt; &lt;p class="paragraph"&gt;hello&lt;/p&gt;
+  (p {:class "foo"} "hello")
+  ;=&gt; &lt;p class="paragraph foo"&gt;hello&lt;/p&gt;
+</code></pre>
 </td><td class="codes"><pre class="brush: clojure">(defn p
   [&amp; s]
-  [:p {:class &quot;paragraph&quot;} (map parse-string s)])</pre></td></tr><tr><td class="docs">
+  (let [[opt &amp; s] (if (-&gt; s first map?) s (cons {} s))
+        attr (merge-with #(str/join &quot; &quot; %&amp;) {:class &quot;paragraph&quot;} opt)]
+    [:p attr (map parse-string s)]))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn- header-decoration [x]
   (if (string? x)
     (let [[first-char &amp; rest-chars] x]
@@ -3669,7 +3660,7 @@ net.brehaut.ClojureTools = (function (SH) {
 </td><td class="codes"><pre class="brush: clojure">(defn header
   [h &amp; p]
   [:header
-   [:h1 (link (header-decoration h) (get-index-filename))]
+   [:h1 (link (header-decoration h) (cnf/get-index-filename))]
    (if p [:p p])])</pre></td></tr><tr><td class="docs"><p>Make default container tag.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn container
   [&amp; body]
@@ -3679,35 +3670,46 @@ net.brehaut.ClojureTools = (function (SH) {
   [:footer {:class &quot;footer&quot;}
    [:p {:class &quot;right back_to_top&quot;} (link &quot;Back to top&quot; &quot;#&quot;)]
    [:p p]])</pre></td></tr><tr><td class="docs"><p>Make default all posts unordered list.</p>
+
+<pre><code>  (post-list)
+  (post-list {:class "foo "})
+</code></pre>
 </td><td class="codes"><pre class="brush: clojure">(defn post-list
-  []
-  (ul
-    #(list
-       (conv/date-&gt;string (:date %))
-       &quot;&amp;nbsp;-&amp;nbsp;&quot;
-       (link (:title %) (:url %)))
-    (:posts *site*)))</pre></td></tr><tr><td class="docs"><p>Make default all tags unordered list.</p>
+  ([] (post-list {}))
+  ([attr]
+   (ul
+     #(list
+        (date/date-&gt;string (:date %))
+        &quot;&amp;nbsp;-&amp;nbsp;&quot;
+        (link (:title %) (:url %)))
+     attr
+     (:posts *site*))))</pre></td></tr><tr><td class="docs"><p>Make default all tags unordered list.</p>
+
+<pre><code>  (tag-list)
+  (tag-list {:class "foo"})
+</code></pre>
 </td><td class="codes"><pre class="brush: clojure">(defn tag-list
-  []
-  (ul
-    #(link (str (:name %) &quot; (&quot; (:count %) &quot;)&quot;)
-           (:url %))
-    (:tags *site*)))</pre></td></tr><tr><td class="docs"><p>Make default post tags unordered list.</p>
+  ([] (tag-list {}))
+  ([attr]
+   (ul
+     #(link (str (:name %) &quot; (&quot; (:count %) &quot;)&quot;)
+            (:url %))
+     attr
+     (:tags *site*))))</pre></td></tr><tr><td class="docs"><p>Make default post tags unordered list.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn post-tags
   [&amp; {:keys [class] :or {class &quot;tag&quot;}}]
   [:div {:class class}
    (ul #(link (:name %) (:url %)) (:tag *site*))])</pre></td></tr><tr><td class="docs"><p>Make default post date tag.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn post-date
   []
-  [:p {:class &quot;date&quot;} (-&gt; *site* :date conv/date-&gt;string)])</pre></td></tr><tr><td class="docs"><p>Make 2 column</p>
+  [:p {:class &quot;date&quot;} (-&gt; *site* :date date/date-&gt;string)])</pre></td></tr><tr><td class="docs"><p>Make 2 column</p>
 </td><td class="codes"><pre class="brush: clojure">(defn two-column
   [left right]
   [:div {:class &quot;column&quot;}
    [:div {:class &quot;w50per&quot;} left]
-   [:div {:class &quot;w50per&quot;} right]])</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#misaki.html.util" name="misaki.html.util"><h1 class="project-name">misaki.html.util</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>HTML Service Utilities</p>
-</td><td class="codes"><pre class="brush: clojure">(ns misaki.html.util
-  (:require
-    [hiccup.page :as page]))</pre></td></tr><tr><td class="docs"><h2>GitHub</h2>
+   [:div {:class &quot;w50per&quot;} right]])</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#misaki.compiler.default.html.util" name="misaki.compiler.default.html.util"><h1 class="project-name">misaki.compiler.default.html.util</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>HTML Service Utilities</p>
+</td><td class="codes"><pre class="brush: clojure">(ns misaki.compiler.default.html.util
+  (:require [hiccup.page :as page]))</pre></td></tr><tr><td class="docs"><h2>GitHub</h2>
 </td><td class="codes"></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(def ribbon-style
   {:left  &quot;position: absolute; top: 0; left: 0; border: 0;&quot;
@@ -3746,20 +3748,23 @@ net.brehaut.ClojureTools = (function (SH) {
          :data-lang lang}
      label]
    (page/include-js &quot;//platform.twitter.com/widgets.js&quot;)
-   ])</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#misaki.reader" name="misaki.reader"><h1 class="project-name">misaki.reader</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>S-exp Reader.</p>
-</td><td class="codes"><pre class="brush: clojure">(ns misaki.reader
-  (:use misaki.util.code)
+   ])</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#misaki.compiler.default.reader" name="misaki.compiler.default.reader"><h1 class="project-name">misaki.compiler.default.reader</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>S-exp Reader.</p>
+</td><td class="codes"><pre class="brush: clojure">(ns misaki.compiler.default.reader
+  (:use misaki.compiler.default.util.code
+        [pretty-error.core :only [set-stack-trace-element!]])
   (:import [java.io StringReader PushbackReader]
            [clojure.lang IDeref]))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(def _EOF_ (gensym &quot;end-of-file&quot;))</pre></td></tr><tr><td class="docs"><p>Utility for java.io.Reader</p>
+</td><td class="codes"><pre class="brush: clojure">(def _EOF_   (gensym &quot;end-of-file&quot;))
+(def _CR_    (first &quot;\r&quot;))
+(def _LFint_ (int \newline))</pre></td></tr><tr><td class="docs"><p>Utility for java.io.Reader</p>
 </td><td class="codes"><pre class="brush: clojure">(defn- read-char [r]
   (let [c (.read r)]
     (if-not (= -1 c) (char c))))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn- blank-char? [c]
-  (some #(= c %) [\space \tab \newline (first &quot;\r&quot;)]))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn- skip-to [r ch]
-  (if-let [_ch (read-char r)]
-    (if (not= _ch ch) (recur r ch))))</pre></td></tr><tr><td class="docs"><p>Create an instance extending java.io.PushbackReader and implementing clojure.lang.IDeref.
+</td><td class="codes"><pre class="brush: clojure">(defn- blank-char? [ch]
+  (some #(= ch %) [\space \tab \newline _CR_]))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn- skip-to [r target-ch]
+  (if-let [ch (read-char r)]
+    (if (not= ch target-ch) (recur r target-ch))))</pre></td></tr><tr><td class="docs"><p>Create an instance extending java.io.PushbackReader and implementing clojure.lang.IDeref.
   This instance counts 
 ewline and return if you deref instance.</p>
 
@@ -3783,7 +3788,7 @@ ewline and return if you deref instance.</p>
   (let [line-num (atom 1)]
     (proxy [PushbackReader IDeref] [in]
       (read [] (let [c (proxy-super read)]
-                 (if (and (not= -1 c) (= \newline (char c)))
+                 (if (and (not= -1 c) (= _LFint_ c))
                    (swap! line-num inc))
                  c))
       (deref [] @line-num))))</pre></td></tr><tr><td class="docs"><p>Skip java.io.Reader to next token.
@@ -3797,10 +3802,12 @@ ewline and return if you deref instance.</p>
       :else            (do (.unread rdr (int ch)) true))))</pre></td></tr><tr><td class="docs"><p>Create java.lang.RuntimeException with base exception, filename and error line number.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn create-exception
   [ex filename line]
-  (let [e  (RuntimeException. (str &quot;....&quot; (.getMessage ex)))
-        st (StackTraceElement. &quot;misaki.reader&quot; &quot;read-sexp&quot; filename line)]
-    (.setStackTrace e (into-array (list st)))
-    e))</pre></td></tr><tr><td class="docs"><p>Read one S-exp.
+  (set-stack-trace-element!
+    (RuntimeException. (.getMessage ex))
+    {:class    &quot;misaki.reader&quot;
+     :method   &quot;read-sexp&quot;
+     :filename filename
+     :line     line}))</pre></td></tr><tr><td class="docs"><p>Read one S-exp.
   If S-exp has format error, throw java.lang.RuntimeException with specified path and line number.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn read-sexp
   [rdr &amp; {:keys [path]}]
@@ -3817,111 +3824,13 @@ ewline and return if you deref instance.</p>
     (take-while #(not= % _EOF_) (repeatedly #(read-sexp pbr :path path)))))</pre></td></tr><tr><td class="docs"><p>Read all S-exps from java.lang.String</p>
 </td><td class="codes"><pre class="brush: clojure">(defn read-from-string
   [s &amp; {:keys [path]}]
-  (read-from-reader (StringReader. s) :path path))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#misaki.server" name="misaki.server"><h1 class="project-name">misaki.server</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>Development server</p>
-
-<p>  Listen <em>port</em> to publish developing blog,
-  and watch template updates.</p>
-</td><td class="codes"><pre class="brush: clojure">(ns misaki.server
+  (read-from-reader (StringReader. s) :path path))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#misaki.compiler.default.template" name="misaki.compiler.default.template"><h1 class="project-name">misaki.compiler.default.template</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>Template file loader</p>
+</td><td class="codes"><pre class="brush: clojure">(ns misaki.compiler.default.template
   (:use
-    [misaki core config template]
-    [misaki.util.file     :only [find-clj-files normalize-path has-extension? file?]]
-    [misaki.util.string   :only [msec-&gt;string]]
-    [text-decoration.core :only [cyan red bold]]
-    watchtower.core
-    [compojure.core       :only [routes]]
-    [compojure.route      :only [files]]
-    [ring.adapter.jetty   :only [run-jetty]]))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defmacro elapsing
-  [&amp; body]
-  `(let [start-time# (System/currentTimeMillis)
-         ~'get-elapsed-time (fn [] (- (System/currentTimeMillis) start-time#))]
-     ~@body))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn- get-result-text
-  [result &amp; optional-string]
-  (case result
-    true  (cyan (apply str &quot;DONE&quot; optional-string))
-    false (red (apply str &quot;FAIL&quot; optional-string))
-    (cyan &quot;SKIP&quot;)))</pre></td></tr><tr><td class="docs"><p>Print colored compile result.</p>
-</td><td class="codes"><pre class="brush: clojure">(defmacro print-compile-result
-  [#^String message, compile-sexp]
-  `(do
-     (println (str &quot; * Compiling &quot; (bold ~message)))
-     (flush)
-     (elapsing
-       (let [result#  ~compile-sexp
-             elapsed# (msec-&gt;string (~'get-elapsed-time))]
-       (println &quot;  &quot; (get-result-text result# &quot; in &quot; elapsed#))))))</pre></td></tr><tr><td class="docs"><h2>Dev Compiler</h2>
-</td><td class="codes"></td></tr><tr><td class="docs"><p>Compile all templates</p>
-</td><td class="codes"><pre class="brush: clojure">(defn do-all-compile
-  []
-  (let [tmpls (remove layout-file? (find-clj-files *template-dir*))
-        tags  (get-tags)]
-    (if *detailed-log*
-      (do (doseq [file tmpls]
-            (print-compile-result (.getName file) (compile-template file)))
-          (doseq [{tag-name :name} tags]
-            (print-compile-result (str tag-name &quot; tag&quot;) (compile-tag tag-name))))
-      (do (print-compile-result &quot;all templates&quot; (every? #(compile-template %) tmpls))
-          (print-compile-result &quot;all tags&quot;      (every? #(compile-tag (:name %)) tags))))
-    (print-compile-result &quot;clojurescripts&quot; (compile-clojurescripts))))</pre></td></tr><tr><td class="docs"><p>Compile templte file and print status</p>
-</td><td class="codes"><pre class="brush: clojure">(defn do-compile
-  [#^java.io.File file]
-  {:pre [(file? file)]}
-  (cond
-    ; clojurescript
-    (has-extension? &quot;.cljs&quot; file)
-    (print-compile-result &quot;clojurescript&quot; (compile-clojurescripts))
-    ; layout or config
-    (or (layout-file? file) (config-file? file))
-    (do-all-compile)
-    ; else
-    :else
-    (do
-      ;(print-compile-result &quot;template&quot; (compile-template file))
-      (print-compile-result (.getName file) (compile-template file))
-      (when (post-file? file)
-        ; compile with posts
-        (if *compile-with-post*
-          (doseq [tmpl-name *compile-with-post*]
-            (do-compile (template-name-&gt;file tmpl-name))))
-        ; compile tag
-        (if-let [tags (-&gt; file parse-template-option :tag)]
-          (doseq [{tag-name :name} tags]
-            (print-compile-result &quot;tag&quot; (compile-tag tag-name))))))))</pre></td></tr><tr><td class="docs"><h2>Template Watcher</h2>
-</td><td class="codes"></td></tr><tr><td class="docs"><p>Start watchtower watcher to compile changed templates</p>
-</td><td class="codes"><pre class="brush: clojure">(defn start-watcher
-  []
-  ; compile all templates at first
-  (do-all-compile)
-  (watcher
-    [*template-dir*
-     (str *base-dir* *config-file*)]
-    (rate 50)
-    (change-first? false) ; do not compile each templates at first
-    (file-filter ignore-dotfiles)
-    (file-filter (extensions :clj :cljs))
-    (on-change #(doseq [file %]
-                  ; use `wrap-config` to apply config file updates
-                  (with-config (do-compile file))))))</pre></td></tr><tr><td class="docs"><h2>main</h2>
-</td><td class="codes"></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn -main [&amp; [dir :as args]]
-  (binding [*base-dir* (normalize-path dir)]
-    (with-config
-      (if (contains? (set args) &quot;--compile&quot;)
-        ; compile all only if '--compile' option is specified
-        (do-all-compile)
-        ; start watching and server
-        (do (start-watcher)
-            (println &quot; * starting server: &quot; (cyan (str &quot;http://localhost:&quot; *port* *url-base*)))
-            (run-jetty
-              (routes (files *url-base* {:root *public-dir*}))
-              {:port *port*}))))))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#misaki.template" name="misaki.template"><h1 class="project-name">misaki.template</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>Template file loader</p>
-</td><td class="codes"><pre class="brush: clojure">(ns misaki.template
-  (:use
-    [misaki evaluator config]
-    [misaki.util.file :only [file?]]
+    [misaki.compiler.default evaluator config]
+    [misaki.util.file       :only [file?]]
     [clojure.core.incubator :only [-?&gt;]])
-  (:require [clojure.string :as str]
+  (:require [clojure.string  :as str]
             [clojure.java.io :as io])
   (:import [java.io File]))</pre></td></tr><tr><td class="docs"><p>Parse tag string to tag list.</p>
 
@@ -3948,10 +3857,12 @@ ewline and return if you deref instance.</p>
   [file] (parse-template-option (slurp file)))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defmethod parse-template-option String
   [slurped-data]
-  (let [lines  (map str/trim (str/split-lines slurped-data))
-        params (remove nil? (map #(re-seq #&quot;^;+\s*@(\w+)\s+(.+)$&quot; %) lines))
-        option (into {} (for [[[_ k v]] params] [(keyword k) v]))]
-    (assoc option :tag (-&gt; option :tag parse-tag-string))))</pre></td></tr><tr><td class="docs"><p>Apply contents data to template function.</p>
+  (if (str/blank? slurped-data)
+    {}
+    (let [lines  (map str/trim (str/split-lines slurped-data))
+          params (remove nil? (map #(re-seq #&quot;^;+\s*@(\w+)\s+(.+)$&quot; %) lines))
+          option (into {} (for [[[_ k v]] params] [(keyword k) v]))]
+      (assoc option :tag (-&gt; option :tag parse-tag-string)))))</pre></td></tr><tr><td class="docs"><p>Apply contents data to template function.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn apply-template
   [f contents]
   {:pre [(fn? f) (sequential? contents)]}
@@ -3977,7 +3888,6 @@ ewline and return if you deref instance.</p>
    {:pre [(file? file)]}
    (reduce
      (fn [parent-fn [template-data option]]
-       ;(let [template-fn (evaluate-to-function template-data)]
        (let [template-fn (evaluate-to-function template-data (.getName file))]
          (with-meta
            (if (or (nil? parent-fn) (not allow-layout?))
@@ -3985,37 +3895,24 @@ ewline and return if you deref instance.</p>
              #(apply-template parent-fn (apply-template template-fn %)))
            (merge (meta parent-fn) option))))
      nil
-     (load-template-data file))))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#misaki.util.code" name="misaki.util.code"><h1 class="project-name">misaki.util.code</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>Here document utility</p>
+     (load-template-data file))))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#misaki.compiler.default.util.code" name="misaki.compiler.default.util.code"><h1 class="project-name">misaki.compiler.default.util.code</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>Here document utility</p>
 
 <p>  cf. <a href="http://d.hatena.ne.jp/nokturnalmortum/20100527/1274961805">http://d.hatena.ne.jp/nokturnalmortum/20100527/1274961805</a></p>
-</td><td class="codes"><pre class="brush: clojure">(ns misaki.util.code
-  (:use misaki.config
-        [misaki.util.string :only [escape-string]]
+</td><td class="codes"><pre class="brush: clojure">(ns misaki.compiler.default.util.code
+  (:use [misaki.config          :only [*config*]]
+        [misaki.util.string     :only [escape-string]]
         [clojure.core.incubator :only [-?&gt;&gt;]])
   (:require [clojure.string :as str]))</pre></td></tr><tr><td class="docs"><p>Get code type from code-highlight setting in <code>config</code>.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn get-code-type
   [s]
-  (let [code-key (keyword s)
-        config   (read-config {})]
-    (get (:code-highlight config) code-key)))</pre></td></tr><tr><td class="docs">
+  (let [code-key (keyword s)]
+    (get (:code-highlight *config* {}) code-key)))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn dispatch-reader-macro
   [ch fun]
   (let [dm (.get (doto (.getDeclaredField clojure.lang.LispReader &quot;dispatchMacros&quot;)
                    (.setAccessible true))
                  nil)]
-    (aset dm (int ch) fun)))</pre></td></tr><tr><td class="docs"><p>(defn read-until
- "Read until end text."
- [reader end]
- (let [end (map int end)]
-   (->> (loop [res nil e end]
-          (if (empty? e)
-            res
-            (let [c (.read reader)]
-              (recur (conj res c) (if (= c (first e))
-                                    (rest e)
-                                    end)))))
-     (drop (count end)) reverse (map char) (apply str))))</p>
-</td><td class="codes"></td></tr><tr><td class="docs"><p>Read until end text.</p>
+    (aset dm (int ch) fun)))</pre></td></tr><tr><td class="docs"><p>Read until end text.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn read-until
   [reader end-str &amp; {:keys [ignore-started?] :or {ignore-started? false}}]
   (let [end-seq      (map int end-str)
@@ -4027,11 +3924,11 @@ ewline and return if you deref instance.</p>
           res
           (let [c (.read reader)]
             (if-not (= -1 c)
-              (if (or started? ignore-started?)
+              (if (or (empty? res) started? ignore-started?)
                 (if (= c (first e))
                   (recur (conj res c) (rest e) true)
                   ; keep `started?` with front space
-                  (recur (conj res c) end-seq (front-space? c e)))
+                  (recur (conj res c) end-seq (or (start? c) (front-space? c e))))
                 ; start to check end-seq with newline
                 (recur (conj res c) end-seq (start? c)))))))
       (drop (count end-seq)) reverse (map char) (apply str))))</pre></td></tr><tr><td class="docs"><p>Read here code</p>
@@ -4049,47 +3946,475 @@ ewline and return if you deref instance.</p>
            (read-until reader)
            escape-string
            str/trim)]))</pre></td></tr><tr><td class="docs"><p>Register <code>#-</code> reader macro</p>
-</td><td class="codes"><pre class="brush: clojure">(dispatch-reader-macro \- here-code)</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#misaki.util.error" name="misaki.util.error"><h1 class="project-name">misaki.util.error</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(ns misaki.util.error
+</td><td class="codes"><pre class="brush: clojure">(dispatch-reader-macro \- here-code)
+(dispatch-reader-macro \# here-code)</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#misaki.compiler.demo.core" name="misaki.compiler.demo.core"><h1 class="project-name">misaki.compiler.demo.core</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(ns misaki.compiler.demo.core
+  (:import [java.io File]))</pre></td></tr><tr><td class="docs"><p>Set watch target extension as keyword. (REQUIRED)</p>
+</td><td class="codes"><pre class="brush: clojure">(defn -extension
+  []
+  {:post [#(sequential? %)]}
+  (list :txt))</pre></td></tr><tr><td class="docs"><p>Set custom configuration. (OPTIONAL)</p>
+</td><td class="codes"><pre class="brush: clojure">(defn -config
+  [config]
+  {:pre  [(map? config)]
+   :post [#(map? %)]}
+  (assoc config :message &quot;hello! &quot;))</pre></td></tr><tr><td class="docs"><p>Compile specified java.io.File. (REQUIRED)</p>
+
+<ul>
+<li>Return value:
+<ul><li>string? : Write string to file named as same as template file.</li>
+<li>true/false : Do nothing.</li>
+<li>map? : Write file with detailed setting.
+<ul><li><code>:status</code>   : Compile result (true/false).</li>
+<li><code>:filename</code> : Filename to write</li>
+<li><code>:body</code>     : Compiled body text. If body is nil, only status is checked.</li>
+<li><code>:stop-compile?</code> : Flag(true/false) to stop compilation.</li>
+<li><code>:all-compile?</code>  : Flag(true/false) to force compiling all templates.</li></ul></li></ul></li>
+</ul>
+</td><td class="codes"><pre class="brush: clojure">(defn -compile
+  [config #^File file]
+  {:pre  [(map? config) (instance? File file)]}
+  (str (:message config) (slurp file)))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#misaki.config" name="misaki.config"><h1 class="project-name">misaki.config</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>Configuration Manager</p>
+</td><td class="codes"><pre class="brush: clojure">(ns misaki.config
+  (:use [misaki.util file string sequence]
+        [clojure.core.incubator :only [-?&gt; -?&gt;&gt;]]
+        [clj-time.core          :only [date-time year month day]]
+        [text-decoration.core   :only [cyan red bold]]
+        [clostache.parser       :only [render]])
+  (:require
+    [clojure.string  :as str]
+    [clojure.java.io :as io])
+  (:import [java.io File FileNotFoundException]))</pre></td></tr><tr><td class="docs"><h2>Default Value</h2>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>Default dev server port.</p>
+
+<p>Default language.</p>
+
+<p>Default compiler.</p>
+
+<p>Default regexp to parse post filename.</p>
+
+<p>Default format to generage post output filename.</p>
+</td><td class="codes"><pre class="brush: clojure">(def PORT      8080)
+(def LANGUAGE         &quot;en&quot;)
+(def COMPILER         &quot;default&quot;)
+(def POST_FILENAME_REGEXP
+  #&quot;(\d{4})[-_](\d{1,2})[-_](\d{1,2})[-_](.+)$&quot;)
+(def POST_OUTPUT_NAME_FORMAT
+  &quot;{{year}}/{{month}}/{{filename}}&quot;)</pre></td></tr><tr><td class="docs"><h2>Declarations</h2>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>Blog base directory.</p>
+
+<p>Config filename.
+  Default filename is '_config.clj'.</p>
+
+<p>Current config map.</p>
+</td><td class="codes"><pre class="brush: clojure">(def ^:dynamic *base-dir*
+  &quot;&quot;)
+(def ^:dynamic *config-file*
+  &quot;_config.clj&quot;)
+(def ^:dynamic *config*
+  {})</pre></td></tr><tr><td class="docs"><h2>Config Data Wrapper</h2>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>Load <code>*config-file*</code> from <code>*base-dir*</code>.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn read-config
+  ([]
+   (read-string (slurp (str *base-dir* *config-file*))))
+  ([default-value]
+   (try (read-config)
+        (catch FileNotFoundException e
+          default-value))))</pre></td></tr><tr><td class="docs"><p>Load specified compiler's public method map.
+  Compiler's namespace must be <strong>misaki.compiler.FOO.core</strong>.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn load-compiler-publics
+  [name]
+  {:pre [(string? name)]}
+  (let [sym (symbol (str &quot;misaki.compiler.&quot; name &quot;.core&quot;))]
+    (try
+      (require sym)
+      (if-let [target-ns (find-ns sym)]
+        (ns-publics target-ns)
+        (load-compiler-publics &quot;default&quot;))
+      (catch FileNotFoundException e
+        (println (red (str &quot; * Compiler \&quot;&quot; name &quot;\&quot; is not found.&quot;
+                           &quot; Default compiler is used.&quot;)))
+        (load-compiler-publics &quot;default&quot;)))))</pre></td></tr><tr><td class="docs"><p>Make basic config to pass plugin's configuration.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn make-basic-config-map
+  []
+  (let [config       (read-config)
+        template-dir (path *base-dir* (:template-dir config))]
+    (assoc
+      config
+      :public-dir     (path *base-dir* (:public-dir config))
+      :template-dir   template-dir
+      :post-dir       (if-let [post-dir (:post-dir config)]
+                        (path template-dir post-dir))
+      :post-sort-type (:post-sort-type config :date-desc)
+      :port           (:port config PORT)
+      :lang           (:lang config LANGUAGE)
+      :site           (:site config {})
+      :index-name     (:index-name config &quot;&quot;)
+      :url-base       (normalize-path (:url-base config &quot;/&quot;))
+      :compiler       (load-compiler-publics (:compiler config COMPILER))
+      :compile-with-post    (:compile-with-post config ())
+      :post-filename-regexp (:post-filename-regexp config POST_FILENAME_REGEXP)
+      :post-filename-format (:post-filename-format config POST_OUTPUT_NAME_FORMAT))))</pre></td></tr><tr><td class="docs"><p>Declare config data, and wrap sexp body with them.</p>
+</td><td class="codes"><pre class="brush: clojure">(defmacro with-config
+  [&amp; body]
+  `(binding [*config* (make-basic-config-map)]
+     ~@body))</pre></td></tr><tr><td class="docs"><h2>File Cheker</h2>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>Check whether file is config file or not.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn config-file?
+  [#^File file]
+  {:pre [(file? file)]}
+  (= *config-file* (.getName file)))</pre></td></tr><tr><td class="docs"><p>Check whether file is post file or not.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn post-file?
+  [#^File file]
+  {:pre [(file? file)]}
+  (and (:post-dir *config*) (str-contains? (.getAbsolutePath file)
+                                           (:post-dir *config*))))</pre></td></tr><tr><td class="docs"><h2>Filename Date Utility</h2>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>Get date from file(java.io.File) with <code>(:post-filename-regexp *config*)</code>.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn get-date-from-file
+  [#^File post-file]
+  {:pre [(or (nil? post-file) (file? post-file))]}
+  (let [date-seq (-?&gt;&gt; post-file (.getName)
+                      (re-seq (:post-filename-regexp *config*))
+                      nfirst drop-last)] ; last = filename
+    (if (and date-seq (= 3 (count date-seq))
+             (every? #(re-matches #&quot;^[0-9]+$&quot; %) date-seq))
+      (apply date-time (map #(Integer/parseInt %) date-seq)))))</pre></td></tr><tr><td class="docs"><p>Remove date string from filename(String).</p>
+</td><td class="codes"><pre class="brush: clojure">(defn remove-date-from-name
+  [#^String filename]
+  {:pre [(string? filename)]}
+  (last (first (re-seq (:post-filename-regexp *config*) filename))))</pre></td></tr><tr><td class="docs"><h2>Converter</h2>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>Convert sort-type keyword to sort function.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn sort-type-&gt;sort-fn
+  []
+  (case (:post-sort-type *config*)
+    :date       (partial sort-by-date :inc get-date-from-file)
+    :name       (partial sort-alphabetically #(.getName %))
+    :date-desc  (partial sort-by-date :desc get-date-from-file)
+    :name-desc  (partial sort-alphabetically :desc #(.getName %))
+    sort-by-date))</pre></td></tr><tr><td class="docs"><h2>Filename Generator</h2>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>Get index filename string.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn get-index-filename
+  []
+  (path (:url-base *config*) (:index-name *config*)))</pre></td></tr><tr><td class="docs"><p>Make post output filename from java.io.File.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn make-post-output-filename
+  [#^File file]
+  {:pre [(file? file)]}
+  (let [date     (get-date-from-file file)
+        filename (if date (remove-date-from-name (.getName file))
+                          (.getName file))]
+    (render (:post-filename-format *config*)
+            {:year     (-?&gt;  date year  str)
+             :month    (-?&gt;&gt; date month (format &quot;%02d&quot;))
+             :day      (-?&gt;&gt; date day   (format &quot;%02d&quot;))
+             :filename filename})))</pre></td></tr><tr><td class="docs"><p>Make output filename from java.io.File.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn make-output-filename
+  [#^File file]
+  {:pre [(file? file)]}
+  (if (post-file? file)
+    (make-post-output-filename file)
+    (.getName file)))</pre></td></tr><tr><td class="docs"><p>Make output url from java.io.File.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn make-output-url
+  [#^File file]
+  {:pre [(file? file)]}
+  (path (:url-base *config*) (make-output-filename file)))</pre></td></tr><tr><td class="docs"><p>Convert template name to java.io.File.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn template-name-&gt;file
+  [#^String tmpl-name]
+  {:pre [(string? tmpl-name)]}
+  (io/file (path (:template-dir *config*) tmpl-name)))</pre></td></tr><tr><td class="docs"><p>Convert path to absolute with <code>(:url-base *config*)</code></p>
+</td><td class="codes"><pre class="brush: clojure">(defn absolute-path
+  [path-str]
+  {:pre [(string? path-str)]}
+  (if (re-seq #&quot;^https?://&quot; path-str)
+    path-str
+    (path (:url-base *config*) path-str)))</pre></td></tr><tr><td class="docs"><p>Add public dir to specified path.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn add-public-dir
+  [filename]
+  {:pre (string? filename)}
+  (path (:public-dir *config*) filename))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#misaki.core" name="misaki.core"><h1 class="project-name">misaki.core</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>Misaki Controll Core</p>
+</td><td class="codes"><pre class="brush: clojure">(ns misaki.core
+  (:use misaki.config
+        [misaki.util file string sequence]
+        [text-decoration.core :only [green]]
+        [pretty-error.core    :only [print-pretty-stack-trace]])
+  (:import [java.io File]))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(declare get-watch-file-extensions)</pre></td></tr><tr><td class="docs"><h2>Util</h2>
+</td><td class="codes"><pre class="brush: clojure">(defn key-&gt;sym [k] (symbol (name k)))</pre></td></tr><tr><td class="docs"><h2>Compiler Utilities</h2>
+</td><td class="codes"></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn- stop-compile? [compile-result]
+  (and (map?   compile-result)
+       (true? (:stop-compile? compile-result))))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn- all-compile? [compile-result]
+  (and (map?   compile-result)
+       (true? (:all-compile? compile-result))))</pre></td></tr><tr><td class="docs"><p>Call compiler's function.</p>
+
+<pre><code>  (call-compiler-fn :-compile file)
+</code></pre>
+</td><td class="codes"><pre class="brush: clojure">(defn- call-compiler-fn
+  [fn-key &amp; args]
+  (let [fn-sym (key-&gt;sym fn-key)
+        f      (get (:compiler *config*) fn-sym)]
+    (if f (apply f args))))</pre></td></tr><tr><td class="docs"><p>Get all template files. Find specified directory with <code>:dir</code> option.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn get-template-files
+  [&amp; {:keys [dir] :or {dir (:template-dir *config*)}}]
+  (let [exts (get-watch-file-extensions)]
+    (filter
+      (fn [file]
+        (some #(has-extension? % file) exts))
+      (find-files dir))))</pre></td></tr><tr><td class="docs"><p>Get all post files.
+  Sort file list with <code>:sort?</code> option(default setting is FALSE).</p>
+</td><td class="codes"><pre class="brush: clojure">(defn get-post-files
+  [&amp; {:keys [sort?] :or {sort? false}}]
+  (let [files (get-template-files :dir (:post-dir *config*))]
+    (if sort?
+      ((sort-type-&gt;sort-fn) files)
+      files)))</pre></td></tr><tr><td class="docs"><h2>Compiler Functions</h2>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>Get extensions list to watch.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn get-watch-file-extensions
+  []
+  (call-compiler-fn :-extension))</pre></td></tr><tr><td class="docs"><p>Update basic config with plugin's -config function.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn update-config
+  []
+  (let [config (make-basic-config-map)
+        res    (call-compiler-fn :-config config)]
+    (if res res config)))</pre></td></tr><tr><td class="docs"><p>Process compile result and return process result.</p>
+
+<ul>
+<li>string?
+<ul><li>Write file with default filename.</li></ul></li>
+<li>true? or false? or symbol?
+<ul><li>Do nothing.
+<ul><li><code>true</code>  : Success</li>
+<li><code>false</code> : Fail</li>
+<li><code>symbol</code>: Skip</li></ul></li></ul></li>
+<li>map?
+<ul><li>Write file with detailed setting.
+<ul><li><code>:status</code>  : True(success), false(fail) or something else(skip)</li>
+<li><code>:filename</code>: Filename to write</li>
+<li><code>:body</code>    : Compiled body text. if body is nil, only status is checked</li></ul></li></ul></li>
+</ul>
+</td><td class="codes"><pre class="brush: clojure">(defn process-compile-result
+  [result default-filename]
+  (cond
+    ; output with default filename
+    (string? result)
+    (if default-filename
+      (do (write-file (add-public-dir default-filename) result)
+          true)
+      false)
+    ; only check status
+    (or (true? result) (false? result))
+    result
+    ; output with detailed data
+    (map? result)
+    (let [{:keys [status filename body]
+           :or   {status false
+                  filename default-filename}} result]
+      (if (and filename body)
+        (do (write-file (add-public-dir filename) body)
+            status)
+        status))
+    ; error
+    :else false))</pre></td></tr><tr><td class="docs"><p>Common function to compile java.io.File with config.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn compile*
+  [config file]
+  (try
+    (let [default-filename (make-output-filename file)
+          compile-result   (call-compiler-fn :-compile config file)
+          process-result   (process-compile-result
+                             compile-result default-filename)]
+      [process-result compile-result])
+    (catch Exception e
+      (print-pretty-stack-trace
+        e :filter #(str-contains? (:str %) &quot;misaki&quot;))
+      [false {:stop-compile? true}])))</pre></td></tr><tr><td class="docs"><p>Call plugin's -compile function for all template files.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn call-all-compile
+  []
+  (let [config (assoc (update-config) :-compiling :all)
+        files  (get-template-files)]
+    (loop [[file &amp; rest-files] files, success? true]
+      (if file
+        (let [[process-result compile-result] (compile* config file)
+              result (and success? process-result)]
+          (if (stop-compile? compile-result)
+            result
+            (recur rest-files result)))
+        success?))))</pre></td></tr><tr><td class="docs"><p>Call plugin's -compile function.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn call-compile
+  [file]
+  (let [config (assoc (update-config) :-compiling :single)
+        [process-result compile-result] (compile* config file)]
+    (cond
+      ; all compile
+      (all-compile? compile-result)
+        (do (println (green &quot;   Switch to all compiling&quot;))
+            (call-all-compile))
+      ; compile with post
+      (post-file? file)
+        (every? #(true? (first %))
+                (for [file (map template-name-&gt;file (:compile-with-post *config*))]
+                  (compile* config file)))
+      :else process-result)))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#misaki.server" name="misaki.server"><h1 class="project-name">misaki.server</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>Development server</p>
+
+<p>  Listen <code>*port*</code> to publish developing site,
+  and watch template updates.</p>
+</td><td class="codes"><pre class="brush: clojure">(ns misaki.server
   (:use
-    misaki.util.string
-    [text-decoration.core :only [red bold underline assoc-color]]
-    [clostache.parser     :only [render]]))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(declare throwable-&gt;map)</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn- get-causes [#^Throwable ex]
-  (map throwable-&gt;map
-       (take-while (comp not nil?) (iterate #(.getCause %) ex))))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn- stack-trace-&gt;map [#^StackTraceElement st]
-  {:class    (.getClassName st)
-   :filename (.getFileName st)
-   :line     (.getLineNumber st)
-   :method   (.getMethodName st)
-   :native?  (.isNativeMethod st)
-   :str      (.toString st)})</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn- get-stack-trace [#^Throwable ex]
-  (let [traces (seq (.getStackTrace ex))]
-    (map stack-trace-&gt;map traces)))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn throwable-&gt;map [ex]
-  {:message           (.getMessage ex)
-   :stack-trace       (get-stack-trace ex)
-   :causes            (get-causes ex)
-   :str               (.toString ex)
-   :localized-message (.getLocalizedMessage ex)})</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn- print-cause [cause &amp; {:keys [caused?] :or {caused? false}}]
-  (let [label  (str (if caused? &quot;Caused by &quot; ) (:str cause))
-        traces (filter #(str-contains? (:str %) &quot;misaki&quot;) (:stack-trace cause))]
-    (flush)
-    (println )
-    (println (underline label))
-    (doseq [st traces]
-      (let [st (assoc-color st :method bold :filename red :line (comp red bold))]
-        (println
-          (render &quot;   at {{class}} / {{method}} ({{filename}}:{{line}})&quot; st))))))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn print-pretty-stack-trace
-  [#^Exception ex]
-  (let [[f &amp; r] (:causes (throwable-&gt;map ex))]
-    (print-cause f)
-    (doseq [x r] (print-cause x :caused? true))))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#misaki.util.file" name="misaki.util.file"><h1 class="project-name">misaki.util.file</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>File control utility</p>
+    [misaki core config]
+    [misaki.util.file     :only [find-clj-files normalize-path has-extension? file?]]
+    [misaki.util.string   :only [msec-&gt;string]]
+    [text-decoration.core :only [cyan red bold]]
+    watchtower.core
+    [compojure.core       :only [routes]]
+    [compojure.route      :only [files]]
+    [ring.adapter.jetty   :only [run-jetty]]))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defmacro elapsing
+  [&amp; body]
+  `(let [start-time# (System/currentTimeMillis)
+         ~'get-elapsed-time (fn [] (- (System/currentTimeMillis) start-time#))]
+     ~@body))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn get-result-text
+  [result &amp; optional-string]
+  (case result
+    true  (cyan (apply str &quot;DONE&quot; optional-string))
+    false (red (apply str &quot;FAIL&quot; optional-string))
+    (cyan &quot;SKIP&quot;)))</pre></td></tr><tr><td class="docs"><p>Print colored compile result.</p>
+</td><td class="codes"><pre class="brush: clojure">(defmacro print-compile-result
+  [#^String message, compile-sexp]
+  `(do
+     (println (str &quot; * Compiling &quot; (bold ~message)))
+     (flush)
+     (elapsing
+       (let [result#  ~compile-sexp
+             elapsed# (msec-&gt;string (~'get-elapsed-time))]
+         (println &quot;  &quot; (get-result-text result# &quot; in &quot; elapsed#))
+         result#))))</pre></td></tr><tr><td class="docs"><h2>Dev Compiler</h2>
+</td><td class="codes"></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn do-all-compile
+  []
+  (print-compile-result &quot;all templates&quot; (call-all-compile))
+  (println &quot; * Finish Compiling&quot;))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn do-compile
+  [#^java.io.File file]
+  (if (config-file? file)
+    (print-compile-result &quot;all templates&quot; (call-all-compile))
+    (print-compile-result (.getName file) (call-compile file)))
+  (println &quot; * Finish Compiling&quot;))</pre></td></tr><tr><td class="docs"><h2>Template Watcher</h2>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>Start watchtower watcher to compile changed templates</p>
+</td><td class="codes"><pre class="brush: clojure">(defn start-watcher
+  [template-dir]
+  (watcher
+    [template-dir
+     (str *base-dir* *config-file*)]
+    (rate 50)
+    (change-first? false) ; do not compile each templates at first
+    (file-filter ignore-dotfiles)
+    (file-filter (apply extensions (get-watch-file-extensions)))
+    (on-change #(doseq [file %]
+                  ; use `wrap-config` to apply config file updates
+                  (with-config (do-compile file))))))</pre></td></tr><tr><td class="docs"><h2>main</h2>
+</td><td class="codes"></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn -main [&amp; [dir :as args]]
+  (binding [*base-dir* (normalize-path dir)]
+    (with-config
+      ; compile all templates at first
+      (do-all-compile)
+      ; compile all only if '--compile' option is specified
+      (when-not (contains? (set args) &quot;--compile&quot;)
+        (start-watcher (:template-dir *config*))
+        (println &quot; * starting server: &quot;
+                 (cyan (str &quot;http://localhost:&quot;
+                            (:port *config*)
+                            (:url-base *config*))))
+        (run-jetty
+          (routes (files (:url-base *config*)
+                         {:root (:public-dir *config*)}))
+          {:port (:port *config*)})))))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#misaki.tester" name="misaki.tester"><h1 class="project-name">misaki.tester</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>Compiler Testing Utilities</p>
+</td><td class="codes"><pre class="brush: clojure">(ns misaki.tester
+  (:use
+    [misaki.core      :only [update-config call-compile]]
+    [misaki.config    :only [*base-dir* *config* make-basic-config-map with-config]]
+    [misaki.util.file :only [normalize-path]]
+    [clojure.test     :only [deftest]])
+  (:require
+    [clojure.string :as str]))</pre></td></tr><tr><td class="docs"><p>default base-dir for tester is "test/"</p>
+</td><td class="codes"><pre class="brush: clojure">(def _test-base-dir_ (atom &quot;test/&quot;))</pre></td></tr><tr><td class="docs"><p>Set base directory for testing.
+  Default base directory is "test/".</p>
+</td><td class="codes"><pre class="brush: clojure">(defn set-base-dir!
+  [base-dir]
+  (reset! _test-base-dir_ (normalize-path base-dir)))</pre></td></tr><tr><td class="docs"><p>Bind test base directory to <code>*base-dir*</code>.</p>
+</td><td class="codes"><pre class="brush: clojure">(defmacro with-test-base-dir
+  [&amp; body]
+  `(binding [*base-dir* @_test-base-dir_]
+     ~@body))</pre></td></tr><tr><td class="docs"><p>Get basic config map. Basically you should use <code>get-config</code>.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn get-base-config
+  []
+  (with-test-base-dir
+    (make-basic-config-map)))</pre></td></tr><tr><td class="docs"><p>Get compiler config map.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn get-config
+  []
+  (with-test-base-dir
+    (update-config)))</pre></td></tr><tr><td class="docs"><p>Run test compile.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn test-compile
+  [file]
+  (with-test-base-dir
+    (call-compile file)))</pre></td></tr><tr><td class="docs"><p>Define test macro for using test base directory and config.</p>
+</td><td class="codes"><pre class="brush: clojure">(defmacro deftest*
+  [name &amp; body]
+  `(deftest ~name
+     (with-test-base-dir
+       (with-config
+         ~@body))))</pre></td></tr><tr><td class="docs"><p>Binding config value.</p>
+
+<pre><code>  (bind-config [:post-dir "foo/bar"]
+    (println (:post-dir *config*)))
+</code></pre>
+</td><td class="codes"><pre class="brush: clojure">(defmacro bind-config
+  [bind-vec &amp; body]
+  `(binding [*config* (assoc *config* ~@bind-vec)]
+     ~@body))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#misaki.util.date" name="misaki.util.date"><h1 class="project-name">misaki.util.date</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(ns misaki.util.date
+  (:require
+    [clj-time.core   :as t]
+    [clj-time.format :as fmt]
+    [clj-time.local  :as l]
+    [clojure.string  :as str]))</pre></td></tr><tr><td class="docs"><h2>Converter for org.joda.time.DateTime</h2>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>Convert org.joda.time.DateTime to XML Schema.</p>
+
+<pre><code>  (date-&gt;xml-scheme (clj-time.core/now))
+  ;=&gt; "2012-01-01T01:01:01"
+</code></pre>
+</td><td class="codes"><pre class="brush: clojure">(defn date-&gt;xml-schema
+  [date]
+  (if date
+    (fmt/unparse
+      (fmt/formatter &quot;yyyy-MM-dd'T'HH:mm:ss&quot;)
+      date)))</pre></td></tr><tr><td class="docs"><p>Convert org.joda.time.DateTime to String</p>
+
+<pre><code>  (date-&gt;string (clj-time.core/now))
+  ;=&gt; "01 Jan 2012"
+</code></pre>
+</td><td class="codes"><pre class="brush: clojure">(defn date-&gt;string
+  [date]
+  (if date
+    (str/join
+      &quot; &quot;
+      [(.toString date &quot;dd&quot;)
+       ; Joda: &quot;MMM&quot; is not worked in my environment
+       (nth '(_ Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec)
+            (t/month date))
+       (.toString date &quot;yyyy&quot;)])))</pre></td></tr><tr><td class="docs"><p>Get current date</p>
+</td><td class="codes"><pre class="brush: clojure">(defn now
+  []
+  (l/local-now))</pre></td></tr><tr><td class="docs"><p>Get year from org.joda.time.DateTime</p>
+</td><td class="codes"><pre class="brush: clojure">(defn year
+  [date]
+  (if date (t/year date)))</pre></td></tr><tr><td class="docs"><p>Get month from org.joda.time.DateTime</p>
+</td><td class="codes"><pre class="brush: clojure">(defn month
+  [date]
+  (if date (format &quot;%02d&quot; (t/month date))))</pre></td></tr><tr><td class="docs"><p>Get day from org.joda.time.DateTime</p>
+</td><td class="codes"><pre class="brush: clojure">(defn day
+  [date]
+  (if date (format &quot;%02d&quot; (t/day date))))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#misaki.util.file" name="misaki.util.file"><h1 class="project-name">misaki.util.file</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>File control utility</p>
 </td><td class="codes"><pre class="brush: clojure">(ns misaki.util.file
   (:use
     [clj-time.coerce :only [from-long]])
@@ -4103,30 +4428,45 @@ ewline and return if you deref instance.</p>
   If path does not contain '/' at end of string, add '/'.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn normalize-path
   [path]
-  (if path (if (.endsWith path &quot;/&quot;) path (str path &quot;/&quot;))))</pre></td></tr><tr><td class="docs"><p>Find files in <code>dir</code> recursively.</p>
+  (if path (if (.endsWith path &quot;/&quot;) path (str path &quot;/&quot;))))</pre></td></tr><tr><td class="docs"><p>Combine paths.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn path
+  [&amp; paths]
+  (let [dirs (drop-last paths)
+        file (last paths)
+        file (if (and (string? file) (.startsWith file &quot;/&quot;))
+               (apply str (drop 1 file)) file)]
+    (str (str/join &quot;&quot; (map normalize-path dirs)) file)))</pre></td></tr><tr><td class="docs"><p>Find files in <code>dir</code> recursively.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn find-files
   [dir]
-  (file-seq (io/file dir)))</pre></td></tr><tr><td class="docs"><p>Check whether file has specified extension or not.</p>
+  (if dir
+    (file-seq (io/file dir))
+    []))</pre></td></tr><tr><td class="docs"><p>Check whether file has specified extension or not.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn has-extension?
   [ext file]
-  (.endsWith (.getName file) ext))</pre></td></tr><tr><td class="docs"><p>Filter file list with <code>has-extension?</code>.</p>
+  (let [ext (if (keyword? ext) (name ext) ext)
+        ext (if (.startsWith ext &quot;.&quot;)
+              ext (str &quot;.&quot; ext))]
+    (.endsWith (.getName file) ext)))</pre></td></tr><tr><td class="docs"><p>Filter file list with <code>has-extension?</code>.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn extension-filter
   [ext file-list]
   (filter (partial has-extension? ext) file-list))</pre></td></tr><tr><td class="docs"><p>Find *.clj files in <code>dir</code> recursively.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn find-clj-files
   [dir]
-  (extension-filter &quot;.clj&quot; (find-files dir)))</pre></td></tr><tr><td class="docs"><p>Remove file extension.</p>
+  (extension-filter :clj (find-files dir)))</pre></td></tr><tr><td class="docs"><p>Remove file extension.</p>
 
 <pre><code>  (remove-extension "foo.bar")
   ;=&gt; "foo"
   (remove-extension "foo.bar.baz")
   ;=&gt; "foo.bar"
 </code></pre>
-</td><td class="codes"><pre class="brush: clojure">(defn remove-extension
-  [x]
-  (if (= java.io.File (class x))
-    (remove-extension (.getName x))
-    (str/replace-first x #&quot;\.[^.]+$&quot; &quot;&quot;)))</pre></td></tr><tr><td class="docs"><p>Get parent path name(String).
+</td><td class="codes"><pre class="brush: clojure">(defmulti remove-extension
+  class)
+(defmethod remove-extension File
+  [file]
+  (remove-extension (.getName file)))
+(defmethod remove-extension String
+  [s]
+  (str/replace-first s #&quot;\.[^.]+$&quot; &quot;&quot;))</pre></td></tr><tr><td class="docs"><p>Get parent path name(String).
   If specified path has no parent, returns the path itself.</p>
 
 <pre><code>  (get-parent-path "/foo/bar")
@@ -4166,10 +4506,12 @@ ewline and return if you deref instance.</p>
   (:use [clj-time.core :only [after? before?]]))</pre></td></tr><tr><td class="docs"><p>Sort post list with org.joda.time.DateTime</p>
 </td><td class="codes"><pre class="brush: clojure">(defn sort-by-date
   ([posts]
-   (sort-by-date :desc posts))
-  ([order-key posts]
+   (sort-by-date :desc :date posts))
+  ([f posts]
+   (sort-by-date :desc f posts))
+  ([order-key f posts]
    (let [f? (if (= :inc order-key) before? after?)]
-     (sort #(f? (:date %) (:date %2)) posts))))</pre></td></tr><tr><td class="docs"><p>Sort list alphabetically.</p>
+     (sort #(f? (f %) (f %2)) posts))))</pre></td></tr><tr><td class="docs"><p>Sort list alphabetically.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn sort-alphabetically
   ([ls]   (sort-alphabetically :inc identity ls))
   ([f ls] (sort-alphabetically :inc f ls))
@@ -4192,12 +4534,13 @@ ewline and return if you deref instance.</p>
   (-&gt; s (str/replace #&quot;&amp;&quot;  &quot;&amp;amp;&quot;)
         (str/replace #&quot;\&quot;&quot; &quot;&amp;quot;&quot;)
         (str/replace #&quot;&lt;&quot;  &quot;&amp;lt;&quot;)
-        (str/replace #&quot;&gt;&quot;  &quot;&amp;gt;&quot;)))</pre></td></tr><tr><td class="docs">
+        (str/replace #&quot;&gt;&quot;  &quot;&amp;gt;&quot;)))</pre></td></tr><tr><td class="docs"><p>Convert msec to string.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn msec-&gt;string
   [ms]
   (let [sec  (int (/ ms 1000))
         msec (format &quot;%03d&quot; (int (mod ms 1000)))]
-    (str sec &quot;.&quot; msec &quot; sec&quot;)))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn str-contains? [s target]
+    (str sec &quot;.&quot; msec &quot; sec&quot;)))</pre></td></tr><tr><td class="docs"><p>Check whether specified string contains sub string or not.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn str-contains?
+  [s target]
   (not= -1 (.indexOf s target)))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr></table><div class="footer">Generated by <a href="https://github.com/fogus/marginalia">Marginalia</a>.&nbsp;&nbsp;Syntax highlighting provided by Alex Gorbatchev's <a href="http://alexgorbatchev.com/SyntaxHighlighter/">SyntaxHighlighter</a></div><script type="text/javascript">SyntaxHighlighter.defaults['gutter'] = false;
        SyntaxHighlighter.all()</script></body></html>

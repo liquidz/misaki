@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta content="width=device-width, initiali-scale=1.0, user-scalable=yes" name="viewport"><title>misaki document - Develop Compiler</title><link href="/favicon.ico" rel="shortcut icon"><link href="/atom.xml" rel="alternate" title="Develop Compiler" type="application/atom-xml"><link href="/misaki/css/prettify.css" rel="stylesheet" type="text/css"><link href="http://fonts.googleapis.com/css?family=Josefin+Sans" rel="stylesheet" type="text/css"><link href="/misaki/css/main.css" rel="stylesheet" type="text/css"><link href="/misaki/css/extra.css" rel="stylesheet" type="text/css"><link href="/misaki/css/smartphone.css" media="only screen and (max-device-width:480px)" rel="stylesheet" type="text/css"></head><body><a class="github_ribbon" href="https://github.com/liquidz/misaki"><img alt="Fork me on GitHub" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" style="position: absolute; top: 0; right: 0; border: 0;"></a><div class="container"><article><div class="page-header"><h1><a href="/misaki/">Develop Compiler</a></h1><div class="tag"><ul></ul></div><p class="date"></p></div><div class="post"><h2><span>O</span>verview</h2><p class="paragraph">misaki allows you to develop your own compiler.
+   There are 3 function to construct misaki's compiler.</p><dl><dt><code class="prettyprint">-extension</code></dt><dd>REQUIRED</dd><dt><code class="prettyprint">-config</code></dt><dd>OPTIONAL</dd><dt><code class="prettyprint">-compile</code></dt><dd>REQUIRED</dd></dl><h2><span>S</span>tart to develop</h2><p class="paragraph">At first, normally make new clojure template.</p><pre class="prettyprint">$ lein new misaki-new-compiler</pre><p class="paragraph">Add <a href="https://clojars.org/misaki">misaki module</a> dependency.</p><pre class="prettyprint lang-clj">:dependencies [[org.clojure/clojure &quot;1.4.0&quot;]
+               [misaki &quot;0.2.0-beta&quot;]] ; add</pre><p class="paragraph">Namespace of core.clj must be <strong>misaki.compiler.YOUR-COMPIER-NAME.core</strong></p><pre class="prettyprint">$ mkdir -p src/misaki/compiler/YOUR_COMPILER_NAME
+$ mv src/misaki_new_compiler/core.clj src/misaki/compiler/YOUR_COMPILER_NAME/core.clj</pre><p class="paragraph">Then, edit core.clj as follows!</p><h2><span>S</span>implest compiler sample</h2><p class="paragraph">Following compiler append <code class="prettyprint">(:text config)</code> to head of template file.</p><pre class="prettyprint lang-clj">(ns misaki.compiler.hello.core
+  &quot;Namespace must be misaki.compiler.***.core
+  '***' is a compiler name.&quot;)
+
+(defn -extension
+  &quot;Specify file extensions to watch in misaki.&quot;
+  []
+  (list :txt))
+
+(defn -config
+  &quot;If your compiler handles custom configuration,
+  you can set original data in this function.&quot;
+  [config]
+  (assoc config :text &quot;hello, &quot;))
+
+(defn -compiler
+  &quot;Called when watched files are updated.
+  If you returns...
+     * string : Write string to file named as same as template file.
+     * boolean: Do nothing(true = success, false = fail).
+     * symbol : Do nothing(skip)
+     * map    : Write file with detailed setting.
+                `:status`        -&gt; Compile result(true(success), false(fail) or something else(skip))
+                `:filename`      -&gt; Filename to write
+                `:body`          -&gt; Compiled body text. if body is nil, only status is checked
+                `:stop-compile?` -&gt; Flag(true/false) to stop all compilation
+                `:all-compile?`  -&gt; Flag(true/false) to force compiling all templates&quot;
+  [config file]
+  (str (:text config) (slurp file)))</pre><h3><span>-</span>extension</h3><p class="paragraph">Return file extension list to watch template file.
+   This function is <strong>REQUIRED</strong>.</p><h3><span>-</span>config</h3><p class="paragraph">Basic config data is passed, and return customized config data.
+   This function is <strong>OPTIONAL</strong>.</p><h3><span>-</span>compile</h3><p class="paragraph">Updated file(java.io.File) is passed, and return compile result.
+   This function is <strong>REQUIRED</strong>.</p><p class="paragraph">Return value specification is following.</p><dl><dt>string</dt><dd><p class="paragraph">Write string to file which is named as same as template file.</p><pre class="prettyprint lang-clj">(defn -compile [file]
+  (str &quot;hello &quot; (slurp file)))
+; foo.txt whose body is &quot;world&quot; is passed,
+; result file is *public-dir*/foo.txt whose body is &quot;hello world&quot;</pre></dd><dt>boolean</dt><dd><p class="paragraph">misaki.core does not write file, only check compile result.</p><pre class="prettyprint lang-clj">(defn -compile [file]
+  (compile-in-compiler file)
+  true)
+; true  =&gt; compile success
+; false =&gt; compile failed</pre></dd><dt>symbol</dt><dd><p class="paragraph">misaki.core skip the file.</p><pre class="prettyprint lang-clj">(defn -compile [file]
+  (if-not (valid-file? file) 'skip))
+; Skip to compile file</pre></dd><dt>map</dt><dd><p class="paragraph">Write file with detailed setting.</p><pre class="prettyprint lang-clj">(defn -compile [file]
+  {; compile result
+   :status        true
+   ; output filename
+   :filename      (str (.getName file) &quot;.html&quot;)
+   ; output body
+   :body          (str &quot;hello &quot; (slurp file))
+   ; flag to stop compilation
+   :stop-compile? false
+   ; flat to force compiling all templates
+   :all-compile?  false})</pre></dd></dl><h2><span>T</span>est your compiler</h2><p class="paragraph">misaki provides utilities to test your own compiler.</p><pre class="prettyprint lang-clj">(ns foo.test
+  (:use misaki.tester))
+
+; set base directory which include _config.clj
+; default testing base directory is &quot;test&quot;
+(set-base-dir! &quot;test&quot;)
+
+; get compiler's config which is customized by `-config`
+(get-config)
+
+; call `-compile` to test your compling
+(let [file (io/file &quot;testtemplate&quot;)]
+  (test-compile file))
+
+; define test wrapping config data as *config*
+;
+; This code is same as following:
+;   (deftest foo-test
+;     (binding [*base-dir* &quot;test&quot;
+;               *config* (get-config)]
+;       (is (= &quot;hello&quot;) (:template-dir *config*))))
+(deftest* foo-test
+  (is (= &quot;hello&quot;) (:template-dir *config*)))</pre><p class="paragraph">Check <a href="/misaki/api/uberdoc.html#misaki.tester">misaki.tester</a> to get detailed document.</p><h2><span>A</span>nother compiler sample</h2><p class="paragraph">You can use <a href="https://github.com/liquidz/misaki-clostache">misaki-clostache</a> and <a href="../api/uberdoc.html">misaki API</a> as reference of developing misaki compiler.</p><h2><span>S</span>ee also..</h2><ul><li><span><p class="paragraph"><a href="/misaki/toc/06-switch-compiler.html">Switch Compiler</a></p></span></li></ul><p class="back">&raquo; <a href="/misaki/">Back to Top</a></p></div></article><footer class="footer"><p><a href="http://twitter.com/uochan">@uochan</a>&nbsp; 2012</p><p><a href="https://github.com/liquidz/misaki"><img alt="misaki banner" src="/misaki/img/misaki_banner.png"></a></p></footer></div><script src="/misaki/js/prettify.js" type="text/javascript"></script><script src="/misaki/js/lang-clj.js" type="text/javascript"></script><script src="/misaki/js/main.js" type="text/javascript"></script></body></html>

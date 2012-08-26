@@ -9,9 +9,10 @@ blockquote { color: #888; font-style: italic; }
 blockquote p:before { content: '> '; }
 
 pre.block {
-    background: #fafafa;
+    background: #fbfbfb;
     margin: 10px; padding: 10px;
-    border-radius: 5px; border: 2px solid #ccc;
+    border-radius: 5px;
+    border: 1px solid #ccc;
 }
 
 /* =header */
@@ -46,18 +47,23 @@ h3 + p { text-indent: 1em; }
 h4 { color: #666; font-weight: bold; border-bottom: 1px dotted #eee; margin-top: 0.5em; }
 h4 + p { text-indent: 0.5em; }
 
-ul li { line-height: 130%; }
+ul li { line-height: 150%; }
+
+ul li:hover { list-style-type: circle; }
+ul li ul li:hover { list-style-type: disc; }
 
 /* page header style*/
 .page-header { margin-top: 2em; border-bottom: 1px solid #eaeaea; overflow: hidden; }
-.page-header h1 { font-size: 50px; color: #444; font-weight: normal; float: left; }
+.page-header h1 { font-size: 50px; font-weight: normal; float: left; }
+.page-header h1 a { text-decoration: none; color: #444; }
+.page-header h1 a:hover { opacity: 0.5; }
 .page-header p.date { float: right; margin: 20px 10px 0 30px; font-weight: bold; letter-spacing: 1px; color: #444; }
 
 /* code highlight */
 pre.prettyprint, code.prettyprint {
     border-radius: 5px;
     border: 1px solid #fde3e3;
-    background: #fdf3f3;
+    background: #fff5f5;
 }
 pre.prettyprint { margin: 10px; padding: 10px; }
 code.prettyprint { padding: 1px 2px; }

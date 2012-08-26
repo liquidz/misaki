@@ -1,12 +1,22 @@
 (ns misaki.test.config
-  (:use [misaki config]
-        misaki.test.common
+  (:use misaki.config
+        [misaki.util.file :only [normalize-path]]
+        [misaki.tester :only [set-base-dir! deftest* bind-config]]
         [clj-time.core :only [date-time year month day]]
         clojure.test)
   (:require [clojure.java.io :as io])
   (:import [java.io FileNotFoundException]))
 
-;;; read-config
+(defn dummy0 [] ())
+(defn dummy1 [a] ())
+(defn dummy2 [a b] ())
+(defn dummy3 ([a] ()) ([a b c] ()))
+(defn dummy4 [a & b] ())
+
+
+(set-base-dir! "test/")
+
+; read-config
 (deftest* read-config-test
   (testing "normal pattern"
     (let [config (read-config)]
@@ -15,6 +25,7 @@
         "template/" (:template-dir config)
         "_posts/"   (:post-dir config)
         "_layouts/" (:layout-dir config))))
+
   (testing "error pattern"
     (binding [*base-dir* "/foo/bar/"]
       (is (thrown? FileNotFoundException (read-config)))))
@@ -22,6 +33,7 @@
   (testing "specify default value"
     (binding [*base-dir* "/foo/bar/"]
       (is (= {} (read-config {}))))))
+
 
 ;;; get-date-from-file
 (deftest* get-date-from-file-test
@@ -45,43 +57,56 @@
       nil)))
 
 ;;; remove-date-from-name
-(deftest* remote-date-from-name-test
+(deftest* remove-date-from-name-test
   (is (= "dummy.clj" (remove-date-from-name "2000.11.22-dummy.clj"))))
 
 ;;; make-post-output-filename
 (deftest* make-post-output-filename-test
   ; test config: "{{year}}-{{month}}/{{filename}}"
   (testing "filename with date"
-    (let [file (io/file "2000.11.22-dummy.html.clj")]
+    (let [file (io/file "2000.11.22-dummy.html")]
       (is (= "2000-11/dummy.html" (make-post-output-filename file)))))
 
   (testing "filename without date"
     (are [x y] (= x (make-post-output-filename (io/file y)))
-      "-/foo.html"    "foo.html.clj"
-      "-/01.foo.html" "01.foo.html.clj"
-      "-/01.02.foo.html" "01.02.foo.html.clj")))
+      "-/foo.html"       "foo.html"
+      "-/01.foo.html"    "01.foo.html"
+      "-/01.02.foo.html" "01.02.foo.html")))
 
-;;; make-template-output-filename
-(deftest* make-template-output-filename-test
-  (let [tmpl-name "template.test.html.clj"
-        file (io/file (str *template-dir* tmpl-name))
-        name1 (make-template-output-filename file)
-        name2 (make-template-output-filename tmpl-name)]
-    (is (= name1 name2))))
+;;; make-output-filename
+(deftest* make-output-filename-test
+  (testing "normal template file"
+    (is (= "foo.html" (make-output-filename (io/file "foo.html")))))
+
+  (testing "post file"
+    (is (= "2000-11/foo.html"
+           (make-output-filename
+             (io/file "test/template/_posts/2000.11.22-foo.html"))))))
+
+;;; make-output-url
+(deftest* make-output-url-test
+  (let [file (io/file "foo.html")]
+    (testing "default url-base"
+      (is (= "/foo.html" (make-output-url file))))
+
+    (testing "custom url-base"
+      (bind-config [:url-base (normalize-path "/bar/baz")]
+        (is (= "/bar/baz/foo.html" (make-output-url file)))))))
 
 ;;; absolute-path
 (deftest* absolute-path-test
-  (are [x y] (= x (absolute-path y))
-    "/a.htm" "a.htm"
-    "/bar/a.htm" "bar/a.htm"
-    "/a.htm" "/a.htm"
-    "/bar/a.htm" "/bar/a.htm"
-    "http://localhost/a.htm" "http://localhost/a.htm"
-    "https://localhost/a.htm" "https://localhost/a.htm")
-
-  (binding [*url-base* "/foo/"]
+  (with-config
     (are [x y] (= x (absolute-path y))
-      "/foo/a.htm" "a.htm"
-      "/foo/a.htm" "/a.htm"
-      "/foo/bar/a.htm" "/bar/a.htm"
-      "/foo/bar/a.htm" "bar/a.htm")))
+      "/a.htm" "a.htm"
+      "/bar/a.htm" "bar/a.htm"
+      "/a.htm" "/a.htm"
+      "/bar/a.htm" "/bar/a.htm"
+      "http://localhost/a.htm" "http://localhost/a.htm"
+      "https://localhost/a.htm" "https://localhost/a.htm")
+
+    (bind-config [:url-base "/foo/"]
+      (are [x y] (= x (absolute-path y))
+        "/foo/a.htm" "a.htm"
+        "/foo/a.htm" "/a.htm"
+        "/foo/bar/a.htm" "/bar/a.htm"
+        "/foo/bar/a.htm" "bar/a.htm"))))

@@ -1,8 +1,6 @@
 (ns misaki.test.file
-  (:use [misaki core]
-        [misaki.util file]
+  (:use [misaki.util file]
         [clj-time.core :only [date-time]]
-        misaki.test.common
         clojure.test)
   (:require [clojure.java.io :as io]))
 
@@ -35,3 +33,28 @@
     "/foo/"     "/foo/bar"
     "/foo/bar/" "/foo/bar/"
     "/"         "/foo"))
+
+;; path
+(deftest path-test
+  (testing "combine 2 paths"
+    (are [x y z] (= x (path y z))
+      "a/b.txt"  "a/"  "b.txt"
+      "a/b.txt"  "a"   "/b.txt"
+      "a/b.txt"  "a"   "b.txt"
+      "/b.txt"   ""    "b.txt"
+      "b.txt"    nil   "b.txt"
+      "a/"       "a"   nil
+      "a/"       "a/"  nil
+      "/"        ""    nil
+      ""         nil   nil))
+
+  (testing "combine 3 paths"
+    (are [x y] (= x (apply path y))
+      "a/b/c.txt" ["a"   "b"   "c.txt"]
+      "a/b/c.txt" ["a/"  "b"   "c.txt"]
+      "a/b/c.txt" ["a"   "b/"  "c.txt"]
+      "a/b/c.txt" ["a/"  "b/"  "c.txt"]
+      "a/b/c.txt" ["a"   "b"   "/c.txt"]
+      "a/b/c.txt" ["a/"  "b"   "/c.txt"]
+      "a/b/c.txt" ["a"   "b/"  "/c.txt"]
+      "a/b/c.txt" ["a/"  "b/"  "/c.txt"])))

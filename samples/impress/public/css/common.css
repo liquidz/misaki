@@ -1,0 +1,28 @@
+/* =util */
+
+.large      { font-size: 70px; }
+.x-large    { font-size: 140px;}
+.xx-large   { font-size: 200px; }
+.largest    { font-size: 300px; }
+.line-space { line-height: 1.5em; }
+.strong     { font-weight: bold; }
+
+.left       { text-align: left; }
+.right      { text-align: right; }
+.center     { text-align: center; }
+
+.arrange    { position: absolute; }
+
+/* =common */
+.step {
+    width: 900px;
+    padding: 50px;
+    -webkit-transition: opacity 1s;
+    -moz-transition:    opacity 1s;
+    -ms-transition:     opacity 1s;
+    -o-transition:      opacity 1s;
+    transition:         opacity 1s;
+}
+.step:not(.active) { opacity: 0.3; }
+.fallback-message { display: none; }
+

@@ -13,7 +13,7 @@ misaki is a [Jekyll](https://github.com/mojombo/jekyll) inspired static site gen
 
 ## Demo
 
-[Demo page](http://liquidz.github.com/misaki/demo/)
+[Demo page](http://liquidz.github.com/misaki/demo/blog/)
 
 ## Example template
 
@@ -40,7 +40,7 @@ CLJ
 ```bash
 $ git clone git://github.com/liquidz/misaki.git
 $ cd misaki
-$ lein run sample
+$ lein run samples/blog
 ```
 
 > If you get "java.lang.AssertionError: Assert failed: Can't recur here",
@@ -51,7 +51,7 @@ Access [http://localhost:8080](http://localhost:8080) to check sample.
 ### Make your blog
 
 ```bash
-$ cp -pir sample your-blog
+$ cp -pir samples/blog your-blog
 $ lein run your-blog
 ```
 

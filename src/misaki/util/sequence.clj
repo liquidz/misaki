@@ -6,10 +6,12 @@
 (defn sort-by-date
   "Sort post list with org.joda.time.DateTime"
   ([posts]
-   (sort-by-date :desc posts))
-  ([order-key posts]
+   (sort-by-date :desc :date posts))
+  ([f posts]
+   (sort-by-date :desc f posts))
+  ([order-key f posts]
    (let [f? (if (= :inc order-key) before? after?)]
-     (sort #(f? (:date %) (:date %2)) posts))))
+     (sort #(f? (f %) (f %2)) posts))))
 
 ; =sort-alphabetically
 (defn sort-alphabetically

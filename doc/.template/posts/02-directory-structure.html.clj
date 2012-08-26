@@ -18,9 +18,11 @@ root/
   |   |
   |   +- index.html.clj
   |
-  +- css/
-  |
-  +- js/
+  +- public/
+  |   |
+  |   +- css/
+  |   |
+  |   +- js/
   |
   +- _config.clj"]
 
@@ -46,6 +48,9 @@ To edit templates, See [Edit Template](title:Edit Template).")
 #-TEXT
 index.html.clj => COMPILE => index.html
 TEXT
+
+(h3 "public/")
+(p "Public root directory. Static files are here.")
 
 (h3 "_config.clj")
 (p "Configuration file for misaki.")
@@ -110,6 +115,10 @@ TEXT
  ;; flag for detailed log
  ;;   default value: false
  :detailed-log false
+
+ ;; compiler setting
+ ;;   default value: "default"
+ :compiler "default"
  }
 CLJ
 

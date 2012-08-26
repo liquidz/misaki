@@ -14,10 +14,12 @@
 ;; passing the "site" variable for access to template options
 (header (:title site))
 
-[:h2 "Posts"]
-[:ul
- (for [p (:posts site)]
-   [:li (:title p)])]
+(h2 "Posts")
+(post-list)
+;; or you can write posts list manually
+;    [:ul
+;     (for [p (:posts site)]
+;       [:li (:title p)])]
 CLJ
 
 ; /Example
@@ -104,11 +106,17 @@ CLJ
 #-CODE
 (println "hello")
 CODE
+
+or
+
+##CODE
+(println "hello")
+CODE
 CLJ
 
 (p "`CODE` can be replaced by any string.")
 (p "If you define highlight setting, `CODE` string specifies a language.
-   To define highlight setting, see [Highlight Setting](aa).")
+   To define highlight setting, see [Highlight Setting](title: Highlight Setting).")
 
 ; /Code Highlight
 

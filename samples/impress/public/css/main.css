@@ -1,0 +1,29 @@
+body {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size:   50px;
+    color:       #333;
+}
+
+h1, h2, h3, h4, p, div { margin: 0; padding: 0; }
+h1, h2, h3, h4 { font-weight: normal; }
+h1 span { color: #d454bf; }
+h2 span { color: #58b271; }
+
+a {
+    color: #04c;
+    -webkit-transition: color 0.5s;
+    -moz-transition:    color 0.5s;
+    -ms-transition:     color 0.5s;
+    -o-transition:      color 0.5s;
+    transition:         color 0.5s;
+}
+a:hover { color: #6af; }
+
+
+div.code_sample pre {
+    width: auto;
+    border: 0px;
+    padding: 20px;
+    font-size: 30px;
+}
+
