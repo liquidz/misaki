@@ -149,7 +149,15 @@
 
     (testing "inline code"
       (are [x y] (= x (html y))
-        "<p class=\"paragraph\">he<code class=\"prettyprint\">ll</code>o</p>" (p "he`ll`o")))
+        "<p class=\"paragraph\">he<code class=\"prettyprint\">ll</code>o</p>" (p "he`ll`o")
+        "<p class=\"paragraph\"><code class=\"prettyprint\">*hello*</code></p>"(p "`*hello*`")
+        "<p class=\"paragraph\">he<code class=\"prettyprint\">*llo*</code></p>"(p "he`*llo*`")
+        "<p class=\"paragraph\"><em><code class=\"prettyprint\">hello</code></em></p>"(p "*`hello`*")
+        "<p class=\"paragraph\"><em>he<code class=\"prettyprint\">llo</code></em></p>"(p "*he`llo`*")
+        "<p class=\"paragraph\"><em><code class=\"prettyprint\">*hello*</code></em></p>"(p "*`*hello*`*")
+        "<p class=\"paragraph\"><em>he<code class=\"prettyprint\">*llo*</code></em></p>"(p "*he`*llo*`*")
+        "<p class=\"paragraph\">aa <code class=\"prettyprint\">hello</code> <strong><code class=\"prettyprint\">*world*</code></strong> bb</p>"
+          (p "aa `hello` **`*world*`** bb")))
 
     (testing "strong paragraph"
       (are [x y] (= x (html y))

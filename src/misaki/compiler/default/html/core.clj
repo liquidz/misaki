@@ -28,12 +28,39 @@
   [k]
   (if (keyword? k) (apply str (rest (str k))) k))
 
+
+(def ^:private markdown-map
+  {"*" (str (gensym "asterisk"))
+   "[" (str (gensym "bracket_start"))
+   "]" (str (gensym "bracket_end"))
+   "(" (str (gensym "parenthesis_start"))
+   ")" (str (gensym "parenthesis_end"))})
+
+(defn- escape-markdown [s]
+  (if (string? s)
+    (reduce
+      (fn [res [from to]]
+        (str/replace res (re-pattern (str "\\" from)) to))
+      s markdown-map)
+    s))
+
+(defn- unescape-markdown [s]
+  (if (string? s)
+    (reduce
+      (fn [res [to from]]
+        (str/replace res (re-pattern from) to))
+      s markdown-map)
+    s))
+
 (defmacro defparser
   "Macro to define string parser."
   [name regexp result-fn]
   `(defn- ~name [arg#]
      (if (string? arg#)
-       (str/replace arg# ~regexp ~result-fn)
+       (if (.startsWith arg# "<code class=\"prettyprint\"")
+         arg#
+         (str/replace arg# ~regexp ~result-fn)
+         )
        arg#)))
 
 (defn- link-from-title? [s]
@@ -73,14 +100,16 @@
 ;;     `hello`
 ;;     ;=> <code class="prettyprint">hello</code>
 (defparser parse-inline-code
-  #"`([^`]+)`" #(hiccup/html [:code {:class "prettyprint"} (second %)]))
+  #"`([^`]+)`"
+  #(hiccup/html [:code {:class "prettyprint"}
+                 (escape-markdown (second %))]))
 
 (defparser parse-new-line
   #"(\r?\n){2}" (fn [_] (hiccup/html [:br])))
 
 ;; Function to apply string parsers
 (def ^:private parse-string
-  (comp parse-new-line parse-link parse-emphasized parse-strong parse-inline-code))
+  (comp unescape-markdown parse-new-line parse-link parse-emphasized parse-strong parse-inline-code))
 
 ;; ## HTML Tags
 
