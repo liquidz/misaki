@@ -3029,7 +3029,7 @@ net.brehaut.ClojureTools = (function (SH) {
   };
 })(SyntaxHighlighter);
 </script><title>misaki -- Marginalia</title></head><body><table><tr><td class="docs"><div class="header"><h1 class="project-name">misaki</h1><h2 class="project-version">0.2.0-beta</h2><br /><p>Jekyll inspired static site generator in Clojure</p>
-</div><div class="dependencies"><h3>dependencies</h3><table><tr><td class="dep-name">org.clojure/clojure</td><td class="dotted"><hr /></td><td class="dep-version">1.4.0</td></tr><tr><td class="dep-name">org.clojure/core.incubator</td><td class="dotted"><hr /></td><td class="dep-version">0.1.0</td></tr><tr><td class="dep-name">org.clojure/clojurescript</td><td class="dotted"><hr /></td><td class="dep-version">0.0-1443</td></tr><tr><td class="dep-name">hiccup</td><td class="dotted"><hr /></td><td class="dep-version">1.0.0</td></tr><tr><td class="dep-name">compojure</td><td class="dotted"><hr /></td><td class="dep-version">1.1.1</td></tr><tr><td class="dep-name">ring/ring-jetty-adapter</td><td class="dotted"><hr /></td><td class="dep-version">1.1.2</td></tr><tr><td class="dep-name">clj-time</td><td class="dotted"><hr /></td><td class="dep-version">0.4.3</td></tr><tr><td class="dep-name">clj-text-decoration</td><td class="dotted"><hr /></td><td class="dep-version">0.0.1</td></tr><tr><td class="dep-name">clj-pretty-error</td><td class="dotted"><hr /></td><td class="dep-version">0.0.5</td></tr><tr><td class="dep-name">uochan/watchtower</td><td class="dotted"><hr /></td><td class="dep-version">0.1.2</td></tr><tr><td class="dep-name">de.ubercode.clostache/clostache</td><td class="dotted"><hr /></td><td class="dep-version">1.3.0</td></tr><tr><td class="dep-name">misaki-clostache</td><td class="dotted"><hr /></td><td class="dep-version">0.0.1-alpha</td></tr></table></div><div class="dependencies"><h3>dev dependencies</h3><table><tr><td class="dep-name">lein-multi</td><td class="dotted"><hr /></td><td class="dep-version">1.1.0</td></tr><tr><td class="dep-name">lein-marginalia</td><td class="dotted"><hr /></td><td class="dep-version">0.7.1</td></tr><tr><td class="dep-name">debug-reader</td><td class="dotted"><hr /></td><td class="dep-version">0.0.1</td></tr><tr><td class="dep-name">lein-autotest-notify</td><td class="dotted"><hr /></td><td class="dep-version">0.0.4</td></tr></table></div></td><td class="codes" style="text-align: center; vertical-align: middle;color: #666;padding-right:20px"><br /><br /><br />(this space intentionally left almost blank)</td></tr><tr><td class="docs"><div class="toc"><a name="toc"><h3>namespaces</h3></a><ul><li><a href="#misaki.compiler.default.config">misaki.compiler.default.config</a></li><li><a href="#misaki.compiler.default.core">misaki.compiler.default.core</a></li><li><a href="#misaki.compiler.default.evaluator">misaki.compiler.default.evaluator</a></li><li><a href="#misaki.compiler.default.html.conv">misaki.compiler.default.html.conv</a></li><li><a href="#misaki.compiler.default.html.core">misaki.compiler.default.html.core</a></li><li><a href="#misaki.compiler.default.html.util">misaki.compiler.default.html.util</a></li><li><a href="#misaki.compiler.default.reader">misaki.compiler.default.reader</a></li><li><a href="#misaki.compiler.default.template">misaki.compiler.default.template</a></li><li><a href="#misaki.compiler.default.util.code">misaki.compiler.default.util.code</a></li><li><a href="#misaki.compiler.demo.core">misaki.compiler.demo.core</a></li><li><a href="#misaki.config">misaki.config</a></li><li><a href="#misaki.core">misaki.core</a></li><li><a href="#misaki.server">misaki.server</a></li><li><a href="#misaki.tester">misaki.tester</a></li><li><a href="#misaki.util.date">misaki.util.date</a></li><li><a href="#misaki.util.file">misaki.util.file</a></li><li><a href="#misaki.util.sequence">misaki.util.sequence</a></li><li><a href="#misaki.util.string">misaki.util.string</a></li></ul></div></td><td class="codes">&nbsp;</td></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#misaki.compiler.default.config" name="misaki.compiler.default.config"><h1 class="project-name">misaki.compiler.default.config</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>Default Compiler's Configuration Manager</p>
+</div><div class="dependencies"><h3>dependencies</h3><table><tr><td class="dep-name">org.clojure/clojure</td><td class="dotted"><hr /></td><td class="dep-version">1.4.0</td></tr><tr><td class="dep-name">org.clojure/core.incubator</td><td class="dotted"><hr /></td><td class="dep-version">0.1.0</td></tr><tr><td class="dep-name">org.clojure/clojurescript</td><td class="dotted"><hr /></td><td class="dep-version">0.0-1443</td></tr><tr><td class="dep-name">hiccup</td><td class="dotted"><hr /></td><td class="dep-version">1.0.0</td></tr><tr><td class="dep-name">compojure</td><td class="dotted"><hr /></td><td class="dep-version">1.1.1</td></tr><tr><td class="dep-name">ring/ring-jetty-adapter</td><td class="dotted"><hr /></td><td class="dep-version">1.1.2</td></tr><tr><td class="dep-name">clj-time</td><td class="dotted"><hr /></td><td class="dep-version">0.4.3</td></tr><tr><td class="dep-name">clj-text-decoration</td><td class="dotted"><hr /></td><td class="dep-version">0.0.1</td></tr><tr><td class="dep-name">clj-pretty-error</td><td class="dotted"><hr /></td><td class="dep-version">0.0.5</td></tr><tr><td class="dep-name">uochan/watchtower</td><td class="dotted"><hr /></td><td class="dep-version">0.1.2</td></tr><tr><td class="dep-name">de.ubercode.clostache/clostache</td><td class="dotted"><hr /></td><td class="dep-version">1.3.0</td></tr></table></div><div class="dependencies"><h3>dev dependencies</h3><table><tr><td class="dep-name">lein-multi</td><td class="dotted"><hr /></td><td class="dep-version">1.1.0</td></tr><tr><td class="dep-name">lein-marginalia</td><td class="dotted"><hr /></td><td class="dep-version">0.7.1</td></tr><tr><td class="dep-name">debug-reader</td><td class="dotted"><hr /></td><td class="dep-version">0.0.1</td></tr><tr><td class="dep-name">lein-autotest-notify</td><td class="dotted"><hr /></td><td class="dep-version">0.0.4</td></tr></table></div></td><td class="codes" style="text-align: center; vertical-align: middle;color: #666;padding-right:20px"><br /><br /><br />(this space intentionally left almost blank)</td></tr><tr><td class="docs"><div class="toc"><a name="toc"><h3>namespaces</h3></a><ul><li><a href="#misaki.compiler.default.config">misaki.compiler.default.config</a></li><li><a href="#misaki.compiler.default.core">misaki.compiler.default.core</a></li><li><a href="#misaki.compiler.default.evaluator">misaki.compiler.default.evaluator</a></li><li><a href="#misaki.compiler.default.html.conv">misaki.compiler.default.html.conv</a></li><li><a href="#misaki.compiler.default.html.core">misaki.compiler.default.html.core</a></li><li><a href="#misaki.compiler.default.html.util">misaki.compiler.default.html.util</a></li><li><a href="#misaki.compiler.default.reader">misaki.compiler.default.reader</a></li><li><a href="#misaki.compiler.default.template">misaki.compiler.default.template</a></li><li><a href="#misaki.compiler.default.util.code">misaki.compiler.default.util.code</a></li><li><a href="#misaki.compiler.demo.core">misaki.compiler.demo.core</a></li><li><a href="#misaki.config">misaki.config</a></li><li><a href="#misaki.core">misaki.core</a></li><li><a href="#misaki.server">misaki.server</a></li><li><a href="#misaki.tester">misaki.tester</a></li><li><a href="#misaki.util.date">misaki.util.date</a></li><li><a href="#misaki.util.file">misaki.util.file</a></li><li><a href="#misaki.util.sequence">misaki.util.sequence</a></li><li><a href="#misaki.util.string">misaki.util.string</a></li></ul></div></td><td class="codes">&nbsp;</td></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#misaki.compiler.default.config" name="misaki.compiler.default.config"><h1 class="project-name">misaki.compiler.default.config</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>Default Compiler's Configuration Manager</p>
 </td><td class="codes"><pre class="brush: clojure">(ns misaki.compiler.default.config
   (:use [misaki.util file string sequence]
         [misaki.config    :only [*config*]]
@@ -3062,9 +3062,9 @@ net.brehaut.ClojureTools = (function (SH) {
   {:pre  [(map? config)]
    :post [#(map? %)]}
   (let [{:keys [template-dir public-dir url-base detailed-log]} config
-        layout   (str template-dir (:layout-dir config))
+        layout   (path template-dir (:layout-dir config))
         cljs     (:cljs config)
-        cljs-out (if cljs (str public-dir (:output-to cljs)))]
+        cljs-out (if cljs (path public-dir (:output-to cljs)))]
     (assoc
       config
       :layout-dir layout
@@ -3078,11 +3078,10 @@ net.brehaut.ClojureTools = (function (SH) {
                :output-dir (if-let [dir (:output-dir cljs)]
                              (path public-dir dir)
                              (get-parent-path cljs-out))
-               :output-to  cljs-out)))))</pre></td></tr><tr><td class="docs"><p>Bind specified config to <code>*config*</code>.</p>
+               :output-to  cljs-out)))))</pre></td></tr><tr><td class="docs"><p>Bind local config to <code>*config*</code></p>
 </td><td class="codes"><pre class="brush: clojure">(defmacro with-config
   [config &amp; body]
-  `(binding [*config* ~config]
-     ~@body))</pre></td></tr><tr><td class="docs"><h2>File Cheker</h2>
+  `(binding [*config* ~config] ~@body))</pre></td></tr><tr><td class="docs"><h2>File Cheker</h2>
 </td><td class="codes"></td></tr><tr><td class="docs"><p>Check whether file is layout file or not.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn layout-file?
   [#^File file]
@@ -3481,8 +3480,10 @@ net.brehaut.ClojureTools = (function (SH) {
   ([n s]
    (heading n {} s))
   ([n attr s]
-   (let [tag (keyword (str &quot;h&quot; n))]
-     [tag attr [:span (first s)] (rest s)])))
+   (let [tag  (keyword (str &quot;h&quot; n))]
+     (if (string? s)
+       [tag attr [:span (first s)] (rest s)]
+       [tag attr s]))))
 (def h1 (partial heading 1))
 (def h2 (partial heading 2))
 (def h3 (partial heading 3))
@@ -3561,7 +3562,7 @@ net.brehaut.ClojureTools = (function (SH) {
   ([href] (link {} href href))
   ([x href]
    (cond
-     (or (string? x) (vector? x)) (link {} x href)
+     (or (string? x) (sequential? x)) (link {} x href)
      (map? x)    (link x href href)
      :else       (link {} href href)))
   ([attr label href]
@@ -3927,7 +3928,7 @@ ewline and return if you deref instance.</p>
                 (if (= c (first e))
                   (recur (conj res c) (rest e) true)
                   ; keep `started?` with front space
-                  (recur (conj res c) end-seq (front-space? c e)))
+                  (recur (conj res c) end-seq (or (start? c) (front-space? c e))))
                 ; start to check end-seq with newline
                 (recur (conj res c) end-seq (start? c)))))))
       (drop (count end-seq)) reverse (map char) (apply str))))</pre></td></tr><tr><td class="docs"><p>Read here code</p>
@@ -4019,11 +4020,11 @@ ewline and return if you deref instance.</p>
   ([default-value]
    (try (read-config)
         (catch FileNotFoundException e
-          default-value))))</pre></td></tr><tr><td class="docs"><p>Load specified compiler's public method map.</p>
-
-<p>  Compiler's namespace must be <strong>misaki.compiler.FOO.core</strong>.</p>
+          default-value))))</pre></td></tr><tr><td class="docs"><p>Load specified compiler's public method map.
+  Compiler's namespace must be <strong>misaki.compiler.FOO.core</strong>.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn load-compiler-publics
   [name]
+  {:pre [(string? name)]}
   (let [sym (symbol (str &quot;misaki.compiler.&quot; name &quot;.core&quot;))]
     (try
       (require sym)
@@ -4031,6 +4032,8 @@ ewline and return if you deref instance.</p>
         (ns-publics target-ns)
         (load-compiler-publics &quot;default&quot;))
       (catch FileNotFoundException e
+        (println (red (str &quot; * Compiler \&quot;&quot; name &quot;\&quot; is not found.&quot;
+                           &quot; Default compiler is used.&quot;)))
         (load-compiler-publics &quot;default&quot;)))))</pre></td></tr><tr><td class="docs"><p>Make basic config to pass plugin's configuration.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn make-basic-config-map
   []
@@ -4069,6 +4072,7 @@ ewline and return if you deref instance.</p>
 </td><td class="codes"></td></tr><tr><td class="docs"><p>Get date from file(java.io.File) with <code>(:post-filename-regexp *config*)</code>.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn get-date-from-file
   [#^File post-file]
+  {:pre [(or (nil? post-file) (file? post-file))]}
   (let [date-seq (-?&gt;&gt; post-file (.getName)
                       (re-seq (:post-filename-regexp *config*))
                       nfirst drop-last)] ; last = filename
@@ -4105,11 +4109,13 @@ ewline and return if you deref instance.</p>
              :filename filename})))</pre></td></tr><tr><td class="docs"><p>Make output filename from java.io.File.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn make-output-filename
   [#^File file]
+  {:pre [(file? file)]}
   (if (post-file? file)
     (make-post-output-filename file)
     (.getName file)))</pre></td></tr><tr><td class="docs"><p>Make output url from java.io.File.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn make-output-url
   [#^File file]
+  {:pre [(file? file)]}
   (path (:url-base *config*) (make-output-filename file)))</pre></td></tr><tr><td class="docs"><p>Convert template name to java.io.File.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn template-name-&gt;file
   [#^String tmpl-name]
@@ -4117,11 +4123,13 @@ ewline and return if you deref instance.</p>
   (io/file (path (:template-dir *config*) tmpl-name)))</pre></td></tr><tr><td class="docs"><p>Convert path to absolute with <code>(:url-base *config*)</code></p>
 </td><td class="codes"><pre class="brush: clojure">(defn absolute-path
   [path-str]
+  {:pre [(string? path-str)]}
   (if (re-seq #&quot;^https?://&quot; path-str)
     path-str
     (path (:url-base *config*) path-str)))</pre></td></tr><tr><td class="docs"><p>Add public dir to specified path.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn add-public-dir
   [filename]
+  {:pre (string? filename)}
   (path (:public-dir *config*) filename))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#misaki.core" name="misaki.core"><h1 class="project-name">misaki.core</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>Misaki Controll Core</p>
 </td><td class="codes"><pre class="brush: clojure">(ns misaki.core
   (:use misaki.config
@@ -4451,11 +4459,14 @@ ewline and return if you deref instance.</p>
   (remove-extension "foo.bar.baz")
   ;=&gt; "foo.bar"
 </code></pre>
-</td><td class="codes"><pre class="brush: clojure">(defn remove-extension
-  [x]
-  (if (= java.io.File (class x))
-    (remove-extension (.getName x))
-    (str/replace-first x #&quot;\.[^.]+$&quot; &quot;&quot;)))</pre></td></tr><tr><td class="docs"><p>Get parent path name(String).
+</td><td class="codes"><pre class="brush: clojure">(defmulti remove-extension
+  class)
+(defmethod remove-extension File
+  [file]
+  (remove-extension (.getName file)))
+(defmethod remove-extension String
+  [s]
+  (str/replace-first s #&quot;\.[^.]+$&quot; &quot;&quot;))</pre></td></tr><tr><td class="docs"><p>Get parent path name(String).
   If specified path has no parent, returns the path itself.</p>
 
 <pre><code>  (get-parent-path "/foo/bar")
