@@ -57,10 +57,7 @@
   [name regexp result-fn]
   `(defn- ~name [arg#]
      (if (string? arg#)
-       (if (.startsWith arg# "<code class=\"prettyprint\"")
-         arg#
-         (str/replace arg# ~regexp ~result-fn)
-         )
+       (str/replace arg# ~regexp ~result-fn)
        arg#)))
 
 (defn- link-from-title? [s]
