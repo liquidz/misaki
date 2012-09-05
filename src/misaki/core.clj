@@ -1,7 +1,7 @@
 (ns misaki.core
   "Misaki Controll Core"
   (:use misaki.config
-        [misaki.util file string sequence]
+        [misaki.util file string sequence notify]
         [text-decoration.core :only [green]]
         [pretty-error.core    :only [print-pretty-stack-trace]])
   (:import [java.io File]))
@@ -123,10 +123,15 @@
           compile-result   (call-compiler-fn :-compile config file)
           process-result   (process-compile-result
                              compile-result default-filename)]
+
+      (if (:notify? config) (notify-result file process-result))
+
       [process-result compile-result])
     (catch Exception e
       (print-pretty-stack-trace
         e :filter #(str-contains? (:str %) "misaki"))
+      ; notify error
+      (if (:notify? config) (notify-result file false (.getMessage e)))
       [false {:stop-compile? true}])))
 
 ; =call-all-compile

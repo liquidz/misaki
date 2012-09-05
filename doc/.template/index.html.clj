@@ -3,9 +3,7 @@
 
 (header
   (:title site)
-  (p "misaki is [Jekyll](https://github.com/mojombo/jekyll) inspired static site generator in [Clojure](http://clojure.org).")
-  )
-
+  (p "misaki is [Jekyll](https://github.com/mojombo/jekyll) inspired static site generator in [Clojure](http://clojure.org)."))
 
 (two-column
   (list

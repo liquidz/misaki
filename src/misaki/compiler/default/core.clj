@@ -7,8 +7,7 @@
     [cljs.closure  :only [build]]
     [hiccup.core   :only [html]]
     [hiccup.page   :only [html5 xhtml html4]]
-    [clojure.core.incubator :only [-?>>]]
-    [pretty-error.core      :only [print-pretty-stack-trace]])
+    [clojure.core.incubator :only [-?>>]])
   (:require
     [misaki.core     :as msk]
     [misaki.config   :as cnf]
@@ -22,10 +21,6 @@
 (declare compile-clojurescripts)
 (declare compile-tag)
 (declare get-tags)
-
-(defn- print-misaki-stack-trace [e]
-  (print-pretty-stack-trace
-    e :filter #(str-contains? (:str %) "misaki")))
 
 ; =log
 (defmacro log
