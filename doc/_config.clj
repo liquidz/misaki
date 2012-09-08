@@ -59,10 +59,12 @@
  ;; highlight setting
  :code-highlight {:CLJ "lang-clj", :CLOJURE "lang-clj"}
 
- :notify? true
- :notify-setting {:fixed  "fixed! {{filename}}"
-                  :failed "FAILED: {{filename}}"}
-
+ ;; flag for detailed log
+ ;;   default value: false
  :detailed-log true
+
+ ;; flag for error notification
+ ;;   default value: false
+ :notify? true
  }
 

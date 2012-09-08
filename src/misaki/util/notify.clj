@@ -1,4 +1,5 @@
 (ns misaki.util.notify
+  "Notification Manager"
   (:use
     [misaki.config          :only [*config*]]
     [clojure.core.incubator :only [-?>]]
@@ -9,36 +10,41 @@
 
 (def ^:private last-result (atom {}))
 (def ^:private linux? (= "Linux" (System/getProperty "os.name")))
-(def NOTIFY_TITLE "misaki")
 
-(defn- notify [msg & {:keys [icon url] :or {icon "", url ""}}]
+(defn- notify [title msg & {:keys [icon url] :or {icon "", url ""}}]
   (when msg
     (cond
       linux?
-      (sh "notify-send" NOTIFY_TITLE msg)
+      (sh "notify-send" title msg)
 
       :else
       (try
-        (growl-notify NOTIFY_TITLE msg url icon)
+        (growl-notify title msg url icon)
         (catch Exception e
-          (let [growl (make-growler "" NOTIFY_TITLE ["Notify" true])]
-            (growl "Notify" NOTIFY_TITLE msg)))))))
+          (let [growl (make-growler "" title ["Notify" true])]
+            (growl "Notify" title msg)))))))
 
 ; =notify-result
-(defn notify-result [file process-result & [message]]
-  (letfn [(get-msg [key]
-                   (-?> *config* :notify-setting key
-                        (or message)
-                        (render {:filename (.getName file)})))]
+(defn notify-result
+  "Notify compile result by Growl."
+  [file process-result & [exception]]
+  (let [filename  (.getName file)
+        message   (if exception (.getMessage exception))
+        st        (if exception (first (.getStackTrace exception)))
+        line      (if (and st (= (.getFileName st) filename))
+                    (.getLineNumber st))
+        get-text  #(-?> *config* :notify-setting %
+                        (render {:filename filename :message message :line line}))]
+
     (cond
       ; fixed
       (and (true? process-result)
            (-?> @last-result (get file) false?))
-      (notify (get-msg :fixed))
+      (notify (get-text :fixed-title) (get-text :fixed))
 
       ; fail
       (false? process-result)
-      (notify (get-msg :failed)))
+      (notify (get-text :failed-title) (get-text :failed)))
 
     (reset! last-result
             (assoc @last-result file process-result))))

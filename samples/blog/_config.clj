@@ -61,6 +61,24 @@
  ;;   default value: false
  :detailed-log true;false
 
+ ;; flag for error notification
+ ;;   default value: false
+ :notify? false
+
+ ;; notify setting(OPTIONAL)
+ :notify-setting {;; title for fixing notification
+                  ;;  default value: "{{filename}}"
+                  :fixed-title  "{{filename}}"
+                  ;; message for fixing notication
+                  ;;   default value: "FIXED"
+                  :fixed        "FIXED"
+                  ;; title for failing notification
+                  ;;   default value: "{{filename}} : {{line}}"
+                  :failed-title "{{filename}} : {{line}}"
+                  ;; message for failing notification
+                  ;;   default value: {{message}}
+                  :failed       "{{message}}"}
+
  ;; compiler setting
  ;;   default value: "default"
  :compiler "default"

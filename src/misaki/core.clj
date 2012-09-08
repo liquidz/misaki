@@ -131,7 +131,7 @@
       (print-pretty-stack-trace
         e :filter #(str-contains? (:str %) "misaki"))
       ; notify error
-      (if (:notify? config) (notify-result file false (.getMessage e)))
+      (if (:notify? config) (notify-result file false e))
       [false {:stop-compile? true}])))
 
 ; =call-all-compile

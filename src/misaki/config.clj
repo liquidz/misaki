@@ -22,8 +22,10 @@
   "Default format to generage post output filename."
   "{{year}}/{{month}}/{{filename}}")
 (def NOTIFY_SETTING
-  {:fixed  "fixed!!! {{filename}}"
-   :failed "failed!!! {{filename}}"})
+  {:fixed-title  "{{filename}}"
+   :fixed        "FIXED"
+   :failed-title "{{filename}} : {{line}}"
+   :failed       "{{message}}"})
 
 ;; ## Declarations
 
@@ -91,8 +93,7 @@
       :post-filename-regexp (:post-filename-regexp config POST_FILENAME_REGEXP)
       :post-filename-format (:post-filename-format config POST_OUTPUT_NAME_FORMAT)
       :notify?              (:notify? config false)
-      :notify-setting       (merge NOTIFY_SETTING (:notify-setting config))
-      )))
+      :notify-setting       (merge NOTIFY_SETTING (:notify-setting config)))))
 
 ; =with-config
 (defmacro with-config
