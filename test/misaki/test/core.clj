@@ -21,22 +21,14 @@
 
 
 ;; get-watch-file-extensions
-;;;(deftest* get-watch-file-extensions-test
-;;;  (testing "single compiler"
-;;;    (is (= [:clj :cljs] (get-watch-file-extensions))))
-;;;
-;;;  (testing "multiple compiler"
-;;;    (binding [*config* {:compiler [{'-extension #(identity [:clj])}
-;;;                                   {'-extension #(identity [:txt])}]}]
-;;;      (is (= [:clj :txt] (get-watch-file-extensions)))))
-;;;
-;;;  (testing "*"
-;;;    (binding [*config* {:compiler [{'-extension #(identity [:*])}
-;;;                                   {'-extension #(identity [:txt])}]}]
-;;;      (is (= [:*] (get-watch-file-extensions))))
-;;;    (binding [*config* {:compiler [{'-extension #(identity [:txt])}
-;;;                                   {'-extension #(identity [:*])}]}]
-;;;      (is (= [:*] (get-watch-file-extensions))))))
+(deftest* get-watch-file-extensions-test
+  (testing "single compiler"
+    (is (= [:clj :cljs] (get-watch-file-extensions))))
+
+  (testing "multiple compiler"
+    (binding [*config* {:compiler [{'-extension #(identity [:clj])}
+                                   {'-extension #(identity [:txt])}]}]
+      (is (= [:clj :txt] (get-watch-file-extensions))))))
 
 ;; TODO
 ;拡張子毎にどのコンパイラが対応しているかのマップを作成する関数

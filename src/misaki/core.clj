@@ -66,17 +66,7 @@
 (defn get-watch-file-extensions
   "Get extensions list to watch."
   []
-
-;  (let [c (:compiler *config*)]
-    ;(if (sequential? c)
-      
-
-      (call-compiler-fn :-extension)
-
-    ;  )
-;    )
-
-  )
+  (call-compiler-fn :-extension))
 
 
 ; =update-config
