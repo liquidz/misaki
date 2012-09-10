@@ -46,7 +46,9 @@
   (let [ext (if (keyword? ext) (name ext) ext)
         ext (if (.startsWith ext ".")
               ext (str "." ext))]
-    (.endsWith (.getName file) ext)))
+    (if (= ".*" ext)
+      true
+      (.endsWith (.getName file) ext))))
 
 ; =extension-filter
 (defn extension-filter

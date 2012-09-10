@@ -19,6 +19,23 @@
     "foo/" "foo/"
     "/"    ""))
 
+(deftest extension-filter-test
+  (let [files (map io/file ["a.txt" "b.clj" "c.txt"])]
+    (testing "fiter extension"
+      (are [x y] (= x (map #(.getName %) y))
+        ["a.txt" "c.txt"] (extension-filter :txt   files)
+        ["a.txt" "c.txt"] (extension-filter "txt"  files)
+        ["a.txt" "c.txt"] (extension-filter ".txt" files)
+        []                (extension-filter :js    files)
+        []                (extension-filter :txt   [])))
+
+    (testing "filter all extension"
+      (are [x y] (= x (map #(.getName %) y))
+        ["a.txt" "b.clj" "c.txt"] (extension-filter :*   files)
+        ["a.txt" "b.clj" "c.txt"] (extension-filter "*"  files)
+        ["a.txt" "b.clj" "c.txt"] (extension-filter ".*" files)
+        []                        (extension-filter ".*" [])))))
+
 ;; remove-extension
 (deftest remove-extension-test
   (are [x y] (= x (remove-extension y))
