@@ -7,9 +7,49 @@
 
 (set-base-dir! "test/")
 
+
+(deftest* call-compiler-fn-test
+  (testing "single compiler"
+    (is (= [:clj :cljs] (#'misaki.core/call-compiler-fn :-extension))))
+
+  (testing "multiple compiler"
+    (binding [*config* {:compiler [{'-extension #(identity [:txt])}
+                                   {'-extension #(identity [:clj])}]}]
+      (are [x y] (= x y)
+        [:txt :clj] (#'misaki.core/call-compiler-fn :-extension)
+        [:js]       (#'misaki.core/call-compiler-fn {'-extension #(identity [:js])} :-extension)))))
+
+
 ;; get-watch-file-extensions
-(deftest* get-watch-file-extensions-test
-  (is (= [:clj :cljs] (get-watch-file-extensions))))
+;;;(deftest* get-watch-file-extensions-test
+;;;  (testing "single compiler"
+;;;    (is (= [:clj :cljs] (get-watch-file-extensions))))
+;;;
+;;;  (testing "multiple compiler"
+;;;    (binding [*config* {:compiler [{'-extension #(identity [:clj])}
+;;;                                   {'-extension #(identity [:txt])}]}]
+;;;      (is (= [:clj :txt] (get-watch-file-extensions)))))
+;;;
+;;;  (testing "*"
+;;;    (binding [*config* {:compiler [{'-extension #(identity [:*])}
+;;;                                   {'-extension #(identity [:txt])}]}]
+;;;      (is (= [:*] (get-watch-file-extensions))))
+;;;    (binding [*config* {:compiler [{'-extension #(identity [:txt])}
+;;;                                   {'-extension #(identity [:*])}]}]
+;;;      (is (= [:*] (get-watch-file-extensions))))))
+
+;; TODO
+;拡張子毎にどのコンパイラが対応しているかのマップを作成する関数
+;ex) {:clj [{default}, {foo}, {bar}]
+;     :txt [{default}]
+;     :js  [{foo}, {bar}]}
+
+;; TODO
+; コンパイラ指定のコンパイラ関数呼び出し
+; call-compiler-fn の汎用バージョン
+
+;; TODO
+; compile* のエンハンス
 
 ;; get-template-files
 (deftest* get-template-files-test

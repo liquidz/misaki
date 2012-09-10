@@ -26,11 +26,18 @@
 (defn- call-compiler-fn
   "Call compiler's function.
 
-      (call-compiler-fn :-compile file)"
-  [fn-key & args]
-  (let [fn-sym (key->sym fn-key)
-        f      (get (:compiler *config*) fn-sym)]
-    (if f (apply f args))))
+      (call-compiler-fn :-compile file)
+      (let [compiler {'-extension #(list :clj %)}]
+        (call-compiler-fn compiler :-extension :cljs))
+  "
+  [& params]
+  (let [[compiler fn-key & args] (if (-> params first map?)
+                                   params
+                                   (cons (:compiler *config*) params))
+        fn-sym (key->sym fn-key)]
+    (if (sequential? compiler)
+      (mapcat #(apply call-compiler-fn % fn-sym args) compiler)
+      (if-let [f (get compiler fn-sym)] (apply f args)))))
 
 ; =get-template-files
 (defn get-template-files
@@ -59,7 +66,17 @@
 (defn get-watch-file-extensions
   "Get extensions list to watch."
   []
-  (call-compiler-fn :-extension))
+
+;  (let [c (:compiler *config*)]
+    ;(if (sequential? c)
+      
+
+      (call-compiler-fn :-extension)
+
+    ;  )
+;    )
+
+  )
 
 
 ; =update-config
