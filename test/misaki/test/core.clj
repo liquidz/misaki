@@ -30,15 +30,19 @@
                                    {'-extension #(identity [:txt])}]}]
       (is (= [:clj :txt] (get-watch-file-extensions))))))
 
+
+;(deftest* foo-test
+;  (testing "single compiler"
+;    (= (foo))
+;    )
+;  )
+
 ;; TODO
 ;拡張子毎にどのコンパイラが対応しているかのマップを作成する関数
 ;ex) {:clj [{default}, {foo}, {bar}]
 ;     :txt [{default}]
 ;     :js  [{foo}, {bar}]}
 
-;; TODO
-; コンパイラ指定のコンパイラ関数呼び出し
-; call-compiler-fn の汎用バージョン
 
 ;; TODO
 ; compile* のエンハンス

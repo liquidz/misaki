@@ -34,6 +34,23 @@
     (binding [*base-dir* "/foo/bar/"]
       (is (= {} (read-config {}))))))
 
+;;; load-compiler-publics-test
+(deftest* load-compiler-publics-test
+  (testing "default compiler"
+    (let [c (load-compiler-publics "default")]
+      (are [x y] (= x y)
+        true      (contains? c '-extension)
+        true      (contains? c '-config)
+        true      (contains? c '-compile)
+        "default" (:name c))))
+
+  (testing "unknown compiler(read default)"
+    (let [c (load-compiler-publics "foo")]
+      (are [x y] (= x y)
+        true      (contains? c '-extension)
+        true      (contains? c '-config)
+        true      (contains? c '-compile)
+        "default" (:name c)))))
 
 ;;; get-date-from-file
 (deftest* get-date-from-file-test

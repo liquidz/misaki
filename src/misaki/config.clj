@@ -63,7 +63,7 @@
     (try
       (require sym)
       (if-let [target-ns (find-ns sym)]
-        (ns-publics target-ns)
+        (assoc (ns-publics target-ns) :name name)
         (load-compiler-publics "default"))
       (catch FileNotFoundException e
         (println (red (str " * Compiler \"" name "\" is not found."
