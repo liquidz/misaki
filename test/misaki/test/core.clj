@@ -25,6 +25,10 @@
   (testing "single compiler"
     (is (= [:clj :cljs] (get-watch-file-extensions))))
 
+  (testing "normalized extentions"
+    (binding [*config* {:compiler {'-extension #(list "clj" "*.txt")}}]
+      (is (= [:clj :txt] (get-watch-file-extensions)))))
+
   (testing "multiple compiler"
     (binding [*config* {:compiler [{'-extension #(list :clj)}
                                    {'-extension #(list :txt)}]}]

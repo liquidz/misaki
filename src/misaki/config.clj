@@ -58,17 +58,19 @@
   Compiler's namespace must be **misaki.compiler.FOO.core**.
   "
   [name]
-  {:pre [(string? name)]}
-  (let [sym (symbol (str "misaki.compiler." name ".core"))]
-    (try
-      (require sym)
-      (if-let [target-ns (find-ns sym)]
-        (assoc (ns-publics target-ns) :name name)
-        (load-compiler-publics "default"))
-      (catch FileNotFoundException e
-        (println (red (str " * Compiler \"" name "\" is not found."
-                           " Default compiler is used.")))
-        (load-compiler-publics "default")))))
+  {:pre [(or (string? name) (sequential? name))]}
+  (if (sequential? name)
+    (map load-compiler-publics name)
+    (let [sym (symbol (str "misaki.compiler." name ".core"))]
+      (try
+        (require sym)
+        (if-let [target-ns (find-ns sym)]
+          (assoc (ns-publics target-ns) :name name)
+          (load-compiler-publics "default"))
+        (catch FileNotFoundException e
+          (println (red (str " * Compiler \"" name "\" is not found."
+                             " Default compiler is used.")))
+          (load-compiler-publics "default"))))))
 
 ; =make-basic-config-map
 (defn make-basic-config-map

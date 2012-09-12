@@ -39,18 +39,25 @@
   (testing "default compiler"
     (let [c (load-compiler-publics "default")]
       (are [x y] (= x y)
-        true      (contains? c '-extension)
-        true      (contains? c '-config)
-        true      (contains? c '-compile)
+        true      (every? #(contains? c %) '(-extension -config -compile))
         "default" (:name c))))
 
   (testing "unknown compiler(read default)"
     (let [c (load-compiler-publics "foo")]
       (are [x y] (= x y)
-        true      (contains? c '-extension)
-        true      (contains? c '-config)
-        true      (contains? c '-compile)
-        "default" (:name c)))))
+        true      (every? #(contains? c %) '(-extension -config -compile))
+        "default" (:name c))))
+
+  (testing "multiple compilers"
+    (let [[c1 c2 :as cs] (load-compiler-publics ["default" "demo"])]
+      (are [x y] (= x y)
+        2         (count cs)
+        "default" (:name c1)
+        "demo"    (:name c2)
+        true      (every? #(contains? c1 %) '(-extension -config -compile))
+        true      (every? #(contains? c2 %) '(-extension -config -compile)))))
+  
+  )
 
 ;;; get-date-from-file
 (deftest* get-date-from-file-test
