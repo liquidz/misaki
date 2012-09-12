@@ -15,10 +15,21 @@
 ;; normalize-path
 (deftest normalize-path-test
   (are [x y] (= x (normalize-path y))
+    nil    nil
     "foo/" "foo"
     "foo/" "foo/"
     "/"    ""))
 
+;; normalize-extension
+(deftest normalize-extension-test
+  (are [x y] (= x (normalize-extension y))
+    nil  nil
+    :clj :clj
+    :clj 'clj
+    :clj "clj"
+    :clj "*.clj"))
+
+;; extension-filter
 (deftest extension-filter-test
   (let [files (map io/file ["a.txt" "b.clj" "c.txt"])]
     (testing "fiter extension"

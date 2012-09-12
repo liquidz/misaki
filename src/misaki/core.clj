@@ -66,8 +66,7 @@
 (defn get-watch-file-extensions
   "Get extensions list to watch."
   []
-  (call-compiler-fn :-extension))
-
+  (distinct (call-compiler-fn :-extension)))
 
 ; =update-config
 (defn update-config

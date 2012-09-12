@@ -20,6 +20,17 @@
   [path]
   (if path (if (.endsWith path "/") path (str path "/"))))
 
+; =normalize-extension
+(defn normalize-extension
+  "Normalize file extension."
+  [ext]
+  (if ext
+    (condp #(% %2) ext
+      keyword? ext
+      symbol?  (keyword ext)
+      string?  (keyword (last (str/split ext #"\.")))
+      nil)))
+
 ; =path
 (defn path
   "Combine paths."
