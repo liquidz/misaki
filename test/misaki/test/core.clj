@@ -37,18 +37,7 @@
   (testing "multiple compiler(duplicated extention)"
     (binding [*config* {:compiler [{'-extension #(list :clj :txt)}
                                    {'-extension #(list :txt)}]}]
-      (is (= [:clj :txt] (get-watch-file-extensions))))
-    )
-  )
-
-
-
-;; TODO
-;拡張子毎にどのコンパイラが対応しているかのマップを作成する関数
-;ex) {:clj [{default}, {foo}, {bar}]
-;     :txt [{default}]
-;     :js  [{foo}, {bar}]}
-
+      (is (= [:clj :txt] (get-watch-file-extensions))))))
 
 ;; TODO
 ; compile* のエンハンス
