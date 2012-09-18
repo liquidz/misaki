@@ -136,5 +136,11 @@
         (is (= "bar" (slurp f)))
         (.delete f)))))
 
-;(deftest* call-compile-test
-;  )
+
+;; call-compile
+(deftest* call-compile-test
+  (testing "single compiler"
+    (is (call-compile (template-file "index.html.clj")))
+    (let [file (public-file "index.html")]
+      (is (.exists file))
+      (.delete file))))
