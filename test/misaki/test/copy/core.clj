@@ -20,26 +20,23 @@
                ~@body)))))))
 
 (deftest* copy-test
-  (letfn [(file  [dir x] (io/file (path dir x)))
-          (pub-file  [x] (file (:public-dir *config*) x))
-          (tmpl-file [x] (file (:template-dir *config*) x))]
-    (testing "text file copy"
-      (let [from-file (tmpl-file "foo.txt")
-            to-file   (pub-file  "foo.txt")]
-        (is (t/test-compile from-file))
-        (is (.exists to-file))
-        (.delete to-file)))
+  (testing "text file copy"
+    (let [from-file (t/template-file "foo.txt")
+          to-file   (t/public-file  "foo.txt")]
+      (is (t/test-compile from-file))
+      (is (.exists to-file))
+      (.delete to-file)))
 
-    (testing "bin file copy"
-      (let [from-file (tmpl-file "favicon.ico")
-            to-file   (pub-file  "favicon.ico")]
-        (is (t/test-compile from-file))
-        (is (.exists to-file))
-        (.delete to-file)))
+  (testing "bin file copy"
+    (let [from-file (t/template-file "favicon.ico")
+          to-file   (t/public-file  "favicon.ico")]
+      (is (t/test-compile from-file))
+      (is (.exists to-file))
+      (.delete to-file)))
 
-    (testing "excepting extension option"
-      (let [from-file (tmpl-file "dummy.except")
-            to-file   (pub-file  "dummy.except")
-            ]
-        (is (not (t/test-compile from-file)))
-        (is (not (.exists to-file)))))))
+  (testing "excepting extension option"
+    (let [from-file (t/template-file "dummy.except")
+          to-file   (t/public-file  "dummy.except")
+          ]
+      (is (not (t/test-compile from-file)))
+      (is (not (.exists to-file))))))

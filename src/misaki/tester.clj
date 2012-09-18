@@ -3,10 +3,11 @@
   (:use
     [misaki.core      :only [update-config call-compile]]
     [misaki.config    :only [*base-dir* *config* make-basic-config-map with-config]]
-    [misaki.util.file :only [normalize-path]]
+    [misaki.util.file :only [normalize-path path]]
     [clojure.test     :only [deftest]])
   (:require
-    [clojure.string :as str]))
+    [clojure.string  :as str]
+    [clojure.java.io :as io]))
 
 ;; default base-dir for tester is "test/"
 (def _test-base-dir_ (atom "test/"))
@@ -66,3 +67,14 @@
   `(binding [*config* (assoc *config* ~@bind-vec)]
      ~@body))
 
+; =template-file
+(defn template-file
+  "Return java.io.File in template directory."
+  [filename]
+  (io/file (path (:template-dir *config*) filename)))
+
+; =public-file
+(defn public-file
+  "Return java.io.File in pulbic directory."
+  [filename]
+  (io/file (path (:public-dir *config*) filename)))
