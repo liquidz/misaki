@@ -71,10 +71,12 @@
 ; =update-config
 (defn update-config
   "Update basic config with plugin's -config function."
-  []
-  (let [config (make-basic-config-map)
-        res    (call-compiler-fn :-config config)]
-    (if res res config)))
+  [& [compiler]]
+   (let [config (make-basic-config-map)
+         res    (if compiler
+                  (call-compiler-fn compiler :-config config)
+                  (call-compiler-fn :-config config))]
+     (if res res config)))
 
 ; =process-compile-result
 (defn process-compile-result

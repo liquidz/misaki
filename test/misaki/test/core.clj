@@ -39,9 +39,6 @@
                                    {'-extension #(list :txt)}]}]
       (is (= [:clj :txt] (get-watch-file-extensions))))))
 
-;; TODO
-; compile* のエンハンス
-
 ;; get-template-files
 (deftest* get-template-files-test
   (testing "default template directory"
@@ -74,6 +71,34 @@
           "2022.02.02-bar.html.clj" (.getName a)
           "2011.01.01-foo.html.clj" (.getName b)
           "2000.01.01-foo.html.clj" (.getName c))))))
+
+;; update-config
+(deftest* update-config-test
+  (testing "default single compiler"
+    (binding [*config* (assoc *config*
+                              :compiler {'-config #(merge {:foo "bar"} %)})]
+      (let [c (update-config)]
+        (are [x y] (= x y)
+          "test/public/" (:public-dir c)
+          "bar"          (:foo c)))))
+
+  (testing "specify compiler"
+    (let [c (update-config {'-config #(assoc % :foo "bar")})]
+      (are [x y] (= x y)
+        "test/public/" (:public-dir c)
+        "bar"         (:foo c))))
+
+  (testing "multiple compilers"
+    (binding [*config* (assoc *config*
+                              :compiler [{'-config #(assoc % :foo "bar")}
+                                         {'-config #(assoc % :bar "baz")}])]
+      (let [c (update-config)]
+        true (sequential? c)
+        2    (count c)
+        "test/public/" (:public-dir (first c))
+        "bar"         (:foo (first c))
+        "test/public/" (:public-dir (second c))
+        "baz"         (:bar (second c))))))
 
 ;; process-compile-result
 (deftest* process-compile-result-test
@@ -110,3 +135,6 @@
         (is (.exists f))
         (is (= "bar" (slurp f)))
         (.delete f)))))
+
+;(deftest* call-compile-test
+;  )
