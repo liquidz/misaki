@@ -136,11 +136,45 @@
         (is (= "bar" (slurp f)))
         (.delete f)))))
 
+;;; handleable-compiler?
+(deftest handleable-compiler?-test
+  (let [default (load-compiler-publics "default")
+        copy    (load-compiler-publics "copy")]
+    (are [x y] (= x y)
+      true  (handleable-compiler? default (io/file "foo.clj"))
+      false (handleable-compiler? default (io/file "foo"))
+      true  (handleable-compiler? copy    (io/file "foo.clj"))
+      true  (handleable-compiler? copy    (io/file "foo")))))
 
-;; call-compile
-(deftest* call-compile-test
+;;; compile*
+(deftest* compile*-test
   (testing "single compiler"
-    (is (call-compile (template-file "index.html.clj")))
+    (let[[c r] (compile* (template-file "index.html.clj"))]
+      (is (not (false? c)))
+      (is (not (false? r))))
     (let [file (public-file "index.html")]
       (is (.exists file))
-      (.delete file))))
+      (.delete file)))
+
+  (binding [*config* (assoc *config* :compiler [(load-compiler-publics "default")
+                                                (load-compiler-publics "copy")])]
+    (testing "multiple compilers: first compiler is used"
+      (let [[c r] (compile* (template-file "index.html.clj"))]
+        (is (not (false? c)))
+        (is (not (false? r))))
+      (let [file (public-file "index.html")]
+        (is (.exists file))
+        (.delete file)))
+
+    (testing "multiple compilers: second compiler is used"
+      (let [[c r] (compile* (template-file "favicon.ico"))]
+        (is (not (false? c)))
+        (is (not (false? r))))
+      (let [file (public-file "favicon.ico")]
+        (is (.exists file))
+        (.delete file))))
+
+  (testing "all skip error test"
+    (let [res (compile* (template-file "favicon.ico"))]
+      (is (every? false? res)))))
+

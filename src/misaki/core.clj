@@ -13,6 +13,11 @@
 
 ;; ## Compiler Utilities
 
+(defn- skip-compile? [compile-result]
+  (or (symbol? compile-result)
+      (and (map? compile-result)
+           (symbol? (:status compile-result)))))
+
 ; =stop-compile?
 (defn- stop-compile? [compile-result]
   (and (map?   compile-result)
@@ -121,26 +126,38 @@
     ; error
     :else false))
 
+; =handleable-compiler?
+(defn handleable-compiler?
+  [compiler file]
+  (let [exts (call-compiler-fn compiler :-extension)]
+    (not (nil? (some #(has-extension? % file) exts)))))
 
 ; =compile*
 (defn compile*
   "Common function to compile java.io.File with config."
-  [config file]
-  (try
-    (let [default-filename (make-output-filename file)
-          compile-result   (call-compiler-fn :-compile config file)
-          process-result   (process-compile-result
-                             compile-result default-filename)]
-
-      (if (:notify? config) (notify-result file process-result))
-
-      [process-result compile-result])
-    (catch Exception e
-      (print-pretty-stack-trace
-        e :filter #(str-contains? (:str %) "misaki"))
-      ; notify error
-      (if (:notify? config) (notify-result file false e))
-      [false {:stop-compile? true}])))
+  ([file] (compile* {} file))
+  ([optional-config file]
+   (try
+     (loop [[compiler & rst] (flatten (list (:compiler *config*)))]
+       (if compiler
+         (if (handleable-compiler? compiler file)
+           (let [config (merge (update-config compiler) optional-config)
+                 compile-result (call-compiler-fn compiler :-compile config file)
+                 default-filename (make-output-filename file)
+                 process-result   (process-compile-result
+                                        compile-result default-filename)]
+             (if (skip-compile? compile-result)
+               (recur rst)
+               (do (if (:notify? *config*) (notify-result file process-result))
+                   [process-result compile-result])))
+           (recur rst))
+         [false false]))
+     (catch Exception e
+       (print-pretty-stack-trace
+         e :filter #(str-contains? (:str %) "misaki"))
+       ; notify error
+       (if (:notify? *config*) (notify-result file false e))
+       [false {:stop-compile? true}]))))
 
 ; =call-all-compile
 (defn call-all-compile
@@ -150,7 +167,8 @@
         files  (get-template-files)]
     (loop [[file & rest-files] files, success? true]
       (if file
-        (let [[process-result compile-result] (compile* config file)
+        ;(let [[process-result compile-result] (compile* config file)
+        (let [[process-result compile-result] (compile* {:-compiling :all} file)
               result (and success? process-result)]
           (if (stop-compile? compile-result)
             result
@@ -161,8 +179,36 @@
 (defn call-compile
   "Call plugin's -compile function."
   [file]
+  ;;;(let [compilers (flatten (list (:compiler *config*)))]
+  ;;;  (loop [[compiler & rst] compilers]
+  ;;;    (println ">>>>" (:name compiler) ":" (.getName file))
+  ;;;    (if (handleable-compiler? compiler file)
+  ;;;      (let [config (assoc (update-config compiler) :-compiling :single)
+  ;;;            [process-result compile-result] (compile* compiler config file)]
+  ;;;        (cond
+  ;;;          (skip-compile? compile-result)
+  ;;;          (recur rst)
+
+  ;;;          (all-compile? compile-result)
+  ;;;          (do (println (green "  Switch to all compiling"))
+  ;;;              (call-all-compile))
+
+  ;;;          (post-file? file)
+  ;;;          (every? #(true? (first %))
+  ;;;                  (for [file (map template-name->file (:compile-with-post *config*))]
+  ;;;                    (compile* compiler config file)))
+
+
+  ;;;          :else process-result
+  ;;;          )
+  ;;;        )
+  ;;;      (recur rst)
+  ;;;      )
+  ;;;    )
+  ;;;  )
+
   (let [config (assoc (update-config) :-compiling :single)
-        [process-result compile-result] (compile* config file)]
+        [process-result compile-result] (compile* {:-compiling :single} file)]
     (cond
       ; all compile
       (all-compile? compile-result)
@@ -173,8 +219,9 @@
       (post-file? file)
         (every? #(true? (first %))
                 (for [file (map template-name->file (:compile-with-post *config*))]
-                  (compile* config file)))
+                  (compile* {:-compiling :single} file)))
 
-      :else process-result)))
+      :else process-result))
+  )
 
 
