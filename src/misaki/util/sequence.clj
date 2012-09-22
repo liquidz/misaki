@@ -26,11 +26,12 @@
 ; =find-first
 (defn find-first
   "Returns the first matched entry for pred, or nil if not matched."
-  [pred coll]
-  {:pre [(or (fn? pred) (keyword? pred))
-         (sequential? coll)]}
-  (let [x (first coll)]
-    (cond
-      (= () coll) nil
-      (pred x)    x
-      :else       (recur pred (rest coll)))))
+  ([pred coll] (find-first pred coll nil))
+  ([pred coll default-value]
+   {:pre [(or (fn? pred) (keyword? pred))
+          (sequential? coll)]}
+   (let [x (first coll)]
+     (cond
+       (= () coll) default-value
+       (pred x)    x
+       :else       (recur pred (rest coll) default-value)))))

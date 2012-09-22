@@ -80,4 +80,8 @@
           ls (map #(do (swap! i inc) %) '(1 2 3 4))]
       (are [x y] (= x y)
         2 (find-first #(= % 2) ls)
-        2 @i))))
+        2 @i)))
+  (testing "find with default value"
+    (are [x y] (= x y)
+      0 (find-first zero? '(0 1 2 3) 'zero)
+      'zero (find-first zero? '(1 2 3) 'zero))))
