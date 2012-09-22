@@ -117,13 +117,23 @@
     #(every? (partial post-info-contains-tag? %) tag-seq)
     (get-posts)))
 
-; =add-next-prev-post
-(defn add-next-prev-post
+; =add-prev-next-post
+(defn add-prev-next-post
   "Add next post, previous post information to post list."
   [posts]
   (map (fn [[prev m next]]
-         (assoc m :prev prev :next next)
-         ) (partition 3 1 (concat '(nil) posts '(nil)))))
+         (assoc m :prev prev :next next))
+       (partition 3 1 (flatten (list nil posts nil)))))
+
+; =get-prev-next-post
+(defn get-prev-next-post
+  "Get next and previous post information from post list."
+  [post-file posts]
+  (let [[p _ n] (find-first
+                  #(= post-file (:file (second %)))
+                  (partition 3 1 (flatten (list nil posts nil)))
+                  [nil nil nil])]
+    [p n]))
 
 ;; ## Tag Functions
 
@@ -157,14 +167,18 @@
   (let [with-tag? (and (not (nil? tags)) (sequential? tags))
         sort-fn   (sort-type->sort-fn)
         posts     (sort-fn (if with-tag? (get-tagged-posts tags) (get-posts)))
-        ]
+        [prev next] (if (cnf/post-file? tmpl-file)
+                      (get-prev-next-post tmpl-file posts)
+                      [nil nil])]
     (assoc (merge (:site *config*) base-option)
            :file     tmpl-file
-           :posts    (add-next-prev-post posts)
+           :posts    (add-prev-next-post posts)
            :tags     (get-tags :count-by-name? true)
            :tag-name (if with-tag? (str/join "," tags))
            :index    (cnf/get-index-filename)
-           :date     (cnf/get-date-from-file tmpl-file))))
+           :date     (cnf/get-date-from-file tmpl-file)
+           :next     next
+           :prev     prev)))
 
 ; =file->template-sexp
 (defn file->template-sexp

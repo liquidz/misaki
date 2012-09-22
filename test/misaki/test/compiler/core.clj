@@ -82,11 +82,11 @@
         0 (count posts5))
       (is (thrown? AssertionError (get-tagged-posts "string"))))))
 
-;;; add-next-prev-post
-(deftest add-next-prev-post-test
+;;; add-prev-next-post
+(deftest add-prev-next-post-test
   (testing "even num"
     (let [posts (list {:name "a"} {:name "b"})
-          [a b] (add-next-prev-post posts)]
+          [a b] (add-prev-next-post posts)]
       (are [x y] (= (if x (dissoc x :next :prev) x) y)
         nil (:prev a)
         b   (:next a)
@@ -95,7 +95,7 @@
 
   (testing "odd num"
     (let [posts (list {:name "a"} {:name "b"} {:name "c"})
-          [a b c] (add-next-prev-post posts)]
+          [a b c] (add-prev-next-post posts)]
       (are [x y] (= (if x (dissoc x :next :prev) x) y)
         nil (:prev a)
         b   (:next a)
@@ -103,6 +103,15 @@
         c   (:next b)
         b   (:prev c)
         nil (:next c)))))
+
+;; get-prev-next-post
+(deftest get-prev-next-post-test
+  (let [[f1 f2 f3 :as ls] (list {:file 1} {:file 2} {:file 3})]
+    (are [x y] (= x y)
+      [nil f2]  (get-prev-next-post 1 ls)
+      [f1 f3]   (get-prev-next-post 2 ls)
+      [f2 nil]  (get-prev-next-post 3 ls)
+      [nil nil] (get-prev-next-post 4 ls))))
 
 ;;; get-all-tags
 (deftest* get-all-tags-test
@@ -167,7 +176,11 @@
           nil     (:tag-name site)
           '("tag1" "tag2" "tag3") (map :name (:tags site))
           '(1 2 1) (map :count (:tags site))
-          (date-time 2000 1 1) (:date site))
+          (date-time 2000 1 1) (:date site)
+          nil (:next site)
+          (dissoc p2 :next :prev) (:prev site)
+          )
+
         (are [x y] (= (if x (dissoc x :next :prev) x) y)
           ; prev/next
           p2  (:next p1)
@@ -179,11 +192,14 @@
 
     (testing "site data with post tag"
       (let [site (make-site-data file1 :base-option option1 :tags ["tag1"])]
-        file1  (:file site)
-        1      (count (:posts site))
-        ()     (:tag site)
-        "tag1" (:tag-name site)
-        "bar"  (-> site :posts first :title)))
+        (are [x y] (= x y)
+          file1  (:file site)
+          1      (count (:posts site))
+          ()     (:tag site)
+          "tag1" (:tag-name site)
+          "bar"  (-> site :posts first :title)
+          nil    (:next site)
+          nil    (:prev site))))
 
     (testing "site data containing tag-name"
       (let [site (make-site-data file2 :base-option option2)]
@@ -197,47 +213,75 @@
           nil     (:tag-name site)
           '("tag1" "tag2" "tag3") (map :name (:tags site))
           '(1 2 1) (map :count (:tags site))
-          (date-time 2011 1 1) (:date site))))
+          (date-time 2011 1 1) (:date site)
+          "baz"   (:title (:next site))
+          "bar"   (:title (:prev site)))))
 
     (testing "with post-sort-type => :date (inc)"
       (bind-config [:post-sort-type :date]
-        (let [[p1 p2 p3] (:posts (make-site-data file1))]
+        (let [site       (make-site-data file1)
+              [p1 p2 p3] (:posts site)]
           (are [x y] (= x y)
             "baz" (:title p1)
             "foo" (:title p2)
-            "bar" (:title p3)))))
+            "bar" (:title p3)
+
+            (dissoc p2 :next :prev)  (:next site)
+            nil (:prev site)
+            ))))
 
     (testing "with post-sort-type => :name (inc)"
       (bind-config [:post-sort-type :name]
-        (let [[p1 p2 p3] (:posts (make-site-data file1))]
+        (let [site       (make-site-data file1)
+              [p1 p2 p3] (:posts site)]
           (are [x y] (= x y)
             "baz" (:title p1)
             "foo" (:title p2)
-            "bar" (:title p3)))))
+            "bar" (:title p3)
+
+            (dissoc p2 :next :prev) (:next site)
+            nil (:prev site)))))
 
     (testing "with post-sort-type => :name-desc"
       (bind-config [:post-sort-type :name-desc]
-        (let [[p1 p2 p3] (:posts (make-site-data file1))]
+        (let [site       (make-site-data file1)
+              [p1 p2 p3] (:posts site)]
           (are [x y] (= x y)
             "bar" (:title p1)
             "foo" (:title p2)
-            "baz" (:title p3)))))
+            "baz" (:title p3)
+
+            nil (:next site)
+            (dissoc p2 :next :prev) (:prev site)
+            ))))
 
     (testing "with post-sort-type => :title (inc)"
       (bind-config [:post-sort-type :title]
-        (let [[p1 p2 p3] (:posts (make-site-data file1))]
+        (let [site       (make-site-data file1)
+              [p1 p2 p3] (:posts site)]
           (are [x y] (= x y)
             "bar" (:title p1)
             "baz" (:title p2)
-            "foo" (:title p3)))))
+            "foo" (:title p3)
+
+            (dissoc p3 :next :prev) (:next site)
+            (dissoc p1 :next :prev) (:prev site)
+            
+            ))))
 
     (testing "with post-sort-type => :title-desc"
       (bind-config [:post-sort-type :title-desc]
-        (let [[p1 p2 p3] (:posts (make-site-data file1))]
+        (let [site       (make-site-data file1)
+              [p1 p2 p3] (:posts site)]
           (are [x y] (= x y)
             "foo" (:title p1)
             "baz" (:title p2)
-            "bar" (:title p3)))))
+            "bar" (:title p3)
+
+            (dissoc p3 :next :prev) (:next site)
+            (dissoc p1 :next :prev) (:prev site)
+            ))))
+
 
     (testing "no post-dir"
       (bind-config [:post-dir nil]
@@ -248,6 +292,8 @@
             "world" (:hello site)
             0       (count (:posts site))
             0       (count (:tags site))
+            nil     (:next site)
+            nil     (:prev site)
             ))))))
 
 ;;; file->template-sexp
