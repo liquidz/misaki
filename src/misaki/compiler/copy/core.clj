@@ -8,17 +8,15 @@
 (defn -config
   [config]
   (merge
-    {:not-to-copy []}
+    {:except-extensions []}
     config))
 
 (defn -compile
-  [{:keys [public-dir not-to-copy]} file]
+  [{:keys [public-dir except-extensions]} file]
 
-  (if (some #(has-extension? % file) not-to-copy)
+  (if (some #(has-extension? % file) except-extensions)
     'skip
-    (do
-      (io/copy file
-               (io/file (path public-dir (.getName file))))
-      true)))
+    (do (io/copy file (io/file (path public-dir (.getName file))))
+        true)))
 
 

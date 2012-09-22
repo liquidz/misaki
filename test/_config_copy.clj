@@ -6,6 +6,6 @@
  :compiler "copy"
 
  ;; extensions not to copy
- :not-to-copy [:except]
+ :except-extensions [:except]
  }
 

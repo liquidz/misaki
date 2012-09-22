@@ -51,7 +51,13 @@
       (is (= 3 (count tmpls)))
       (is (find-first #(= "2000.01.01-foo.html.clj" (.getName %)) tmpls))
       (is (find-first #(= "2011.01.01-foo.html.clj" (.getName %)) tmpls))
-      (is (find-first #(= "2022.02.02-bar.html.clj" (.getName %)) tmpls)))))
+      (is (find-first #(= "2022.02.02-bar.html.clj" (.getName %)) tmpls))))
+
+  (testing "not matched directory"
+    (binding [*config* (assoc *config* :compiler {'-extension #(list :*)})]
+      (let [tmpls (get-template-files)]
+        (is (= 17 (count tmpls)))
+        (is (find-first #(= "favicon.ico" (.getName %)) tmpls))))))
 
 
 ;; get-post-files

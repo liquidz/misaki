@@ -51,7 +51,7 @@
   (let [exts (get-watch-file-extensions)]
     (filter
       (fn [file]
-        (some #(has-extension? % file) exts))
+        (some #(and (.isFile file) (has-extension? % file)) exts))
       (find-files dir))))
 
 ; =get-post-files
@@ -166,7 +166,6 @@
         files  (get-template-files)]
     (loop [[file & rest-files] files, success? true]
       (if file
-        ;(let [[process-result compile-result] (compile* config file)
         (let [[process-result compile-result] (compile* {:-compiling :all} file)
               result (and success? process-result)]
           (if (stop-compile? compile-result)
