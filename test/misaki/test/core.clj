@@ -156,8 +156,9 @@
       (is (.exists file))
       (.delete file)))
 
-  (binding [*config* (assoc *config* :compiler [(load-compiler-publics "default")
-                                                (load-compiler-publics "copy")])]
+  (binding [*config* (assoc *config* :compiler
+                            [(load-compiler-publics "default")
+                             (load-compiler-publics "copy")])]
     (testing "multiple compilers: first compiler is used"
       (let [[c r] (compile* (template-file "index.html.clj"))]
         (is (not (false? c)))

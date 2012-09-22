@@ -29,8 +29,8 @@
   [pred coll]
   {:pre [(or (fn? pred) (keyword? pred))
          (sequential? coll)]}
-  (loop [[x & rst :as ls] coll]
+  (let [x (first coll)]
     (cond
-      (empty? ls) nil
+      (= () coll) nil
       (pred x)    x
-      :else       (recur rst))))
+      :else       (recur pred (rest coll)))))

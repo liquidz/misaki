@@ -141,8 +141,8 @@
      (loop [[compiler & rst] (flatten (list (:compiler *config*)))]
        (if compiler
          (if (handleable-compiler? compiler file)
-           (let [config (merge (update-config compiler) optional-config)
-                 compile-result (call-compiler-fn compiler :-compile config file)
+           (let [config           (merge (update-config compiler) optional-config)
+                 compile-result   (call-compiler-fn compiler :-compile config file)
                  default-filename (make-output-filename file)
                  process-result   (process-compile-result
                                         compile-result default-filename)]
