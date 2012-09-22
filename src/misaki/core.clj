@@ -149,7 +149,7 @@
                 (if (:notify? *config*) (notify-result file process-result))
                 [process-result compile-result])))
          (flatten (list (:compiler *config*)))
-       [false false])
+       [true 'skip])
 
      (catch Exception e
        (print-pretty-stack-trace
@@ -162,16 +162,14 @@
 (defn call-all-compile
   "Call plugin's -compile function for all template files."
   []
-  (let [config (assoc (update-config) :-compiling :all)
-        files  (get-template-files)]
-    (loop [[file & rest-files] files, success? true]
-      (if file
-        (let [[process-result compile-result] (compile* {:-compiling :all} file)
-              result (and success? process-result)]
-          (if (stop-compile? compile-result)
-            result
-            (recur rest-files result)))
-        success?))))
+  (loop [[file & rest-files] (get-template-files), success? true]
+    (if file
+      (let [[process-result compile-result] (compile* {:-compiling :all} file)
+            result (and success? process-result)]
+        (if (stop-compile? compile-result)
+          result
+          (recur rest-files result)))
+      success?)))
 
 ; =call-compile
 (defn call-compile
