@@ -117,6 +117,14 @@
     #(every? (partial post-info-contains-tag? %) tag-seq)
     (get-posts)))
 
+; =add-next-prev-post
+(defn add-next-prev-post
+  "Add next post, previous post information to post list."
+  [posts]
+  (map (fn [[prev m next]]
+         (assoc m :prev prev :next next)
+         ) (partition 3 1 (concat '(nil) posts '(nil)))))
+
 ;; ## Tag Functions
 
 ; =get-all-tags
@@ -147,10 +155,12 @@
                        :or   {base-option {}, tags nil}}]
   {:pre [(file? tmpl-file)]}
   (let [with-tag? (and (not (nil? tags)) (sequential? tags))
-        sort-fn   (sort-type->sort-fn)]
+        sort-fn   (sort-type->sort-fn)
+        posts     (sort-fn (if with-tag? (get-tagged-posts tags) (get-posts)))
+        ]
     (assoc (merge (:site *config*) base-option)
            :file     tmpl-file
-           :posts    (sort-fn (if with-tag? (get-tagged-posts tags) (get-posts)))
+           :posts    (add-next-prev-post posts)
            :tags     (get-tags :count-by-name? true)
            :tag-name (if with-tag? (str/join "," tags))
            :index    (cnf/get-index-filename)

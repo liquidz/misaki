@@ -82,6 +82,28 @@
         0 (count posts5))
       (is (thrown? AssertionError (get-tagged-posts "string"))))))
 
+;;; add-next-prev-post
+(deftest add-next-prev-post-test
+  (testing "even num"
+    (let [posts (list {:name "a"} {:name "b"})
+          [a b] (add-next-prev-post posts)]
+      (are [x y] (= (if x (dissoc x :next :prev) x) y)
+        nil (:prev a)
+        b   (:next a)
+        a   (:prev b)
+        nil (:next b))))
+
+  (testing "odd num"
+    (let [posts (list {:name "a"} {:name "b"} {:name "c"})
+          [a b c] (add-next-prev-post posts)]
+      (are [x y] (= (if x (dissoc x :next :prev) x) y)
+        nil (:prev a)
+        b   (:next a)
+        a   (:prev b)
+        c   (:next b)
+        b   (:prev c)
+        nil (:next c)))))
+
 ;;; get-all-tags
 (deftest* get-all-tags-test
   (testing "normal pattern"
@@ -145,7 +167,15 @@
           nil     (:tag-name site)
           '("tag1" "tag2" "tag3") (map :name (:tags site))
           '(1 2 1) (map :count (:tags site))
-          (date-time 2000 1 1) (:date site))))
+          (date-time 2000 1 1) (:date site))
+        (are [x y] (= (if x (dissoc x :next :prev) x) y)
+          ; prev/next
+          p2  (:next p1)
+          nil (:prev p1)
+          p3  (:next p2)
+          p1  (:prev p2)
+          nil (:next p3)
+          p2  (:prev p3))))
 
     (testing "site data with post tag"
       (let [site (make-site-data file1 :base-option option1 :tags ["tag1"])]
