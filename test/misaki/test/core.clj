@@ -155,9 +155,9 @@
 ;;; compile*
 (deftest* compile*-test
   (testing "single compiler"
-    (let [[c r] (compile* (template-file "index.html.clj"))]
-      (is (not (false? c)))
-      (is (not (false? r))))
+    (let [[p c] (compile* (template-file "index.html.clj"))]
+      (is (not (false? p)))
+      (is (not (false? c))))
     (let [file (public-file "index.html")]
       (is (.exists file))
       (.delete file)))
@@ -166,22 +166,23 @@
                             [(load-compiler-publics "default")
                              (load-compiler-publics "copy")])]
     (testing "multiple compilers: first compiler is used"
-      (let [[c r] (compile* (template-file "index.html.clj"))]
-        (is (not (false? c)))
-        (is (not (false? r))))
+      (let [[p c] (compile* (template-file "index.html.clj"))]
+        (is (not (false? p)))
+        (is (not (false? c))))
       (let [file (public-file "index.html")]
         (is (.exists file))
         (.delete file)))
 
     (testing "multiple compilers: second compiler is used"
-      (let [[c r] (compile* (template-file "favicon.ico"))]
-        (is (not (false? c)))
-        (is (not (false? r))))
+      (let [[p c] (compile* (template-file "favicon.ico"))]
+        (is (not (false? p)))
+        (is (not (false? c))))
       (let [file (public-file "favicon.ico")]
         (is (.exists file))
         (.delete file))))
 
   (testing "all skip error test"
-    (let [res (compile* (template-file "favicon.ico"))]
-      (is (every? false? res)))))
+    (let [[p c] (compile* (template-file "favicon.ico"))]
+      (is (true? p))
+      (is (= 'skip c)))))
 

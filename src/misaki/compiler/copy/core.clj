@@ -1,6 +1,15 @@
 (ns misaki.compiler.copy.core
-  (:use [misaki.util.file :only [path has-extension?]])
-  (:require [clojure.java.io :as io]))
+  (:use [misaki.util.file :only [path has-extension?]]
+        [misaki.config    :only [*config*]])
+  (:require [clojure.java.io :as io]
+            [misaki.server   :as srv]))
+
+
+(defmacro log
+  [label body]
+  `(if (and (:detailed-log *config*) (= :all (:-compiling *config*)))
+     (srv/print-compile-result ~label ~body)
+     ~body))
 
 (defn -extension
   [] (list :*))
@@ -8,15 +17,18 @@
 (defn -config
   [config]
   (merge
-    {:except-extensions []}
+    {:except-extensions []
+    :detailed-log false}
     config))
 
 (defn -compile
-  [{:keys [public-dir except-extensions]} file]
+  [{:keys [public-dir except-extensions] :as config} file]
+  (binding [*config* config]
+    (if (some #(has-extension? % file) except-extensions)
+      'skip
+      (log (.getName file)
+           (do (io/copy file (io/file (path public-dir (.getName file))))
+               true)))))
 
-  (if (some #(has-extension? % file) except-extensions)
-    'skip
-    (do (io/copy file (io/file (path public-dir (.getName file))))
-        true)))
 
 

@@ -36,5 +36,5 @@
   (testing "excepting extension option"
     (let [from-file (t/template-file "dummy.except")
           to-file   (t/public-file  "dummy.except")]
-      (is (not (t/test-compile from-file)))
+      (is (t/test-compile from-file))
       (is (not (.exists to-file))))))

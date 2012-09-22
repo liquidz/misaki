@@ -26,7 +26,7 @@
   [result & optional-string]
   (case result
     true  (cyan (apply str "DONE" optional-string))
-    false (red (apply str "FAIL" optional-string))
+    false (red  (apply str "FAIL" optional-string))
     (cyan "SKIP")))
 
 ; =print-result
@@ -67,7 +67,6 @@
 (defn start-watcher
   "Start watchtower watcher to compile changed templates"
   [template-dir]
-
   (watcher
     [template-dir
      (str *base-dir* *config-file*)]

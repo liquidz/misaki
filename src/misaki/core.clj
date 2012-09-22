@@ -203,8 +203,7 @@
   ;;;    )
   ;;;  )
 
-  (let [config (assoc (update-config) :-compiling :single)
-        [process-result compile-result] (compile* {:-compiling :single} file)]
+  (let [[process-result compile-result] (compile* {:-compiling :single} file)]
     (cond
       ; all compile
       (all-compile? compile-result)

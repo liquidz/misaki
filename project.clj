@@ -9,7 +9,7 @@
                  [clj-time "0.4.3"]
                  [clj-text-decoration "0.0.1"]
                  [clj-pretty-error "0.0.5"]
-                 [uochan/watchtower "0.1.2"]
+                 [uochan/watchtower "0.1.3"]
                  [de.ubercode.clostache/clostache "1.3.0"]
                  [clj-gntp "0.0.1"]
                  [clj-growl "0.2.1"]]
