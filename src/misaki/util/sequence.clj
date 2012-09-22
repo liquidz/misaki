@@ -35,3 +35,11 @@
        (= () coll) default-value
        (pred x)    x
        :else       (recur pred (rest coll) default-value)))))
+
+
+; =some-with-default-value
+(defn some-with-default-value
+  "`some` function which returns specified default value if not matched."
+  [pred coll default-value]
+  (-> (some pred coll)
+      (or default-value)))

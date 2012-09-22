@@ -138,20 +138,19 @@
   ([file] (compile* {} file))
   ([optional-config file]
    (try
-     (loop [[compiler & rst] (flatten (list (:compiler *config*)))]
-       (if compiler
-         (if (handleable-compiler? compiler file)
-           (let [config           (merge (update-config compiler) optional-config)
-                 compile-result   (call-compiler-fn compiler :-compile config file)
-                 default-filename (make-output-filename file)
-                 process-result   (process-compile-result
-                                        compile-result default-filename)]
-             (if (skip-compile? compile-result)
-               (recur rst)
-               (do (if (:notify? *config*) (notify-result file process-result))
-                   [process-result compile-result])))
-           (recur rst))
-         [false false]))
+     (some-with-default-value
+       #(if (handleable-compiler? % file)
+            (let [config         (merge (update-config %) optional-config)
+                  compile-result (call-compiler-fn % :-compile config file)
+                  process-result (process-compile-result
+                                   compile-result
+                                   (make-output-filename file))]
+              (when-not (skip-compile? compile-result)
+                (if (:notify? *config*) (notify-result file process-result))
+                [process-result compile-result])))
+         (flatten (list (:compiler *config*)))
+       [false false])
+
      (catch Exception e
        (print-pretty-stack-trace
          e :filter #(str-contains? (:str %) "misaki"))

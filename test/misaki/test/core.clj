@@ -149,7 +149,7 @@
 ;;; compile*
 (deftest* compile*-test
   (testing "single compiler"
-    (let[[c r] (compile* (template-file "index.html.clj"))]
+    (let [[c r] (compile* (template-file "index.html.clj"))]
       (is (not (false? c)))
       (is (not (false? r))))
     (let [file (public-file "index.html")]
