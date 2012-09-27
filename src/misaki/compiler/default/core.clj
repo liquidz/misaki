@@ -21,14 +21,20 @@
 (declare compile-clojurescripts)
 (declare compile-tag)
 (declare get-tags)
+(declare get-posts)
+(declare get-prev-next-post)
 
 ; =log
 (defmacro log
   "Print compile result log with `:detailed-log` option."
-  [label body]
-  `(if (and (:detailed-log *config*) (= :all (:-compiling *config*)))
-     (srv/print-compile-result ~label ~body)
-     ~body))
+  ([label body]
+   `(if (and (:detailed-log *config*) (= :all (:-compiling *config*)))
+      (srv/print-compile-result ~label ~body)
+      ~body))
+  ([label body force?]
+   `(if (and (:detailed-log *config*) ~force?)
+      (srv/print-compile-result ~label ~body)
+      ~body)))
 
 ;; ## Functions for Plugin
 
@@ -68,7 +74,16 @@
           ; compile tag
           (if-let [tags (-> file parse-template-option :tag)]
             (doseq [{tag-name :name} tags]
-              (log tag-name (compile-tag tag-name)))))
+              (log tag-name (compile-tag tag-name) true)))
+          ; compile prev/next posts
+          (let [posts       ((sort-type->sort-fn) (get-posts))
+                [prev next] (get-prev-next-post file posts)
+                prev-file   (:file prev)
+                next-file   (:file next)]
+            (if prev-file
+              (log (.getName prev-file) (compile-template prev-file) true))
+            (if next-file
+              (log (.getName next-file) (compile-template next-file) true))))
         res))))
 
 ;; ## Post Functions
@@ -164,9 +179,9 @@
   [#^File tmpl-file & {:keys [base-option tags]
                        :or   {base-option {}, tags nil}}]
   {:pre [(file? tmpl-file)]}
-  (let [with-tag? (and (not (nil? tags)) (sequential? tags))
-        sort-fn   (sort-type->sort-fn)
-        posts     (sort-fn (if with-tag? (get-tagged-posts tags) (get-posts)))
+  (let [with-tag?   (and (not (nil? tags)) (sequential? tags))
+        sort-fn     (sort-type->sort-fn)
+        posts       (sort-fn (if with-tag? (get-tagged-posts tags) (get-posts)))
         [prev next] (if (cnf/post-file? tmpl-file)
                       (get-prev-next-post tmpl-file posts)
                       [nil nil])]

@@ -183,8 +183,8 @@
     (cond
       ; all compile
       (all-compile? compile-result)
-        (do (println (green "   Switch to all compiling"))
-            (call-all-compile))
+      (do (println (green "   Switch to all compiling"))
+        (call-all-compile))
 
       ; compile with post
       (post-file? file)

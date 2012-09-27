@@ -1,9 +1,9 @@
 (ns misaki.test.compiler.core
   (:use [misaki.compiler.default core template config]
-        [misaki.util sequence]
+        [misaki.util sequence file]
         [misaki.config :only [*config*]]
         [misaki.config :only [template-name->file]]
-        [misaki.tester :only [bind-config]]
+        [misaki.tester :only [bind-config test-compile template-file public-file]]
         misaki.server
         misaki.test.compiler.common
         [hiccup.core :only [html]]
@@ -12,6 +12,60 @@
   (:require
     [misaki.core :as msk]
     [clojure.java.io :as io]))
+
+;;; -compile
+(deftest* -compile-test
+  (testing "normal template should be compiled"
+    (let [in  (template-file "index.html.clj")
+          out (public-file "index.html")]
+      (is (not (.exists out)))
+      (test-compile in)
+      (is (.exists out))
+      (.delete out)))
+
+  (testing "tag and prev/next post should be compiled when post file is compiled"
+    (let [
+          in1   (template-file "_posts/2022.02.02-bar.html.clj")
+          in2   (template-file "_posts/2011.01.01-foo.html.clj")
+          in3   (template-file "_posts/2000.01.01-foo.html.clj")
+          tag1  (public-file "tag/tag1.html")
+          tag2  (public-file "tag/tag2.html")
+          tag3  (public-file "tag/tag3.html")
+          post1 (public-file "2000-01/foo.html")
+          post2 (public-file "2011-01/foo.html")
+          post3 (public-file "2022-02/bar.html")]
+
+      ; in1
+      ;   tags: tag1, tag2
+      ;   next: 2011.01.01-foo.html.clj
+      ;   prev: nil
+      (is (every? #(not (.exists %)) [tag1 tag2 tag3 post1 post2 post3]))
+      (test-compile in1)
+      (is (every? #(.exists %) [tag1 tag2 post2 post3]))
+      (is (not (.exists tag3)))
+      (is (not (.exists post1)))
+      (doseq [f [tag1 tag2 post2 post3]] (.delete f))
+
+      ; in2
+      ;   tags: tag2, tag3
+      ;   next: 2000.01.01-foo.html.clj
+      ;   prev: 2022.02.02-bar.html.clj
+      (is (every? #(not (.exists %)) [tag1 tag2 tag3 post1 post2 post3]))
+      (test-compile in2)
+      (is (every? #(.exists %) [tag2 tag3 post1 post2 post3]))
+      (is (not (.exists tag1)))
+      (doseq [f [tag2 tag3 post1 post2 post3]] (.delete f))
+
+      ; in3
+      ;   tags: []
+      ;   next: nil
+      ;   prev: 2011.01.01-foo.html.clj
+      (is (every? #(not (.exists %)) [tag1 tag2 tag3 post1 post2 post3]))
+      (test-compile in3)
+      (is (every? #(.exists %) [post1 post2]))
+      (is (every? #(not (.exists %)) [tag1 tag2 tag3]))
+      (is (not (.exists post3)))
+      (doseq [f [post1 post2]] (.delete f)))))
 
 ;;; generate-post-content
 (deftest* generate-post-content-test
@@ -332,7 +386,6 @@
 (deftest* compile-tag-test
   (let [{:keys [public-dir tag-out-dir]} *config*
         tag-name "tag1"
-        ;res      (msk/process-compile-result (compile-tag tag-name) "")
         res      (compile-tag tag-name)
         file     (io/file (str public-dir tag-out-dir tag-name ".html"))]
     (is res)
@@ -343,7 +396,6 @@
 (deftest* compile-template-test
   (let [{:keys [public-dir template-dir]} *config*
         tmpl (io/file (str template-dir "index.html.clj"))
-        ;res  (msk/process-compile-result (compile-template tmpl) "")
         res  (compile-template tmpl)
         file (io/file (str public-dir (make-template-output-filename tmpl)))]
     (is res)
@@ -383,23 +435,24 @@
 (deftest* server-test
   (testing "compile with post"
     (let [{:keys [post-dir public-dir tag-out-dir]} *config*]
-      (do-compile (io/file (str post-dir "2011.01.01-foo.html.clj")))
-      (let [post-file (io/file (str public-dir "2011-01/foo.html"))
-            test-file (io/file (str public-dir "index.html"))
-            tag1-file (io/file (str public-dir tag-out-dir "tag1.html"))
-            tag2-file (io/file (str public-dir tag-out-dir "tag2.html"))
-            tag3-file (io/file (str public-dir tag-out-dir "tag3.html"))
-            ]
+      (do-compile (io/file (path post-dir "2011.01.01-foo.html.clj")))
+      (let [post-file (public-file "2011-01/foo.html")
+            test-file (public-file "index.html")
+            tag1-file (public-file (path tag-out-dir "tag1.html"))
+            tag2-file (public-file (path tag-out-dir "tag2.html"))
+            tag3-file (public-file (path tag-out-dir "tag3.html"))]
         (are [x file] (= x (.exists file))
           true  post-file
           true  test-file
           false tag1-file
           true  tag2-file
-          true  tag3-file
-          )
-        (.delete post-file)
-        (.delete test-file)
-        (.delete tag2-file)
-        (.delete tag3-file)
-        ))))
+          true  tag3-file)
+
+        (let [files (concat (find-files public-dir)
+                            (find-files (path public-dir "2000-01"))
+                            (find-files (path public-dir "2011-01"))
+                            (find-files (path public-dir "2022-02"))
+                            (find-files (path public-dir "tag")))
+              files (distinct (filter #(.isFile %) files))]
+          (doseq [f files] (.delete f)))))))
 
