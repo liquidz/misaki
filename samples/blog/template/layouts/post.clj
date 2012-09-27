@@ -15,5 +15,15 @@
   (post-date)]
 
  ; contents
- [:div {:class "post"} contents]]
+ [:div {:class "post"} contents]
+
+
+ (p {:class "pager"}
+ (if-let [prev (:prev site)]
+   (p "&laquo;" (link (:title prev) (:url prev))))
+  (if-let [next (:next site)]
+    (p (link (:title next) (:url next)) "&raquo;"))
+  )
+
+ ]
 

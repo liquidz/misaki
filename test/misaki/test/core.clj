@@ -7,6 +7,24 @@
 
 (set-base-dir! "test/")
 
+(deftest skip-compile?-test
+  (testing "symbol or (symbol? (:status %)) is skip"
+    (are [x y] (= x y)
+      true (#'misaki.core/skip-compile? 'skip)
+      true (#'misaki.core/skip-compile? {:status 'skip})))
+
+  (testing "invalid"
+    (are [x y] (= x y)
+      false (#'misaki.core/skip-compile? 1)
+      false (#'misaki.core/skip-compile? "str")
+      false (#'misaki.core/skip-compile? {:status true})))
+
+  (testing "iregular"
+    ; if additional options exists, return false
+    (are [x y] (= x y)
+      false (#'misaki.core/skip-compile? {:status 'skip :stop-compile? true})
+      false (#'misaki.core/skip-compile? {:status 'skip :all-compile? true}))))
+
 ;; call-compiler-fn
 (deftest* call-compiler-fn-test
   (testing "single compiler"

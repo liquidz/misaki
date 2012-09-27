@@ -13,19 +13,23 @@
 
 ;; ## Compiler Utilities
 
-(defn- skip-compile? [compile-result]
-  (or (symbol? compile-result)
-      (and (map? compile-result)
-           (symbol? (:status compile-result)))))
 
 ; =stop-compile?
 (defn- stop-compile? [compile-result]
   (and (map?   compile-result)
        (true? (:stop-compile? compile-result))))
 
+; =all-compile?
 (defn- all-compile? [compile-result]
   (and (map?   compile-result)
        (true? (:all-compile? compile-result))))
+
+; =skip-compile?
+(defn- skip-compile? [compile-result]
+  (or (symbol? compile-result)
+      (and (map? compile-result)
+           (symbol? (:status compile-result))
+           (every? #(not (% compile-result)) [stop-compile? all-compile?]))))
 
 ; =call-compiler-fn
 (defn- call-compiler-fn
@@ -140,15 +144,15 @@
    (try
      (some-with-default-value
        #(if (handleable-compiler? % file)
-            (let [config         (merge (update-config %) optional-config)
-                  compile-result (call-compiler-fn % :-compile config file)
-                  process-result (process-compile-result
-                                   compile-result
-                                   (make-output-filename file))]
-              (when-not (skip-compile? compile-result)
-                (if (:notify? *config*) (notify-result file process-result))
-                [process-result compile-result])))
-         (flatten (list (:compiler *config*)))
+          (let [config         (merge (update-config %) optional-config)
+                compile-result (call-compiler-fn % :-compile config file)
+                process-result (process-compile-result
+                                 compile-result
+                                 (make-output-filename file))]
+            (when-not (skip-compile? compile-result)
+              (if (:notify? *config*) (notify-result file process-result))
+              [process-result compile-result])))
+       (flatten (list (:compiler *config*)))
        [true 'skip])
 
      (catch Exception e
@@ -175,34 +179,6 @@
 (defn call-compile
   "Call plugin's -compile function."
   [file]
-  ;;;(let [compilers (flatten (list (:compiler *config*)))]
-  ;;;  (loop [[compiler & rst] compilers]
-  ;;;    (println ">>>>" (:name compiler) ":" (.getName file))
-  ;;;    (if (handleable-compiler? compiler file)
-  ;;;      (let [config (assoc (update-config compiler) :-compiling :single)
-  ;;;            [process-result compile-result] (compile* compiler config file)]
-  ;;;        (cond
-  ;;;          (skip-compile? compile-result)
-  ;;;          (recur rst)
-
-  ;;;          (all-compile? compile-result)
-  ;;;          (do (println (green "  Switch to all compiling"))
-  ;;;              (call-all-compile))
-
-  ;;;          (post-file? file)
-  ;;;          (every? #(true? (first %))
-  ;;;                  (for [file (map template-name->file (:compile-with-post *config*))]
-  ;;;                    (compile* compiler config file)))
-
-
-  ;;;          :else process-result
-  ;;;          )
-  ;;;        )
-  ;;;      (recur rst)
-  ;;;      )
-  ;;;    )
-  ;;;  )
-
   (let [[process-result compile-result] (compile* {:-compiling :single} file)]
     (cond
       ; all compile
@@ -212,11 +188,10 @@
 
       ; compile with post
       (post-file? file)
-        (every? #(true? (first %))
-                (for [file (map template-name->file (:compile-with-post *config*))]
-                  (compile* {:-compiling :single} file)))
+      (every? #(true? (first %))
+              (for [file (map template-name->file (:compile-with-post *config*))]
+                (compile* {:-compiling :single} file)))
 
-      :else process-result))
-  )
+      :else process-result)))
 
 
