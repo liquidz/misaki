@@ -186,10 +186,12 @@
     (testing "paragraph with attribute"
       (are [x y] (= x (html y))
         "<p class=\"paragraph foo\">bar</p>"(p {:class "foo"} "bar")
-        "<p class=\"paragraph\" id=\"foo\">bar</p>"(p {:id "foo"} "bar")
-        )
-      )
-    ))
+        "<p class=\"paragraph\" id=\"foo\">bar</p>"(p {:id "foo"} "bar")))
+
+    (testing "paragraph in paragraph"
+      (are [x y] (= x (html y))
+        "<p class=\"paragraph\">foo<p class=\"paragraph\">bar</p></p>" (p "foo" (p "bar"))
+        "<p class=\"paragraph baz\">foo<p class=\"paragraph\">bar</p></p>" (p {:class "baz"} "foo" (p "bar"))))))
 
 (deftest* js-test
   (testing "basic pattern"

@@ -17,13 +17,12 @@
  ; contents
  [:div {:class "post"} contents]
 
-
+ ; pager
  (p {:class "pager"}
- (if-let [prev (:prev site)]
-   (p "&laquo;" (link (:title prev) (:url prev))))
-  (if-let [next (:next site)]
-    (p (link (:title next) (:url next)) "&raquo;"))
-  )
-
- ]
+    (if-let [prev (:prev site)]
+      (list "&laquo;" (link (:title prev) (:url prev))))
+    (if (and (:prev site) (:next site))
+      (list " | "))
+    (if-let [next (:next site)]
+      (list (link (:title next) (:url next)) "&raquo;")))]
 
