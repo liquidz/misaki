@@ -17,12 +17,6 @@
  ; contents
  [:div {:class "post"} contents]
 
- ; pager
- (p {:class "pager"}
-    (if-let [prev (:prev site)]
-      (list "&laquo;" (link (:title prev) (:url prev))))
-    (if (and (:prev site) (:next site))
-      (list " | "))
-    (if-let [next (:next site)]
-      (list (link (:title next) (:url next)) "&raquo;")))]
+ ; previous/next post
+ (prev-next-post-link)]
 

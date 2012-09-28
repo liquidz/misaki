@@ -378,7 +378,7 @@
   "Make default footer."
   [& p]
   [:footer {:class "footer"}
-   [:p {:class "right back_to_top"} (link "Back to top" "#")]
+   [:p {:class "right back_to_top"} (link "&uArr; Page Top" "#")]
    [:p p]])
 
 (defn post-list
@@ -422,6 +422,18 @@
   "Make default post date tag."
   []
   [:p {:class "date"} (-> *site* :date date/date->string)])
+
+(defn prev-next-post-link
+  "Make previous/next post links."
+  [& {:keys [class separator] :or {class "pager", separator "|"}}]
+  (p {:class class}
+     (if-let [prev (:prev *site*)]
+       (list (link (str "&laquo; " (:title prev)) (:url prev))
+             (str "&nbsp;&nbsp;" separator "&nbsp;&nbsp;")))
+     (link "Top Page" (:index *site*))
+     (if-let [next (:next *site*)]
+       (list (str "&nbsp;&nbsp;" separator "&nbsp;&nbsp;")
+             (link (str (:title next) "&nbsp;&raquo;") (:url next))))))
 
 (defn two-column
   "Make 2 column"

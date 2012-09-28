@@ -18,5 +18,5 @@
 
  ; contents
  [:div {:class "post"} contents
-  [:p {:class "back"} "&raquo; " (link "Back to Top" (:index site))]]]
-
+  ; previous/next post
+  (prev-next-post-link)]]
