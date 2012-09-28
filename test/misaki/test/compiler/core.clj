@@ -158,15 +158,6 @@
         b   (:prev c)
         nil (:next c)))))
 
-;; get-prev-next-post
-(deftest get-prev-next-post-test
-  (let [[f1 f2 f3 :as ls] (list {:file 1} {:file 2} {:file 3})]
-    (are [x y] (= x y)
-      [nil f2]  (get-prev-next-post 1 ls)
-      [f1 f3]   (get-prev-next-post 2 ls)
-      [f2 nil]  (get-prev-next-post 3 ls)
-      [nil nil] (get-prev-next-post 4 ls))))
-
 ;;; get-all-tags
 (deftest* get-all-tags-test
   (testing "normal pattern"
@@ -319,9 +310,7 @@
             "foo" (:title p3)
 
             (dissoc p3 :next :prev) (:next site)
-            (dissoc p1 :next :prev) (:prev site)
-            
-            ))))
+            (dissoc p1 :next :prev) (:prev site)))))
 
     (testing "with post-sort-type => :title-desc"
       (bind-config [:post-sort-type :title-desc]

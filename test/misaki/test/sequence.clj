@@ -85,3 +85,23 @@
     (are [x y] (= x y)
       0 (find-first zero? '(0 1 2 3) 'zero)
       'zero (find-first zero? '(1 2 3) 'zero))))
+
+
+;;; get-prev-next
+(deftest get-prev-next-test
+  (testing "should return correct prev/next element"
+    (let [[f1 f2 f3 :as ls] '(file1 file2 file3)]
+      (are [x y] (= x y)
+        [nil f2]  (get-prev-next #(= % 'file1) ls)
+        [f1 f3]   (get-prev-next #(= % 'file2) ls)
+        [f2 nil]  (get-prev-next #(= % 'file3) ls)
+        [nil nil] (get-prev-next #(= % 'file4) ls))))
+
+  (testing ":default option"
+    (let [[f1 f2 :as ls] (list {:file 1} {:file 2})
+          default '[NULL1 NULL2]]
+      (are [x y] (= x y)
+        ['NULL1 f2]      (get-prev-next #(= 1 (:file %)) ls :default default)
+        [f1 'NULL2]      (get-prev-next #(= 2 (:file %)) ls :default default)
+        ['NULL1  'NULL2] (get-prev-next #(= 3 (:file %)) ls :default default)))))
+

@@ -16,13 +16,12 @@
     [clojure.java.io :as io])
   (:import [java.io File]))
 
-(declare file->template-sexp)
-(declare compile-template)
-(declare compile-clojurescripts)
-(declare compile-tag)
-(declare get-tags)
-(declare get-posts)
-(declare get-prev-next-post)
+(declare file->template-sexp
+         compile-template
+         compile-clojurescripts
+         compile-tag
+         get-tags
+         get-posts)
 
 ; =log
 (defmacro log
@@ -77,12 +76,10 @@
               (log tag-name (compile-tag tag-name) true)))
           ; compile prev/next posts
           (let [posts       ((sort-type->sort-fn) (get-posts))
-                [prev next] (get-prev-next-post file posts)
-                prev-file   (:file prev)
-                next-file   (:file next)]
-            (if prev-file
+                [prev next] (get-prev-next #(= file (:file %)) posts)]
+            (if-let [prev-file (:file prev)]
               (log (.getName prev-file) (compile-template prev-file) true))
-            (if next-file
+            (if-let [next-file (:file next)]
               (log (.getName next-file) (compile-template next-file) true))))
         res))))
 
@@ -140,15 +137,6 @@
          (assoc m :prev prev :next next))
        (partition 3 1 (flatten (list nil posts nil)))))
 
-; =get-prev-next-post
-(defn get-prev-next-post
-  "Get next and previous post information from post list."
-  [post-file posts]
-  (let [[p _ n] (find-first
-                  #(= post-file (:file (second %)))
-                  (partition 3 1 (flatten (list nil posts nil)))
-                  [nil nil nil])]
-    [p n]))
 
 ;; ## Tag Functions
 
@@ -183,7 +171,7 @@
         sort-fn     (sort-type->sort-fn)
         posts       (sort-fn (if with-tag? (get-tagged-posts tags) (get-posts)))
         [prev next] (if (cnf/post-file? tmpl-file)
-                      (get-prev-next-post tmpl-file posts)
+                      (get-prev-next #(= tmpl-file (:file %)) posts)
                       [nil nil])]
     (assoc (merge (:site *config*) base-option)
            :file     tmpl-file

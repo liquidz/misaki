@@ -43,3 +43,16 @@
   [pred coll default-value]
   (-> (some pred coll)
       (or default-value)))
+
+
+; =get-prev-next
+(defn get-prev-next
+  "Get previous and next element from a sequence."
+  [pred coll & {:keys [default] :or {default [nil nil]}}]
+  {:pre [(fn? pred) (sequential? coll)
+         (sequential? default) (= 2 (count default))]}
+  (let [[prev* next*] default
+        coll*         (partition 3 1 (flatten (list prev* coll next*)))
+        [prev _ next] (find-first #(pred (second %)) coll* [prev* nil next*])]
+    [prev next]))
+

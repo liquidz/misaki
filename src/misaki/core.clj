@@ -16,20 +16,20 @@
 
 ; =stop-compile?
 (defn- stop-compile? [compile-result]
-  (and (map?   compile-result)
+  (and (map?  compile-result)
        (true? (:stop-compile? compile-result))))
 
 ; =all-compile?
 (defn- all-compile? [compile-result]
-  (and (map?   compile-result)
+  (and (map?  compile-result)
        (true? (:all-compile? compile-result))))
 
 ; =skip-compile?
 (defn- skip-compile? [compile-result]
   (or (symbol? compile-result)
-      (and (map? compile-result)
+      (and (map?    compile-result)
            (symbol? (:status compile-result))
-           (every? #(not (% compile-result)) [stop-compile? all-compile?]))))
+           (every?  #(not (% compile-result)) [stop-compile? all-compile?]))))
 
 ; =call-compiler-fn
 (defn- call-compiler-fn
@@ -68,6 +68,7 @@
     (if sort?
       ((sort-type->sort-fn) files)
       files)))
+
 
 ;; ## Compiler Functions
 

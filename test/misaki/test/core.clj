@@ -96,6 +96,7 @@
           "2011.01.01-foo.html.clj" (.getName b)
           "2000.01.01-foo.html.clj" (.getName c))))))
 
+
 ;; update-config
 (deftest* update-config-test
   (testing "default single compiler"
