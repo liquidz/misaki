@@ -3215,10 +3215,12 @@ net.brehaut.ClojureTools = (function (SH) {
               (log tag-name (compile-tag tag-name) true)))
           ; compile prev/next posts
           (let [posts       ((sort-type-&gt;sort-fn) (get-posts))
-                [prev next] (get-prev-next #(= file (:file %)) posts)]
-            (if-let [prev-file (:file prev)]
+                [prev next] (get-prev-next #(= file (:file %)) posts)
+                prev-file   (:file prev)
+                next-file   (:file next)]
+            (if (and prev-file (= :single (:-compiling config)))
               (log (.getName prev-file) (compile-template prev-file) true))
-            (if-let [next-file (:file next)]
+            (if (and next-file (= :single (:-compiling config)))
               (log (.getName next-file) (compile-template next-file) true))))
         res))))</pre></td></tr><tr><td class="docs"><h2>Post Functions</h2>
 </td><td class="codes"></td></tr><tr><td class="docs"><p>Generate post content without layout.</p>
@@ -3739,7 +3741,7 @@ net.brehaut.ClojureTools = (function (SH) {
 </td><td class="codes"><pre class="brush: clojure">(defn footer
   [&amp; p]
   [:footer {:class &quot;footer&quot;}
-   [:p {:class &quot;right back_to_top&quot;} (link &quot;Back to top&quot; &quot;#&quot;)]
+   [:p {:class &quot;right back_to_top&quot;} (link &quot;&amp;uArr; Page Top&quot; &quot;#&quot;)]
    [:p p]])</pre></td></tr><tr><td class="docs"><p>Make default all posts unordered list.</p>
 
 <pre><code>  (post-list)
@@ -3773,7 +3775,17 @@ net.brehaut.ClojureTools = (function (SH) {
    (ul #(link (:name %) (:url %)) (:tag *site*))])</pre></td></tr><tr><td class="docs"><p>Make default post date tag.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn post-date
   []
-  [:p {:class &quot;date&quot;} (-&gt; *site* :date date/date-&gt;string)])</pre></td></tr><tr><td class="docs"><p>Make 2 column</p>
+  [:p {:class &quot;date&quot;} (-&gt; *site* :date date/date-&gt;string)])</pre></td></tr><tr><td class="docs"><p>Make previous/next post links.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn prev-next-post-link
+  [&amp; {:keys [class separator] :or {class &quot;pager&quot;, separator &quot;|&quot;}}]
+  (p {:class class}
+     (if-let [prev (:prev *site*)]
+       (list (link (str &quot;&amp;laquo; &quot; (:title prev)) (:url prev))
+             (str &quot;&amp;nbsp;&amp;nbsp;&quot; separator &quot;&amp;nbsp;&amp;nbsp;&quot;)))
+     (link &quot;Top Page&quot; (:index *site*))
+     (if-let [next (:next *site*)]
+       (list (str &quot;&amp;nbsp;&amp;nbsp;&quot; separator &quot;&amp;nbsp;&amp;nbsp;&quot;)
+             (link (str (:title next) &quot;&amp;nbsp;&amp;raquo;&quot;) (:url next))))))</pre></td></tr><tr><td class="docs"><p>Make 2 column</p>
 </td><td class="codes"><pre class="brush: clojure">(defn two-column
   [left right]
   [:div {:class &quot;column&quot;}
@@ -4216,8 +4228,8 @@ ewline and return if you deref instance.</p>
         [misaki.util file string sequence notify]
         [text-decoration.core :only [green]]
         [pretty-error.core    :only [print-pretty-stack-trace]])
-  (:import [java.io File]))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(declare get-watch-file-extensions)</pre></td></tr><tr><td class="docs"><h2>Util</h2>
+  (:import [java.io File]))</pre></td></tr><tr><td class="docs"><h2>Util</h2>
+</td><td class="codes"></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn key-&gt;sym [k] (symbol (name k)))</pre></td></tr><tr><td class="docs"><h2>Compiler Utilities</h2>
 </td><td class="codes"></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn- stop-compile? [compile-result]
@@ -4244,7 +4256,14 @@ ewline and return if you deref instance.</p>
         fn-sym (key-&gt;sym fn-key)]
     (if (sequential? compiler)
       (mapcat #(apply call-compiler-fn % fn-sym args) compiler)
-      (if-let [f (get compiler fn-sym)] (apply f args)))))</pre></td></tr><tr><td class="docs"><p>Get all template files. Find specified directory with <code>:dir</code> option.</p>
+      (if-let [f (get compiler fn-sym)] (apply f args)))))</pre></td></tr><tr><td class="docs"><p>Get extensions list to watch.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn get-watch-file-extensions
+  []
+  (map normalize-extension (distinct (call-compiler-fn :-extension))))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn handleable-compiler?
+  [compiler file]
+  (let [exts (call-compiler-fn compiler :-extension)]
+    (not (nil? (some #(has-extension? % file) exts)))))</pre></td></tr><tr><td class="docs"><p>Get all template files. Find specified directory with <code>:dir</code> option.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn get-template-files
   [&amp; {:keys [dir] :or {dir (:template-dir *config*)}}]
   (let [exts (get-watch-file-extensions)]
@@ -4259,10 +4278,7 @@ ewline and return if you deref instance.</p>
     (if sort?
       ((sort-type-&gt;sort-fn) files)
       files)))</pre></td></tr><tr><td class="docs"><h2>Compiler Functions</h2>
-</td><td class="codes"></td></tr><tr><td class="docs"><p>Get extensions list to watch.</p>
-</td><td class="codes"><pre class="brush: clojure">(defn get-watch-file-extensions
-  []
-  (map normalize-extension (distinct (call-compiler-fn :-extension))))</pre></td></tr><tr><td class="docs"><p>Update basic config with plugin's -config function.</p>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>Update basic config with plugin's -config function.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn update-config
   [&amp; [compiler]]
    (let [config (make-basic-config-map)
@@ -4307,11 +4323,7 @@ ewline and return if you deref instance.</p>
             status)
         status))
     ; error
-    :else false))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn handleable-compiler?
-  [compiler file]
-  (let [exts (call-compiler-fn compiler :-extension)]
-    (not (nil? (some #(has-extension? % file) exts)))))</pre></td></tr><tr><td class="docs"><p>Common function to compile java.io.File with config.</p>
+    :else false))</pre></td></tr><tr><td class="docs"><p>Common function to compile java.io.File with config.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn compile*
   ([file] (compile* {} file))
   ([optional-config file]
@@ -4351,7 +4363,7 @@ ewline and return if you deref instance.</p>
       ; all compile
       (all-compile? compile-result)
       (do (println (green &quot;   Switch to all compiling&quot;))
-        (call-all-compile))
+          (call-all-compile))
       ; compile with post
       (post-file? file)
       (every? #(true? (first %))
