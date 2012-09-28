@@ -82,6 +82,24 @@ root/
  ;;   default value: false
  :detailed-log false
 
+ ;; flag for error notification
+ ;;   default value: false
+ :notify? false
+
+ ;; notify setting(OPTIONAL)
+ :notify-setting {;; title for fixing notification
+                  ;;  default value: &quot;{{filename}}&quot;
+                  :fixed-title  &quot;{{filename}}&quot;
+                  ;; message for fixing notication
+                  ;;   default value: &quot;FIXED&quot;
+                  :fixed        &quot;FIXED&quot;
+                  ;; title for failing notification
+                  ;;   default value: &quot;{{filename}} : {{line}}&quot;
+                  :failed-title &quot;{{filename}} : {{line}}&quot;
+                  ;; message for failing notification
+                  ;;   default value: {{message}}
+                  :failed       &quot;{{message}}&quot;}
+
  ;; compiler setting
  ;;   default value: &quot;default&quot;
  :compiler &quot;default&quot;
