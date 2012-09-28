@@ -48,6 +48,12 @@
       (mapcat #(apply call-compiler-fn % fn-sym args) compiler)
       (if-let [f (get compiler fn-sym)] (apply f args)))))
 
+; =handleable-compiler?
+(defn handleable-compiler?
+  [compiler file]
+  (let [exts (call-compiler-fn compiler :-extension)]
+    (not (nil? (some #(has-extension? % file) exts)))))
+
 ; =get-template-files
 (defn get-template-files
   "Get all template files. Find specified directory with `:dir` option."
@@ -131,12 +137,6 @@
     ; error
     :else false))
 
-; =handleable-compiler?
-(defn handleable-compiler?
-  [compiler file]
-  (let [exts (call-compiler-fn compiler :-extension)]
-    (not (nil? (some #(has-extension? % file) exts)))))
-
 ; =compile*
 (defn compile*
   "Common function to compile java.io.File with config."
@@ -185,7 +185,7 @@
       ; all compile
       (all-compile? compile-result)
       (do (println (green "   Switch to all compiling"))
-        (call-all-compile))
+          (call-all-compile))
 
       ; compile with post
       (post-file? file)
@@ -194,5 +194,4 @@
                 (compile* {:-compiling :single} file)))
 
       :else process-result)))
-
 

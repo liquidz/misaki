@@ -72,10 +72,21 @@
       (is (find-first #(= "2022.02.02-bar.html.clj" (.getName %)) tmpls))))
 
   (testing "not matched directory"
+    (is (empty? (get-template-files :dir "not_existing_directory"))))
+
+  (testing "all extensions"
     (binding [*config* (assoc *config* :compiler {'-extension #(list :*)})]
       (let [tmpls (get-template-files)]
         (is (= 17 (count tmpls)))
-        (is (find-first #(= "favicon.ico" (.getName %)) tmpls))))))
+        (is (find-first #(= "favicon.ico" (.getName %)) tmpls)))))
+
+  (testing "multiple compiler"
+    (binding [*config* (assoc *config* :compiler [{'-extension #(list :ico)}
+                                                  {'-extension #(list :cljs)}])]
+      (let [tmpls (get-template-files)]
+        (is (= 2 (count tmpls)))
+        (is (find-first #(= "favicon.ico" (.getName %)) tmpls))
+        (is (find-first #(= "hello.cljs" (.getName %)) tmpls))))))
 
 
 ;; get-post-files
