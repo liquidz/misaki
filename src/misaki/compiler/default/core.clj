@@ -76,10 +76,12 @@
               (log tag-name (compile-tag tag-name) true)))
           ; compile prev/next posts
           (let [posts       ((sort-type->sort-fn) (get-posts))
-                [prev next] (get-prev-next #(= file (:file %)) posts)]
-            (if-let [prev-file (:file prev)]
+                [prev next] (get-prev-next #(= file (:file %)) posts)
+                prev-file   (:file prev)
+                next-file   (:file next)]
+            (if (and prev-file (= :single (:-compiling config)))
               (log (.getName prev-file) (compile-template prev-file) true))
-            (if-let [next-file (:file next)]
+            (if (and next-file (= :single (:-compiling config)))
               (log (.getName next-file) (compile-template next-file) true))))
         res))))
 
