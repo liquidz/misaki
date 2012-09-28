@@ -6,13 +6,11 @@
         [pretty-error.core    :only [print-pretty-stack-trace]])
   (:import [java.io File]))
 
-(declare get-watch-file-extensions)
-
 ;; ## Util
+
 (defn key->sym [k] (symbol (name k)))
 
 ;; ## Compiler Utilities
-
 
 ; =stop-compile?
 (defn- stop-compile? [compile-result]
@@ -48,6 +46,12 @@
       (mapcat #(apply call-compiler-fn % fn-sym args) compiler)
       (if-let [f (get compiler fn-sym)] (apply f args)))))
 
+; =get-watch-file-extensions
+(defn get-watch-file-extensions
+  "Get extensions list to watch."
+  []
+  (map normalize-extension (distinct (call-compiler-fn :-extension))))
+
 ; =handleable-compiler?
 (defn handleable-compiler?
   [compiler file]
@@ -77,12 +81,6 @@
 
 
 ;; ## Compiler Functions
-
-; =get-watch-file-extensions
-(defn get-watch-file-extensions
-  "Get extensions list to watch."
-  []
-  (map normalize-extension (distinct (call-compiler-fn :-extension))))
 
 ; =update-config
 (defn update-config
