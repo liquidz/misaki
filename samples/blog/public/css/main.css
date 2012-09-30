@@ -2,8 +2,8 @@
 body, h1, h2, h3, h4, p { margin: 0; padding: 0; }
 body, p { font-family: 'Josefin Sans', sans-serif; }
 
-a { color: #04c; }
-a:hover { color: #6af; }
+a { color: #4ea5e1; }
+a:hover { opacity: 0.5; }
 
 blockquote { color: #888; font-style: italic; }
 blockquote p:before { content: '> '; }
@@ -32,7 +32,7 @@ h2 { margin-top: 1em; }
 /* page header style */
 .page-header { margin: 1.5em 0 0.5em 0; border-bottom: 1px solid #eaeaea; overflow: hidden; }
 .page-header h1 { color: #444; font-weight: normal; float: left; }
-.page-header h1 span { color: #58b271; font-weight: bold; }
+.page-header h1 span { color: #93ca76; font-weight: bold; }
 .page-header p.date { float: right; margin: 20px 10px 0 30px; font-weight: bold; letter-spacing: 1px; color: #444; }
 
 /* tag style */
@@ -40,19 +40,23 @@ h2 { margin-top: 1em; }
 .tag ul li { display: inline; margin-right: 10px; }
 .tag ul li a {
     padding: 0.2em 0.5em;
-    background: #58b271;
+    border: 2px solid #fef263;
     border-radius: 5px;
-    color: #fff; text-decoration: none;
+    color: #444;
+    text-decoration: none;
 }
-.tag ul li a:hover { background: #78d291; }
+.tag ul li a:hover { opacity: 0.5; }
 
 /* code highlight */
 pre.prettyprint {
     margin: 10px; padding: 10px;
     border-radius: 5px;
-    border: 1px solid #fde3e3;
-    background: #fff5f5;
+    border: 1px solid #eebbcb;
+    background: #fbeff3;
 }
+
+/* pager style */
+p.pager { text-align: center; }
 
 /* column style */
 .column { overflow: hidden; }
@@ -61,12 +65,4 @@ pre.prettyprint {
 
 /* =footer */
 footer { margin: 20px 0 10px; overflow: hidden; }
-
-
-p.pager { text-align: center; }
-
-
-
-
-
 
