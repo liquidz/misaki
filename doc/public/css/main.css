@@ -71,6 +71,18 @@ pre.prettyprint, code.prettyprint {
 pre.prettyprint { margin: 10px; padding: 10px; }
 code.prettyprint { padding: 1px 2px; }
 
+/* dagger style */
+.dagger {
+    font-size: 50%;
+    text-decoration: none;
+    padding-left: 0.5em;
+    opacity: 0;
+}
+h1:hover .dagger, h2:hover .dagger, h3:hover .dagger,
+h4:hover .dagger, h5:hover .dagger, .dagger:hover {
+    opacity: 1;
+}
+
 /* column style */
 .column { overflow: hidden; }
 .column > div { float: left; }

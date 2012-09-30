@@ -11,16 +11,31 @@
 
 ;; heading
 (deftest heading-test
-  (testing "no attributes"
-    (are [x y] (= x (html y))
-      "<h1><span>f</span>oo</h1>" (heading 1 "foo")
-      "<h1><span>f</span>oo</h1>" (h1 "foo")))
-  (testing "with attributes"
-    (are [x y] (= x (html y))
-      "<h1 class=\"bar\"><span>f</span>oo</h1>" (heading 1 {:class "bar"} "foo")
-      "<h1 class=\"bar\"><span>f</span>oo</h1>" (h1 {:class "bar"} "foo")))
-  (testing "contains html"
-    "<h1><a href=\"\">a.html</a></h1>"(heading 1 (link "a.html"))))
+  (letfn [(remove-id [[tag attr & text]] [tag (dissoc attr :id) (drop-last text) (last text)])]
+    (testing "no attributes"
+      (are [x y] (= x (html (vec (drop-last (remove-id y)))))
+        "<h1><span>f</span>oo</h1>" (heading 1 "foo")
+        "<h1><span>f</span>oo</h1>" (h1 "foo")))
+    (testing "with attributes"
+      (are [x y] (= x (html (vec (drop-last (remove-id y)))))
+        "<h1 class=\"bar\"><span>f</span>oo</h1>" (heading 1 {:class "bar"} "foo")
+        "<h1 class=\"bar\"><span>f</span>oo</h1>" (h1 {:class "bar"} "foo")))
+    (testing "contains html"
+      (are [x y] (= x (html (vec (drop-last (remove-id y)))))
+        "<h1><a href=\"a.html\">a.html</a></h1>" (heading 1 (link "a.html"))))
+    (testing "id should be specified automatically"
+      (are [x y] (= x y)
+        true (contains? (second (heading 1 "foo")) :id)
+        true (contains? (second (heading 1 {:class "bar"} "foo")) :id)
+        "bar" (:id (second (heading 1 {:id "bar"} "foo")))))
+
+    (testing "heading link should be added"
+      (let [h  (heading 1 "foo")
+            id (:id (second h))]
+        (is (= (str "<a class=\"dagger\" href=\"#" id "\">&dagger;</a>") (html (last h)))))
+      (let [h  (heading 1 {:id "foo"} "foo")
+            id (:id (second h))]
+        (is (= (str "<a class=\"dagger\" href=\"#" id "\">&dagger;</a>") (html (last h))))))))
 
 ;; ul
 (deftest ul-test

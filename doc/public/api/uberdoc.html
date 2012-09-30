@@ -3545,15 +3545,16 @@ net.brehaut.ClojureTools = (function (SH) {
     (apply css (cons opt args))))</pre></td></tr><tr><td class="docs"><p>Make heading tag</p>
 
 <pre><code>  (heading 1 "hello")
-  ;=&gt; &lt;h1&gt;&lt;span&gt;h&lt;/span&gt;ello&lt;/h1&gt;
+  ;=&gt; &lt;h1 id="auto_gen"&gt;&lt;span&gt;h&lt;/span&gt;ello&lt;/h1&gt;
   (heading 1 {:class "foo"} "hello")
-  ;=&gt; &lt;h1 class="foo"&gt;&lt;span&gt;h&lt;/span&gt;ello&lt;/h1&gt;
+  ;=&gt; &lt;h1 id="auto_gen" class="foo"&gt;&lt;span&gt;h&lt;/span&gt;ello&lt;/h1&gt;
 </code></pre>
 </td><td class="codes"><pre class="brush: clojure">(defn heading
   ([n s]
    (heading n {} s))
   ([n attr s]
-   (let [tag  (keyword (str &quot;h&quot; n))]
+   (let [tag  (keyword (str &quot;h&quot; n))
+         attr (merge {:id (gensym)} attr)]
      (if (string? s)
        [tag attr [:span (first s)] (rest s)]
        [tag attr s]))))

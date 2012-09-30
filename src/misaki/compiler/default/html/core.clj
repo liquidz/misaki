@@ -165,17 +165,19 @@
   "Make heading tag
 
       (heading 1 \"hello\")
-      ;=> <h1><span>h</span>ello</h1>
+      ;=> <h1 id=\"auto_gen\"><span>h</span>ello</h1>
       (heading 1 {:class \"foo\"} \"hello\")
-      ;=> <h1 class=\"foo\"><span>h</span>ello</h1>
+      ;=> <h1 id=\"auto_gen\" class=\"foo\"><span>h</span>ello</h1>
   "
   ([n s]
    (heading n {} s))
   ([n attr s]
-   (let [tag  (keyword (str "h" n))]
+   (let [tag  (keyword (str "h" n))
+         attr (merge {:id (gensym)} attr)
+         link (link {:class "dagger"} "&dagger;" (str "#" (:id attr)))]
      (if (string? s)
-       [tag attr [:span (first s)] (rest s)]
-       [tag attr s]))))
+       [tag attr [:span (first s)] (rest s) link]
+       [tag attr s link]))))
 (def h1 (partial heading 1))
 (def h2 (partial heading 2))
 (def h3 (partial heading 3))
