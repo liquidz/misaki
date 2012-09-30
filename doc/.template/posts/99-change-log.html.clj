@@ -14,4 +14,6 @@
            (ul [
                 "Update misaki.util.sequence/find-first to handle lazy sequence."
                 "Update misaki.util.file/has-extension? to handle all extension(*)."
-                "Add misaki.util.file/normalize-extension."]))])
+                "Add misaki.util.file/normalize-extension."
+                "Update misaki.compiler.default.html.core/heading to generate self heading link."
+                ]))])
