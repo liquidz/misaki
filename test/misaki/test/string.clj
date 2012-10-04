@@ -12,6 +12,17 @@
 
     "&amp;&quot;&lt;&gt;" "&\"<>"))
 
+;;; msec->string
+(deftest msec->string-test
+  (testing "positive numbers"
+    (are [x y] (= x (msec->string y))
+      "0.001 sec" 1
+      "1.000 sec" 1000
+      "1.999 sec" 1999))
+
+  (testing "negative numbers"
+    (is (thrown? AssertionError (msec->string -100)))))
+
 ;;; str-split-last
 (deftest split-last-test
   (testing "no match"

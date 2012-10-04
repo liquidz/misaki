@@ -15,6 +15,7 @@
 (defn msec->string
   "Convert msec to string."
   [ms]
+  {:pre [(pos? ms)]}
   (let [sec  (int (/ ms 1000))
         msec (format "%03d" (int (mod ms 1000)))]
     (str sec "." msec " sec")))
