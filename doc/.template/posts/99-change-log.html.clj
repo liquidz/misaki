@@ -7,7 +7,7 @@
            (ul ["Add misaki.util.seqence/get-prev-next function"
                 "Add misaki.compiler.default.html.core/prev-next-post-link function"]))
      (list "Support using multiple compiler at the same time."
-           (ul ["See document: [Switch Compiler](title: Switch Compiler)"]))
+           (ul ["See document: [Use multiple compilers](title: Switch Compiler#multiple_compilers)"]))
      "Add copy compiler to copy template file without any changes."
      "Support `:*` as compiler watching extension."
      (list "Add/Update utility functions"
@@ -16,4 +16,5 @@
                 "Update misaki.util.file/has-extension? to handle all extension(*)."
                 "Add misaki.util.file/normalize-extension."
                 "Update misaki.compiler.default.html.core/heading to generate self heading link."
+                "Update misaki.compiler.default.html.conv/post-title->url to handle #jump_position."
                 ]))])

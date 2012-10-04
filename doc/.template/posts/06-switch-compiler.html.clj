@@ -69,7 +69,7 @@ SH
 
 ;;;;
 
-(h2 "Use multiple compilers")
+(h2 {:id "multiple_compilers"} "Use multiple compilers")
 
 (p "You can use multiple compilers at the same time.")
 ##CLJ

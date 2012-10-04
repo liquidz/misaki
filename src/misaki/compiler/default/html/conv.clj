@@ -4,6 +4,7 @@
     [misaki.compiler.default.core   :only [get-posts]]
     [misaki.compiler.default.config :only [*site*]]
     [misaki.util.sequence           :only [find-first]]
+    [misaki.util.string             :only [str-split-last]]
     [clojure.core.incubator         :only [-?>>]])
   (:require
     [clojure.string :as str]
@@ -16,7 +17,11 @@
 (defn post-title->url
   "Convert post title to post url."
   [#^String post-title]
-  (let [posts (:posts *site*)
-        posts (if posts posts (get-posts))]
-    (-?>> posts (find-first #(= post-title (:title %))) :url)))
+  (let [[title jump] (str-split-last post-title #"#")
+        posts (:posts *site*)
+        posts (if posts posts (get-posts))
+        url   (-?>> posts (find-first #(= title (:title %))) :url)]
+
+    (if url
+      (if jump (str url "#" jump) url))))
 
