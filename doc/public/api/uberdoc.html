@@ -3029,7 +3029,7 @@ net.brehaut.ClojureTools = (function (SH) {
   };
 })(SyntaxHighlighter);
 </script><title>misaki -- Marginalia</title></head><body><table><tr><td class="docs"><div class="header"><h1 class="project-name">misaki</h1><h2 class="project-version">0.2.3-beta</h2><br /><p>Jekyll inspired static site generator in Clojure</p>
-</div><div class="dependencies"><h3>dependencies</h3><table><tr><td class="dep-name">org.clojure/clojure</td><td class="dotted"><hr /></td><td class="dep-version">1.4.0</td></tr><tr><td class="dep-name">org.clojure/core.incubator</td><td class="dotted"><hr /></td><td class="dep-version">0.1.0</td></tr><tr><td class="dep-name">org.clojure/clojurescript</td><td class="dotted"><hr /></td><td class="dep-version">0.0-1443</td></tr><tr><td class="dep-name">hiccup</td><td class="dotted"><hr /></td><td class="dep-version">1.0.0</td></tr><tr><td class="dep-name">compojure</td><td class="dotted"><hr /></td><td class="dep-version">1.1.1</td></tr><tr><td class="dep-name">ring/ring-jetty-adapter</td><td class="dotted"><hr /></td><td class="dep-version">1.1.2</td></tr><tr><td class="dep-name">clj-time</td><td class="dotted"><hr /></td><td class="dep-version">0.4.3</td></tr><tr><td class="dep-name">clj-text-decoration</td><td class="dotted"><hr /></td><td class="dep-version">0.0.1</td></tr><tr><td class="dep-name">clj-pretty-error</td><td class="dotted"><hr /></td><td class="dep-version">0.0.5</td></tr><tr><td class="dep-name">uochan/watchtower</td><td class="dotted"><hr /></td><td class="dep-version">0.1.3</td></tr><tr><td class="dep-name">de.ubercode.clostache/clostache</td><td class="dotted"><hr /></td><td class="dep-version">1.3.0</td></tr><tr><td class="dep-name">clj-gntp</td><td class="dotted"><hr /></td><td class="dep-version">0.0.1</td></tr><tr><td class="dep-name">clj-growl</td><td class="dotted"><hr /></td><td class="dep-version">0.2.1</td></tr></table></div><div class="dependencies"><h3>dev dependencies</h3><table><tr><td class="dep-name">lein-multi</td><td class="dotted"><hr /></td><td class="dep-version">1.1.0</td></tr><tr><td class="dep-name">lein-marginalia</td><td class="dotted"><hr /></td><td class="dep-version">0.7.1</td></tr><tr><td class="dep-name">debug-reader</td><td class="dotted"><hr /></td><td class="dep-version">0.0.1</td></tr><tr><td class="dep-name">lein-autotest-notify</td><td class="dotted"><hr /></td><td class="dep-version">0.0.4</td></tr></table></div></td><td class="codes" style="text-align: center; vertical-align: middle;color: #666;padding-right:20px"><br /><br /><br />(this space intentionally left almost blank)</td></tr><tr><td class="docs"><div class="toc"><a name="toc"><h3>namespaces</h3></a><ul><li><a href="#misaki.compiler.copy.core">misaki.compiler.copy.core</a></li><li><a href="#misaki.compiler.default.config">misaki.compiler.default.config</a></li><li><a href="#misaki.compiler.default.core">misaki.compiler.default.core</a></li><li><a href="#misaki.compiler.default.evaluator">misaki.compiler.default.evaluator</a></li><li><a href="#misaki.compiler.default.html.conv">misaki.compiler.default.html.conv</a></li><li><a href="#misaki.compiler.default.html.core">misaki.compiler.default.html.core</a></li><li><a href="#misaki.compiler.default.html.util">misaki.compiler.default.html.util</a></li><li><a href="#misaki.compiler.default.reader">misaki.compiler.default.reader</a></li><li><a href="#misaki.compiler.default.template">misaki.compiler.default.template</a></li><li><a href="#misaki.compiler.default.util.code">misaki.compiler.default.util.code</a></li><li><a href="#misaki.compiler.demo.core">misaki.compiler.demo.core</a></li><li><a href="#misaki.config">misaki.config</a></li><li><a href="#misaki.core">misaki.core</a></li><li><a href="#misaki.server">misaki.server</a></li><li><a href="#misaki.tester">misaki.tester</a></li><li><a href="#misaki.util.date">misaki.util.date</a></li><li><a href="#misaki.util.file">misaki.util.file</a></li><li><a href="#misaki.util.notify">misaki.util.notify</a></li><li><a href="#misaki.util.sequence">misaki.util.sequence</a></li><li><a href="#misaki.util.string">misaki.util.string</a></li></ul></div></td><td class="codes">&nbsp;</td></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#misaki.compiler.copy.core" name="misaki.compiler.copy.core"><h1 class="project-name">misaki.compiler.copy.core</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+</div><div class="dependencies"><h3>dependencies</h3><table><tr><td class="dep-name">org.clojure/clojure</td><td class="dotted"><hr /></td><td class="dep-version">1.4.0</td></tr><tr><td class="dep-name">org.clojure/core.incubator</td><td class="dotted"><hr /></td><td class="dep-version">0.1.0</td></tr><tr><td class="dep-name">org.clojure/clojurescript</td><td class="dotted"><hr /></td><td class="dep-version">0.0-1443</td></tr><tr><td class="dep-name">hiccup</td><td class="dotted"><hr /></td><td class="dep-version">1.0.1</td></tr><tr><td class="dep-name">compojure</td><td class="dotted"><hr /></td><td class="dep-version">1.1.3</td></tr><tr><td class="dep-name">ring/ring-jetty-adapter</td><td class="dotted"><hr /></td><td class="dep-version">1.1.6</td></tr><tr><td class="dep-name">clj-time</td><td class="dotted"><hr /></td><td class="dep-version">0.4.4</td></tr><tr><td class="dep-name">clj-text-decoration</td><td class="dotted"><hr /></td><td class="dep-version">0.0.1</td></tr><tr><td class="dep-name">clj-pretty-error</td><td class="dotted"><hr /></td><td class="dep-version">0.0.5</td></tr><tr><td class="dep-name">uochan/watchtower</td><td class="dotted"><hr /></td><td class="dep-version">0.1.3</td></tr><tr><td class="dep-name">de.ubercode.clostache/clostache</td><td class="dotted"><hr /></td><td class="dep-version">1.3.0</td></tr><tr><td class="dep-name">clj-gntp</td><td class="dotted"><hr /></td><td class="dep-version">0.0.1</td></tr><tr><td class="dep-name">clj-growl</td><td class="dotted"><hr /></td><td class="dep-version">0.2.1</td></tr></table></div><div class="dependencies"><h3>dev dependencies</h3><table><tr><td class="dep-name">lein-multi</td><td class="dotted"><hr /></td><td class="dep-version">1.1.0</td></tr><tr><td class="dep-name">lein-marginalia</td><td class="dotted"><hr /></td><td class="dep-version">0.7.1</td></tr><tr><td class="dep-name">debug-reader</td><td class="dotted"><hr /></td><td class="dep-version">0.0.1</td></tr><tr><td class="dep-name">lein-autotest-notify</td><td class="dotted"><hr /></td><td class="dep-version">0.0.4</td></tr></table></div></td><td class="codes" style="text-align: center; vertical-align: middle;color: #666;padding-right:20px"><br /><br /><br />(this space intentionally left almost blank)</td></tr><tr><td class="docs"><div class="toc"><a name="toc"><h3>namespaces</h3></a><ul><li><a href="#misaki.compiler.copy.core">misaki.compiler.copy.core</a></li><li><a href="#misaki.compiler.default.config">misaki.compiler.default.config</a></li><li><a href="#misaki.compiler.default.core">misaki.compiler.default.core</a></li><li><a href="#misaki.compiler.default.evaluator">misaki.compiler.default.evaluator</a></li><li><a href="#misaki.compiler.default.html.conv">misaki.compiler.default.html.conv</a></li><li><a href="#misaki.compiler.default.html.core">misaki.compiler.default.html.core</a></li><li><a href="#misaki.compiler.default.html.util">misaki.compiler.default.html.util</a></li><li><a href="#misaki.compiler.default.reader">misaki.compiler.default.reader</a></li><li><a href="#misaki.compiler.default.template">misaki.compiler.default.template</a></li><li><a href="#misaki.compiler.default.util.code">misaki.compiler.default.util.code</a></li><li><a href="#misaki.compiler.demo.core">misaki.compiler.demo.core</a></li><li><a href="#misaki.config">misaki.config</a></li><li><a href="#misaki.core">misaki.core</a></li><li><a href="#misaki.server">misaki.server</a></li><li><a href="#misaki.tester">misaki.tester</a></li><li><a href="#misaki.util.date">misaki.util.date</a></li><li><a href="#misaki.util.file">misaki.util.file</a></li><li><a href="#misaki.util.notify">misaki.util.notify</a></li><li><a href="#misaki.util.sequence">misaki.util.sequence</a></li><li><a href="#misaki.util.string">misaki.util.string</a></li></ul></div></td><td class="codes">&nbsp;</td></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#misaki.compiler.copy.core" name="misaki.compiler.copy.core"><h1 class="project-name">misaki.compiler.copy.core</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(ns misaki.compiler.copy.core
   (:use [misaki.util.file :only [path has-extension?]]
         [misaki.config    :only [*config*]])
@@ -3395,6 +3395,7 @@ net.brehaut.ClojureTools = (function (SH) {
     [misaki.compiler.default.core   :only [get-posts]]
     [misaki.compiler.default.config :only [*site*]]
     [misaki.util.sequence           :only [find-first]]
+    [misaki.util.string             :only [str-split-last]]
     [clojure.core.incubator         :only [-?&gt;&gt;]])
   (:require
     [clojure.string :as str]
@@ -3403,9 +3404,12 @@ net.brehaut.ClojureTools = (function (SH) {
 </td><td class="codes"></td></tr><tr><td class="docs"><p>Convert post title to post url.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn post-title-&gt;url
   [#^String post-title]
-  (let [posts (:posts *site*)
-        posts (if posts posts (get-posts))]
-    (-?&gt;&gt; posts (find-first #(= post-title (:title %))) :url)))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#misaki.compiler.default.html.core" name="misaki.compiler.default.html.core"><h1 class="project-name">misaki.compiler.default.html.core</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>HTML utility for template</p>
+  (let [[title jump] (str-split-last post-title #&quot;#&quot;)
+        posts (:posts *site*)
+        posts (if posts posts (get-posts))
+        url   (-?&gt;&gt; posts (find-first #(= title (:title %))) :url)]
+    (if url
+      (if jump (str url &quot;#&quot; jump) url))))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#misaki.compiler.default.html.core" name="misaki.compiler.default.html.core"><h1 class="project-name">misaki.compiler.default.html.core</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>HTML utility for template</p>
 </td><td class="codes"><pre class="brush: clojure">(ns misaki.compiler.default.html.core
   (:use
     [misaki.compiler.default.config    :only [*site*]]
@@ -3554,10 +3558,11 @@ net.brehaut.ClojureTools = (function (SH) {
    (heading n {} s))
   ([n attr s]
    (let [tag  (keyword (str &quot;h&quot; n))
-         attr (merge {:id (gensym)} attr)]
+         attr (merge {:id (gensym)} attr)
+         link (link {:class &quot;dagger&quot;} &quot;&amp;dagger;&quot; (str &quot;#&quot; (:id attr)))]
      (if (string? s)
-       [tag attr [:span (first s)] (rest s)]
-       [tag attr s]))))
+       [tag attr [:span (first s)] (rest s) link]
+       [tag attr s link]))))
 (def h1 (partial heading 1))
 (def h2 (partial heading 2))
 (def h3 (partial heading 3))
@@ -4724,10 +4729,19 @@ ewline and return if you deref instance.</p>
         (str/replace #&quot;&gt;&quot;  &quot;&amp;gt;&quot;)))</pre></td></tr><tr><td class="docs"><p>Convert msec to string.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn msec-&gt;string
   [ms]
+  {:pre [(pos? ms)]}
   (let [sec  (int (/ ms 1000))
         msec (format &quot;%03d&quot; (int (mod ms 1000)))]
     (str sec &quot;.&quot; msec &quot; sec&quot;)))</pre></td></tr><tr><td class="docs"><p>Check whether specified string contains sub string or not.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn str-contains?
   [s target]
-  (not= -1 (.indexOf s target)))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr></table><div class="footer">Generated by <a href="https://github.com/fogus/marginalia">Marginalia</a>.&nbsp;&nbsp;Syntax highlighting provided by Alex Gorbatchev's <a href="http://alexgorbatchev.com/SyntaxHighlighter/">SyntaxHighlighter</a></div><script type="text/javascript">SyntaxHighlighter.defaults['gutter'] = false;
+  (not= -1 (.indexOf s target)))</pre></td></tr><tr><td class="docs"><p>Split string on a regular expression which matches at last.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn str-split-last
+  ([s re] (str-split-last s re (str re)))
+  ([s re sep]
+   (let [ls (str/split s re)]
+     (if (= 1 (count ls))
+       ls
+       [(str/join sep (drop-last ls))
+        (last ls)]))))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr></table><div class="footer">Generated by <a href="https://github.com/fogus/marginalia">Marginalia</a>.&nbsp;&nbsp;Syntax highlighting provided by Alex Gorbatchev's <a href="http://alexgorbatchev.com/SyntaxHighlighter/">SyntaxHighlighter</a></div><script type="text/javascript">SyntaxHighlighter.defaults['gutter'] = false;
        SyntaxHighlighter.all()</script></body></html>

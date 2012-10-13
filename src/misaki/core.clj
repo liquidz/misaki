@@ -168,7 +168,8 @@
   (loop [[file & rest-files] (get-template-files), success? true]
     (if file
       (let [[process-result compile-result] (compile* {:-compiling :all} file)
-            result (and success? process-result)]
+            result (and success? (or (symbol? process-result)
+                                     (true? process-result)))]
         (if (stop-compile? compile-result)
           result
           (recur rest-files result)))
