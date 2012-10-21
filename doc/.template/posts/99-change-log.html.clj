@@ -18,3 +18,5 @@
                 "Update misaki.compiler.default.html.core/heading to generate self heading link."
                 "Update misaki.compiler.default.html.conv/post-title->url to handle #jump_position."
                 ]))])
+(p "2012-10-21")
+(ul ["Update [develop compiler](title: Develop Compiler) document to use [misaki-compiler-template](https://github.com/liquidz/misaki-compiler-template)."])
