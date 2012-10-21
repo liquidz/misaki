@@ -14,23 +14,18 @@
 
 (h2 "Start to develop")
 
-(p "At first, normally make new clojure template.")
-#-SH
-$ lein new misaki-new-compiler
+(p "You can use [misaki-compiler-template](https://github.com/liquidz/misaki-compiler-template) as a template for misaki compiler.")
+(p "[misaki-compiler-template](https://github.com/liquidz/misaki-compiler-template) need to install [lein-newnew](https://github.com/Raynes/lein-newnew).")
+
+##SH
+$ lein new misaki-compiler YOUR_COMPILER_NAME
+$ cd YOUR_COMPILER_NAME
 SH
-
-(p "Add [misaki module](https://clojars.org/misaki) dependency.")
-
-#-CLJ
-:dependencies [[org.clojure/clojure "1.4.0"]
-               [misaki "0.2.0-beta"]] ; add
-CLJ
 
 (p "Namespace of core.clj must be **misaki.compiler.YOUR-COMPIER-NAME.core**")
 
 #-SH
-$ mkdir -p src/misaki/compiler/YOUR_COMPILER_NAME
-$ mv src/misaki_new_compiler/core.clj src/misaki/compiler/YOUR_COMPILER_NAME/core.clj
+$ vi src/misaki/compiler/YOUR_COMPILER_NAME/core.clj
 SH
 
 (p "Then, edit core.clj as follows!")
@@ -42,9 +37,11 @@ SH
 (p "Following compiler append `(:text config)` to head of template file.")
 
 #-CLJ
-(ns misaki.compiler.hello.core
+(ns misaki.compiler.YOUR_COMPILER_NAME.core
   "Namespace must be misaki.compiler.***.core
-  '***' is a compiler name.")
+  '***' is a compiler name."
+  (:require
+    [misaki.server :as srv]))
 
 (defn -extension
   "Specify file extensions to watch in misaki."
@@ -55,7 +52,7 @@ SH
   "If your compiler handles custom configuration,
   you can set original data in this function."
   [config]
-  (assoc config :text "hello, "))
+  (assoc config :message "hello YOUR_COMPILER_NAME"))
 
 (defn -compiler
   "Called when watched files are updated.
@@ -70,7 +67,13 @@ SH
                 `:stop-compile?` -> Flag(true/false) to stop all compilation
                 `:all-compile?`  -> Flag(true/false) to force compiling all templates"
   [config file]
-  (str (:text config) (slurp file)))
+  (str (:message config) " " (slurp file)))
+
+
+(defn -main
+  "You can run misaki using this compiler with `lein run`."
+  [& args]
+  (apply srv/-main args))
 CLJ
 
 (h3 "-extension")
@@ -127,19 +130,16 @@ CLJ)})
 (p "misaki provides utilities to test your own compiler.")
 
 ##CLJ
-(ns foo.test
-  (:use misaki.tester))
+(ns misaki.compiler.YOUR_COMPILER_NAME.core-test
+  (:use clojure.test
+        misaki.compiler.YOUR_COMPILER_NAME.core
+        misaki.tester)
+  (:require [clojure.string  :as str]
+            [clojure.java.io :as io]))
 
 ; set base directory which include _config.clj
 ; default testing base directory is "test"
 (set-base-dir! "test")
-
-; get compiler's config which is customized by `-config`
-(get-config)
-
-; call `-compile` to test your compling
-(let [file (io/file "testtemplate")]
-  (test-compile file))
 
 ; define test wrapping config data as *config*
 ;
@@ -148,8 +148,18 @@ CLJ)})
 ;     (binding [*base-dir* "test"
 ;               *config* (get-config)]
 ;       (is (= "hello") (:template-dir *config*))))
-(deftest* foo-test
-  (is (= "hello") (:template-dir *config*)))
+(deftest* -config-test
+  ; get compiler's config which is customized by `-config`
+  (is (= "hello {{name}}" (:message (get-config)))))
+
+(deftest* -compile-test
+  (let [in  (template-file "foo.txt")
+        out (public-file "foo.txt")]
+    ; call `-compile` to test your compling
+    (is (test-compile in))
+    (is (= "hello {{name}} world" (str/trim (slurp out))))
+
+    (.delete out)))
 CLJ
 
 (p "Check [misaki.tester](/misaki/api/uberdoc.html#misaki.tester) to get detailed document.")
