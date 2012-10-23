@@ -23,6 +23,14 @@
       (is (.exists out))
       (.delete out)))
 
+  (testing "compile template under a directory"
+    (let [in  (template-file "dir/under_dir.html.clj")
+          out (public-file "dir/under_dir.html")]
+      (is (not (.exists out)))
+      (is (test-compile in))
+      (is (.exists out))
+      (.delete out)))
+
   (testing "tag and prev/next post should be compiled when post file is compiled"
     (let [
           in1   (template-file "_posts/2022.02.02-bar.html.clj")

@@ -20,3 +20,7 @@
                 ]))])
 (p "2012-10-21")
 (ul ["Update [develop compiler](title: Develop Compiler) document to use [misaki-compiler-template](https://github.com/liquidz/misaki-compiler-template)."])
+
+(h2 "0.2.4 beta")
+(p "2012-10-23")
+(ul ["Fixed to compile templates under directories correctly. [GitHub Issue](https://github.com/liquidz/misaki/issues/26)"])

@@ -184,7 +184,11 @@
   {:pre [(file? file)]}
   (if (post-file? file)
     (make-post-output-filename file)
-    (.getName file)))
+    (let [path (.getPath file)
+          len  (count (:template-dir *config*))]
+      (if (.startsWith path (:template-dir *config*))
+        (.substring path len)
+        path))))
 
 ; =make-output-url
 (defn make-output-url

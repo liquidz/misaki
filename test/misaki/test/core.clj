@@ -62,7 +62,7 @@
   (testing "default template directory"
     (let [tmpls (get-template-files)]
       (is (find-first #(= "index.html.clj" (.getName %)) tmpls))
-      (is (= 16 (count tmpls)))))
+      (is (= 17 (count tmpls)))))
 
   (testing "find from specified directory"
     (let [tmpls (get-template-files :dir (:post-dir *config*))]
@@ -77,7 +77,7 @@
   (testing "all extensions"
     (binding [*config* (assoc *config* :compiler {'-extension #(list :*)})]
       (let [tmpls (get-template-files)]
-        (is (= 17 (count tmpls)))
+        (is (= 18 (count tmpls)))
         (is (find-first #(= "favicon.ico" (.getName %)) tmpls)))))
 
   (testing "multiple compiler"

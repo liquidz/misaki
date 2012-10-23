@@ -100,7 +100,9 @@
 ;;; make-output-filename
 (deftest* make-output-filename-test
   (testing "normal template file"
-    (is (= "foo.html" (make-output-filename (io/file "foo.html")))))
+    (are [x y] (= x y)
+      "foo.html" (make-output-filename (io/file "foo.html"))
+      "foo/bar.html" (make-output-filename (io/file "foo/bar.html"))))
 
   (testing "post file"
     (is (= "2000-11/foo.html"
