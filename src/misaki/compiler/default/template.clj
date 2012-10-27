@@ -42,7 +42,7 @@
   (if (str/blank? slurped-data)
     {}
     (let [lines  (map str/trim (str/split-lines slurped-data))
-          params (remove nil? (map #(re-seq #"^;+\s*@(\w+)\s+(.+)$" %) lines))
+          params (remove nil? (map #(re-seq #"^;+\s*@([\w?!#_><*+=.\-]+)\s+(.+)$" %) lines))
           option (into {} (for [[[_ k v]] params] [(keyword k) v]))]
       (assoc option :tag (-> option :tag parse-tag-string)))))
 

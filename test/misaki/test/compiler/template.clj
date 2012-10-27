@@ -43,6 +43,20 @@
         "default" (:layout option)
         nil       (:dummy option))))
 
+  (testing "Parse template option with symbols"
+    (are [x y] (= x (dissoc y :tag))
+      {:foo?  "bar"} (parse-template-option "; @foo? bar")
+      {:f-oo  "bar"} (parse-template-option "; @f-oo bar")
+      {:f_oo  "bar"} (parse-template-option "; @f_oo bar")
+      {:foo!  "bar"} (parse-template-option "; @foo! bar")
+      {:f->oo "bar"} (parse-template-option "; @f->oo bar")
+      {:f<-oo "bar"} (parse-template-option "; @f<-oo bar")
+      {:foo*  "bar"} (parse-template-option "; @foo* bar")
+      {:foo#  "bar"} (parse-template-option "; @foo# bar")
+      {:f+oo  "bar"} (parse-template-option "; @f+oo bar")
+      {:f=oo  "bar"} (parse-template-option "; @f=oo bar")
+      {:f.oo  "bar"} (parse-template-option "; @f.oo bar")))
+
   (testing "Error pattern"
     (is (= {} (parse-template-option "")))
     (is (thrown? IllegalArgumentException (parse-template-option nil)))))
