@@ -67,16 +67,17 @@
 (defn start-watcher
   "Start watchtower watcher to compile changed templates"
   [template-dir]
-  (watcher
-    [template-dir
-     (str *base-dir* *config-file*)]
-    (rate 50)
-    (change-first? false) ; do not compile each templates at first
-    (file-filter ignore-dotfiles)
-    (file-filter (apply extensions (get-watch-file-extensions)))
-    (on-change #(doseq [file %]
-                  ; use `wrap-config` to apply config file updates
-                  (with-config (do-compile file))))))
+  (let [ext-chk-fn (apply extensions (get-watch-file-extensions))]
+    (watcher
+      [template-dir
+       (str *base-dir* *config-file*)]
+      (rate 50)
+      (change-first? false) ; do not compile each templates at first
+      (file-filter ignore-dotfiles)
+      (file-filter #(or (config-file? %) (ext-chk-fn %)))
+      (on-change #(doseq [file %]
+                    ; use `wrap-config` to apply config file updates
+                    (with-config (do-compile file)))))))
 
 ;; ## main
 
