@@ -103,8 +103,10 @@
 
 (defmethod make-template-output-filename File
   [file]
-  (remove-extension
-    (cnf/make-output-filename file)))
+  (let [filename (cnf/make-output-filename file)]
+    (if (has-extension? :clj filename)
+      (remove-extension filename)
+      filename)))
 
 ; =make-layout-filename
 (defn make-layout-filename
@@ -120,7 +122,10 @@
   "Make post url from java.io.File"
   [#^File file]
   {:pre [(file? file)]}
-  (remove-extension (cnf/make-output-url file)))
+  (let [url (cnf/make-output-url file)]
+    (if (has-extension? :clj url)
+      (remove-extension url)
+      url)))
 
 ; =make-tag-url
 (defn make-tag-url

@@ -7,8 +7,7 @@
         [clj-time.core :only [date-time year month day]]
         clojure.test)
   (:require [clojure.java.io :as io])
-  (:import [java.io FileNotFoundException])
-  )
+  (:import [java.io FileNotFoundException]))
 
 (def sample-posts
   (list
@@ -76,9 +75,22 @@
 
 ;;; make-template-output-filename
 (deftest* make-template-output-filename-test
-  (let [tmpl-name "template.test.html.clj"
-        file (io/file (path (:template-dir *config*) tmpl-name))
-        name1 (make-template-output-filename file)
-        name2 (make-template-output-filename tmpl-name)]
-    (is (= name1 name2))))
+  (testing "simple template"
+    (let [tmpl-name "template.test.html.clj"
+          file (io/file (path (:template-dir *config*) tmpl-name))
+          name1 (make-template-output-filename file)
+          name2 (make-template-output-filename tmpl-name)]
+      (is (= name1 name2))))
+
+  (testing "post template"
+    (let [tmpl-name "2000.01.01-foo.html.clj"
+          file      (io/file (path (:post-dir *config*) tmpl-name))]
+      (is (= "2000-01/foo.html" (make-template-output-filename file)))
+
+      (binding [*config* (assoc *config* :post-filename-format "{{year}}-{{month}}/{{day}}.htm")]
+        (is (= "2000-01/01.htm" (make-template-output-filename file))))
+      (binding [*config* (assoc *config*
+                                :post-filename-regexp #"(\d{4})\.(\d{1,2})\.(\d{1,2})[-_](.+)\.html.clj$"
+                                :post-filename-format "{{year}}-{{month}}/{{filename}}/index.html")]
+        (is (= "2000-01/foo/index.html" (make-template-output-filename file)))))))
 

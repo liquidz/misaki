@@ -51,15 +51,20 @@
     []))
 
 ; =has-extension?
-(defn has-extension?
+(defmulti has-extension?
   "Check whether file has specified extension or not."
+  #(class %2))
+(defmethod has-extension? File
   [ext file]
+  (has-extension? ext (.getName file)))
+(defmethod has-extension? String
+  [ext filename]
   (let [ext (if (keyword? ext) (name ext) ext)
         ext (if (.startsWith ext ".")
               ext (str "." ext))]
     (if (= ".*" ext)
       true
-      (.endsWith (.getName file) ext))))
+      (.endsWith filename ext))))
 
 ; =extension-filter
 (defn extension-filter

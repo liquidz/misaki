@@ -55,6 +55,25 @@
     "foo"     "foo"
     ""       ""))
 
+;; has-extension?
+(deftest has-extension?-test
+  (testing "File"
+    (are [x y] (= x (has-extension? :clj y))
+      true  (io/file "foo.clj")
+      false (io/file "foo.html")))
+  (testing "String"
+    (are [x y] (= x (has-extension? :clj y))
+      true  "foo.clj"
+      false "foo.html"))
+  (testing "extension pattern"
+    (are [x y] (= x y)
+      true (has-extension? :* "foo.html")
+      true (has-extension? :* "foo.clj")
+      true (has-extension? "*" "foo.clj")
+      true (has-extension? ".*" "foo.clj")
+      true (has-extension? "clj" "foo.clj")
+      true (has-extension? ".clj" "foo.clj"))))
+
 ;; get-parent-path
 (deftest get-parent-path-test
   (are [x y] (= x (get-parent-path y))
