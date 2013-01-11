@@ -105,7 +105,7 @@
   [file]
   (let [filename (cnf/make-output-filename file)]
     (if (has-extension? :clj filename)
-      (remove-extension filename)
+      (remove-last-extension filename)
       filename)))
 
 ; =make-layout-filename
@@ -124,7 +124,7 @@
   {:pre [(file? file)]}
   (let [url (cnf/make-output-url file)]
     (if (has-extension? :clj url)
-      (remove-extension url)
+      (remove-last-extension url)
       url)))
 
 ; =make-tag-url

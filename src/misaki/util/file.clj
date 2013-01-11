@@ -78,21 +78,23 @@
   [dir]
   (extension-filter :clj (find-files dir)))
 
-; =remove-extension
-(defmulti remove-extension
+; =remove-last-extension
+(defmulti remove-last-extension
   "Remove file extension.
 
-      (remove-extension \"foo.bar\")
+      (remove-last-extension \"foo.bar\")
       ;=> \"foo\"
-      (remove-extension \"foo.bar.baz\")
+      (remove-last-extension \"foo.bar.baz\")
       ;=> \"foo.bar\""
   class)
-(defmethod remove-extension File
+(defmethod remove-last-extension File
   [file]
-  (remove-extension (.getName file)))
-(defmethod remove-extension String
+  (remove-last-extension (.getName file)))
+(defmethod remove-last-extension String
   [s]
   (str/replace-first s #"\.[^.]+$" ""))
+; remove-last-extension alias for compatibility
+(def remove-extension remove-last-extension)
 
 ; =get-parent-path
 (defn get-parent-path

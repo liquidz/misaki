@@ -47,9 +47,9 @@
         ["a.txt" "b.clj" "c.txt"] (extension-filter ".*" files)
         []                        (extension-filter ".*" [])))))
 
-;; remove-extension
-(deftest remove-extension-test
-  (are [x y] (= x (remove-extension y))
+;; remove-last-extension
+(deftest remove-last-extension-test
+  (are [x y] (= x (remove-last-extension y))
     "foo"     "foo.bar"
     "foo.bar" "foo.bar.baz"
     "foo"     "foo"
