@@ -11,8 +11,7 @@
                  [clj-pretty-error "0.0.5"]
                  [uochan/watchtower "0.1.3"]
                  [de.ubercode.clostache/clostache "1.3.0"]
-                 [clj-gntp "0.0.1"]
-                 [clj-growl "0.2.1"]]
+                 [clj-gntp "0.0.1"]]
 
   :dev-dependencies [[lein-multi "1.1.0"]
                      [lein-marginalia "0.7.1"]

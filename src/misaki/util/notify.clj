@@ -4,7 +4,6 @@
     [misaki.config          :only [*config*]]
     [clojure.core.incubator :only [-?>]]
     [clj-gntp.core          :only [growl-notify]]
-    [clj-growl.core         :only [make-growler]]
     [clojure.java.shell     :only [sh]]
     [clostache.parser       :only [render]]))
 
@@ -18,11 +17,7 @@
       (sh "notify-send" title msg)
 
       :else
-      (try
-        (growl-notify title msg url icon)
-        (catch Exception e
-          (let [growl (make-growler "" title ["Notify" true])]
-            (growl "Notify" title msg)))))))
+      (growl-notify title msg url icon))))
 
 ; =notify-result
 (defn notify-result
