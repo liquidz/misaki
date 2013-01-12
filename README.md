@@ -72,7 +72,7 @@ $ vi your-blog/_template/index.html.clj
 
 ## License
 
-Copyright (C) 2012 Masashi Iizuka([@uochan](http://twitter.com/uochan/)) 
+Copyright (C) 2013 Masashi Iizuka([@uochan](http://twitter.com/uochan/)) 
 
 Distributed under the Eclipse Public License, the same as Clojure. 
 
