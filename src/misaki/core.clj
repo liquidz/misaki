@@ -89,7 +89,10 @@
    (let [config (make-basic-config-map)
          res    (if compiler
                   (call-compiler-fn compiler :-config config)
-                  (call-compiler-fn :-config config))]
+                  (let [compilers (flatten (list (:compiler *config*)))]
+                    (if (= 1 (count compilers))
+                      (call-compiler-fn (first compilers) :-config config)
+                      (map #(call-compiler-fn % :-config config) compilers))))]
      (if res res config)))
 
 ; =process-compile-result

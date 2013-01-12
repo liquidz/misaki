@@ -27,7 +27,7 @@
 
 ;; call-compiler-fn
 (deftest* call-compiler-fn-test
-  (testing "single compiler"
+  (testing "single compiler (using default compiler)"
     (is (= [:clj :cljs] (#'misaki.core/call-compiler-fn :-extension))))
 
   (testing "multiple compiler"
@@ -40,7 +40,7 @@
 
 ;; get-watch-file-extensions
 (deftest* get-watch-file-extensions-test
-  (testing "single compiler"
+  (testing "single compiler (using default compiler)"
     (is (= [:clj :cljs] (get-watch-file-extensions))))
 
   (testing "normalized extentions"
@@ -129,12 +129,13 @@
                               :compiler [{'-config #(assoc % :foo "bar")}
                                          {'-config #(assoc % :bar "baz")}])]
       (let [c (update-config)]
-        true (sequential? c)
-        2    (count c)
-        "test/public/" (:public-dir (first c))
-        "bar"         (:foo (first c))
-        "test/public/" (:public-dir (second c))
-        "baz"         (:bar (second c))))))
+        (are [x y] (= x y)
+          true (sequential? c)
+          2    (count c)
+          "test/public/" (:public-dir (first c))
+          "bar"          (:foo (first c))
+          "test/public/" (:public-dir (second c))
+          "baz"          (:bar (second c)))))))
 
 ;; process-compile-result
 (deftest* process-compile-result-test

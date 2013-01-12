@@ -32,8 +32,7 @@
       (.delete out)))
 
   (testing "tag and prev/next post should be compiled when post file is compiled"
-    (let [
-          in1   (template-file "_posts/2022.02.02-bar.html.clj")
+    (let [in1   (template-file "_posts/2022.02.02-bar.html.clj")
           in2   (template-file "_posts/2011.01.01-foo.html.clj")
           in3   (template-file "_posts/2000.01.01-foo.html.clj")
           tag1  (public-file "tag/tag1.html")

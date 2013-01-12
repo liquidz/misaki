@@ -60,10 +60,12 @@
   (testing "File"
     (are [x y] (= x (has-extension? :clj y))
       true  (io/file "foo.clj")
+      false (io/file "foo.cljs")
       false (io/file "foo.html")))
   (testing "String"
     (are [x y] (= x (has-extension? :clj y))
       true  "foo.clj"
+      false "foo.cljs"
       false "foo.html"))
   (testing "extension pattern"
     (are [x y] (= x y)

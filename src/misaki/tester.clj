@@ -35,10 +35,22 @@
 
 ; =get-config
 (defn get-config
-  "Get compiler config map."
-  []
+  "Get compiler config map.
+
+  If config has two or more maps and `:merge? true` option is specified,
+  this function returns merged config map.
+
+  ex) (get-config)
+      (get-config :merge? true)
+  "
+  [& {:keys [merge?] :or {merge? false}}]
   (with-test-base-dir
-    (update-config)))
+    (let [config (update-config)]
+      (if (and merge? (sequential? config))
+        ; ["compiler1" "compiler2"]
+        ; => (merge [compiler2 compiler1])
+        (apply merge (reverse config))
+        config))))
 
 ; =test-compile
 (defn test-compile

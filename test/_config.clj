@@ -27,6 +27,6 @@
  ;; highlight setting
  :code-highlight {:CLJ "lang-clj"}
 
- :compiler "default"
+ :compiler ["default"]
  }
 

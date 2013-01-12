@@ -7,6 +7,6 @@
      (t/set-base-dir! "test/")
      (t/deftest*
        ~name
-       (let [config# (t/get-config)]
+       (let [config# (t/get-config :merge? true)]
          (binding [*config* config#]
            ~@body)))))

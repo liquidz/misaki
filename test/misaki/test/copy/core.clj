@@ -11,30 +11,30 @@
 (defmacro deftest* [name & body]
   `(do
      (t/set-base-dir! "test/")
-     (deftest ~name
+     (t/deftest* ~name
        (binding [*config-file* "_config_copy.clj"]
          (t/with-test-base-dir
-           (let [config# (t/get-config)]
+           (let [config# (t/get-config :merge? true)]
              (binding [*config* config#]
                ~@body)))))))
 
 (deftest* copy-test
   (testing "text file copy"
     (let [from-file (t/template-file "foo.txt")
-          to-file   (t/public-file  "foo.txt")]
+          to-file   (t/public-file   "foo.txt")]
       (is (t/test-compile from-file))
       (is (.exists to-file))
       (.delete to-file)))
 
   (testing "bin file copy"
     (let [from-file (t/template-file "favicon.ico")
-          to-file   (t/public-file  "favicon.ico")]
+          to-file   (t/public-file   "favicon.ico")]
       (is (t/test-compile from-file))
       (is (.exists to-file))
       (.delete to-file)))
 
   (testing "excepting extension option"
     (let [from-file (t/template-file "dummy.except")
-          to-file   (t/public-file  "dummy.except")]
+          to-file   (t/public-file   "dummy.except")]
       (is (t/test-compile from-file))
       (is (not (.exists to-file))))))
