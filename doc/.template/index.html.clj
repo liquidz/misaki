@@ -18,13 +18,13 @@
 
     (h2 "API")
     (ul
-      [(link "API Index" "api/uberdoc.html")
+      [(link "API Index" "api/index.html")
        (list "Built in functions"
              (ul
                #(let [s (name %)]
                   (link
                     (str "misaki.compiler.default.html." s)
-                    (str "api/uberdoc.html#misaki.compiler.default.html." s)))
+                    (str "api/misaki.compiler.default.html." s ".html")))
                [:core :conv :util]))]))
 
   (list
@@ -39,6 +39,6 @@ SH
     (p "\"misaki(美咲)\" is woman's name in Japan, and it means \"Bloom beautifully\".")
 
     (h2 "License")
-    (p "Copyright (C) 2012 Masashi Iizuka ([@uochan](http://twitter.com/uochan/))
+    (p "Copyright (C) 2013 Masashi Iizuka ([@uochan](http://twitter.com/uochan/))
 
        Distributed under the Eclipse Public License, the same as Clojure.")))

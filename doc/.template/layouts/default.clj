@@ -35,7 +35,7 @@
 
    [:footer {:class "footer"}
     [:p (link (str "@" (:twitter site)) (str "http://twitter.com/" (:twitter site)))
-     "&nbsp; 2012"]
+     "&nbsp; 2013"]
     [:p (link (img "misaki banner" "/misaki/img/misaki_banner.png") "https://github.com/liquidz/misaki")]])
  ; /container
 

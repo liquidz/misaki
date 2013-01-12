@@ -32,4 +32,10 @@
                        [uochan/watchtower "0.1.2"]
                        [de.ubercode.clostache/clostache "1.3.0"]]}
 
+  :codox {:exclude [misaki.compiler.demo.core
+                    misaki.compiler.copy.core]
+          :src-dir-uri "http://github.com/liquidz/misaki/blob/master"
+          :src-linenum-anchor-prefix "L"
+          :output-dir "doc/public/api"}
+
   :main misaki.server)

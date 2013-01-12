@@ -32,7 +32,7 @@
 
   (footer
     (link (str "@" (:twitter site)) (str "http://twitter.com/" (:twitter site)))
-    "&nbsp; 2012"))
+    "&nbsp; 2013"))
  ; /container
 
  (absolute-js ["/js/prettify.js"
