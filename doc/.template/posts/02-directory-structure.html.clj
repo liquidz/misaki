@@ -140,7 +140,8 @@ TEXT
  }
 CLJ
 
-(p "See [Highlight Setting](title: Highlight Setting) about code highlight setting.")
+(ul [">= 0.2.6, Growl notify only support GNTP. If you want to use Growl notification with UDP, please checkout <= 0.2.5 version."
+     "See [Highlight Setting](title: Highlight Setting) about code highlight setting."])
 
 (see-also ["Edit Template"
            "Highlight Setting"])
