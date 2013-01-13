@@ -4,7 +4,6 @@
     [misaki.compiler.default template config]
     [misaki.util file sequence string]
     [misaki.config :only [*config*]]
-    [cljs.closure  :only [build]]
     [hiccup.core   :only [html]]
     [hiccup.page   :only [html5 xhtml html4]]
     [clojure.core.incubator :only [-?>>]])
@@ -18,7 +17,6 @@
 
 (declare file->template-sexp
          compile-template
-         compile-clojurescripts
          compile-tag
          get-tags
          get-posts)
@@ -41,7 +39,7 @@
 (defn -extension
   []
   {:post [#(sequential? %)]}
-  (list :clj :cljs))
+  (list :clj))
 
 ; =-config
 (defn -config
@@ -59,8 +57,8 @@
   (with-config config
     (cond
       ; clojurescript
-      (has-extension? ".cljs" file)
-      (log "clojurescripts" (compile-clojurescripts))
+      ;(has-extension? ".cljs" file)
+      ;(log "clojurescripts" (compile-clojurescripts))
 
       ; layout
       (layout-file? file)
@@ -248,17 +246,17 @@
             (file->template-sexp tmpl-file)))
 
 ; =compile-clojurescripts
-(defn compile-clojurescripts
-  "Compile clojurescripts.
-  return true if compile succeeded."
-  []
-  (when-let [option (:cljs-compile-options *config*)]
-    ; make directory if not exists
-    (make-directories (:output-to option))
-    ; delete existing files
-    (delete-file (:output-to option))
-    (delete-file (str (:output-dir option) "/cljs"))
-    ; build clojurescript
-    (build (:src-dir option) option)
-    true))
+;;(defn compile-clojurescripts
+;;  "Compile clojurescripts.
+;;  return true if compile succeeded."
+;;  []
+;;  (when-let [option (:cljs-compile-options *config*)]
+;;    ; make directory if not exists
+;;    (make-directories (:output-to option))
+;;    ; delete existing files
+;;    (delete-file (:output-to option))
+;;    (delete-file (str (:output-dir option) "/cljs"))
+;;    ; build clojurescript
+;;    (build (:src-dir option) option)
+;;    true))
 

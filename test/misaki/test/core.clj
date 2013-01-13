@@ -27,21 +27,26 @@
 
 ;; call-compiler-fn
 (deftest* call-compiler-fn-test
-  (testing "single compiler (using default compiler)"
-    (is (= [:clj :cljs] (#'misaki.core/call-compiler-fn :-extension))))
+  (testing "single compiler"
+    (binding [*config* {:compiler {'-extension #(list :clj)}}]
+      (is (= [:clj] (#'misaki.core/call-compiler-fn :-extension)))))
 
   (testing "multiple compiler"
     (binding [*config* {:compiler [{'-extension #(list :txt)}
                                    {'-extension #(list :clj)}]}]
       (are [x y] (= x y)
         [:txt :clj] (#'misaki.core/call-compiler-fn :-extension)
-        [:js]       (#'misaki.core/call-compiler-fn {'-extension #(list :js)} :-extension)))))
+        [:js]       (#'misaki.core/call-compiler-fn {'-extension #(list :js)} :-extension))))
+
+  (testing "_config.clj (default and cljs compiler)"
+    (is (= [:clj :cljs] (#'misaki.core/call-compiler-fn :-extension)))))
 
 
 ;; get-watch-file-extensions
 (deftest* get-watch-file-extensions-test
-  (testing "single compiler (using default compiler)"
-    (is (= [:clj :cljs] (get-watch-file-extensions))))
+  (testing "single compiler"
+    (binding [*config* {:compiler {'-extension #(list :clj)}}]
+      (is (= [:clj] (get-watch-file-extensions)))))
 
   (testing "normalized extentions"
     (binding [*config* {:compiler {'-extension #(list "clj" "*.txt")}}]
@@ -55,7 +60,10 @@
   (testing "multiple compiler(duplicated extention)"
     (binding [*config* {:compiler [{'-extension #(list :clj :txt)}
                                    {'-extension #(list :txt)}]}]
-      (is (= [:clj :txt] (get-watch-file-extensions))))))
+      (is (= [:clj :txt] (get-watch-file-extensions)))))
+
+  (testing "_config.clj (default and cljs compiler)"
+    (is (= [:clj :cljs] (get-watch-file-extensions)))))
 
 ;; get-template-files
 (deftest* get-template-files-test

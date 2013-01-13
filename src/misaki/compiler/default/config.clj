@@ -30,29 +30,18 @@
   * `:tag-layout`: Layout file for tag page.
   * `:detailed-log`: Flag to print detailed log.
   * `:post-sort-type`: Sort type of posts.
-  * `:cljs-compile-options`: Setting for clojurescript compiling.
   "
   [config]
   {:pre  [(map? config)]
    :post [#(map? %)]}
   (let [{:keys [template-dir public-dir url-base detailed-log]} config
-        layout   (path template-dir (:layout-dir config))
-        cljs     (:cljs config)
-        cljs-out (if cljs (path public-dir (:output-to cljs)))]
+        layout   (path template-dir (:layout-dir config))]
     (assoc
       config
       :layout-dir layout
       :tag-layout   (str layout (:tag-layout config) ".clj")
       :detailed-log (:detailed-log config false)
-      :post-sort-type       (:post-sort-type config :date-desc)
-      :cljs-compile-options
-      (if cljs
-        (assoc cljs
-               :src-dir    (normalize-path (str template-dir (:src-dir cljs)))
-               :output-dir (if-let [dir (:output-dir cljs)]
-                             (path public-dir dir)
-                             (get-parent-path cljs-out))
-               :output-to  cljs-out)))))
+      :post-sort-type       (:post-sort-type config :date-desc))))
 
 ; =with-config
 (defmacro with-config

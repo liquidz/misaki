@@ -20,13 +20,11 @@
  ;; clojurescript compile options
  ;; src-dir base is `:template-dir`
  ;; output-dir base is `:public-dir`
- :cljs {:src-dir       "cljs"
-        :output-to     "js/main.js"
-        :optimizations :advanced}
+ :cljs {:optimizations :advanced}
 
  ;; highlight setting
  :code-highlight {:CLJ "lang-clj"}
 
- :compiler ["default"]
+ :compiler ["default" "cljs"]
  }
 

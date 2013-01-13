@@ -51,10 +51,7 @@
  ;; clojurescript compile options
  ;; src-dir base is `:template-dir`
  ;; output-dir base is `:public-dir`
- :cljs {:src-dir       "cljs"
-        :output-to     "js/hello.js"
-        :optimizations :whitespace
-        :pretty-print true}
+ :cljs {:output-to "js/hello.js"}
 
  ;; highlight setting
  :code-highlight {:CLJ "lang-clj", :CLOJURE "lang-clj"}
@@ -66,5 +63,7 @@
  ;; flag for error notification
  ;;   default value: false
  :notify? true
+
+ :compiler ["default" "cljs"]
  }
 
