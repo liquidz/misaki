@@ -2,7 +2,6 @@
   :description "Jekyll inspired static site generator in Clojure"
   :dependencies [[org.clojure/clojure "1.4.0"]
                  [org.clojure/core.incubator "0.1.0"]
-                 [org.clojure/clojurescript "0.0-1443"]
                  [hiccup "1.0.1"]
                  [compojure "1.1.3"]
                  [ring/ring-jetty-adapter "1.1.6"]
@@ -11,7 +10,9 @@
                  [clj-pretty-error "0.0.5"]
                  [uochan/watchtower "0.1.3"]
                  [de.ubercode.clostache/clostache "1.3.0"]
-                 [clj-gntp "0.0.1"]]
+                 [clj-gntp "0.0.1"]
+                 ; cljs compiler
+                 [org.clojure/clojurescript "0.0-1552"]]
 
   :dev-dependencies [[lein-multi "1.1.0"]
                      [lein-marginalia "0.7.1"]
