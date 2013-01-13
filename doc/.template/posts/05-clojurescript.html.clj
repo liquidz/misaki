@@ -3,7 +3,7 @@
 
 (h2 "Config setting")
 
-(p "Delete comment in `_config.clj`.")
+(p "Delete cljs option comment in `_config.clj`, and add `cljs` compiler.")
 
 #-CLJ
 {
@@ -13,7 +13,20 @@
  :cljs {:src-dir       "cljs"
         :output-to     "js/main.js"
         :optimizations :whitespace
-        :pretty-print true}
+        :pretty-print  true}
+
+ ;; add cljs compiler
+ :compiler ["default" "cljs"]
+ }
+CLJ
+
+(p "Following is default cljs options, so you can specify only difference.")
+##CLJ
+{
+ :src-dir       "cljs"
+ :output-to     "js/main.js"
+ :optimizations :whitespace
+ :pretty-print  true
  }
 CLJ
 

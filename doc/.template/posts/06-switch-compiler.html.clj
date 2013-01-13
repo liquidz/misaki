@@ -8,6 +8,7 @@
 (ul ["default"
      "clostache"
      "copy"
+     "cljs"
      ])
 
 ; --
@@ -33,6 +34,9 @@
  :except-extensions [:jpg :png :gif]
  }
 CLJ
+; --
+(h3 "Cljs compiler")
+(p "ClojureScript compiler. clj file compiles to js. Detailed explanation is [here](title:Clojurescript).")
 
 ;;;;
 
