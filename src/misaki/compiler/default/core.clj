@@ -244,19 +244,3 @@
   {:pre [(file? tmpl-file)]}
   (compile* (make-template-output-filename tmpl-file)
             (file->template-sexp tmpl-file)))
-
-; =compile-clojurescripts
-;;(defn compile-clojurescripts
-;;  "Compile clojurescripts.
-;;  return true if compile succeeded."
-;;  []
-;;  (when-let [option (:cljs-compile-options *config*)]
-;;    ; make directory if not exists
-;;    (make-directories (:output-to option))
-;;    ; delete existing files
-;;    (delete-file (:output-to option))
-;;    (delete-file (str (:output-dir option) "/cljs"))
-;;    ; build clojurescript
-;;    (build (:src-dir option) option)
-;;    true))
-

@@ -9,6 +9,7 @@
   (:import [java.io File]))
 
 (def DEFAULT_CLJS_OPTION
+  "Default clojurescript compiling options."
   {:src-dir       "cljs"
    :output-to     "js/main.js"
    :optimizations :whitespace
@@ -28,16 +29,23 @@
 
 ; =-extension
 (defn -extension
-  "Watch *.cljs extension"
+  "Watch *.cljs extension."
   []
   {:post [#(sequential? %)]}
   (list :cljs))
 
 ; =-config
 (defn -config
-  "Configuration
+  "ClojureScript compling configuration.
 
-   * `:cljs-compile-options`: Setting for clojurescript compiling.
+  * _config.clj
+    `:cljs-compile-options`: Setting for clojurescript compiling.
+
+  * default setting
+    {:src-dir       \"cljs\"
+     :output-to     \"js/main.js\"
+     :optimizations :whitespace
+     :pretty-print  true}
   "
   [config]
   {:pre  [(map? config)]
