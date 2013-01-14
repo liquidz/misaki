@@ -28,7 +28,7 @@
     (condp #(% %2) ext
       keyword? ext
       symbol?  (keyword ext)
-      string?  (keyword (last (str/split ext #"\.")))
+      string?  (keyword (last (str/split ext #"\*\.")))
       nil)))
 
 ; =path

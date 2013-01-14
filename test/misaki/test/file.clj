@@ -27,7 +27,11 @@
     :clj :clj
     :clj 'clj
     :clj "clj"
-    :clj "*.clj"))
+    :clj "*.clj"
+    :html.clj :html.clj
+    :html.clj 'html.clj
+    :html.clj "html.clj"
+    :html.clj "*.html.clj"))
 
 ;; extension-filter
 (deftest extension-filter-test
@@ -45,7 +49,15 @@
         ["a.txt" "b.clj" "c.txt"] (extension-filter :*   files)
         ["a.txt" "b.clj" "c.txt"] (extension-filter "*"  files)
         ["a.txt" "b.clj" "c.txt"] (extension-filter ".*" files)
-        []                        (extension-filter ".*" [])))))
+        []                        (extension-filter ".*" []))))
+
+  (let [files (map io/file ["a.txt" "b.foo.txt" "c.foo"])]
+    (testing "*.aaa.bbb pattern"
+      (are [x y] (= x (map #(.getName %) y))
+        ["a.txt" "b.foo.txt"]         (extension-filter :txt files)
+        ["b.foo.txt"]                 (extension-filter :foo.txt files)
+        ["c.foo"]                     (extension-filter :foo files)
+        ["a.txt" "b.foo.txt" "c.foo"] (extension-filter :* files)))))
 
 ;; remove-last-extension
 (deftest remove-last-extension-test
@@ -74,7 +86,11 @@
       true (has-extension? "*" "foo.clj")
       true (has-extension? ".*" "foo.clj")
       true (has-extension? "clj" "foo.clj")
-      true (has-extension? ".clj" "foo.clj"))))
+      true (has-extension? ".clj" "foo.clj")))
+  (testing "double extension"
+    true  (has-extension? :html.clj "foo.html.clj")
+    false (has-extension? :html.clj "foo.clj")
+    false (has-extension? :html.clj "foo.html")))
 
 ;; get-parent-path
 (deftest get-parent-path-test
