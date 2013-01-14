@@ -36,6 +36,7 @@
    "(" (str (gensym "parenthesis_start"))
    ")" (str (gensym "parenthesis_end"))})
 
+; =escape-markdown
 (defn- escape-markdown [s]
   (if (string? s)
     (reduce
@@ -44,6 +45,7 @@
       s markdown-map)
     s))
 
+; =unescape-markdown
 (defn- unescape-markdown [s]
   (if (string? s)
     (reduce
@@ -52,6 +54,7 @@
       s markdown-map)
     s))
 
+; =defparser
 (defmacro defparser
   "Macro to define string parser."
   [name regexp result-fn]
@@ -114,6 +117,7 @@
 
 ;; ## HTML Tags
 
+; =js
 (defn js
   "Include JavaScript
 
@@ -123,12 +127,14 @@
   [& args]
   (apply page/include-js (flatten args)))
 
+; =absolute-js
 (defn absolute-js
   "Include JavaScript from `(:url-base *config*)` setting."
   [& args]
   (let [args (map #(cnf/absolute-path %) (flatten args))]
     (apply js args)))
 
+; =css
 (defn css
   "Include Cascading Style Sheet.
 
@@ -144,6 +150,7 @@
         attrs (map #(merge {:rel "stylesheet" :type "text/css" :href %} opt) hrefs)]
     (map #(vector :link %) attrs)))
 
+; =absolute-css
 (defn absolute-css
   "Include Cascading Style Sheet from `(:url-base *config*)` setting.
 
@@ -161,6 +168,7 @@
         args (map #(cnf/absolute-path %) args)]
     (apply css (cons opt args))))
 
+; =heading
 (defn heading
   "Make heading tag
 
@@ -185,6 +193,7 @@
 (def h5 (partial heading 5))
 (def h6 (partial heading 6))
 
+; =ul
 (defn ul
   "Make unordered list
 
@@ -207,7 +216,7 @@
   ([f attr ls]
    [:ul attr (for [x ls] [:li [:span (f x)]])]))
 
-
+; =dl
 (defn dl
   "Make definition list
 
@@ -228,7 +237,7 @@
                    [:dd (parse-string dd)]))
            (partition 2 x))])))
 
-
+; =img
 (defn img
   "Make image
 
@@ -250,6 +259,7 @@
   ([attr alt src]
    [:img (merge attr {:alt alt :src src})]))
 
+; =link
 (defn link
   "Make link
 
@@ -271,6 +281,7 @@
   ([attr label href]
    [:a (merge attr {:href href}) (parse-string label)]))
 
+; =blockquote
 (defn blockquote
   "Make blockquote
 
@@ -291,6 +302,7 @@
           [:p %])
        xs)]))
 
+; =code
 (defmacro code
   "Make inline code
 
@@ -304,6 +316,7 @@
    [:code
     (merge-with #(str % " " %2) {:class "prettyprint"} attr) (str s)]))
 
+; =table
 (defn table
   "Make table
 
@@ -333,7 +346,7 @@
      (for [body bodies]
        [:tr (for [b body] [:td (parse-string b)])])]]))
 
-
+; =links
 (defn links
   "Make link list
 
@@ -344,6 +357,7 @@
   [& title-url-pairs]
   (ul #(apply link %) (partition 2 title-url-pairs)))
 
+; =p
 (defn p
   "Make paragraph
 
@@ -351,12 +365,37 @@
       ;=> <p class=\"paragraph\">hello</p>
       (p {:class \"foo\"} \"hello\")
       ;=> <p class=\"paragraph foo\">hello</p>
+
+  Following markdown format is allowd.
+
+   * Parse link
+      \"[hello](world)\"
+      ;=> <a href=\"world\">hello</a>
+      \"[hello](title: POST TITLE)\"
+      ;=> <a href=\"POST URL\">hello</a>
+
+   * Parse emphasized
+      \"*hello*\"
+      ;=> <em>hello</em>
+
+   * Parse strong
+      \"**hello**\"
+      ;=> <strong>hello</strong>
+
+   * Parse inline code
+      \"`hello`\"
+      ;=> <code class=\"prettyprint\">hello</code>
+
+   * Parse new line
+      \"\\n\\nhello\"
+      ;=> <br />hello
   "
   [& s]
   (let [[opt & s] (if (-> s first map?) s (cons {} s))
         attr (merge-with #(str/join " " %&) {:class "paragraph"} opt)]
     [:p attr (map parse-string s)]))
 
+; =header-decoration
 (defn- header-decoration [x]
   (if (string? x)
     (let [[first-char & rest-chars] x]
@@ -364,6 +403,7 @@
             rest-chars))
     x))
 
+; =header
 (defn header
   "Make default header tag."
   [h & p]
@@ -371,11 +411,13 @@
    [:h1 (link (header-decoration h) (cnf/get-index-filename))]
    (if p [:p p])])
 
+; =container
 (defn container
   "Make default container tag."
   [& body]
   [:div {:class "container"} body])
 
+; =footer
 (defn footer
   "Make default footer."
   [& p]
@@ -383,6 +425,7 @@
    [:p {:class "right back_to_top"} (link "&uArr; Page Top" "#")]
    [:p p]])
 
+; =post-list
 (defn post-list
   "Make default all posts unordered list.
 
@@ -399,6 +442,7 @@
      attr
      (:posts *site*))))
 
+; =tag-list
 (defn tag-list
   "Make default all tags unordered list.
 
@@ -413,18 +457,20 @@
      attr
      (:tags *site*))))
 
-
+; =post-tags
 (defn post-tags
   "Make default post tags unordered list."
   [& {:keys [class] :or {class "tag"}}]
   [:div {:class class}
    (ul #(link (:name %) (:url %)) (:tag *site*))])
 
+; =post-date
 (defn post-date
   "Make default post date tag."
   []
   [:p {:class "date"} (-> *site* :date date/date->string)])
 
+; =prev-next-post-link
 (defn prev-next-post-link
   "Make previous/next post links."
   [& {:keys [class separator] :or {class "pager", separator "|"}}]
@@ -437,6 +483,7 @@
        (list (str "&nbsp;&nbsp;" separator "&nbsp;&nbsp;")
              (link (str (:title next) "&nbsp;&raquo;") (:url next))))))
 
+; =two-column
 (defn two-column
   "Make 2 column"
   [left right]

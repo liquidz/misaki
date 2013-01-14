@@ -9,8 +9,8 @@ ex) :url-base &quot;/foo&quot;
    (absolute-css &quot;/bar.css&quot;)
    ;=&gt; &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/foo/bar.css&quot; /&gt;
    (absolute-css &quot;http://localhost/bar.css&quot;)
-   ;=&gt; &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;http://localhost/bar.css&quot; /&gt;</pre><div class="src-link"><a href="http://github.com/liquidz/misaki/blob/master/src/misaki/compiler/default/html/core.clj#L147">Source</a></div></div><div class="public" id="var-absolute-js"><h3>absolute-js</h3><div class="usage"><code>(absolute-js &amp; args)</code></div><pre class="doc">Include JavaScript from `(:url-base *config*)` setting.
-</pre><div class="src-link"><a href="http://github.com/liquidz/misaki/blob/master/src/misaki/compiler/default/html/core.clj#L126">Source</a></div></div><div class="public" id="var-blockquote"><h3>blockquote</h3><div class="usage"><code>(blockquote &amp; xs)</code></div><pre class="doc">Make blockquote
+   ;=&gt; &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;http://localhost/bar.css&quot; /&gt;</pre><div class="src-link"><a href="http://github.com/liquidz/misaki/blob/master/src/misaki/compiler/default/html/core.clj#L154">Source</a></div></div><div class="public" id="var-absolute-js"><h3>absolute-js</h3><div class="usage"><code>(absolute-js &amp; args)</code></div><pre class="doc">Include JavaScript from `(:url-base *config*)` setting.
+</pre><div class="src-link"><a href="http://github.com/liquidz/misaki/blob/master/src/misaki/compiler/default/html/core.clj#L131">Source</a></div></div><div class="public" id="var-blockquote"><h3>blockquote</h3><div class="usage"><code>(blockquote &amp; xs)</code></div><pre class="doc">Make blockquote
 
 (blockquote &quot;foo&quot; &quot;bar&quot;)
 ;=&gt; &lt;blockquote&gt;&lt;p&gt;foo&lt;/p&gt;&lt;p&gt;bar&lt;/p&gt;&lt;/blockquote&gt;
@@ -18,22 +18,22 @@ ex) :url-base &quot;/foo&quot;
 ;=&gt; &lt;blockquote&gt;&lt;p&gt;foo&lt;/p&gt;&lt;p&gt;bar&lt;/p&gt;&lt;/blockquote&gt;
 (blockquote {:class &quot;bar&quot;} &quot;foo&quot;)
 ;=&gt; &lt;blockquote class=&quot;bar&quot;&gt;&lt;p&gt;foo&lt;/p&gt;&lt;/blockquote&gt;
-</pre><div class="src-link"><a href="http://github.com/liquidz/misaki/blob/master/src/misaki/compiler/default/html/core.clj#L274">Source</a></div></div><div class="public" id="var-code"><h3>code</h3><h4 class="macro">macro</h4><div class="usage"><code>(code s)</code><code>(code attr s)</code></div><pre class="doc">Make inline code
+</pre><div class="src-link"><a href="http://github.com/liquidz/misaki/blob/master/src/misaki/compiler/default/html/core.clj#L285">Source</a></div></div><div class="public" id="var-code"><h3>code</h3><h4 class="macro">macro</h4><div class="usage"><code>(code s)</code><code>(code attr s)</code></div><pre class="doc">Make inline code
 
 (code hello)
 ;=&gt; &lt;code class=&quot;prettyprint&quot;&gt;hello&lt;/code&gt;
 (code {:class &quot;foo&quot;} hello)
 ;=&gt; &lt;code class=&quot;prettyprint foo&quot;&gt;hello&lt;/code&gt;
-</pre><div class="src-link"><a href="http://github.com/liquidz/misaki/blob/master/src/misaki/compiler/default/html/core.clj#L294">Source</a></div></div><div class="public" id="var-container"><h3>container</h3><div class="usage"><code>(container &amp; body)</code></div><pre class="doc">Make default container tag.
-</pre><div class="src-link"><a href="http://github.com/liquidz/misaki/blob/master/src/misaki/compiler/default/html/core.clj#L374">Source</a></div></div><div class="public" id="var-css"><h3>css</h3><div class="usage"><code>(css &amp; args)</code></div><pre class="doc">Include Cascading Style Sheet.
+</pre><div class="src-link"><a href="http://github.com/liquidz/misaki/blob/master/src/misaki/compiler/default/html/core.clj#L306">Source</a></div></div><div class="public" id="var-container"><h3>container</h3><div class="usage"><code>(container &amp; body)</code></div><pre class="doc">Make default container tag.
+</pre><div class="src-link"><a href="http://github.com/liquidz/misaki/blob/master/src/misaki/compiler/default/html/core.clj#L415">Source</a></div></div><div class="public" id="var-css"><h3>css</h3><div class="usage"><code>(css &amp; args)</code></div><pre class="doc">Include Cascading Style Sheet.
 
 (css &quot;foo.css&quot; &quot;bar.css&quot;)
 ;=&gt; &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;foo.css&quot; /&gt;
 ;=&gt; &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;bar.css&quot; /&gt;
 (css {:media &quot;screen&quot;} &quot;foo.css&quot; &quot;bar.css&quot;)
 ;=&gt; &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; media=&quot;screen&quot; href=&quot;foo.css&quot; /&gt;
-;=&gt; &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; media=&quot;screen&quot; href=&quot;bar.css&quot; /&gt;</pre><div class="src-link"><a href="http://github.com/liquidz/misaki/blob/master/src/misaki/compiler/default/html/core.clj#L132">Source</a></div></div><div class="public" id="var-defparser"><h3>defparser</h3><h4 class="macro">macro</h4><div class="usage"><code>(defparser name regexp result-fn)</code></div><pre class="doc">Macro to define string parser.
-</pre><div class="src-link"><a href="http://github.com/liquidz/misaki/blob/master/src/misaki/compiler/default/html/core.clj#L55">Source</a></div></div><div class="public" id="var-dl"><h3>dl</h3><div class="usage"><code>(dl x)</code><code>(dl attr x)</code></div><pre class="doc">Make definition list
+;=&gt; &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; media=&quot;screen&quot; href=&quot;bar.css&quot; /&gt;</pre><div class="src-link"><a href="http://github.com/liquidz/misaki/blob/master/src/misaki/compiler/default/html/core.clj#L138">Source</a></div></div><div class="public" id="var-defparser"><h3>defparser</h3><h4 class="macro">macro</h4><div class="usage"><code>(defparser name regexp result-fn)</code></div><pre class="doc">Macro to define string parser.
+</pre><div class="src-link"><a href="http://github.com/liquidz/misaki/blob/master/src/misaki/compiler/default/html/core.clj#L58">Source</a></div></div><div class="public" id="var-dl"><h3>dl</h3><div class="usage"><code>(dl x)</code><code>(dl attr x)</code></div><pre class="doc">Make definition list
 
 (dl {:foo &quot;bar&quot;})
 ;=&gt; &lt;dl&gt;&lt;dt&gt;foo&lt;/dt&gt;&lt;dd&gt;bar&lt;/dd&gt;&lt;/dl&gt;
@@ -41,15 +41,15 @@ ex) :url-base &quot;/foo&quot;
 ;=&gt; &lt;dl&gt;&lt;dt&gt;foo&lt;/dt&gt;&lt;dd&gt;bar&lt;/dd&gt;&lt;/dl&gt;
 (dl {:class &quot;foo&quot;} {:foo &quot;bar&quot;})
 ;=&gt; &lt;dl class=&quot;foo&quot;&gt;&lt;dt&gt;foo&lt;/dt&gt;&lt;dd&gt;bar&lt;/dd&gt;&lt;/dl&gt;
-</pre><div class="src-link"><a href="http://github.com/liquidz/misaki/blob/master/src/misaki/compiler/default/html/core.clj#L211">Source</a></div></div><div class="public" id="var-footer"><h3>footer</h3><div class="usage"><code>(footer &amp; p)</code></div><pre class="doc">Make default footer.
-</pre><div class="src-link"><a href="http://github.com/liquidz/misaki/blob/master/src/misaki/compiler/default/html/core.clj#L379">Source</a></div></div><div class="public" id="var-header"><h3>header</h3><div class="usage"><code>(header h &amp; p)</code></div><pre class="doc">Make default header tag.
-</pre><div class="src-link"><a href="http://github.com/liquidz/misaki/blob/master/src/misaki/compiler/default/html/core.clj#L367">Source</a></div></div><div class="public" id="var-heading"><h3>heading</h3><div class="usage"><code>(heading n s)</code><code>(heading n attr s)</code></div><pre class="doc">Make heading tag
+</pre><div class="src-link"><a href="http://github.com/liquidz/misaki/blob/master/src/misaki/compiler/default/html/core.clj#L220">Source</a></div></div><div class="public" id="var-footer"><h3>footer</h3><div class="usage"><code>(footer &amp; p)</code></div><pre class="doc">Make default footer.
+</pre><div class="src-link"><a href="http://github.com/liquidz/misaki/blob/master/src/misaki/compiler/default/html/core.clj#L421">Source</a></div></div><div class="public" id="var-header"><h3>header</h3><div class="usage"><code>(header h &amp; p)</code></div><pre class="doc">Make default header tag.
+</pre><div class="src-link"><a href="http://github.com/liquidz/misaki/blob/master/src/misaki/compiler/default/html/core.clj#L407">Source</a></div></div><div class="public" id="var-heading"><h3>heading</h3><div class="usage"><code>(heading n s)</code><code>(heading n attr s)</code></div><pre class="doc">Make heading tag
 
 (heading 1 &quot;hello&quot;)
 ;=&gt; &lt;h1 id=&quot;auto_gen&quot;&gt;&lt;span&gt;h&lt;/span&gt;ello&lt;/h1&gt;
 (heading 1 {:class &quot;foo&quot;} &quot;hello&quot;)
 ;=&gt; &lt;h1 id=&quot;auto_gen&quot; class=&quot;foo&quot;&gt;&lt;span&gt;h&lt;/span&gt;ello&lt;/h1&gt;
-</pre><div class="src-link"><a href="http://github.com/liquidz/misaki/blob/master/src/misaki/compiler/default/html/core.clj#L164">Source</a></div></div><div class="public" id="var-img"><h3>img</h3><div class="usage"><code>(img src)</code><code>(img x src)</code><code>(img attr alt src)</code></div><pre class="doc">Make image
+</pre><div class="src-link"><a href="http://github.com/liquidz/misaki/blob/master/src/misaki/compiler/default/html/core.clj#L172">Source</a></div></div><div class="public" id="var-img"><h3>img</h3><div class="usage"><code>(img src)</code><code>(img x src)</code><code>(img attr alt src)</code></div><pre class="doc">Make image
 
 (img &quot;bar.jpg&quot;)
 ;=&gt; &lt;img src=&quot;bar.jpg&quot; /&gt;
@@ -59,11 +59,11 @@ ex) :url-base &quot;/foo&quot;
 ;=&gt; &lt;img class=&quot;foo&quot; src=&quot;bar.jpg&quot; /&gt;
 (img {:class &quot;foo&quot;} &quot;foo&quot; &quot;bar.jpg&quot;)
 ;=&gt; &lt;img alt=&quot;foo&quot; class=&quot;foo&quot; src=&quot;bar.jpg&quot; /&gt;
-</pre><div class="src-link"><a href="http://github.com/liquidz/misaki/blob/master/src/misaki/compiler/default/html/core.clj#L232">Source</a></div></div><div class="public" id="var-js"><h3>js</h3><div class="usage"><code>(js &amp; args)</code></div><pre class="doc">Include JavaScript
+</pre><div class="src-link"><a href="http://github.com/liquidz/misaki/blob/master/src/misaki/compiler/default/html/core.clj#L241">Source</a></div></div><div class="public" id="var-js"><h3>js</h3><div class="usage"><code>(js &amp; args)</code></div><pre class="doc">Include JavaScript
 
 (js &quot;foo.js&quot; &quot;bar.js&quot;)
 ;=&gt; &lt;script type=&quot;text/javascript&quot; src=&quot;foo.js&quot;&gt;&lt;/script&gt;
-;=&gt; &lt;script type=&quot;text/javascript&quot; src=&quot;bar.js&quot;&gt;&lt;/script&gt;</pre><div class="src-link"><a href="http://github.com/liquidz/misaki/blob/master/src/misaki/compiler/default/html/core.clj#L117">Source</a></div></div><div class="public" id="var-link"><h3>link</h3><div class="usage"><code>(link href)</code><code>(link x href)</code><code>(link attr label href)</code></div><pre class="doc">Make link
+;=&gt; &lt;script type=&quot;text/javascript&quot; src=&quot;bar.js&quot;&gt;&lt;/script&gt;</pre><div class="src-link"><a href="http://github.com/liquidz/misaki/blob/master/src/misaki/compiler/default/html/core.clj#L121">Source</a></div></div><div class="public" id="var-link"><h3>link</h3><div class="usage"><code>(link href)</code><code>(link x href)</code><code>(link attr label href)</code></div><pre class="doc">Make link
 
 (link &quot;foo.html&quot;)
 ;=&gt; &lt;a href=&quot;foo.html&quot;&gt;foo.html&lt;/a&gt;
@@ -73,25 +73,49 @@ ex) :url-base &quot;/foo&quot;
 ;=&gt; &lt;a class=&quot;foo&quot; href=&quot;foo.html&quot;&gt;foo.html&lt;/a&gt;
 (link {:class &quot;foo&quot;} &quot;foo&quot; &quot;bar.html&quot;)
 ;=&gt; &lt;a class=&quot;foo&quot; href=&quot;bar.html&quot;&gt;foo&lt;/a&gt;
-</pre><div class="src-link"><a href="http://github.com/liquidz/misaki/blob/master/src/misaki/compiler/default/html/core.clj#L253">Source</a></div></div><div class="public" id="var-links"><h3>links</h3><div class="usage"><code>(links &amp; title-url-pairs)</code></div><pre class="doc">Make link list
+</pre><div class="src-link"><a href="http://github.com/liquidz/misaki/blob/master/src/misaki/compiler/default/html/core.clj#L263">Source</a></div></div><div class="public" id="var-links"><h3>links</h3><div class="usage"><code>(links &amp; title-url-pairs)</code></div><pre class="doc">Make link list
 
 (links &quot;aa&quot; &quot;aa.html&quot;
        &quot;bb&quot; &quot;bb.html&quot;)
 ;=&gt; &lt;ul&gt;&lt;li&gt;&lt;span&gt;&lt;a href=&quot;aa.html&quot;&gt;aa&lt;/a&gt;&lt;/span&gt;&lt;/li&gt;
-        &lt;li&gt;&lt;span&gt;&lt;a href=&quot;bb.html&quot;&gt;bb&lt;/a&gt;&lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;</pre><div class="src-link"><a href="http://github.com/liquidz/misaki/blob/master/src/misaki/compiler/default/html/core.clj#L337">Source</a></div></div><div class="public" id="var-p"><h3>p</h3><div class="usage"><code>(p &amp; s)</code></div><pre class="doc">Make paragraph
+        &lt;li&gt;&lt;span&gt;&lt;a href=&quot;bb.html&quot;&gt;bb&lt;/a&gt;&lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;</pre><div class="src-link"><a href="http://github.com/liquidz/misaki/blob/master/src/misaki/compiler/default/html/core.clj#L350">Source</a></div></div><div class="public" id="var-p"><h3>p</h3><div class="usage"><code>(p &amp; s)</code></div><pre class="doc">Make paragraph
 
-(p &quot;hello&quot;)
-;=&gt; &lt;p class=&quot;paragraph&quot;&gt;hello&lt;/p&gt;
-(p {:class &quot;foo&quot;} &quot;hello&quot;)
-;=&gt; &lt;p class=&quot;paragraph foo&quot;&gt;hello&lt;/p&gt;
-</pre><div class="src-link"><a href="http://github.com/liquidz/misaki/blob/master/src/misaki/compiler/default/html/core.clj#L347">Source</a></div></div><div class="public" id="var-post-date"><h3>post-date</h3><div class="usage"><code>(post-date)</code></div><pre class="doc">Make default post date tag.
-</pre><div class="src-link"><a href="http://github.com/liquidz/misaki/blob/master/src/misaki/compiler/default/html/core.clj#L423">Source</a></div></div><div class="public" id="var-post-list"><h3>post-list</h3><div class="usage"><code>(post-list)</code><code>(post-list attr)</code></div><pre class="doc">Make default all posts unordered list.
+    (p &quot;hello&quot;)
+    ;=&gt; &lt;p class=&quot;paragraph&quot;&gt;hello&lt;/p&gt;
+    (p {:class &quot;foo&quot;} &quot;hello&quot;)
+    ;=&gt; &lt;p class=&quot;paragraph foo&quot;&gt;hello&lt;/p&gt;
+
+Following markdown format is allowd.
+
+ * Parse link
+    &quot;[hello](world)&quot;
+    ;=&gt; &lt;a href=&quot;world&quot;&gt;hello&lt;/a&gt;
+    &quot;[hello](title: POST TITLE)&quot;
+    ;=&gt; &lt;a href=&quot;POST URL&quot;&gt;hello&lt;/a&gt;
+
+ * Parse emphasized
+    &quot;*hello*&quot;
+    ;=&gt; &lt;em&gt;hello&lt;/em&gt;
+
+ * Parse strong
+    &quot;**hello**&quot;
+    ;=&gt; &lt;strong&gt;hello&lt;/strong&gt;
+
+ * Parse inline code
+    &quot;`hello`&quot;
+    ;=&gt; &lt;code class=&quot;prettyprint&quot;&gt;hello&lt;/code&gt;
+
+ * Parse new line
+    &quot;\n\nhello&quot;
+    ;=&gt; &lt;br /&gt;hello
+</pre><div class="src-link"><a href="http://github.com/liquidz/misaki/blob/master/src/misaki/compiler/default/html/core.clj#L361">Source</a></div></div><div class="public" id="var-post-date"><h3>post-date</h3><div class="usage"><code>(post-date)</code></div><pre class="doc">Make default post date tag.
+</pre><div class="src-link"><a href="http://github.com/liquidz/misaki/blob/master/src/misaki/compiler/default/html/core.clj#L468">Source</a></div></div><div class="public" id="var-post-list"><h3>post-list</h3><div class="usage"><code>(post-list)</code><code>(post-list attr)</code></div><pre class="doc">Make default all posts unordered list.
 
 (post-list)
 (post-list {:class &quot;foo &quot;})
-</pre><div class="src-link"><a href="http://github.com/liquidz/misaki/blob/master/src/misaki/compiler/default/html/core.clj#L386">Source</a></div></div><div class="public" id="var-post-tags"><h3>post-tags</h3><div class="usage"><code>(post-tags &amp; {:keys [class], :or {class &quot;tag&quot;}})</code></div><pre class="doc">Make default post tags unordered list.
-</pre><div class="src-link"><a href="http://github.com/liquidz/misaki/blob/master/src/misaki/compiler/default/html/core.clj#L417">Source</a></div></div><div class="public" id="var-prev-next-post-link"><h3>prev-next-post-link</h3><div class="usage"><code>(prev-next-post-link &amp; {:keys [class separator], :or {class &quot;pager&quot;, separator &quot;|&quot;}})</code></div><pre class="doc">Make previous/next post links.
-</pre><div class="src-link"><a href="http://github.com/liquidz/misaki/blob/master/src/misaki/compiler/default/html/core.clj#L428">Source</a></div></div><div class="public" id="var-table"><h3>table</h3><div class="usage"><code>(table bodies)</code><code>(table x bodies)</code><code>(table attr head bodies)</code></div><pre class="doc">Make table
+</pre><div class="src-link"><a href="http://github.com/liquidz/misaki/blob/master/src/misaki/compiler/default/html/core.clj#L429">Source</a></div></div><div class="public" id="var-post-tags"><h3>post-tags</h3><div class="usage"><code>(post-tags &amp; {:keys [class], :or {class &quot;tag&quot;}})</code></div><pre class="doc">Make default post tags unordered list.
+</pre><div class="src-link"><a href="http://github.com/liquidz/misaki/blob/master/src/misaki/compiler/default/html/core.clj#L461">Source</a></div></div><div class="public" id="var-prev-next-post-link"><h3>prev-next-post-link</h3><div class="usage"><code>(prev-next-post-link &amp; {:keys [class separator], :or {class &quot;pager&quot;, separator &quot;|&quot;}})</code></div><pre class="doc">Make previous/next post links.
+</pre><div class="src-link"><a href="http://github.com/liquidz/misaki/blob/master/src/misaki/compiler/default/html/core.clj#L474">Source</a></div></div><div class="public" id="var-table"><h3>table</h3><div class="usage"><code>(table bodies)</code><code>(table x bodies)</code><code>(table attr head bodies)</code></div><pre class="doc">Make table
 
 (table [[1 2]])
 ;=&gt; &lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;1&lt;/td&gt;&lt;td&gt;2&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
@@ -103,12 +127,12 @@ ex) :url-base &quot;/foo&quot;
 (table {:class &quot;foo&quot;} '[a b] [[1 2]])
 ;=&gt; &lt;table class=&quot;foo&quot;&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;a&lt;/th&gt;&lt;th&gt;b&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;
 ;          &lt;tbody&gt;&lt;tr&gt;&lt;td&gt;1&lt;/td&gt;&lt;td&gt;2&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
-</pre><div class="src-link"><a href="http://github.com/liquidz/misaki/blob/master/src/misaki/compiler/default/html/core.clj#L307">Source</a></div></div><div class="public" id="var-tag-list"><h3>tag-list</h3><div class="usage"><code>(tag-list)</code><code>(tag-list attr)</code></div><pre class="doc">Make default all tags unordered list.
+</pre><div class="src-link"><a href="http://github.com/liquidz/misaki/blob/master/src/misaki/compiler/default/html/core.clj#L320">Source</a></div></div><div class="public" id="var-tag-list"><h3>tag-list</h3><div class="usage"><code>(tag-list)</code><code>(tag-list attr)</code></div><pre class="doc">Make default all tags unordered list.
 
 (tag-list)
 (tag-list {:class &quot;foo&quot;})
-</pre><div class="src-link"><a href="http://github.com/liquidz/misaki/blob/master/src/misaki/compiler/default/html/core.clj#L402">Source</a></div></div><div class="public" id="var-two-column"><h3>two-column</h3><div class="usage"><code>(two-column left right)</code></div><pre class="doc">Make 2 column
-</pre><div class="src-link"><a href="http://github.com/liquidz/misaki/blob/master/src/misaki/compiler/default/html/core.clj#L440">Source</a></div></div><div class="public" id="var-ul"><h3>ul</h3><div class="usage"><code>(ul ls)</code><code>(ul x ls)</code><code>(ul f attr ls)</code></div><pre class="doc">Make unordered list
+</pre><div class="src-link"><a href="http://github.com/liquidz/misaki/blob/master/src/misaki/compiler/default/html/core.clj#L446">Source</a></div></div><div class="public" id="var-two-column"><h3>two-column</h3><div class="usage"><code>(two-column left right)</code></div><pre class="doc">Make 2 column
+</pre><div class="src-link"><a href="http://github.com/liquidz/misaki/blob/master/src/misaki/compiler/default/html/core.clj#L487">Source</a></div></div><div class="public" id="var-ul"><h3>ul</h3><div class="usage"><code>(ul ls)</code><code>(ul x ls)</code><code>(ul f attr ls)</code></div><pre class="doc">Make unordered list
 
     (ul [1 2])
     ;=&gt; &lt;ul&gt;&lt;li&gt;&lt;span&gt;1&lt;/span&gt;&lt;/li&gt;&lt;li&gt;&lt;span&gt;2&lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;
@@ -119,4 +143,4 @@ ex) :url-base &quot;/foo&quot;
     (ul inc {:class &quot;foo&quot;} [1 2])
     ;=&gt; &lt;ul class=&quot;foo&quot;&gt;&lt;li&gt;&lt;span&gt;2&lt;/span&gt;&lt;/li&gt;&lt;li&gt;&lt;span&gt;3&lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;
 ;
-</pre><div class="src-link"><a href="http://github.com/liquidz/misaki/blob/master/src/misaki/compiler/default/html/core.clj#L188">Source</a></div></div></div></body></html>
+</pre><div class="src-link"><a href="http://github.com/liquidz/misaki/blob/master/src/misaki/compiler/default/html/core.clj#L197">Source</a></div></div></div></body></html>
