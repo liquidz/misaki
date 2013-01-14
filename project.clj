@@ -12,7 +12,9 @@
                  [de.ubercode.clostache/clostache "1.3.0"]
                  [clj-gntp "0.0.1"]
                  ; cljs compiler
-                 [org.clojure/clojurescript "0.0-1552"]]
+                 [org.clojure/clojurescript "0.0-1552"]
+                 ; css compiler
+                 [gaka "0.3.0"]]
 
   :dev-dependencies [[lein-multi "1.1.0"]
                      [lein-marginalia "0.7.1"]
