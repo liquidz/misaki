@@ -8,7 +8,7 @@
                  [clj-time "0.4.4"]
                  [clj-text-decoration "0.0.1"]
                  [clj-pretty-error "0.0.5"]
-                 [uochan/watchtower "0.1.3"]
+                 [uochan/watchtower "0.1.4"]
                  [de.ubercode.clostache/clostache "1.3.0"]
                  [clj-gntp "0.0.1"]
                  ; cljs compiler
