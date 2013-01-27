@@ -21,6 +21,9 @@
 (def POST_OUTPUT_NAME_FORMAT
   "Default format to generage post output filename."
   "{{year}}/{{month}}/{{filename}}")
+(def INDEX_TEMPLATE_REGEXP
+  "Default regexp to detect index template file."
+  #"^index\.")
 (def NOTIFY_SETTING
   {:fixed-title  "{{filename}}"
    :fixed        "FIXED"
@@ -100,9 +103,10 @@
       :index-name     (:index-name config "")
       :url-base       (normalize-path (:url-base config "/"))
       :compiler       (load-compiler-publics (:compiler config COMPILER))
-      :compile-with-post    (:compile-with-post config ())
-      :post-filename-regexp (:post-filename-regexp config POST_FILENAME_REGEXP)
-      :post-filename-format (:post-filename-format config POST_OUTPUT_NAME_FORMAT)
+      :compile-with-post     (:compile-with-post config ())
+      :post-filename-regexp  (:post-filename-regexp config POST_FILENAME_REGEXP)
+      :post-filename-format  (:post-filename-format config POST_OUTPUT_NAME_FORMAT)
+      :index-template-regexp (:index-template config INDEX_TEMPLATE_REGEXP)
       :notify?              (:notify? config false)
       :notify-setting       (merge NOTIFY_SETTING (:notify-setting config)))))
 
@@ -129,6 +133,12 @@
   {:pre [(file? file)]}
   (and (:post-dir *config*) (str-contains? (.getAbsolutePath file)
                                            (:post-dir *config*))))
+
+(defn index-file?
+  "Check whether file is index file or not."
+  [#^File file]
+  (re-seq (:index-template-regexp *config*) (.getName file)))
+
 
 ;; ## Filename Date Utility
 

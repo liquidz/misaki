@@ -107,7 +107,8 @@
   (testing "post file"
     (is (= "2000-11/foo.html"
            (make-output-filename
-             (io/file "test/template/_posts/2000.11.22-foo.html"))))))
+             (io/file "test/template/_posts/2000.11.22-foo.html")))))
+  )
 
 ;;; make-output-url
 (deftest* make-output-url-test

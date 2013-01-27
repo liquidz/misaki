@@ -28,6 +28,8 @@
  ;; number of posts per page
  :posts-per-page nil
 
+ :index-template "index.html.clj"
+
  :compiler ["default" "cljs"]
  }
 
