@@ -99,12 +99,7 @@
 (defmethod make-template-output-filename File
   [file]
   (remove-clj-extension
-    (cnf/make-output-filename file))
-  ;(let [filename (cnf/make-output-filename file)]
-  ;  (if (has-extension? :clj filename)
-  ;    (remove-last-extension filename)
-  ;    filename))
-  )
+    (cnf/make-output-filename file)))
 
 ; =make-layout-filename
 (defn make-layout-filename
@@ -121,12 +116,7 @@
   [#^File file]
   {:pre [(file? file)]}
   (remove-clj-extension
-    (cnf/make-output-url file))
-  ;(let [url (cnf/make-output-url file)]
-  ;  (if (has-extension? :clj url)
-  ;    (remove-last-extension url)
-  ;    url))
-  )
+    (cnf/make-output-url file)))
 
 ; =make-tag-url
 (defn make-tag-url
