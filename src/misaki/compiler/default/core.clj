@@ -6,7 +6,7 @@
     [misaki.config :only [*config*]]
     [hiccup.core   :only [html]]
     [hiccup.page   :only [html5 xhtml html4]]
-    [clojure.core.incubator :only [-?>>]])
+    [clojure.core.incubator :only [-?> -?>>]])
   (:require
     [misaki.core     :as msk]
     [misaki.config   :as cnf]
@@ -181,7 +181,12 @@
            :index    (cnf/get-index-filename)
            :date     (cnf/get-date-from-file tmpl-file)
            :next     next
-           :prev     prev)))
+           :prev     prev
+           ;; pagination
+           :page      (:page *config*)
+           :pages     (:pages *config*)
+           :next-page (-?> (:next-page *config*) remove-clj-extension)
+           :prev-page (-?> (:prev-page *config*) remove-clj-extension))))
 
 ; =file->template-sexp
 (defn file->template-sexp

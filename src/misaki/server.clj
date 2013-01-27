@@ -55,6 +55,10 @@
 (defn do-compile
   [#^java.io.File file]
 
+  ;(cond
+  ;  (config-file? file) (print-compile-result "all templates" (call-all-compile))
+  ;  (index-file? file)  (print-compile-result "index templates" (call-index-compile))
+  ;  :else               (print-compile-result (.getName file) (call-compile file)))
   (if (config-file? file)
     (print-compile-result "all templates" (call-all-compile))
     (print-compile-result (.getName file) (call-compile file)))

@@ -1,7 +1,7 @@
 (ns misaki.tester
   "Compiler Testing Utilities"
   (:use
-    [misaki.core      :only [update-config call-compile]]
+    [misaki.core      :only [update-config call-compile call-index-compile]]
     [misaki.config    :only [*base-dir* *config* make-basic-config-map with-config]]
     [misaki.util.file :only [normalize-path path]]
     [clojure.test     :only [deftest]])
@@ -58,6 +58,13 @@
   [file]
   (with-test-base-dir
     (call-compile file)))
+
+; =test-index-compile
+(defn test-index-compile
+  ([file] (test-index-compile {} file))
+  ([optional-config file]
+   (with-test-base-dir
+     (call-index-compile optional-config file))))
 
 ; =deftest*
 (defmacro deftest*

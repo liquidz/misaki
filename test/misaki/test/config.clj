@@ -110,17 +110,27 @@
              (io/file "test/template/_posts/2000.11.22-foo.html")))))
 
   (testing "index file without pagenation"
-    (is (= "index.html" (make-output-filename (io/file "index.html")))))
+    (binding [*config* (assoc *config* :posts-per-page nil
+                                       :index-template-regexp #"^index")]
+      (is (= "index.html" (make-output-filename (io/file "index.html"))))))
 
   (testing "index file with pagenation"
     (let [file (io/file "index.html")]
-      (binding [*config* (assoc *config* :posts-per-page 1)]
+      (binding [*config* (assoc *config* :posts-per-page 1
+                                         :index-template-regexp #"^index")]
         (binding [*page-index* 0]
           (is (= "index.html" (make-output-filename file))))
         (binding [*page-index* 1]
           (is (= "page2/index.html" (make-output-filename file))))
         (binding [*page-index* 2]
-          (is (= "page3/index.html" (make-output-filename file))))))))
+          (is (= "page3/index.html" (make-output-filename file)))))))
+
+  (testing "index file with specific page number"
+    (let [file (io/file "index.html")]
+      (bind-config [:posts-per-page 1, :index-template-regexp #"^index"]
+        (is (= "index.html" (make-output-filename file :page 0)))
+        (is (= "page2/index.html" (make-output-filename file :page 1)))
+        (is (= "page3/index.html" (make-output-filename file :page 2)))))))
 
 ;;; make-output-url
 (deftest* make-output-url-test
@@ -134,16 +144,26 @@
 
   (let [file (io/file "index.html")]
     (testing "index file without pagenation"
-      (is (= "/index.html" (make-output-url file))))
+      (binding [*config* (assoc *config* :posts-per-page nil
+                                         :index-template-regexp #"^index")]
+        (is (= "/index.html" (make-output-url file)))))
 
     (testing "index file with pagenation"
-      (binding [*config* (assoc *config* :posts-per-page 1)]
+      (binding [*config* (assoc *config* :posts-per-page 1
+                                         :index-template-regexp #"^index")]
         (binding [*page-index* 0]
           (is (= "/index.html" (make-output-url file))))
         (binding [*page-index* 1]
           (is (= "/page2/index.html" (make-output-url file))))
         (binding [*page-index* 2]
-          (is (= "/page3/index.html" (make-output-url file))))))))
+          (is (= "/page3/index.html" (make-output-url file)))))))
+
+  (testing "index file with specific page number"
+    (let [file (io/file "index.html")]
+      (bind-config [:posts-per-page 1, :index-template-regexp #"^index"]
+        (is (= "/index.html" (make-output-url file :page 0)))
+        (is (= "/page2/index.html" (make-output-url file :page 1)))
+        (is (= "/page3/index.html" (make-output-url file :page 2)))))))
 
 ;;; absolute-path
 (deftest* absolute-path-test

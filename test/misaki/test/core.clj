@@ -70,7 +70,7 @@
   (testing "default template directory"
     (let [tmpls (get-template-files)]
       (is (find-first #(= "index.html.clj" (.getName %)) tmpls))
-      (is (= 17 (count tmpls)))))
+      (is (= 18 (count tmpls)))))
 
   (testing "find from specified directory"
     (let [tmpls (get-template-files :dir (:post-dir *config*))]
@@ -85,7 +85,7 @@
   (testing "all extensions"
     (binding [*config* (assoc *config* :compiler {'-extension #(list :*)})]
       (let [tmpls (get-template-files)]
-        (is (= 18 (count tmpls)))
+        (is (= 19 (count tmpls)))
         (is (find-first #(= "favicon.ico" (.getName %)) tmpls)))))
 
   (testing "multiple compiler"
@@ -100,14 +100,16 @@
 ;; get-post-files
 (deftest* get-post-files-test
   (testing "without sort"
-    (let [files (get-post-files)]
-      (is (= 3 (count files)))
-      (is (find-first #(= "2000.01.01-foo.html.clj" (.getName %)) files))
-      (is (find-first #(= "2011.01.01-foo.html.clj" (.getName %)) files))
-      (is (find-first #(= "2022.02.02-bar.html.clj" (.getName %)) files))))
+    (bind-config [:posts-per-page nil]
+      (let [files (get-post-files)]
+        (is (= 3 (count files)))
+        (is (find-first #(= "2000.01.01-foo.html.clj" (.getName %)) files))
+        (is (find-first #(= "2011.01.01-foo.html.clj" (.getName %)) files))
+        (is (find-first #(= "2022.02.02-bar.html.clj" (.getName %)) files)))))
 
   (testing "with sort"
-    (bind-config [:post-sort-type :date-desc]
+    (bind-config [:post-sort-type :date-desc
+                  :posts-per-page nil]
       (let [[a b c :as files] (get-post-files :sort? true)]
         (are [x y] (= x y)
           3 (count files)
@@ -130,10 +132,7 @@
           (is (= 1 (count files)))
           (is (= "2022.02.02-bar.html.clj" (.getName (first files))))))
       (binding [*page-index* 3]
-        (is (zero? (count (get-post-files)))))
-      )
-    )
-  )
+        (is (zero? (count (get-post-files))))))))
 
 
 ;; update-config
@@ -244,4 +243,21 @@
     (let [[p c] (compile* (template-file "favicon.ico"))]
       (is (true? p))
       (is (= 'skip c)))))
+
+;;; call-index-compile
+(deftest* call-index-compile-test
+  (bind-config [:posts-per-page 1
+                :index-template-regexp #"^pagetest"]
+    (test-index-compile
+      {:index-template-regexp (:index-template-regexp *config*)}
+      (template-file "pagetest.html.clj"))
+    (let [p1   (public-file "pagetest.html")
+          p2   (public-file "page2/pagetest.html")
+          p3   (public-file "page3/pagetest.html")]
+      (is (.exists p1))
+      (is (.exists p2))
+      (is (.exists p3))
+      (.delete p1)
+      (.delete p2)
+      (.delete p3))))
 

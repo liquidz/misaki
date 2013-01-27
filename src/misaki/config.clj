@@ -109,7 +109,7 @@
       :compile-with-post     (:compile-with-post config ())
       :post-filename-regexp  (:post-filename-regexp config POST_FILENAME_REGEXP)
       :post-filename-format  (:post-filename-format config POST_OUTPUT_NAME_FORMAT)
-      :index-template-regexp (:index-template config INDEX_TEMPLATE_REGEXP)
+      :index-template-regexp (:index-template-regexp config INDEX_TEMPLATE_REGEXP)
       :page-filename-format  (:page-filename-format config PAGE_FILENAME_FORMAT)
       :notify?              (:notify? config false)
       :notify-setting       (merge NOTIFY_SETTING (:notify-setting config)))))
@@ -203,27 +203,29 @@
 ; =make-output-filename
 (defn make-output-filename
   "Make output filename from java.io.File."
-  [#^File file]
+  [#^File file & {:keys [page] :or {page nil}}]
   {:pre [(file? file)]}
+
   (if (post-file? file)
     (make-post-output-filename file)
     (let [path (.getPath file)
           len  (count (:template-dir *config*))
           filename (if (.startsWith path (:template-dir *config*))
                      (.substring path len)
-                     path)]
-      (if (and (index-file? file) (not= 0 *page-index*))
+                     path)
+          page-index (if page page *page-index*)]
+      (if (and (index-file? file) (not= 0 page-index))
         (render (:page-filename-format *config*)
                 {:filename filename
-                 :page     (inc *page-index*)})
+                 :page     (inc page-index)})
         filename))))
 
 ; =make-output-url
 (defn make-output-url
   "Make output url from java.io.File."
-  [#^File file]
+  [#^File file & {:keys [page] :or {page nil}}]
   {:pre [(file? file)]}
-  (path (:url-base *config*) (make-output-filename file)))
+  (path (:url-base *config*) (make-output-filename file :page page)))
 
 ; =template-name->file
 (defn template-name->file

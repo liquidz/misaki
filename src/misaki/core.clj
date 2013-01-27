@@ -4,6 +4,8 @@
         [misaki.util file string sequence notify]
         [text-decoration.core :only [green]]
         [pretty-error.core    :only [print-pretty-stack-trace]])
+  (:require
+    [clojure.math.numeric-tower :as math])
   (:import [java.io File]))
 
 ;; ## Util
@@ -70,13 +72,13 @@
 
 ; =get-post-files
 (defn get-post-files
-  "Get all post files.
+  "Get post files.
   Sort file list with `:sort?` option(default setting is FALSE)."
-  [& {:keys [sort?] :or {sort? false}}]
+  [& {:keys [sort? all?] :or {sort? false, all? false}}]
 
   (let [ppp   (:posts-per-page *config*)
         files (get-template-files :dir (:post-dir *config*))
-        files (if (nil? ppp)
+        files (if (or all? (nil? ppp))
                 files
                 (nth (partition-all ppp files) *page-index* ()))]
     (if sort?
@@ -185,19 +187,46 @@
 ; =call-compile
 (defn call-compile
   "Call plugin's -compile function."
-  [file]
-  (let [[process-result compile-result] (compile* {:-compiling :single} file)]
-    (cond
-      ; all compile
-      (all-compile? compile-result)
-      (do (println (green "   Switch to all compiling"))
-          (call-all-compile))
+  ([file] (call-compile {} file))
+  ([optional-config file]
+   (let [[process-result compile-result]
+         (compile* (merge optional-config {:-compiling :single}) file)]
+     (cond
+       ; all compile
+       (all-compile? compile-result)
+       (do (println (green "   Switch to all compiling"))
+         (call-all-compile))
 
-      ; compile with post
-      (post-file? file)
-      (every? #(true? (first %))
-              (for [file (map template-name->file (:compile-with-post *config*))]
-                (compile* {:-compiling :single} file)))
+       ; compile with post
+       (post-file? file)
+       (every? #(true? (first %))
+               (for [file (map template-name->file (:compile-with-post *config*))]
+                 (compile* (merge optional-config {:-compiling :single}) file)))
 
-      :else process-result)))
+       :else process-result))))
+
+; =call-index-compile
+(defn call-index-compile
+  "Call plugin's -compile function to compile index template defined by :index-template-regexp."
+  ([file] (call-index-compile {} file))
+  ([optional-config file]
+   (let [ppp (:posts-per-page *config*)]
+     (if (nil? ppp)
+       (call-compile optional-config file)
+       (let [pages (math/ceil (/ (count (get-post-files :all? true)) ppp))]
+         (dotimes [n pages]
+           (binding [*page-index* n]
+             (let [page (inc n)
+                   next-page (if (< n (dec pages))
+                                (make-output-url file :page (inc n)))
+                   prev-page (if (> n 0)
+                                (make-output-url file :page (dec n)))]
+               (call-compile
+                 (merge
+                   optional-config
+                   {:page      page
+                    :pages     pages
+                    :next-page next-page
+                    :prev-page prev-page})
+                 file)))))))))
 

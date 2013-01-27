@@ -25,10 +25,6 @@
  ;; highlight setting
  :code-highlight {:CLJ "lang-clj"}
 
- ;; number of posts per page
- :posts-per-page nil
-
- ;:index-template "index.html.clj"
  :page-filename-format "page{{page}}/{{filename}}"
 
  :compiler ["default" "cljs"]

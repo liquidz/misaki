@@ -22,6 +22,12 @@
 
 (def ^:dynamic *site* {})
 
+;; ## Utilities
+(defn remove-clj-extension [filename]
+  (if (has-extension? :clj filename)
+    (remove-last-extension filename)
+    filename))
+
 ; =plugin-config
 (defn plugin-config
   "Configure for this compiler.
@@ -92,10 +98,13 @@
 
 (defmethod make-template-output-filename File
   [file]
-  (let [filename (cnf/make-output-filename file)]
-    (if (has-extension? :clj filename)
-      (remove-last-extension filename)
-      filename)))
+  (remove-clj-extension
+    (cnf/make-output-filename file))
+  ;(let [filename (cnf/make-output-filename file)]
+  ;  (if (has-extension? :clj filename)
+  ;    (remove-last-extension filename)
+  ;    filename))
+  )
 
 ; =make-layout-filename
 (defn make-layout-filename
@@ -111,10 +120,13 @@
   "Make post url from java.io.File"
   [#^File file]
   {:pre [(file? file)]}
-  (let [url (cnf/make-output-url file)]
-    (if (has-extension? :clj url)
-      (remove-last-extension url)
-      url)))
+  (remove-clj-extension
+    (cnf/make-output-url file))
+  ;(let [url (cnf/make-output-url file)]
+  ;  (if (has-extension? :clj url)
+  ;    (remove-last-extension url)
+  ;    url))
+  )
 
 ; =make-tag-url
 (defn make-tag-url
