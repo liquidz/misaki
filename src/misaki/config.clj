@@ -24,6 +24,9 @@
 (def INDEX_TEMPLATE_REGEXP
   "Default regexp to detect index template file."
   #"^index\.")
+(def PAGE_FILENAME_FORMAT
+  "Default format to generate page output filename."
+  "page{{page}}/{{filename}}")
 (def NOTIFY_SETTING
   {:fixed-title  "{{filename}}"
    :fixed        "FIXED"
@@ -107,6 +110,7 @@
       :post-filename-regexp  (:post-filename-regexp config POST_FILENAME_REGEXP)
       :post-filename-format  (:post-filename-format config POST_OUTPUT_NAME_FORMAT)
       :index-template-regexp (:index-template config INDEX_TEMPLATE_REGEXP)
+      :page-filename-format  (:page-filename-format config PAGE_FILENAME_FORMAT)
       :notify?              (:notify? config false)
       :notify-setting       (merge NOTIFY_SETTING (:notify-setting config)))))
 
@@ -204,10 +208,15 @@
   (if (post-file? file)
     (make-post-output-filename file)
     (let [path (.getPath file)
-          len  (count (:template-dir *config*))]
-      (if (.startsWith path (:template-dir *config*))
-        (.substring path len)
-        path))))
+          len  (count (:template-dir *config*))
+          filename (if (.startsWith path (:template-dir *config*))
+                     (.substring path len)
+                     path)]
+      (if (and (index-file? file) (not= 0 *page-index*))
+        (render (:page-filename-format *config*)
+                {:filename filename
+                 :page     (inc *page-index*)})
+        filename))))
 
 ; =make-output-url
 (defn make-output-url

@@ -108,7 +108,19 @@
     (is (= "2000-11/foo.html"
            (make-output-filename
              (io/file "test/template/_posts/2000.11.22-foo.html")))))
-  )
+
+  (testing "index file without pagenation"
+    (is (= "index.html" (make-output-filename (io/file "index.html")))))
+
+  (testing "index file with pagenation"
+    (let [file (io/file "index.html")]
+      (binding [*config* (assoc *config* :posts-per-page 1)]
+        (binding [*page-index* 0]
+          (is (= "index.html" (make-output-filename file))))
+        (binding [*page-index* 1]
+          (is (= "page2/index.html" (make-output-filename file))))
+        (binding [*page-index* 2]
+          (is (= "page3/index.html" (make-output-filename file))))))))
 
 ;;; make-output-url
 (deftest* make-output-url-test
@@ -118,7 +130,20 @@
 
     (testing "custom url-base"
       (bind-config [:url-base (normalize-path "/bar/baz")]
-        (is (= "/bar/baz/foo.html" (make-output-url file)))))))
+        (is (= "/bar/baz/foo.html" (make-output-url file))))))
+
+  (let [file (io/file "index.html")]
+    (testing "index file without pagenation"
+      (is (= "/index.html" (make-output-url file))))
+
+    (testing "index file with pagenation"
+      (binding [*config* (assoc *config* :posts-per-page 1)]
+        (binding [*page-index* 0]
+          (is (= "/index.html" (make-output-url file))))
+        (binding [*page-index* 1]
+          (is (= "/page2/index.html" (make-output-url file))))
+        (binding [*page-index* 2]
+          (is (= "/page3/index.html" (make-output-url file))))))))
 
 ;;; absolute-path
 (deftest* absolute-path-test
