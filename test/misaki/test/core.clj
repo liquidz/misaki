@@ -113,7 +113,27 @@
           3 (count files)
           "2022.02.02-bar.html.clj" (.getName a)
           "2011.01.01-foo.html.clj" (.getName b)
-          "2000.01.01-foo.html.clj" (.getName c))))))
+          "2000.01.01-foo.html.clj" (.getName c)))))
+
+  (testing "with posts-per-page"
+    (binding [*config* (assoc *config* :posts-per-page 1)]
+      (binding [*page-index* 0]
+        (let [files (get-post-files)]
+          (is (= 1 (count files)))
+          (is (= "2000.01.01-foo.html.clj" (.getName (first files))))))
+      (binding [*page-index* 1]
+        (let [files (get-post-files)]
+          (is (= 1 (count files)))
+          (is (= "2011.01.01-foo.html.clj" (.getName (first files))))))
+      (binding [*page-index* 2]
+        (let [files (get-post-files)]
+          (is (= 1 (count files)))
+          (is (= "2022.02.02-bar.html.clj" (.getName (first files))))))
+      (binding [*page-index* 3]
+        (is (zero? (count (get-post-files)))))
+      )
+    )
+  )
 
 
 ;; update-config

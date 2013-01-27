@@ -40,6 +40,15 @@
   "Current config map."
   {})
 
+;(def ^:dynamic *posts-per-page*
+;  "Number of posts per page.
+;  nil is all posts."
+;  nil)
+
+(def ^:dynamic *page-index*
+  "Page index. First page is 0."
+  0)
+
 ;; ## Config Data Wrapper
 
 ; =read-config

@@ -25,6 +25,9 @@
  ;; highlight setting
  :code-highlight {:CLJ "lang-clj"}
 
+ ;; number of posts per page
+ :posts-per-page nil
+
  :compiler ["default" "cljs"]
  }
 

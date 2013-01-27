@@ -74,7 +74,11 @@
   Sort file list with `:sort?` option(default setting is FALSE)."
   [& {:keys [sort?] :or {sort? false}}]
 
-  (let [files (get-template-files :dir (:post-dir *config*))]
+  (let [ppp   (:posts-per-page *config*)
+        files (get-template-files :dir (:post-dir *config*))
+        files (if (nil? ppp)
+                files
+                (nth (partition-all ppp files) *page-index* ()))]
     (if sort?
       ((sort-type->sort-fn) files)
       files)))
