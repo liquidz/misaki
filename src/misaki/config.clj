@@ -200,25 +200,36 @@
              :day      (-?>> date day   (format "%02d"))
              :filename filename})))
 
+; =make-regular-output-filename
+(defn- make-regular-output-filename
+  "Make regular output filename from java.io.File."
+  [#^File file]
+  (let [path (.getPath file)
+        len  (count (:template-dir *config*))]
+    (if (.startsWith path (:template-dir *config*))
+      (.substring path len)
+      path)))
+
+; =make-index-output-filename
+(defn- make-index-output-filename
+  "Make index output filename from java.io.File."
+  [#^File file & {:keys [page] :or {page nil}}]
+  (let [filename   (make-regular-output-filename file)
+        page-index (or page *page-index*)]
+    (if (not= 0 page-index)
+      (render (:page-filename-format *config*)
+              {:filename filename, :page (inc page-index)})
+      filename)))
+
 ; =make-output-filename
 (defn make-output-filename
   "Make output filename from java.io.File."
   [#^File file & {:keys [page] :or {page nil}}]
   {:pre [(file? file)]}
-
-  (if (post-file? file)
-    (make-post-output-filename file)
-    (let [path (.getPath file)
-          len  (count (:template-dir *config*))
-          filename (if (.startsWith path (:template-dir *config*))
-                     (.substring path len)
-                     path)
-          page-index (if page page *page-index*)]
-      (if (and (index-file? file) (not= 0 page-index))
-        (render (:page-filename-format *config*)
-                {:filename filename
-                 :page     (inc page-index)})
-        filename))))
+  (cond
+    (post-file? file)  (make-post-output-filename file)
+    (index-file? file) (make-index-output-filename file :page page)
+    :else              (make-regular-output-filename file)))
 
 ; =make-output-url
 (defn make-output-url
