@@ -187,7 +187,7 @@
   (path (:url-base *config*) (:index-name *config*)))
 
 ; =make-post-output-filename
-(defn make-post-output-filename
+(defn- make-post-output-filename
   "Make post output filename from java.io.File."
   [#^File file]
   {:pre [(file? file)]}
