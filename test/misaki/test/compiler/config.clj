@@ -26,7 +26,7 @@
   (testing "error"
     (is (thrown? AssertionError (layout-file? nil)))))
 
-
+; FIXME
 (deftest* sort-type->sort-fn-test
   (testing "title sort"
     (bind-config [:post-sort-type :title]

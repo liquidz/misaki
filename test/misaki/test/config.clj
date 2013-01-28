@@ -13,6 +13,11 @@
 (defn dummy3 ([a] ()) ([a b c] ()))
 (defn dummy4 [a & b] ())
 
+;(def sample-posts
+;  (list
+;    (io/file "2022.2.2_a.html.clj")
+;    (io/file "2000.1.1_c.html.clj")
+;    (io/file "2011.1.1_b.html.clj")))
 
 (set-base-dir! "test/")
 
@@ -55,9 +60,7 @@
         "default" (:name c1)
         "demo"    (:name c2)
         true      (every? #(contains? c1 %) '(-extension -config -compile))
-        true      (every? #(contains? c2 %) '(-extension -config -compile)))))
-  
-  )
+        true      (every? #(contains? c2 %) '(-extension -config -compile))))))
 
 ;;; get-date-from-file
 (deftest* get-date-from-file-test
@@ -83,6 +86,38 @@
 ;;; remove-date-from-name
 (deftest* remove-date-from-name-test
   (is (= "dummy.clj" (remove-date-from-name "2000.11.22-dummy.clj"))))
+
+;;;; sort-type->sort-fn
+;(deftest* sort-type->sort-fn-test
+;  (testing "date sort"
+;    (bind-config [:post-sort-type :date]
+;      (let [[p1 p2 p3] ((sort-type->sort-fn) sample-posts)]
+;        (are [x y] (= x (:title y))
+;          "c" p1
+;          "b" p2
+;          "a" p3))))
+;  (testing "date-desc sort"
+;    (bind-config [:post-sort-type :date-desc]
+;      (let [[p1 p2 p3] ((sort-type->sort-fn) sample-posts)]
+;        (are [x y] (= x (:title y))
+;          "a" p1
+;          "b" p2
+;          "c" p3))))
+;
+;  (testing "name sort"
+;    (bind-config [:post-sort-type :name]
+;      (let [[p1 p2 p3] ((sort-type->sort-fn) sample-posts)]
+;        (are [x y] (= x (:title y))
+;          "b" p1
+;          "a" p2
+;          "c" p3))))
+;  (testing "name-desc sort"
+;    (bind-config [:post-sort-type :name-desc]
+;      (let [[p1 p2 p3] ((sort-type->sort-fn) sample-posts)]
+;        (are [x y] (= x (:title y))
+;          "c" p1
+;          "a" p2
+;          "b" p3)))))
 
 ;;; make-post-output-filename
 (deftest* make-post-output-filename-test

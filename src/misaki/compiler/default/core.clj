@@ -118,7 +118,7 @@
 (defn get-posts
   "Get posts data from (:post-dir *config*) directory."
   []
-  (map get-post-info (msk/get-post-files)))
+  (map get-post-info (msk/get-post-files))) ; FIXME
 
 ; =get-tagged-posts
 (defn get-tagged-posts
