@@ -1,7 +1,7 @@
 (ns misaki.config
   "Configuration Manager"
   (:use [misaki.util file string sequence]
-        [clojure.core.incubator :only [-?> -?>>]]
+        [clojure.core.incubator :only [-?>>]]
         [clj-time.core          :only [date-time year month day]]
         [text-decoration.core   :only [cyan red bold]]
         [clostache.parser       :only [render]])
@@ -45,12 +45,6 @@
 (def ^:dynamic *config*
   "Current config map."
   {})
-
-;(def ^:dynamic *posts-per-page*
-;  "Number of posts per page.
-;  nil is all posts."
-;  nil)
-
 (def ^:dynamic *page-index*
   "Page index. First page is 0."
   0)
@@ -138,6 +132,7 @@
   (and (:post-dir *config*) (str-contains? (.getAbsolutePath file)
                                            (:post-dir *config*))))
 
+; =index-file?
 (defn index-file?
   "Check whether file is index file or not."
   [#^File file]
@@ -168,6 +163,7 @@
 
 ;; ## Converter
 
+; =sort-type->sort-fn
 (defn sort-type->sort-fn
   "Convert sort-type keyword to sort function."
   []
@@ -195,7 +191,7 @@
         filename (if date (remove-date-from-name (.getName file))
                           (.getName file))]
     (render (:post-filename-format *config*)
-            {:year     (-?>  date year  str)
+            {:year     (-?>> date year  str)
              :month    (-?>> date month (format "%02d"))
              :day      (-?>> date day   (format "%02d"))
              :filename filename})))
@@ -261,3 +257,18 @@
   {:pre (string? filename)}
   (path (:public-dir *config*) filename))
 
+
+;; ## Pagination
+
+; =make-page-data
+(defn make-page-data
+  "Make pagination data from page numbers."
+  [file page last-page]
+  {:pre [(file? file) (number? page) (number? last-page)]}
+  (let [next?    (< page (dec last-page))
+        prev?    (> page 0)
+        page-url #(make-output-url file :page %)]
+    {:page      (inc page)
+     :last-page last-page
+     :next-page (if next? (page-url (inc page)))
+     :prev-page (if prev? (page-url (dec page)))}))

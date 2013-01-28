@@ -99,7 +99,7 @@
                     (if (= 1 (count compilers))
                       (call-compiler-fn (first compilers) :-config config)
                       (map #(call-compiler-fn % :-config config) compilers))))]
-     (if res res config)))
+     (or res config)))
 
 ; =process-compile-result
 (defn process-compile-result
@@ -210,23 +210,15 @@
   "Call plugin's -compile function to compile index template defined by :index-template-regexp."
   ([file] (call-index-compile {} file))
   ([optional-config file]
-   (let [ppp (:posts-per-page *config*)]
-     (if (nil? ppp)
-       (call-compile optional-config file)
-       (let [pages (math/ceil (/ (count (get-post-files :all? true)) ppp))]
-         (dotimes [n pages]
-           (binding [*page-index* n]
-             (let [page (inc n)
-                   next-page (if (< n (dec pages))
-                                (make-output-url file :page (inc n)))
-                   prev-page (if (> n 0)
-                                (make-output-url file :page (dec n)))]
-               (call-compile
-                 (merge
-                   optional-config
-                   {:page      page
-                    :pages     pages
-                    :next-page next-page
-                    :prev-page prev-page})
-                 file)))))))))
+   (if-let [ppp (:posts-per-page *config*)]
+     (let [post-count (count (get-post-files :all? true))
+           last-page  (math/ceil (/ post-count ppp))]
+       (every?
+         (fn [page]
+           (binding [*page-index* page]
+             (call-compile
+               (merge optional-config (make-page-data file page last-page))
+               file )))
+         (range last-page)))
+     (call-compile optional-config file))))
 

@@ -6,7 +6,7 @@
     [misaki.config :only [*config*]]
     [hiccup.core   :only [html]]
     [hiccup.page   :only [html5 xhtml html4]]
-    [clojure.core.incubator :only [-?> -?>>]])
+    [clojure.core.incubator :only [-?>]])
   (:require
     [misaki.core     :as msk]
     [misaki.config   :as cnf]
@@ -184,9 +184,9 @@
            :prev     prev
            ;; pagination
            :page      (:page *config*)
-           :pages     (:pages *config*)
-           :next-page (-?> (:next-page *config*) remove-clj-extension)
-           :prev-page (-?> (:prev-page *config*) remove-clj-extension))))
+           :last-page (:last-page *config*)
+           :next-page (-?> *config* :next-page remove-clj-extension)
+           :prev-page (-?> *config* :prev-page remove-clj-extension))))
 
 ; =file->template-sexp
 (defn file->template-sexp

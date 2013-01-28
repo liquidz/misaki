@@ -3,8 +3,7 @@
   (:use [misaki.util file string sequence]
         [misaki.config    :only [*config*]]
         [clj-time.core    :only [date-time year month day]]
-        [clostache.parser :only [render]]
-        [clojure.core.incubator :only [-?> -?>>]])
+        [clostache.parser :only [render]])
   (:require
     [misaki.config   :as cnf]
     [clojure.string  :as str]
