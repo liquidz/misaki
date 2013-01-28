@@ -57,7 +57,7 @@
 
   (cond
     (config-file? file) (print-compile-result "all templates" (call-all-compile))
-    (index-file? file)  (print-compile-result "index templates" (call-index-compile))
+    (index-file? file)  (print-compile-result "index templates" (call-index-compile file))
     :else               (print-compile-result (.getName file) (call-compile file)))
 
   (println " * Finish Compiling"))

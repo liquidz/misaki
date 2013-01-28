@@ -8,6 +8,9 @@
     [clojure.math.numeric-tower :as math])
   (:import [java.io File]))
 
+(declare index-compile*
+         call-index-compile)
+
 ;; ## Util
 
 (defn key->sym [k] (symbol (name k)))
@@ -176,7 +179,9 @@
   []
   (loop [[file & rest-files] (get-template-files), success? true]
     (if file
-      (let [[process-result compile-result] (compile* {:-compiling :all} file)
+      (let [[process-result compile-result] (if (index-file? file)
+                                              (index-compile* {:-compiling :all} file)
+                                              (compile* {:-compiling :all} file))
             result (and success? (or (symbol? process-result)
                                      (true? process-result)))]
         (if (stop-compile? compile-result)
@@ -195,9 +200,9 @@
        ; all compile
        (all-compile? compile-result)
        (do (println (green "   Switch to all compiling"))
-         (call-all-compile))
+           (call-all-compile))
 
-       ; compile with post
+       ; post compile
        (post-file? file)
        (every? #(true? (first %))
                (for [file (map template-name->file (:compile-with-post *config*))]
@@ -205,20 +210,26 @@
 
        :else process-result))))
 
+(defn index-compile*
+  ([file] (index-compile* {} file))
+  ([optional-config file]
+   (if-let [ppp (:posts-per-page *config*)]
+     (let [post-count (count (get-post-files :all? true))
+           last-page  (math/ceil (/ post-count ppp))]
+       (last (map #(binding [*page-index* %]
+                     (compile* (merge optional-config (make-page-data file % last-page))
+                               file ))
+                  (range last-page))))
+     (compile* optional-config file))))
+
 ; =call-index-compile
 (defn call-index-compile
   "Call plugin's -compile function to compile index template defined by :index-template-regexp."
   ([file] (call-index-compile {} file))
   ([optional-config file]
-   (if-let [ppp (:posts-per-page *config*)]
-     (let [post-count (count (get-post-files :all? true))
-           last-page  (math/ceil (/ post-count ppp))]
-       (every?
-         (fn [page]
-           (binding [*page-index* page]
-             (call-compile
-               (merge optional-config (make-page-data file page last-page))
-               file )))
-         (range last-page)))
-     (call-compile optional-config file))))
+   (let [[process-result compile-result] (index-compile* optional-config file)]
+     (if (all-compile? compile-result)
+       (do (println (green "   Switch to all compiling"))
+           (call-all-compile))
+       process-result))))
 
