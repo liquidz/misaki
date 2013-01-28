@@ -81,12 +81,12 @@
 
   (let [ppp   (:posts-per-page *config*)
         files (get-template-files :dir (:post-dir *config*))
-        files (if (or all? (nil? ppp))
-                files
-                (nth (partition-all ppp files) *page-index* ()))]
-    (if sort?
-      ((sort-type->sort-fn) files)
-      files)))
+        files (if sort?
+                ((sort-type->sort-fn) files)
+                files)]
+    (if (or all? (nil? ppp))
+      files
+      (nth (partition-all ppp files) *page-index* ()))))
 
 
 ;; ## Compiler Functions

@@ -134,6 +134,21 @@
       (binding [*page-index* 3]
         (is (zero? (count (get-post-files)))))))
 
+  (testing "with sort and posts-per-page"
+    (bind-config [:post-sort-type :date-desc
+                  :posts-per-page 2]
+      (binding [*page-index* 0]
+        (let [[a b :as files] (get-post-files :sort? true)]
+          (are [x y] (= x y)
+            2 (count files)
+            "2022.02.02-bar.html.clj" (.getName a)
+            "2011.01.01-foo.html.clj" (.getName b))))
+      (binding [*page-index* 1]
+        (let [[a :as files] (get-post-files :sort? true)]
+          (are [x y] (= x y)
+            1 (count files)
+            "2000.01.01-foo.html.clj" (.getName a))))))
+
   (testing "with all? option"
     (is (= 3 (count (get-post-files))))
     (bind-config [:posts-per-page 1]
