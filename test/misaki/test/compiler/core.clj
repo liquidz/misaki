@@ -1,8 +1,10 @@
 (ns misaki.test.compiler.core
   (:use [misaki.compiler.default core template config]
         [misaki.util sequence file]
-        [misaki.config :only [*config*]]
-        [misaki.config :only [template-name->file]]
+        [misaki.config :only [*config*
+                              *page-index*
+                              template-name->file]]
+        ;[misaki.config :only [template-name->file]]
         [misaki.tester :only [bind-config test-compile template-file public-file]]
         misaki.server
         misaki.test.compiler.common
@@ -10,7 +12,7 @@
         [clj-time.core :only [date-time]])
   (:use [clojure.test])
   (:require
-    [misaki.core :as msk]
+    [misaki.core     :as msk]
     [clojure.java.io :as io]))
 
 ;;; -compile
@@ -210,6 +212,7 @@
   (let [post-dir (:post-dir *config*)
         file1    (io/file (str post-dir "2000.01.01-foo.html.clj"))
         file2    (io/file (str post-dir "2011.01.01-foo.html.clj"))
+        file3    (template-file "index.html.clj")
         option1  (parse-template-option file1)
         option2  (parse-template-option file2)]
 
@@ -230,8 +233,7 @@
           '(1 2 1) (map :count (:tags site))
           (date-time 2000 1 1) (:date site)
           nil (:next site)
-          (dissoc p2 :next :prev) (:prev site)
-          )
+          (dissoc p2 :next :prev) (:prev site))
 
         (are [x y] (= (if x (dissoc x :next :prev) x) y)
           ; prev/next
@@ -329,9 +331,7 @@
             "bar" (:title p3)
 
             (dissoc p3 :next :prev) (:next site)
-            (dissoc p1 :next :prev) (:prev site)
-            ))))
-
+            (dissoc p1 :next :prev) (:prev site)))))
 
     (testing "no post-dir"
       (bind-config [:post-dir nil]
@@ -343,8 +343,45 @@
             0       (count (:posts site))
             0       (count (:tags site))
             nil     (:next site)
-            nil     (:prev site)
-            ))))))
+            nil     (:prev site)))))
+
+    (testing "with pagination"
+      (bind-config [:posts-per-page 2]
+        (binding [*page-index* 0]
+          (let [[p1 p2 :as posts] (:posts (make-site-data file3))]
+            (are [x y] (= x y)
+              2 (count posts)
+              "bar" (:title p1)
+              "foo" (:title p2))))
+
+        (binding [*page-index* 1]
+          (let [[p1 :as posts] (:posts (make-site-data file3))]
+            (are [x y] (= x y)
+              1 (count posts)
+              "baz" (:title p1))))
+
+        (binding [*page-index* 2]
+          (is (zero? (count (:posts (make-site-data file3))))))))
+
+    (testing "NOT index file with pagination"
+      (bind-config [:posts-per-page 1]
+        ; pagination does not work with NOT index file
+        (is (= 3 (-> file1 make-site-data :posts count)))))
+
+    (testing "with sort and pagination"
+      (bind-config [:posts-per-page 2
+                    :post-sort-type :date]
+        (binding [*page-index* 0]
+          (let [[p1 p2 :as posts] (:posts (make-site-data file3))]
+            (are [x y] (= x y)
+              2 (count posts)
+              "baz" (:title p1)
+              "foo" (:title p2))))
+        (binding [*page-index* 1]
+          (let [[p1 :as posts] (:posts (make-site-data file3))]
+            (are [x y] (= x y)
+              1 (count posts)
+              "bar" (:title p1))))))))
 
 ;;; file->template-sexp
 (deftest* file->template-sexp-test

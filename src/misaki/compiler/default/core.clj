@@ -118,7 +118,7 @@
 (defn get-posts
   "Get posts data from (:post-dir *config*) directory."
   []
-  (map get-post-info (msk/get-post-files))) ; FIXME
+  (map get-post-info (msk/get-post-files :all? true)))
 
 ; =get-tagged-posts
 (defn get-tagged-posts
@@ -161,6 +161,12 @@
 
 ;; ## S-exp Template Applier
 
+(defn- page-partition
+  [posts]
+  (if-let [ppp (:posts-per-page *config*)]
+    (nth (partition-all ppp posts) cnf/*page-index* ())
+    posts))
+
 ; =make-site-data
 (defn make-site-data
   "Make site meta data from template java.io.File for HTML generator."
@@ -170,6 +176,7 @@
   (let [with-tag?   (and (not (nil? tags)) (sequential? tags))
         sort-fn     (sort-type->sort-fn)
         posts       (sort-fn (if with-tag? (get-tagged-posts tags) (get-posts)))
+        posts       (if (cnf/index-file? tmpl-file) (page-partition posts) posts)
         [prev next] (if (cnf/post-file? tmpl-file)
                       (get-prev-next #(= tmpl-file (:file %)) posts)
                       [nil nil])]
