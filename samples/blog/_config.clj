@@ -46,6 +46,18 @@
  ;;   default value: :date-desc
  :post-sort-type :date-desc
 
+ ;; regexp to detect index template
+ ;;   default value: #"^index\."
+ :index-template-regexp #"^index\.html\.clj$"
+
+ ;; post number per page
+ ;;   default value: nil (disabled pagination)
+ :posts-per-page 2
+
+ ;; filename format to generate index file with pagination
+ ;;   default value: "page{{page}}/{{filename}}"
+ :page-filename-format "page{{page}}/{{filename}}"
+
  ;; clojurescript compile options
  ;; src-dir base is `:template-dir`
  ;; output-dir base is `:public-dir`

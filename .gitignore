@@ -9,8 +9,8 @@
 /.lein-deps-sum
 /blog
 /test/public
-/samples/*/public/2011-01
-/samples/*/public/2012-02
+/samples/*/public/201*
+/samples/*/public/page[0-9]*
 /samples/*/public/tag
 /samples/*/public/atom.xml
 /samples/*/public/index.html

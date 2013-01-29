@@ -16,6 +16,10 @@
 ;; Sample posts
 (page-header "Sample posts")
 (post-list)
+(if-let [url (:prev-page site)]
+  (link "prev page" url))
+(if-let [url (:next-page site)]
+  (link "next page" url))
 
 ;; Sample post tags
 (page-header "Sample tags")
