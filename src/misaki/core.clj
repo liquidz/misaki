@@ -206,7 +206,9 @@
        (post-file? file)
        (every? #(true? (first %))
                (for [file (map template-name->file (:compile-with-post *config*))]
-                 (compile* (merge optional-config {:-compiling :single}) file)))
+                 (if (index-file? file)
+                   (index-compile* (merge optional-config {:-compiling :single}) file)
+                   (compile* (merge optional-config {:-compiling :single}) file))))
 
        :else process-result))))
 
