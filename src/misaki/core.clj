@@ -176,9 +176,8 @@
   []
   (loop [[file & rest-files] (get-template-files), success? true]
     (if file
-      (let [[process-result compile-result] (if (index-file? file)
-                                              (index-compile* {:-compiling :all} file)
-                                              (compile* {:-compiling :all} file))
+      (let [compile-fn (if (index-file? file) index-compile* compile*)
+            [process-result compile-result] (compile-fn {:-compiling :all} file)
             result (and success? (or (symbol? process-result)
                                      (true? process-result)))]
         (if (stop-compile? compile-result)
@@ -203,9 +202,8 @@
        (post-file? file)
        (every? #(true? (first %))
                (for [file (map template-name->file (:compile-with-post *config*))]
-                 (if (index-file? file)
-                   (index-compile* (merge optional-config {:-compiling :single}) file)
-                   (compile* (merge optional-config {:-compiling :single}) file))))
+                 ((if (index-file? file) index-compile* compile*)
+                    (merge optional-config {:-compiling :single}) file)))
 
        :else process-result))))
 
