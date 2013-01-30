@@ -167,10 +167,11 @@
   [#^File tmpl-file & {:keys [base-option tags]
                        :or   {base-option {}, tags nil}}]
   {:pre [(file? tmpl-file)]}
-  (let [with-tag?   (and (not (nil? tags)) (sequential? tags))
+  (let [with-tag?   (and tags (sequential? tags))
         sort-fn     (sort-type->sort-fn)
-        posts       (sort-fn (if with-tag? (get-tagged-posts tags) (get-posts)))
-        posts       (if (cnf/index-file? tmpl-file) (cnf/get-page-posts posts) posts)
+        page-fn     (if (cnf/index-file? tmpl-file) cnf/get-page-posts identity)
+        posts       (-> (if with-tag? (get-tagged-posts tags) (get-posts))
+                        sort-fn page-fn)
         [prev next] (if (cnf/post-file? tmpl-file)
                       (get-prev-next #(= tmpl-file (:file %)) posts)
                       [nil nil])]
