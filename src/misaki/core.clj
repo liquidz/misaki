@@ -90,15 +90,16 @@
 ; =update-config
 (defn update-config
   "Update basic config with plugin's -config function."
-  [& [compiler]]
-   (let [config (make-basic-config-map)
-         res    (if compiler
-                  (call-compiler-fn compiler :-config config)
-                  (let [compilers (flatten (list (:compiler *config*)))]
-                    (if (= 1 (count compilers))
-                      (call-compiler-fn (first compilers) :-config config)
-                      (map #(call-compiler-fn % :-config config) compilers))))]
-     (or res config)))
+  ([]
+   (let [compilers (-> *config* :compiler list flatten)
+         configs   (map update-config compilers)]
+     (if (next configs)
+       configs
+       (first configs))))
+  ([compiler]
+   (let [config (make-basic-config-map)]
+     (or (call-compiler-fn compiler :-config config) config))))
+
 
 ; =process-compile-result
 (defn process-compile-result
