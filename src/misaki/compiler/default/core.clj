@@ -161,12 +161,6 @@
 
 ;; ## S-exp Template Applier
 
-(defn- page-partition
-  [posts]
-  (if-let [ppp (:posts-per-page *config*)]
-    (nth (partition-all ppp posts) cnf/*page-index* ())
-    posts))
-
 ; =make-site-data
 (defn make-site-data
   "Make site meta data from template java.io.File for HTML generator."
@@ -176,7 +170,7 @@
   (let [with-tag?   (and (not (nil? tags)) (sequential? tags))
         sort-fn     (sort-type->sort-fn)
         posts       (sort-fn (if with-tag? (get-tagged-posts tags) (get-posts)))
-        posts       (if (cnf/index-file? tmpl-file) (page-partition posts) posts)
+        posts       (if (cnf/index-file? tmpl-file) (cnf/get-page-posts posts) posts)
         [prev next] (if (cnf/post-file? tmpl-file)
                       (get-prev-next #(= tmpl-file (:file %)) posts)
                       [nil nil])]

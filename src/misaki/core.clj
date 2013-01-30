@@ -79,14 +79,10 @@
   Sort file list with `:sort?` option(default setting is FALSE)."
   [& {:keys [sort? all?] :or {sort? false, all? false}}]
 
-  (let [ppp   (:posts-per-page *config*)
-        files (get-template-files :dir (:post-dir *config*))
-        files (if sort?
-                ((sort-type->sort-fn) files)
-                files)]
-    (if (or all? (nil? ppp))
-      files
-      (nth (partition-all ppp files) *page-index* ()))))
+  (let [files   (get-template-files :dir (:post-dir *config*))
+        sort-fn #(if sort? ((sort-type->sort-fn) %) %)
+        page-fn #(if all?  % (get-page-posts %))]
+    (-> files sort-fn page-fn)))
 
 
 ;; ## Compiler Functions
@@ -212,7 +208,9 @@
 
        :else process-result))))
 
+; =index-compile*
 (defn index-compile*
+  ""
   ([file] (index-compile* {} file))
   ([optional-config file]
    (if-let [ppp (:posts-per-page *config*)]

@@ -260,6 +260,15 @@
 
 ;; ## Pagination
 
+; =get-page-posts
+(defn get-page-posts
+  "Return posts at the *page-index*.
+  If posts-per-page is not defined, return all posts."
+  [posts]
+  (if-let [ppp (:posts-per-page *config*)]
+    (nth (partition-all ppp posts) *page-index* ())
+    posts))
+
 ; =make-page-data
 (defn make-page-data
   "Make pagination data from page numbers."
