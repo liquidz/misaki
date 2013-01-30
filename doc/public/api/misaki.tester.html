@@ -4,8 +4,8 @@
 
 (bind-config [:post-dir &quot;foo/bar&quot;]
   (println (:post-dir *config*)))
-</pre><div class="src-link"><a href="http://github.com/liquidz/misaki/blob/master/src/misaki/tester.clj#L72">Source</a></div></div><div class="public" id="var-deftest*"><h3>deftest*</h3><h4 class="macro">macro</h4><div class="usage"><code>(deftest* name &amp; body)</code></div><pre class="doc">Define test macro for using test base directory and config.
-</pre><div class="src-link"><a href="http://github.com/liquidz/misaki/blob/master/src/misaki/tester.clj#L63">Source</a></div></div><div class="public" id="var-get-base-config"><h3>get-base-config</h3><div class="usage"><code>(get-base-config)</code></div><pre class="doc">Get basic config map. Basically you should use `get-config`.
+</pre><div class="src-link"><a href="http://github.com/liquidz/misaki/blob/master/src/misaki/tester.clj#L79">Source</a></div></div><div class="public" id="var-deftest*"><h3>deftest*</h3><h4 class="macro">macro</h4><div class="usage"><code>(deftest* name &amp; body)</code></div><pre class="doc">Define test macro for using test base directory and config.
+</pre><div class="src-link"><a href="http://github.com/liquidz/misaki/blob/master/src/misaki/tester.clj#L70">Source</a></div></div><div class="public" id="var-get-base-config"><h3>get-base-config</h3><div class="usage"><code>(get-base-config)</code></div><pre class="doc">Get basic config map. Basically you should use `get-config`.
 </pre><div class="src-link"><a href="http://github.com/liquidz/misaki/blob/master/src/misaki/tester.clj#L30">Source</a></div></div><div class="public" id="var-get-config"><h3>get-config</h3><div class="usage"><code>(get-config &amp; {:keys [merge?], :or {merge? false}})</code></div><pre class="doc">Get compiler config map.
 
 If config has two or more maps and `:merge? true` option is specified,
@@ -14,8 +14,8 @@ this function returns merged config map.
 ex) (get-config)
     (get-config :merge? true)
 </pre><div class="src-link"><a href="http://github.com/liquidz/misaki/blob/master/src/misaki/tester.clj#L37">Source</a></div></div><div class="public" id="var-public-file"><h3>public-file</h3><div class="usage"><code>(public-file filename)</code></div><pre class="doc">Return java.io.File in pulbic directory.
-</pre><div class="src-link"><a href="http://github.com/liquidz/misaki/blob/master/src/misaki/tester.clj#L89">Source</a></div></div><div class="public" id="var-set-base-dir%21"><h3>set-base-dir!</h3><div class="usage"><code>(set-base-dir! base-dir)</code></div><pre class="doc">Set base directory for testing.
+</pre><div class="src-link"><a href="http://github.com/liquidz/misaki/blob/master/src/misaki/tester.clj#L96">Source</a></div></div><div class="public" id="var-set-base-dir%21"><h3>set-base-dir!</h3><div class="usage"><code>(set-base-dir! base-dir)</code></div><pre class="doc">Set base directory for testing.
 Default base directory is &quot;test/&quot;.</pre><div class="src-link"><a href="http://github.com/liquidz/misaki/blob/master/src/misaki/tester.clj#L16">Source</a></div></div><div class="public" id="var-template-file"><h3>template-file</h3><div class="usage"><code>(template-file filename)</code></div><pre class="doc">Return java.io.File in template directory.
-</pre><div class="src-link"><a href="http://github.com/liquidz/misaki/blob/master/src/misaki/tester.clj#L83">Source</a></div></div><div class="public" id="var-test-compile"><h3>test-compile</h3><div class="usage"><code>(test-compile file)</code></div><pre class="doc">Run test compile.
+</pre><div class="src-link"><a href="http://github.com/liquidz/misaki/blob/master/src/misaki/tester.clj#L90">Source</a></div></div><div class="public" id="var-test-compile"><h3>test-compile</h3><div class="usage"><code>(test-compile file)</code></div><pre class="doc">Run test compile.
 </pre><div class="src-link"><a href="http://github.com/liquidz/misaki/blob/master/src/misaki/tester.clj#L56">Source</a></div></div><div class="public" id="var-with-test-base-dir"><h3>with-test-base-dir</h3><h4 class="macro">macro</h4><div class="usage"><code>(with-test-base-dir &amp; body)</code></div><pre class="doc">Bind test base directory to `*base-dir*`.
 </pre><div class="src-link"><a href="http://github.com/liquidz/misaki/blob/master/src/misaki/tester.clj#L23">Source</a></div></div></div></body></html>
