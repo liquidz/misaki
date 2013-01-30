@@ -216,7 +216,8 @@
      (let [post-count (count (get-post-files :all? true))
            last-page  (math/ceil (/ post-count ppp))]
        (last (map #(binding [*page-index* %]
-                     (compile* (merge optional-config (make-page-data file % last-page))
+                     (compile* (merge optional-config
+                                      (make-page-data file % last-page))
                                file ))
                   (range last-page))))
      (compile* optional-config file))))
