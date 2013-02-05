@@ -24,3 +24,10 @@
 (h2 "0.2.4 beta")
 (p "2012-10-23")
 (ul ["Fixed to compile templates under directories correctly. [GitHub Issue](https://github.com/liquidz/misaki/issues/26)"])
+
+(h2 "0.2.6")
+(p "2013-02-XX")
+(ul ["Add css compiler to compile CSS from *.css.clj. [#15](https://github.com/liquidz/misaki/issues/15)"
+     "Fix filename generation problem. [#28](https://github.com/liquidz/misaki/issues/28)"
+     "Fix misaki.util.notify to only support GNTP. [#29](https://github.com/liquidz/misaki/issues/29)"
+     "Add pagination method. [#31](https://github.com/liquidz/misaki/issues/31)"])
