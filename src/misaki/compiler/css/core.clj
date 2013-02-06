@@ -7,12 +7,19 @@
     [gaka.core        :as gaka])
   (:import [java.io File]))
 
+(defn- css-compile [coll]
+  (cond
+    (vector? coll) (gaka/css coll)
+    (seq? coll)    (map css-compile coll)
+    :else          nil))
+
 ; =-extension
 (defn -extension
   "Watch *.css.clj."
   []
   {:post [#(sequential? %)]}
   (list :css.clj))
+
 
 ; =-compile
 (defn -compile
@@ -29,7 +36,8 @@
          (cons 'list)
          eval
          (remove var?)
-         (map gaka/css)
+         css-compile
+         flatten
          (apply str)
          (file/write-file filename))
     true))
