@@ -8,10 +8,9 @@
   (:import [java.io File]))
 
 (defn- css-compile [coll]
-  (cond
-    (vector? coll) (gaka/css coll)
-    (seq? coll)    (map css-compile coll)
-    :else          nil))
+  (if (seq? coll)
+    (map css-compile coll)
+    (gaka/css coll)))
 
 ; =-extension
 (defn -extension
