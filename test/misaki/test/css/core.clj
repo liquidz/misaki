@@ -18,7 +18,7 @@
              (binding [*config* config#]
                ~@body)))))))
 
-(deftest* css-compile-test
+(deftest* -compile-test
   (testing "valid css clj"
     (let [from-file (t/template-file "success.css.clj")
           to-file   (t/public-file   "success.css")]
@@ -26,9 +26,16 @@
       (is (.exists to-file))
       (.delete to-file)))
 
-  (testing "invalid css clj"
-    (let [from-file (t/template-file "error.css.clj")
-          to-file   (t/public-file   "error.css")]
+  (testing "invalid css clj (parse error)"
+    (let [from-file (t/template-file "parse-error.css.clj")
+          to-file   (t/public-file   "parse-error.css")]
+      (is (not (t/test-compile from-file)))
+      (is (not (.exists to-file)))
+      (.delete to-file)))
+
+  (testing "invalid css clj (eval error)"
+    (let [from-file (t/template-file "eval-error.css.clj")
+          to-file   (t/public-file   "eval-error.css")]
       (is (not (t/test-compile from-file)))
       (is (not (.exists to-file)))
       (.delete to-file))))
