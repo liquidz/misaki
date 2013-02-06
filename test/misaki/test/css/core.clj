@@ -31,6 +31,4 @@
           to-file   (t/public-file   "error.css")]
       (is (not (t/test-compile from-file)))
       (is (not (.exists to-file)))
-      ;(.delete to-file)
-      ))
-  )
+      (.delete to-file))))
