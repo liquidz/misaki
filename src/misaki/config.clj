@@ -48,6 +48,9 @@
 (def ^:dynamic *page-index*
   "Page index. First page is 0."
   0)
+(def ^:dynamic *print-stack-trace?*
+  "Flag for printing stack trace."
+  true)
 
 ;; ## Config Data Wrapper
 

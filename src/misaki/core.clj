@@ -164,8 +164,9 @@
        [true 'skip])
 
      (catch Exception e
-       (print-pretty-stack-trace
-         e :filter #(str-contains? (:str %) "misaki"))
+       (if *print-stack-trace?*
+         (print-pretty-stack-trace
+           e :filter #(str-contains? (:str %) "misaki")))
        ; notify error
        (if (:notify? *config*) (notify-result file false e))
        [false {:stop-compile? true}]))))

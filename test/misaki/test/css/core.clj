@@ -1,12 +1,15 @@
 (ns misaki.test.css.core
   (:use
     misaki.compiler.css.core
-    [misaki.config :only [*config-file* *config*]]
+    [misaki.config :only [*config-file* *config* *print-stack-trace?*]]
     [misaki.util.file :only [path]]
     clojure.test)
   (require
-    [misaki.tester :as t]
-    [clojure.java.io :as io]))
+    [misaki.tester   :as t]
+    [clojure.java.io :as io]
+    [clojure.string  :as str]
+    [gaka.core       :as gaka]
+    ))
 
 (defmacro deftest* [name & body]
   `(do
@@ -27,15 +30,26 @@
       (.delete to-file)))
 
   (testing "invalid css clj (parse error)"
-    (let [from-file (t/template-file "parse-error.css.clj")
-          to-file   (t/public-file   "parse-error.css")]
-      (is (not (t/test-compile from-file)))
-      (is (not (.exists to-file)))
-      (.delete to-file)))
+    (binding [*print-stack-trace?* false]
+      (let [from-file (t/template-file "parse-error.css.clj")
+            to-file   (t/public-file   "parse-error.css")]
+        (is (not (t/test-compile from-file)))
+        (is (not (.exists to-file)))
+        (.delete to-file))))
 
   (testing "invalid css clj (eval error)"
-    (let [from-file (t/template-file "eval-error.css.clj")
-          to-file   (t/public-file   "eval-error.css")]
-      (is (not (t/test-compile from-file)))
-      (is (not (.exists to-file)))
-      (.delete to-file))))
+    (binding [*print-stack-trace?* false]
+      (let [from-file (t/template-file "eval-error.css.clj")
+            to-file   (t/public-file   "eval-error.css")]
+        (is (not (t/test-compile from-file)))
+        (is (not (.exists to-file)))
+        (.delete to-file))))
+
+  (testing "list css compiling"
+    (binding [gaka/*print-indent* false]
+      (let [from-file (t/template-file "list.css.clj")
+            to-file   (t/public-file   "list.css")]
+        (is (t/test-compile from-file))
+        (is (= "h1{font-size:0;}h2{font-size:0;}"
+               (str/replace (slurp to-file) #"[\s\r\n]" "")))
+        (.delete to-file)))))
