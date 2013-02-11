@@ -100,6 +100,15 @@ CLJ
 
 ; /Post tags
 
+(h3 "Next/Prev page link")
+
+(p "With [pagination](title: Pagination), `(:next-url site)` and `(:prev-url site)` are provided.")
+
+(ul [(p "`:next-url`: Next page's URL")
+     (p "`:prev-url`: Previous page's URL")])
+
+; /Pagination
+
 (h3 "Code Highlight")
 
 (p "Code is highlighted using [google-code-prettify](http://code.google.com/p/google-code-prettify/).")
@@ -177,7 +186,8 @@ CLJ
      (p "`(:posts site)`: Post list which contains the tag.")])
 
 (see-also ["Highlight Setting"
-           "Clojurescript"])
+           "Clojurescript"
+           "Pagination"])
 
 ; @layout  post
 ; @title   Edit Template

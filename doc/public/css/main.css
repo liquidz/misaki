@@ -42,10 +42,13 @@ h2 + p { margin-left: 1.5em; }
 
 h3 span, h4 span { font-size: 130%; }
 h3 span { color: #93ca76; }
-h3 { color: #93ca76; margin: 1em 0 0.5em 0; }
+/*
+h3 { color: #93ca76; margin: 2em 0 0.5em 0; }
+*/
+h3 { color: #528545; margin: 2em 0 0.5em 0; }
 h3 + p { text-indent: 1em; }
 
-h4 { color: #666; font-weight: bold; border-bottom: 1px dotted #eee; margin-top: 0.5em; }
+h4 { color: #666; font-weight: bold; border-bottom: 1px dotted #eee; margin: 1em 0 0.2em; }
 h4 + p { text-indent: 0.5em; }
 
 ul li { line-height: 150%; }
