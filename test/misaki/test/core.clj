@@ -125,15 +125,15 @@
           (is (= 1 (count files)))
           (is (= "2000.01.01-foo.html.clj" (.getName (first files))))))
       (binding [*page-index* 1]
-        (let [files (get-post-files)]
+        (let [files (get-post-files :sort? true)]
           (is (= 1 (count files)))
           (is (= "2011.01.01-foo.html.clj" (.getName (first files))))))
       (binding [*page-index* 2]
-        (let [files (get-post-files)]
+        (let [files (get-post-files :sort? true)]
           (is (= 1 (count files)))
           (is (= "2022.02.02-bar.html.clj" (.getName (first files))))))
       (binding [*page-index* 3]
-        (is (zero? (count (get-post-files)))))))
+        (is (zero? (count (get-post-files :sort? true)))))))
 
   (testing "with all? option"
     (is (= 3 (count (get-post-files))))
