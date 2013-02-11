@@ -1,15 +1,13 @@
 (ns misaki.compiler.default.html.core
   "HTML utility for template"
-  (:use
-    [misaki.compiler.default.config    :only [*site*]]
-    [misaki.compiler.default.html.conv :only [post-title->url]])
   (:require
-    [clojure.string   :as str]
-    [hiccup.core      :as hiccup]
-    [hiccup.page      :as page]
-    [misaki.config    :as cnf]
-    [misaki.util.date :as date]
-    [misaki.compiler.default.html.conv :as conv]))
+    [misaki.compiler.default.config    :refer [*site*]]
+    [misaki.compiler.default.html.conv :refer [post-title->url] :as conv]
+    [misaki.config                     :as cnf]
+    [misaki.util.date                  :as date]
+    [hiccup.core                       :as hiccup]
+    [hiccup.page                       :as page]
+    [clojure.string                    :as str]))
 
 (declare link)
 

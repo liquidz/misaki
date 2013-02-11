@@ -1,8 +1,9 @@
 (ns misaki.compiler.copy.core
-  (:use [misaki.util.file :only [path has-extension?]]
-        [misaki.config    :only [*config*]])
-  (:require [clojure.java.io :as io]
-            [misaki.server   :as srv]))
+  (:require
+    [misaki.util.file :refer [path has-extension?]]
+    [misaki.config    :refer [*config*]]
+    [clojure.java.io  :as io]
+    [misaki.server    :as srv]))
 
 
 (defmacro log

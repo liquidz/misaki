@@ -1,13 +1,15 @@
 (ns misaki.config
   "Configuration Manager"
-  (:use [misaki.util file string sequence]
-        [clojure.core.incubator :only [-?>>]]
-        [clj-time.core          :only [date-time year month day]]
-        [text-decoration.core   :only [cyan red bold]]
-        [clostache.parser       :only [render]])
   (:require
-    [clojure.string  :as str]
-    [clojure.java.io :as io])
+    [misaki.util [file     :refer :all]
+                 [string   :refer :all]
+                 [sequence :refer :all]]
+    [clojure.core.incubator :refer [-?>>]]
+    [clj-time.core          :refer [date-time year month day]]
+    [text-decoration.core   :refer [cyan red bold]]
+    [clostache.parser       :refer [render]]
+    [clojure.string         :as str]
+    [clojure.java.io        :as io])
   (:import [java.io File FileNotFoundException]))
 
 ;; ## Default Value

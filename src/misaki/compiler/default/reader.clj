@@ -1,7 +1,8 @@
 (ns misaki.compiler.default.reader
   "S-exp Reader."
-  (:use misaki.compiler.default.util.code
-        [pretty-error.core :only [set-stack-trace-element!]])
+  (:require
+    [misaki.compiler.default.util.code :refer :all]
+    [pretty-error.core                 :refer [set-stack-trace-element!]])
   (:import [java.io StringReader PushbackReader]
            [clojure.lang IDeref]))
 

@@ -1,10 +1,9 @@
 (ns misaki.util.file
   "File control utility"
-  (:use
-    [clj-time.coerce :only [from-long]])
   (:require
+    [clj-time.coerce :refer [from-long]]
     [clojure.java.io :as io]
-    [clojure.string :as str])
+    [clojure.string  :as str])
   (:import [java.io File]))
 
 ; =file?

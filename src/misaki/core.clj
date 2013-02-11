@@ -1,10 +1,13 @@
 (ns misaki.core
   "Misaki Controll Core"
-  (:use misaki.config
-        [misaki.util file string sequence notify]
-        [text-decoration.core :only [green]]
-        [pretty-error.core    :only [print-pretty-stack-trace]])
   (:require
+    [misaki.config :refer :all]
+    [misaki.util [file     :refer :all]
+                 [string   :refer :all]
+                 [sequence :refer :all]
+                 [notify   :refer :all]]
+    [text-decoration.core :refer [green]]
+    [pretty-error.core    :refer [print-pretty-stack-trace]]
     [clojure.math.numeric-tower :as math])
   (:import [java.io File]))
 

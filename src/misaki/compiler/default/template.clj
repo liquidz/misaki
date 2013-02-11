@@ -1,12 +1,14 @@
 (ns misaki.compiler.default.template
   "Template file loader"
-  (:use
-    [misaki.compiler.default evaluator config]
-    [misaki.util.file       :only [file?]]
-    [clojure.core.incubator :only [-?>]])
-  (:require [clojure.string  :as str]
-            [clojure.java.io :as io])
-  (:import [java.io File]))
+  (:require
+    [misaki.compiler.default [evaluator :refer :all]
+                             [config :refer :all]]
+    [misaki.util.file       :refer [file?]]
+    [clojure.core.incubator :refer [-?>]]
+    [clojure.string         :as str]
+    [clojure.java.io        :as io])
+  (:import
+    [java.io File]))
 
 
 ; =parse-tag-string

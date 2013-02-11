@@ -1,11 +1,10 @@
 (ns misaki.compiler.cljs.core
   "ClojureScript compiler for misaki."
-  (:use
-    [misaki.util file]
-    [misaki.config :only [*config*]]
-    [cljs.closure :only [build]])
   (:require
-    [misaki.server :as srv])
+    [misaki.util.file :refer :all]
+    [misaki.config    :refer [*config*]]
+    [cljs.closure     :refer [build]]
+    [misaki.server    :as srv])
   (:import [java.io File]))
 
 (def DEFAULT_CLJS_OPTION

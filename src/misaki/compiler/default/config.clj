@@ -1,13 +1,14 @@
 (ns misaki.compiler.default.config
   "Default Compiler's Configuration Manager"
-  (:use [misaki.util file string sequence]
-        [misaki.config    :only [*config*]]
-        [clj-time.core    :only [date-time year month day]]
-        [clostache.parser :only [render]])
   (:require
-    [misaki.config   :as cnf]
-    [clojure.string  :as str]
-    [clojure.java.io :as io])
+    [misaki.util [file :refer :all]
+                 [string :refer :all]
+                 [sequence :refer :all]]
+    [misaki.config    :refer [*config*] :as cnf]
+    [clj-time.core    :refer [date-time year month day]]
+    [clostache.parser :refer [render]]
+    [clojure.string   :as str]
+    [clojure.java.io  :as io])
   (:import [java.io File FileNotFoundException]))
 
 ;; ## Default Value

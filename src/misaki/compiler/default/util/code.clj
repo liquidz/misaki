@@ -3,10 +3,11 @@
 
   cf. [http://d.hatena.ne.jp/nokturnalmortum/20100527/1274961805](http://d.hatena.ne.jp/nokturnalmortum/20100527/1274961805)
   "
-  (:use [misaki.config          :only [*config*]]
-        [misaki.util.string     :only [escape-string]]
-        [clojure.core.incubator :only [-?>>]])
-  (:require [clojure.string :as str]))
+  (:require
+    [misaki.config          :refer [*config*]]
+    [misaki.util.string     :refer [escape-string]]
+    [clojure.core.incubator :refer [-?>>]]
+    [clojure.string         :as str]))
 
 ; =get-code-type
 (defn get-code-type

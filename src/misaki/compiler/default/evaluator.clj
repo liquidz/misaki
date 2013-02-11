@@ -1,7 +1,7 @@
 (ns misaki.compiler.default.evaluator
   "S-exp Template Evaluator.
   Template string is evaluated as Function."
-  (:use [misaki.compiler.default.reader :only [read-from-string]]))
+  (:require [misaki.compiler.default.reader :refer [read-from-string]]))
 
 ; =def?
 (defn def?

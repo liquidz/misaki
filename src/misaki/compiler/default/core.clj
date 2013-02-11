@@ -1,18 +1,20 @@
 (ns misaki.compiler.default.core
   "Default HTML compiler for clojure source."
-  (:use
-    [misaki.compiler.default template config]
-    [misaki.util file sequence string]
-    [misaki.config :only [*config*]]
-    [hiccup.core   :only [html]]
-    [hiccup.page   :only [html5 xhtml html4]]
-    [clojure.core.incubator :only [-?>]])
   (:require
-    [misaki.core     :as msk]
-    [misaki.config   :as cnf]
-    [misaki.server   :as srv]
-    [clojure.string  :as str]
-    [clojure.java.io :as io])
+    [misaki.compiler.default [template :refer :all]
+                             [config :refer :all]]
+    [misaki.util [file :refer :all]
+                 [sequence :refer :all]
+                 [string :refer :all]]
+    [misaki.config          :refer [*config*]]
+    [hiccup.core            :refer [html]]
+    [hiccup.page            :refer [html5 xhtml html4]]
+    [misaki.core            :as msk]
+    [misaki.config          :as cnf]
+    [misaki.server          :as srv]
+    [clojure.core.incubator :refer [-?>]]
+    [clojure.string         :as str]
+    [clojure.java.io        :as io])
   (:import [java.io File]))
 
 (declare file->template-sexp

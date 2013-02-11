@@ -1,13 +1,12 @@
 (ns misaki.tester
   "Compiler Testing Utilities"
-  (:use
-    [misaki.core      :only [update-config call-compile call-index-compile]]
-    [misaki.config    :only [*base-dir* *config* make-basic-config-map with-config]]
-    [misaki.util.file :only [normalize-path path]]
-    [clojure.test     :only [deftest]])
   (:require
-    [clojure.string  :as str]
-    [clojure.java.io :as io]))
+    [misaki.core      :refer [update-config call-compile call-index-compile]]
+    [misaki.config    :refer [*base-dir* *config* make-basic-config-map with-config]]
+    [misaki.util.file :refer [normalize-path path]]
+    [clojure.test     :refer [deftest]]
+    [clojure.string   :as str]
+    [clojure.java.io  :as io]))
 
 ;; default base-dir for tester is "test/"
 (def _test-base-dir_ (atom "test/"))

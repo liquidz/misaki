@@ -4,15 +4,16 @@
   Listen `*port*` to publish developing site,
   and watch template updates.
   "
-  (:use
-    [misaki core config]
-    [misaki.util.file     :only [find-clj-files normalize-path has-extension? file?]]
-    [misaki.util.string   :only [msec->string]]
-    [text-decoration.core :only [cyan red bold]]
-    watchtower.core
-    [compojure.core       :only [routes]]
-    [compojure.route      :only [files]]
-    [ring.adapter.jetty   :only [run-jetty]]))
+  (:require
+    [misaki [core   :refer :all]
+            [config :refer :all]]
+    [misaki.util.file     :refer [find-clj-files normalize-path has-extension? file?]]
+    [misaki.util.string   :refer [msec->string]]
+    [text-decoration.core :refer [cyan red bold]]
+    [watchtower.core      :refer :all]
+    [compojure.core       :refer [routes]]
+    [compojure.route      :refer [files]]
+    [ring.adapter.jetty   :refer [run-jetty]]))
 
 ; =elapsing
 (defmacro elapsing
