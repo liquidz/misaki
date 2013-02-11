@@ -13,9 +13,7 @@
                  [de.ubercode.clostache/clostache "1.3.0"]
                  [clj-gntp "0.0.1"]
                  ; cljs compiler
-                 [org.clojure/clojurescript "0.0-1552"]
-                 ; css compiler
-                 [gaka "0.3.0"]]
+                 [org.clojure/clojurescript "0.0-1552"]]
 
   :dev-dependencies [[debug-reader "0.0.1"]
                      [lein-autotest-notify "0.0.4"]]

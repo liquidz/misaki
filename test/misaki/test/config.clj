@@ -13,12 +13,6 @@
 (defn dummy3 ([a] ()) ([a b c] ()))
 (defn dummy4 [a & b] ())
 
-;(def sample-posts
-;  (list
-;    (io/file "2022.2.2_a.html.clj")
-;    (io/file "2000.1.1_c.html.clj")
-;    (io/file "2011.1.1_b.html.clj")))
-
 (set-base-dir! "test/")
 
 ; read-config
@@ -86,38 +80,6 @@
 ;;; remove-date-from-name
 (deftest* remove-date-from-name-test
   (is (= "dummy.clj" (remove-date-from-name "2000.11.22-dummy.clj"))))
-
-;;;; sort-type->sort-fn
-;(deftest* sort-type->sort-fn-test
-;  (testing "date sort"
-;    (bind-config [:post-sort-type :date]
-;      (let [[p1 p2 p3] ((sort-type->sort-fn) sample-posts)]
-;        (are [x y] (= x (:title y))
-;          "c" p1
-;          "b" p2
-;          "a" p3))))
-;  (testing "date-desc sort"
-;    (bind-config [:post-sort-type :date-desc]
-;      (let [[p1 p2 p3] ((sort-type->sort-fn) sample-posts)]
-;        (are [x y] (= x (:title y))
-;          "a" p1
-;          "b" p2
-;          "c" p3))))
-;
-;  (testing "name sort"
-;    (bind-config [:post-sort-type :name]
-;      (let [[p1 p2 p3] ((sort-type->sort-fn) sample-posts)]
-;        (are [x y] (= x (:title y))
-;          "b" p1
-;          "a" p2
-;          "c" p3))))
-;  (testing "name-desc sort"
-;    (bind-config [:post-sort-type :name-desc]
-;      (let [[p1 p2 p3] ((sort-type->sort-fn) sample-posts)]
-;        (are [x y] (= x (:title y))
-;          "c" p1
-;          "a" p2
-;          "b" p3)))))
 
 ;;; make-post-output-filename
 (deftest* make-post-output-filename-test
@@ -217,3 +179,24 @@
         "/foo/a.htm" "/a.htm"
         "/foo/bar/a.htm" "/bar/a.htm"
         "/foo/bar/a.htm" "bar/a.htm"))))
+
+
+(deftest* get-page-posts-test
+  (let [ls '(1 2 3)]
+    (bind-config [:posts-per-page 1]
+      (binding [*page-index* 0]
+        (is (= '(1) (get-page-posts ls))))
+      (binding [*page-index* 1]
+        (is (= '(2) (get-page-posts ls))))
+      (binding [*page-index* 2]
+        (is (= '(3) (get-page-posts ls))))
+      (binding [*page-index* 3]
+        (is (= () (get-page-posts ls)))))
+
+    (bind-config [:posts-per-page 2]
+      (binding [*page-index* 0]
+        (is (= '(1 2) (get-page-posts ls))))
+      (binding [*page-index* 1]
+        (is (= '(3) (get-page-posts ls))))
+      (binding [*page-index* 2]
+        (is (= () (get-page-posts ls)))))))
