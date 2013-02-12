@@ -481,6 +481,19 @@
        (list (str "&nbsp;&nbsp;" separator "&nbsp;&nbsp;")
              (link (str (:title next) "&nbsp;&raquo;") (:url next))))))
 
+; =prev-next-page-link
+(defn prev-next-page-link
+  "Make previous/next post links."
+  [& {:keys [class separator prev-label next-label] :or {class "pager", separator "|", prev-label "previous page", next-label "next page"}}]
+  (p {:class class}
+     (if-let [prev (:prev-page *site*)]
+       (list (link (str "&laquo; " prev-label) prev)
+             (str "&nbsp;&nbsp;" separator "&nbsp;&nbsp;")))
+     (list (:page *site*) "/" (:last-page *site*))
+     (if-let [next (:next-page *site*)]
+       (list (str "&nbsp;&nbsp;" separator "&nbsp;&nbsp;")
+             (link (str next-label "&nbsp;&raquo;") next)))))
+
 ; =two-column
 (defn two-column
   "Make 2 column"
