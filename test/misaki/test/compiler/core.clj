@@ -450,7 +450,7 @@
 
 ;;; functions in template test
 (deftest* html-function-template-test
-  (is (= "<p class=\"paragraph\"><a href=\"link.html\">link</a></p>"
+  (is (= "<p class=\"paragraph\"><a href=\"./link.html\">link</a></p>"
          (-> "html.test.html.clj" template-name->file file->template-sexp html))))
 
 ;; SERVER

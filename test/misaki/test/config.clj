@@ -200,7 +200,12 @@
     (bind-config [:url-base "/foo/"]
       (are [x y] (= x (absolute-path y))
         "./foo"     "./foo"
-        "./foo/bar" "./foo/bar"))))
+        "./foo/bar" "./foo/bar")))
+
+  (testing "should not be added url-base if specified path is relative"
+    (bind-config [:url-base "/foo/"]
+      (are [x y] (= x (absolute-path y))
+        "#foo"     "#foo"))))
 
 (deftest* get-page-posts-test
   (let [ls '(1 2 3)]

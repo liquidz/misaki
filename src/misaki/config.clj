@@ -253,12 +253,14 @@
   With following pattern, this function does not convert path.
   * Starts with 'http' or 'https'
   * Starts with './' which represents relative path
+  * Starts with '#' which represents jump link
   * Starts with `(:url-base *confit*)`"
   [path-str]
   {:pre [(string? path-str)]}
   (let [{url-base :url-base} *config*]
     (if (or (.startsWith path-str url-base)
             (re-seq #"^\./" path-str)
+            (re-seq #"^#" path-str)
             (re-seq #"^https?://" path-str))
       path-str
       (path url-base path-str))))

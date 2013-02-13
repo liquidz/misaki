@@ -10,7 +10,7 @@
   (:require [clojure.java.io :as io]))
 
 ;; heading
-(deftest heading-test
+(deftest* heading-test
   (letfn [(remove-id [[tag attr & text]] [tag (dissoc attr :id) (drop-last text) (last text)])]
     (testing "no attributes"
       (are [x y] (= x (html (vec (drop-last (remove-id y)))))
@@ -22,7 +22,7 @@
         "<h1 class=\"bar\"><span>f</span>oo</h1>" (h1 {:class "bar"} "foo")))
     (testing "contains html"
       (are [x y] (= x (html (vec (drop-last (remove-id y)))))
-        "<h1><a href=\"a.html\">a.html</a></h1>" (heading 1 (link "a.html"))))
+        "<h1><a href=\"./a.html\">./a.html</a></h1>" (heading 1 (link "./a.html"))))
     (testing "id should be specified automatically"
       (are [x y] (= x y)
         true (contains? (second (heading 1 "foo")) :id)
@@ -65,29 +65,46 @@
       (ul inc {:class "foo"} [1 2]))))
 
 ;; img
-(deftest img-test
-  (testing "without attribute"
-    (is (= "<img alt=\"\" src=\"a.png\" />" (html (img "a.png"))))
-    (is (= "<img alt=\"neko\" src=\"a.png\" />" (html (img "neko" "a.png")))))
-  (testing "with attribute"
-    (is (= "<img alt=\"\" class=\"foo\" src=\"a.png\" />"
-           (html (img {:class "foo"} "a.png"))))
-    (is (= "<img alt=\"neko\" class=\"foo\" src=\"a.png\" />"
-           (html (img {:class "foo"} "neko" "a.png"))))))
+(deftest* img-test
+  (bind-config [:url-base "/"]
+    (testing "without attribute"
+      (is (= "<img alt=\"\" src=\"./a.png\" />" (html (img "./a.png"))))
+      (is (= "<img alt=\"neko\" src=\"./a.png\" />" (html (img "neko" "./a.png")))))
+    (testing "with attribute"
+      (is (= "<img alt=\"\" class=\"foo\" src=\"./a.png\" />"
+             (html (img {:class "foo"} "./a.png"))))
+      (is (= "<img alt=\"neko\" class=\"foo\" src=\"./a.png\" />"
+             (html (img {:class "foo"} "neko" "./a.png")))))
+
+    (testing "absolute path image"
+      (bind-config [:url-base "/foo"]
+        (are [x y] (= x (html y))
+          "<img alt=\"\" src=\"/foo/a.png\" />"  (img "a.png")
+          "<img alt=\"\" src=\"/foo/a.png\" />"  (img "/a.png")
+          "<img alt=\"neko\" src=\"/foo/a.png\" />" (img "neko" "a.png")
+          "<img alt=\"neko\" src=\"/foo/a.png\" />" (img "neko" "/foo/a.png"))))))
 
 ;; link
-(deftest link-test
+(deftest* link-test
   (testing "without attribute"
     (are [x y] (= x (html y))
-      "<a href=\"a.html\">a.html</a>" (link "a.html")
-      "<a href=\"a.html\">link</a>"   (link "link" "a.html")
-      "<a href=\"a.html\">link</a>"   (link (list "li" "nk") "a.html")
-      "<a href=\"a.html\"><code class=\"prettyprint\">link</code></a>" (link "`link`" "a.html")
-      "<a href=\"a.html\"><span>span</span></a>" (link [:span "span"] "a.html")))
+      "<a href=\"./a.html\">./a.html</a>" (link "./a.html")
+      "<a href=\"./a.html\">link</a>"   (link "link" "./a.html")
+      "<a href=\"./a.html\">link</a>"   (link (list "li" "nk") "./a.html")
+      "<a href=\"./a.html\"><code class=\"prettyprint\">link</code></a>" (link "`link`" "./a.html")
+      "<a href=\"./a.html\"><span>span</span></a>" (link [:span "span"] "./a.html")))
   (testing "with attribute"
     (are [x y] (= x (html y))
-      "<a class=\"foo\" href=\"a.html\">a.html</a>" (link {:class "foo"} "a.html")
-      "<a class=\"foo\" href=\"a.html\">link</a>" (link {:class "foo"} "link" "a.html"))))
+      "<a class=\"foo\" href=\"./a.html\">./a.html</a>" (link {:class "foo"} "./a.html")
+      "<a class=\"foo\" href=\"./a.html\">link</a>" (link {:class "foo"} "link" "./a.html")))
+
+  (testing "absolute path link"
+    (bind-config [:url-base "/foo"]
+      (are [x y] (= x (html y))
+        "<a href=\"/foo/a.html\">a.html</a>" (link "a.html")
+        "<a href=\"/foo/a.html\">link</a>"   (link "link" "a.html")
+        "<a href=\"/foo/a.html\">link</a>"   (link "link" "/a.html")
+        "<a href=\"/foo/a.html\">link</a>"   (link "link" "/foo/a.html")))))
 
 
 ;; dl
@@ -188,7 +205,7 @@
 
     (testing "inline link"
       (are [x y] (= x (html y))
-        "<p class=\"paragraph\"><a href=\"a.html\">a</a></p>" (p "[a](a.html)")
+        "<p class=\"paragraph\"><a href=\"./a.html\">a</a></p>" (p "[a](./a.html)")
         "<p class=\"paragraph\"><a href=\"/2011-01/foo.html\">a</a></p>" (p "[a](title:foo)")))
 
     (testing "new-line"
@@ -211,50 +228,50 @@
 (deftest* js-test
   (testing "basic pattern"
     (are [x y] (= x (html (first y)))
-      "<script src=\"a.js\" type=\"text/javascript\"></script>" (js "a.js")
-      "<script src=\"a.js\" type=\"text/javascript\"></script>" (js ["a.js"])
-      "<script src=\"a.js\" type=\"text/javascript\"></script>" (js "a.js" "b.js")
-      "<script src=\"a.js\" type=\"text/javascript\"></script>" (js ["a.js" "b.js"])))
+      "<script src=\"./a.js\" type=\"text/javascript\"></script>" (js "./a.js")
+      "<script src=\"./a.js\" type=\"text/javascript\"></script>" (js ["./a.js"])
+      "<script src=\"./a.js\" type=\"text/javascript\"></script>" (js "./a.js" "./b.js")
+      "<script src=\"./a.js\" type=\"text/javascript\"></script>" (js ["./a.js" "./b.js"])))
   (testing "css from url-base"
     (are [x y] (= x (html (first y)))
-      "<script src=\"/a.js\" type=\"text/javascript\"></script>" (absolute-js "a.js")
-      "<script src=\"/a.js\" type=\"text/javascript\"></script>" (absolute-js "/a.js")
-      "<script src=\"/bar/a.js\" type=\"text/javascript\"></script>" (absolute-js "/bar/a.js")
-      "<script src=\"http://localhost/a.js\" type=\"text/javascript\"></script>" (absolute-js "http://localhost/a.js"))
+      "<script src=\"/a.js\" type=\"text/javascript\"></script>" (js "a.js")
+      "<script src=\"/a.js\" type=\"text/javascript\"></script>" (js "/a.js")
+      "<script src=\"/bar/a.js\" type=\"text/javascript\"></script>" (js "/bar/a.js")
+      "<script src=\"http://localhost/a.js\" type=\"text/javascript\"></script>" (js "http://localhost/a.js"))
     (bind-config [:url-base "/foo/"]
       (are [x y] (= x (html (first y)))
-        "<script src=\"/foo/a.js\" type=\"text/javascript\"></script>" (absolute-js "a.js")
-        "<script src=\"/foo/a.js\" type=\"text/javascript\"></script>" (absolute-js "/a.js")
-        "<script src=\"/foo/bar/a.js\" type=\"text/javascript\"></script>" (absolute-js "/bar/a.js")
-        "<script src=\"http://localhost/a.js\" type=\"text/javascript\"></script>" (absolute-js "http://localhost/a.js")))))
+        "<script src=\"/foo/a.js\" type=\"text/javascript\"></script>" (js "a.js")
+        "<script src=\"/foo/a.js\" type=\"text/javascript\"></script>" (js "/a.js")
+        "<script src=\"/foo/bar/a.js\" type=\"text/javascript\"></script>" (js "/bar/a.js")
+        "<script src=\"http://localhost/a.js\" type=\"text/javascript\"></script>" (js "http://localhost/a.js")))))
 
 (deftest* css-test
   (testing "basic pattern"
     (are [x y] (= x (html y))
-      "<link href=\"a.css\" rel=\"stylesheet\" type=\"text/css\" />" (first (css "a.css"))
-      "<link href=\"b.css\" rel=\"stylesheet\" type=\"text/css\" />" (second (css "a.css" "b.css"))
+      "<link href=\"./a.css\" rel=\"stylesheet\" type=\"text/css\" />" (first (css "./a.css"))
+      "<link href=\"./b.css\" rel=\"stylesheet\" type=\"text/css\" />" (second (css "./a.css" "./b.css"))
       ))
   (testing "css with media attribute"
     (are [x y] (= x (html y))
-      "<link href=\"a.css\" media=\"screen\" rel=\"stylesheet\" type=\"text/css\" />" (first (css {:media "screen"} "a.css"))
-      "<link href=\"b.css\" media=\"screen\" rel=\"stylesheet\" type=\"text/css\" />" (second (css {:media "screen"} "a.css" "b.css"))))
+      "<link href=\"./a.css\" media=\"screen\" rel=\"stylesheet\" type=\"text/css\" />" (first (css {:media "screen"} "./a.css"))
+      "<link href=\"./b.css\" media=\"screen\" rel=\"stylesheet\" type=\"text/css\" />" (second (css {:media "screen"} "./a.css" "./b.css"))))
 
   (testing "css from url base"
     (are [x y] (= x (html y))
-      "<link href=\"/a.css\" rel=\"stylesheet\" type=\"text/css\" />" (first (absolute-css "a.css"))
-      "<link href=\"/a.css\" rel=\"stylesheet\" type=\"text/css\" />" (first (absolute-css "/a.css"))
-      "<link href=\"/bar/a.css\" rel=\"stylesheet\" type=\"text/css\" />" (first (absolute-css "/bar/a.css"))
-      "<link href=\"http://localhost/a.css\" rel=\"stylesheet\" type=\"text/css\" />" (first (absolute-css "http://localhost/a.css")))
+      "<link href=\"/a.css\" rel=\"stylesheet\" type=\"text/css\" />" (first (css "a.css"))
+      "<link href=\"/a.css\" rel=\"stylesheet\" type=\"text/css\" />" (first (css "/a.css"))
+      "<link href=\"/bar/a.css\" rel=\"stylesheet\" type=\"text/css\" />" (first (css "/bar/a.css"))
+      "<link href=\"http://localhost/a.css\" rel=\"stylesheet\" type=\"text/css\" />" (first (css "http://localhost/a.css")))
     (bind-config [:url-base "/foo/"]
       (are [x y] (= x (html y))
-        "<link href=\"/foo/a.css\" rel=\"stylesheet\" type=\"text/css\" />" (first (absolute-css "a.css"))
-        "<link href=\"/foo/a.css\" rel=\"stylesheet\" type=\"text/css\" />" (first (absolute-css "/a.css"))
-        "<link href=\"/foo/bar/a.css\" rel=\"stylesheet\" type=\"text/css\" />" (first (absolute-css "/bar/a.css"))
-        "<link href=\"http://localhost/a.css\" rel=\"stylesheet\" type=\"text/css\" />" (first (absolute-css "http://localhost/a.css")))))
+        "<link href=\"/foo/a.css\" rel=\"stylesheet\" type=\"text/css\" />" (first (css "a.css"))
+        "<link href=\"/foo/a.css\" rel=\"stylesheet\" type=\"text/css\" />" (first (css "/a.css"))
+        "<link href=\"/foo/bar/a.css\" rel=\"stylesheet\" type=\"text/css\" />" (first (css "/bar/a.css"))
+        "<link href=\"http://localhost/a.css\" rel=\"stylesheet\" type=\"text/css\" />" (first (css "http://localhost/a.css")))))
   (testing "css with media attribute from url base"
     (are [x y] (= x (html y))
-      "<link href=\"/a.css\" media=\"screen\" rel=\"stylesheet\" type=\"text/css\" />" (first (absolute-css {:media "screen"} "a.css"))
-      "<link href=\"/a.css\" media=\"screen\" rel=\"stylesheet\" type=\"text/css\" />" (first (absolute-css {:media "screen"} "/a.css"))))
+      "<link href=\"/a.css\" media=\"screen\" rel=\"stylesheet\" type=\"text/css\" />" (first (css {:media "screen"} "a.css"))
+      "<link href=\"/a.css\" media=\"screen\" rel=\"stylesheet\" type=\"text/css\" />" (first (css {:media "screen"} "/a.css"))))
   )
 
 ;(deftest embed-test

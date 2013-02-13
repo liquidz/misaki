@@ -123,14 +123,9 @@
       ;=> <script type=\"text/javascript\" src=\"foo.js\"></script>
       ;=> <script type=\"text/javascript\" src=\"bar.js\"></script>"
   [& args]
-  (apply page/include-js (flatten args)))
+  (apply page/include-js (map cnf/absolute-path (flatten args))))
 
-; =absolute-js
-(defn absolute-js
-  "Include JavaScript from `(:url-base *config*)` setting."
-  [& args]
-  (let [args (map #(cnf/absolute-path %) (flatten args))]
-    (apply js args)))
+(def absolute-js "js alias for compatibility" js)
 
 ; =css
 (defn css
@@ -145,26 +140,11 @@
   [& args]
   (let [args (flatten args)
         [opt & hrefs] (if (map? (first args)) args (cons {} args))
+        hrefs (map cnf/absolute-path hrefs)
         attrs (map #(merge {:rel "stylesheet" :type "text/css" :href %} opt) hrefs)]
     (map #(vector :link %) attrs)))
 
-; =absolute-css
-(defn absolute-css
-  "Include Cascading Style Sheet from `(:url-base *config*)` setting.
-
-   ex) :url-base \"/foo\"
-
-      (absolute-css \"bar.css\")
-      ;=> <link rel=\"stylesheet\" type=\"text/css\" href=\"/foo/bar.css\" />
-      (absolute-css \"/bar.css\")
-      ;=> <link rel=\"stylesheet\" type=\"text/css\" href=\"/foo/bar.css\" />
-      (absolute-css \"http://localhost/bar.css\")
-      ;=> <link rel=\"stylesheet\" type=\"text/css\" href=\"http://localhost/bar.css\" />"
-  [& args]
-  (let [args (flatten args)
-        [opt & args] (if (map? (first args)) args (cons {} args))
-        args (map #(cnf/absolute-path %) args)]
-    (apply css (cons opt args))))
+(def absolute-css "css alias for compatibility" css)
 
 ; =heading
 (defn heading
@@ -255,7 +235,7 @@
      (map? x)    (img x "" src)
      :else       (img {} "" src)))
   ([attr alt src]
-   [:img (merge attr {:alt alt :src src})]))
+   [:img (merge attr {:alt alt :src (cnf/absolute-path src)})]))
 
 ; =link
 (defn link
@@ -277,7 +257,7 @@
      (map? x)    (link x href href)
      :else       (link {} href href)))
   ([attr label href]
-   [:a (merge attr {:href href}) (parse-string label)]))
+   [:a (merge attr {:href (cnf/absolute-path href)}) (parse-string label)]))
 
 ; =blockquote
 (defn blockquote
