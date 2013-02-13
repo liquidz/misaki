@@ -18,11 +18,8 @@
          :title (:title site)
          :type  "application/atom-xml"}]
 
- (absolute-css
-   ["/css/prettify.css" (:css site ())])
- (absolute-css
-   {:media "only screen and (max-device-width:480px)"}
-   (:device-css site))]
+ (css ["/css/prettify.css" (:css site ())])
+ (css {:media "only screen and (max-device-width:480px)"} (:device-css site))]
 ; /head
 
 [:body
@@ -36,10 +33,10 @@
    [:footer {:class "footer"}
     [:p (link (str "@" (:twitter site)) (str "http://twitter.com/" (:twitter site)))
      "&nbsp; 2013"]
-    [:p (link (img "misaki banner" "/misaki/img/misaki_banner.png") "https://github.com/liquidz/misaki")]])
+    [:p (link (img "misaki banner" "/img/misaki_banner.png") "https://github.com/liquidz/misaki")]])
  ; /container
 
- (absolute-js ["/js/prettify.js"
-               "/js/lang-clj.js"
-               (:js site ())])]
+ (js ["/js/prettify.js"
+      "/js/lang-clj.js"
+      (:js site ())])]
 ; /body

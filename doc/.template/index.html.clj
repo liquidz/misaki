@@ -13,8 +13,8 @@
       (:posts site))
 
     (h2 "Demo")
-    (ul [(link "Blog" "/misaki/demo/blog/")
-         (link "Presentation" "/misaki/demo/presentation/")])
+    (ul [(link "Blog" "/demo/blog/")
+         (link "Presentation" "/demo/presentation/")])
 
     (h2 "API")
     (ul

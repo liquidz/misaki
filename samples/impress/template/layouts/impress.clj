@@ -69,8 +69,8 @@
 [:head
  [:meta {:charset (:charset site)}]
  [:title (:title site)]
- (absolute-css ["/css/prettify.css"
-                (:css site ())])]
+ (css ["/css/prettify.css"
+       (:css site ())])]
 ; /head
 
 [:body
@@ -82,8 +82,8 @@
  [:div {:id "impress"}
   contents]
 
- (absolute-js ["/js/impress.js"
-               "/js/prettify.js"
-               "/js/lang-clj.js"
-               "/js/main.js"])]
+ (js ["/js/impress.js"
+      "/js/prettify.js"
+      "/js/lang-clj.js"
+      "/js/main.js"])]
 ; /body

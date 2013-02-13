@@ -18,8 +18,8 @@
          :title (:title site)
          :type  "application/atom-xml"}]
 
- (absolute-css ["/css/prettify.css" (:css site ())])
- (absolute-css {:media "only screen and (max-device-width:480px)"} (:device-css site))]
+ (css ["/css/prettify.css" (:css site ())])
+ (css {:media "only screen and (max-device-width:480px)"} (:device-css site))]
 ; /head
 
 [:body
@@ -35,7 +35,7 @@
     "&nbsp; 2013"))
  ; /container
 
- (absolute-js ["/js/prettify.js"
-               "/js/lang-clj.js"
-               (:js site ())])]
+ (js ["/js/prettify.js"
+      "/js/lang-clj.js"
+      (:js site ())])]
 ; /body
