@@ -248,12 +248,20 @@
 
 ; =absolute-path
 (defn absolute-path
-  "Convert path to absolute with `(:url-base *config*)`"
+  "Convert path to absolute with `(:url-base *config*)`
+
+  With following pattern, this function does not convert path.
+  * Starts with 'http' or 'https'
+  * Starts with './' which represents relative path
+  * Starts with `(:url-base *confit*)`"
   [path-str]
   {:pre [(string? path-str)]}
-  (if (re-seq #"^https?://" path-str)
-    path-str
-    (path (:url-base *config*) path-str)))
+  (let [{url-base :url-base} *config*]
+    (if (or (.startsWith path-str url-base)
+            (re-seq #"^\./" path-str)
+            (re-seq #"^https?://" path-str))
+      path-str
+      (path url-base path-str))))
 
 ; =add-public-dir
 (defn add-public-dir

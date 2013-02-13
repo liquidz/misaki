@@ -164,22 +164,43 @@
 
 ;;; absolute-path
 (deftest* absolute-path-test
-  (with-config
-    (are [x y] (= x (absolute-path y))
-      "/a.htm" "a.htm"
-      "/bar/a.htm" "bar/a.htm"
-      "/a.htm" "/a.htm"
-      "/bar/a.htm" "/bar/a.htm"
-      "http://localhost/a.htm" "http://localhost/a.htm"
-      "https://localhost/a.htm" "https://localhost/a.htm")
+  (testing "should be added url-base"
+    (with-config
+      (are [x y] (= x (absolute-path y))
+        "/a.htm" "a.htm"
+        "/bar/a.htm" "bar/a.htm"
+        "/a.htm" "/a.htm"
+        "/bar/a.htm" "/bar/a.htm"
+        "http://localhost/a.htm" "http://localhost/a.htm"
+        "https://localhost/a.htm" "https://localhost/a.htm")
 
+      (bind-config [:url-base "/foo/"]
+        (are [x y] (= x (absolute-path y))
+          "/foo/a.htm" "a.htm"
+          "/foo/a.htm" "/a.htm"
+          "/foo/bar/a.htm" "/bar/a.htm"
+          "/foo/bar/a.htm" "bar/a.htm"))))
+
+  (testing "should not be added url-base if specified path has url-base"
+    (are [x y] (= x (absolute-path y))
+      "http://foo.bar"  "http://foo.bar"
+      "https://foo.bar" "https://foo.bar"))
+
+  (testing "should not be added url-base if specified path has url-base"
     (bind-config [:url-base "/foo/"]
       (are [x y] (= x (absolute-path y))
-        "/foo/a.htm" "a.htm"
-        "/foo/a.htm" "/a.htm"
-        "/foo/bar/a.htm" "/bar/a.htm"
-        "/foo/bar/a.htm" "bar/a.htm"))))
+        "/foo/bar"     "/foo/bar"
+        "/foo/bar/baz" "/foo/bar/baz"))
+    (bind-config [:url-base "/foo"]
+      (are [x y] (= x (absolute-path y))
+        "/foo/bar"     "/foo/bar"
+        "/foo/bar/baz" "/foo/bar/baz")))
 
+  (testing "should not be added url-base if specified path is relative"
+    (bind-config [:url-base "/foo/"]
+      (are [x y] (= x (absolute-path y))
+        "./foo"     "./foo"
+        "./foo/bar" "./foo/bar"))))
 
 (deftest* get-page-posts-test
   (let [ls '(1 2 3)]
