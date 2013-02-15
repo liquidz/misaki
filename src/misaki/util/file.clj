@@ -1,9 +1,10 @@
 (ns misaki.util.file
   "File control utility"
   (:require
-    [clj-time.coerce :refer [from-long]]
-    [clojure.java.io :as io]
-    [clojure.string  :as str])
+    [clj-time.coerce        :refer [from-long]]
+    [clojure.core.incubator :refer [-?>]]
+    [clojure.java.io        :as io]
+    [clojure.string         :as str])
   (:import [java.io File]))
 
 ; =file?
@@ -94,6 +95,23 @@
   (str/replace-first s #"\.[^.]+$" ""))
 ; remove-last-extension alias for compatibility
 (def remove-extension remove-last-extension)
+
+; =get-last-extension
+(defmulti get-last-extension
+  "Get last extension from file.
+
+      (get-last-extension \"foo.bar\")
+      ;=> \"bar\"
+      (get-last-extension \"foo.bar.baz\")
+      ;=> \"baz\""
+  class)
+(defmethod get-last-extension File
+  [file]
+  (get-last-extension (.getName file)))
+(defmethod get-last-extension String
+  [s]
+  (-?> (re-seq #"\.([^.]+)$" s)
+       first second))
 
 ; =get-parent-path
 (defn get-parent-path

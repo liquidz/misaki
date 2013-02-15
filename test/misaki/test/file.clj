@@ -123,3 +123,17 @@
       "a/b/c.txt" ["a/"  "b"   "/c.txt"]
       "a/b/c.txt" ["a"   "b/"  "/c.txt"]
       "a/b/c.txt" ["a/"  "b/"  "/c.txt"])))
+
+;; get-last-extension
+(deftest get-last-extension-test
+  (testing "File"
+    (are [x y] (= x (get-last-extension (io/file y)))
+      "txt" "foo.txt"
+      "clj" "foo.txt.clj"
+      nil   "foo"))
+
+  (testing "String"
+    (are [x y] (= x (get-last-extension y))
+      "txt" "foo.txt"
+      "clj" "foo.txt.clj"
+      nil   "foo")))
