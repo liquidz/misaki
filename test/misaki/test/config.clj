@@ -94,6 +94,36 @@
       "-/01.foo.html"    "01.foo.html"
       "-/01.02.foo.html" "01.02.foo.html")))
 
+(deftest* make-index-output-filename
+  (let [f #(apply #'misaki.config/make-index-output-filename %&)]
+    (bind-config [:page-filename-format "{{page}}/{{filename}}"]
+      (binding [*page-index* 0]
+        (are [x y] (= x y)
+          "foo.bar"   (f (io/file "foo.bar"))
+          "foo.bar"   (f (io/file "foo.bar") :page 0)
+          "2/foo.bar" (f (io/file "foo.bar") :page 1)))
+      (binding [*page-index* 1]
+        (are [x y] (= x y)
+          "2/foo.bar" (f (io/file "foo.bar"))
+          "foo.bar"   (f (io/file "foo.bar") :page 0)
+          "2/foo.bar" (f (io/file "foo.bar") :page 1))))
+
+    (bind-config [:page-filename-format "{{name}}{{page}}{{ext}}"]
+      (binding [*page-index* 0]
+        (are [x y] (= x y)
+          "foo.bar"      (f (io/file "foo.bar"))
+          "foo.bar"      (f (io/file "foo.bar") :page 0)
+          "foo2.bar"     (f (io/file "foo.bar") :page 1)
+          "foo.bar2.baz" (f (io/file "foo.bar.baz") :page 1)))
+      (binding [*page-index* 1]
+        (are [x y] (= x y)
+          "foo2.bar"     (f (io/file "foo.bar"))
+          "foo.bar"      (f (io/file "foo.bar") :page 0)
+          "foo2.bar"     (f (io/file "foo.bar") :page 1)
+          "foo.bar2.baz" (f (io/file "foo.bar.baz") :page 1))))
+    )
+  )
+
 ;;; make-output-filename
 (deftest* make-output-filename-test
   (testing "normal template file"

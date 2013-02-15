@@ -17,6 +17,8 @@
  ;;   default value: "page{{page}}/{{filename}}"
  ;;     @page    : page number(1..N)
  ;;     @filename: front page's filename
+ ;;     @name    : filename without last extension
+ ;;     @ext     : file's last extension
  :post-filename-format "page{{page}}/{{filename}}"
  }
 CLJ

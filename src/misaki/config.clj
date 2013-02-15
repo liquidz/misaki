@@ -213,13 +213,23 @@
 
 ; =make-index-output-filename
 (defn- make-index-output-filename
-  "Make index output filename from java.io.File."
+  "Make index output filename from java.io.File.
+
+  Filename format is defined by `:page-filename-format`.
+  Following variables can be used in `:page-filename-format`.
+      {{filename}}: Filename
+      {{page}}    : Page number (0..N)
+      {{name}}    : Filename witout last extension
+      {{ext}}     : Extension"
   [#^File file & {:keys [page] :or {page nil}}]
   (let [filename   (make-regular-output-filename file)
         page-index (or page *page-index*)]
     (if (not= 0 page-index)
       (render (:page-filename-format *config*)
-              {:filename filename, :page (inc page-index)})
+              {:filename filename
+               :page     (inc page-index)
+               :name     (remove-last-extension filename)
+               :ext      (str "." (get-last-extension filename))})
       filename)))
 
 ; =make-output-filename
