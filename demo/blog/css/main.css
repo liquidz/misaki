@@ -68,7 +68,7 @@ h4:hover .dagger, h5:hover .dagger, .dagger:hover {
 }
 
 /* pager style */
-p.pager { text-align: center; }
+article p.pager { text-align: center; }
 
 /* column style */
 .column { overflow: hidden; }
