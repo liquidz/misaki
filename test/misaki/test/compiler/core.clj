@@ -205,7 +205,13 @@
       1      (:count t3)
       "/tag/tag1.html" (:url   t1)
       "/tag/tag2.html" (:url   t2)
-      "/tag/tag3.html" (:url   t3))))
+      "/tag/tag3.html" (:url   t3)))
+
+  (testing "get tags with pagination"
+    (bind-config [:posts-per-page 1]
+      (are [x y] (= x y)
+        3 (count (get-tags))
+        3 (count (get-tags :count-by-name? true))))))
 
 ;;; make-site-data
 (deftest* make-site-data-test

@@ -147,7 +147,9 @@
   "Get all(unfiltered) tags from post list.
   Return nil if :post-dir option is nil."
   []
-  (remove nil?  (mapcat (comp :tag parse-template-option) (msk/get-post-files))))
+  (->> (msk/get-post-files :all? true)
+       (mapcat (comp :tag parse-template-option))
+       (remove nil?)))
 
 ; =get-tags
 (defn get-tags
