@@ -16,7 +16,7 @@
  [:link {:href  "/atom.xml"
          :rel   "alternate"
          :title (:title site)
-         :type  "application/atom-xml"}]
+         :type  "application/atom+xml"}]
 
  (css ["/css/prettify.css" (:css site ())])
  (css {:media "only screen and (max-device-width:480px)"} (:device-css site))]
