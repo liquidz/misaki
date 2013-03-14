@@ -2,19 +2,18 @@
   "Default HTML compiler for clojure source."
   (:require
     [misaki.compiler.default [template :refer :all]
-                             [config :refer :all]]
-    [misaki.util [file :refer :all]
+                             [config   :refer :all]]
+    [misaki.util [file     :refer :all]
                  [sequence :refer :all]
-                 [string :refer :all]]
-    [misaki.config          :refer [*config*]]
-    [hiccup.core            :refer [html]]
-    [hiccup.page            :refer [html5 xhtml html4]]
-    [misaki.core            :as msk]
-    [misaki.config          :as cnf]
-    [misaki.server          :as srv]
-    [clojure.core.incubator :refer [-?>]]
-    [clojure.string         :as str]
-    [clojure.java.io        :as io])
+                 [string   :refer :all]]
+    [misaki.config         :refer [*config*]]
+    [hiccup.core           :refer [html]]
+    [hiccup.page           :refer [html5 xhtml html4]]
+    [misaki.core           :as msk]
+    [misaki.config         :as cnf]
+    [misaki.server         :as srv]
+    [clojure.string        :as str]
+    [clojure.java.io       :as io])
   (:import [java.io File]))
 
 (declare file->template-sexp
@@ -191,8 +190,8 @@
            ;; pagination
            :page      (:page *config*)
            :last-page (:last-page *config*)
-           :next-page (-?> *config* :next-page remove-clj-extension)
-           :prev-page (-?> *config* :prev-page remove-clj-extension))))
+           :next-page (some-> *config* :next-page remove-clj-extension)
+           :prev-page (some-> *config* :prev-page remove-clj-extension))))
 
 ; =file->template-sexp
 (defn file->template-sexp

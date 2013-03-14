@@ -2,11 +2,10 @@
   "Template file loader"
   (:require
     [misaki.compiler.default [evaluator :refer :all]
-                             [config :refer :all]]
-    [misaki.util.file       :refer [file?]]
-    [clojure.core.incubator :refer [-?>]]
-    [clojure.string         :as str]
-    [clojure.java.io        :as io])
+                             [config    :refer :all]]
+    [misaki.util.file :refer [file?]]
+    [clojure.string   :as str]
+    [clojure.java.io  :as io])
   (:import
     [java.io File]))
 
@@ -66,7 +65,7 @@
   (let [data   (slurp file)
         option (parse-template-option data)
         result (list [data option])]
-    (if-let [parent (-?> option :layout make-layout-filename io/file)]
+    (if-let [parent (some-> option :layout make-layout-filename io/file)]
       (concat (load-template-data parent) result)
       result)))
 

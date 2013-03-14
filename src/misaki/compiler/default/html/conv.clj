@@ -1,14 +1,13 @@
 (ns misaki.compiler.default.html.conv
   "Data converting utilities for template"
   (:require
-    [misaki.compiler.default [core :refer [get-posts]]
+    [misaki.compiler.default [core   :refer [get-posts]]
                              [config :refer [*site*]]]
     [misaki.util [sequence :refer [find-first]]
                  [string   :refer [str-split-last]]]
     [clj-time [core   :as t]
               [format :as fmt]]
-    [clojure.core.incubator :refer [-?>>]]
-    [clojure.string         :as str]))
+    [clojure.string   :as str]))
 
 ;; ## Converter for post data
 
@@ -19,7 +18,7 @@
   (let [[title jump] (str-split-last post-title #"#")
         posts (:posts *site*)
         posts (if posts posts (get-posts))
-        url   (-?>> posts (find-first #(= title (:title %))) :url)]
+        url   (some->> posts (find-first #(= title (:title %))) :url)]
 
     (if url
       (if jump (str url "#" jump) url))))

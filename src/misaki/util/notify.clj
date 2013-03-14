@@ -1,11 +1,10 @@
 (ns misaki.util.notify
   "Notification Manager"
   (:require
-    [misaki.config          :refer [*config*]]
-    [clojure.core.incubator :refer [-?>]]
-    [clj-gntp.core          :refer [growl-notify]]
-    [clojure.java.shell     :refer [sh]]
-    [clostache.parser       :refer [render]]))
+    [misaki.config      :refer [*config*]]
+    [clj-gntp.core      :refer [growl-notify]]
+    [clojure.java.shell :refer [sh]]
+    [clostache.parser   :refer [render]]))
 
 (def ^:private last-result (atom {}))
 (def ^:private linux? (= "Linux" (System/getProperty "os.name")))
@@ -28,13 +27,13 @@
         st        (if exception (first (.getStackTrace exception)))
         line      (if (and st (= (.getFileName st) filename))
                     (.getLineNumber st))
-        get-text  #(-?> *config* :notify-setting %
-                        (render {:filename filename :message message :line line}))]
+        get-text  #(some-> *config* :notify-setting %
+                           (render {:filename filename :message message :line line}))]
 
     (cond
       ; fixed
       (and (true? process-result)
-           (-?> @last-result (get file) false?))
+           (some-> @last-result (get file) false?))
       (notify (get-text :fixed-title) (get-text :fixed))
 
       ; fail

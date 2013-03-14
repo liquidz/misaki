@@ -4,12 +4,11 @@
     [misaki.util [file     :refer :all]
                  [string   :refer :all]
                  [sequence :refer :all]]
-    [clojure.core.incubator :refer [-?>>]]
-    [clj-time.core          :refer [date-time year month day]]
-    [text-decoration.core   :refer [cyan red bold]]
-    [clostache.parser       :refer [render]]
-    [clojure.string         :as str]
-    [clojure.java.io        :as io])
+    [clj-time.core         :refer [date-time year month day]]
+    [text-decoration.core  :refer [cyan red bold]]
+    [clostache.parser      :refer [render]]
+    [clojure.string        :as str]
+    [clojure.java.io       :as io])
   (:import [java.io File FileNotFoundException]))
 
 ;; ## Default Value
@@ -151,7 +150,7 @@
   "Get date from file(java.io.File) with `(:post-filename-regexp *config*)`."
   [#^File post-file]
   {:pre [(or (nil? post-file) (file? post-file))]}
-  (let [date-seq (-?>> post-file (.getName)
+  (let [date-seq (some->> post-file (.getName)
                       (re-seq (:post-filename-regexp *config*))
                       nfirst drop-last)] ; last = filename
     (if (and date-seq (= 3 (count date-seq))
@@ -196,9 +195,9 @@
         filename (if date (remove-date-from-name (.getName file))
                           (.getName file))]
     (render (:post-filename-format *config*)
-            {:year     (-?>> date year  str)
-             :month    (-?>> date month (format "%02d"))
-             :day      (-?>> date day   (format "%02d"))
+            {:year     (some->> date year  str)
+             :month    (some->> date month (format "%02d"))
+             :day      (some->> date day   (format "%02d"))
              :filename filename})))
 
 ; =make-regular-output-filename

@@ -1,7 +1,6 @@
 (defproject misaki "0.2.6-beta"
   :description "Jekyll inspired static site generator in Clojure"
-  :dependencies [[org.clojure/clojure "1.4.0"]
-                 [org.clojure/core.incubator "0.1.0"]
+  :dependencies [[org.clojure/clojure "1.5.1"]
                  [org.clojure/math.numeric-tower "0.0.2"]
                  [hiccup "1.0.1"]
                  [compojure "1.1.3"]

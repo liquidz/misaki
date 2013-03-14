@@ -4,10 +4,9 @@
   cf. [http://d.hatena.ne.jp/nokturnalmortum/20100527/1274961805](http://d.hatena.ne.jp/nokturnalmortum/20100527/1274961805)
   "
   (:require
-    [misaki.config          :refer [*config*]]
-    [misaki.util.string     :refer [escape-string]]
-    [clojure.core.incubator :refer [-?>>]]
-    [clojure.string         :as str]))
+    [misaki.config      :refer [*config*]]
+    [misaki.util.string :refer [escape-string]]
+    [clojure.string     :as str]))
 
 ; =get-code-type
 (defn get-code-type
@@ -31,7 +30,7 @@
   (let [end-seq      (map int end-str)
         start?       #(= % (int \newline))
         front-space? #(and (= % (int \space)) (= %2 end-seq))]
-    (-?>>
+    (some->>
       (loop [res nil, e end-seq, started? false]
         (if (empty? e)
           res
@@ -58,10 +57,10 @@
   (let [end-str   (read-until reader "\n" :ignore-started? true)
         css-class (remove nil? ["prettyprint" (get-code-type end-str)])]
     [:pre {:class (str/join " " css-class)}
-     (-?>> end-str
-           (read-until reader)
-           escape-string
-           str/trim)]))
+     (some->> end-str
+              (read-until reader)
+              escape-string
+              str/trim)]))
 
 ;; Register `#-` reader macro
 (dispatch-reader-macro \- here-code)

@@ -1,10 +1,9 @@
 (ns misaki.util.file
   "File control utility"
   (:require
-    [clj-time.coerce        :refer [from-long]]
-    [clojure.core.incubator :refer [-?>]]
-    [clojure.java.io        :as io]
-    [clojure.string         :as str])
+    [clj-time.coerce :refer [from-long]]
+    [clojure.java.io :as io]
+    [clojure.string  :as str])
   (:import [java.io File]))
 
 ; =file?
@@ -110,8 +109,8 @@
   (get-last-extension (.getName file)))
 (defmethod get-last-extension String
   [s]
-  (-?> (re-seq #"\.([^.]+)$" s)
-       first second))
+  (some-> (re-seq #"\.([^.]+)$" s)
+          first second))
 
 ; =get-parent-path
 (defn get-parent-path
