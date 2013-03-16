@@ -6,8 +6,8 @@
                  [string   :refer :all]
                  [sequence :refer :all]
                  [notify   :refer :all]]
-    [text-decoration.core :refer [green]]
-    [pretty-error.core    :refer [print-pretty-stack-trace]]
+    [text-decoration.core  :refer [green]]
+    [pretty-error.core     :refer [print-pretty-stack-trace]]
     [clojure.math.numeric-tower :as math])
   (:import [java.io File]))
 
@@ -82,10 +82,11 @@
   Sort file list with `:sort?` option(default setting is FALSE)."
   [& {:keys [sort? all?] :or {sort? false, all? false}}]
 
-  (let [files   (get-template-files :dir (:post-dir *config*))
-        sort-fn #(if sort? ((sort-type->sort-fn) %) %)
-        page-fn #(if all?  % (get-page-posts %))]
-    (-> files sort-fn page-fn)))
+  (let [files (get-template-files :dir (:post-dir *config*))
+        page? (not all?)]
+    (cond-> files
+            sort? ((sort-type->sort-fn))
+            page? get-page-posts)))
 
 
 ;; ## Compiler Functions
