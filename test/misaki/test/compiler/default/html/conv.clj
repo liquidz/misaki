@@ -1,13 +1,14 @@
 (ns misaki.test.compiler.default.html.conv
-  (:use misaki.test.compiler.default.common
-        [misaki.compiler.default.html conv]
-        [misaki.compiler.default.core :only [make-site-data]]
-        [misaki.compiler.default.config :only [*site*]]
-        [misaki.config :only [*config*]]
-        [clj-time.core :only [date-time]]
-        [misaki.tester :only [set-base-dir!]]
-        clojure.test)
-  (:require [clojure.java.io :as io]))
+  (:require
+    [misaki.test.compiler.default.common :refer :all]
+    [misaki.compiler.default.html.conv   :refer :all]
+    [misaki.compiler.default [core       :refer [make-site-data]]
+                             [config     :refer [*site*]]]
+    [misaki [config  :refer [*config*]]
+            [tester  :refer [set-base-dir!]]]
+    [clj-time.core   :refer [date-time]]
+    [clojure.test    :refer :all]
+    [clojure.java.io :as io]))
 
 (set-base-dir! "test/files/compiler/default/html/conv/")
 

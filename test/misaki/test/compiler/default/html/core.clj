@@ -1,13 +1,14 @@
 (ns misaki.test.compiler.default.html.core
-  (:use misaki.test.compiler.default.common
-        misaki.compiler.default.html.core
-        [misaki.compiler.default.core   :only [make-site-data]]
-        [misaki.compiler.default.config :only [*site*]]
-        [misaki.config :only [*config*]]
-        [misaki.tester :only [set-base-dir! bind-config]]
-        [hiccup.core :only [html]])
-  (:use [clojure.test])
-  (:require [clojure.java.io :as io]))
+  (:require
+    [misaki.test.compiler.default.common :refer :all]
+    [misaki.compiler.default.html.core   :refer :all]
+    [misaki.compiler.default [core       :refer [make-site-data]]
+                             [config     :refer [*site*]]]
+    [misaki [config  :refer [*config*]]
+            [tester  :refer [set-base-dir! bind-config]]]
+    [hiccup.core     :refer [html]]
+    [clojure.test    :refer :all]
+    [clojure.java.io :as io]))
 
 (set-base-dir! "test/files/compiler/default/html/core/")
 

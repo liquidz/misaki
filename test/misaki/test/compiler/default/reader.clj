@@ -1,9 +1,8 @@
 (ns misaki.test.compiler.default.reader
-  (:use
-    misaki.compiler.default.reader
-    clojure.test)
   (:require
-    [clojure.string  :as str]
+    [misaki.compiler.default.reader :refer :all]
+    [clojure [test   :refer :all]
+             [string :as str]]
     [clojure.java.io :as io])
   (:import [java.io StringReader PushbackReader]))
 

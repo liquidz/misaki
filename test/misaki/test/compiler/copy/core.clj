@@ -1,11 +1,10 @@
 (ns misaki.test.compiler.copy.core
-  (:use
-    misaki.compiler.copy.core
-    [misaki.config :only [*config-file* *config*]]
-    [misaki.util.file :only [path]]
-    clojure.test)
   (require
-    [misaki.tester :as t]
+    [misaki.compiler.copy.core :refer :all]
+    [misaki [config :refer [*config-file* *config*]]
+            [tester :as t]]
+    [misaki.util.file :refer [path]]
+    [clojure.test    :refer :all]
     [clojure.java.io :as io]))
 
 (t/set-base-dir! "test/files/compiler/copy/core/")

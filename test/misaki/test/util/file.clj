@@ -1,8 +1,9 @@
 (ns misaki.test.util.file
-  (:use [misaki.util file]
-        [clj-time.core :only [date-time]]
-        clojure.test)
-  (:require [clojure.java.io :as io]))
+  (:require
+    [misaki.util.file :refer :all]
+    [clj-time.core    :refer [date-time]]
+    [clojure.test     :refer :all]
+    [clojure.java.io  :as io]))
 
 ;; file?
 (deftest file?-test

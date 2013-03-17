@@ -1,7 +1,8 @@
 (ns misaki.test.util.date
-  (:use [misaki.util date]
-        [clj-time.core :only [date-time]]
-        clojure.test))
+  (:require
+    [misaki.util.date :refer :all]
+    [clj-time.core    :refer [date-time]]
+    [clojure.test     :refer :all]))
 
 ;; date->xml-schema
 (deftest date->xml-schema-test

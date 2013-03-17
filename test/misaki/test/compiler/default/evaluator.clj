@@ -1,8 +1,10 @@
 (ns misaki.test.compiler.default.evaluator
-  (:use [misaki.compiler.default evaluator template]
-        [hiccup.core :only [html]])
-  (:use [clojure.test])
-  (:require [clojure.java.io :as io]))
+  (:require
+    [misaki.compiler.default [evaluator :refer :all]
+                             [template  :refer :all]]
+    [hiccup.core     :refer [html]]
+    [clojure.test    :refer :all]
+    [clojure.java.io :as io]))
 
 ;; def?
 (deftest def?-test

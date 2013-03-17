@@ -1,6 +1,7 @@
 (ns misaki.test.util.string
-  (:use [misaki.util string]
-        clojure.test))
+  (:require
+    [misaki.util.string :refer :all]
+    [clojure.test       :refer :all]))
 
 ;;; escape-string
 (deftest escape-string-test

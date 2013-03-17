@@ -1,11 +1,11 @@
 (ns misaki.test.compiler.default.util.code
-  (:use misaki.compiler.default.config
-        misaki.compiler.default.util.code
-        misaki.test.compiler.default.common
-        [misaki.tester :only [set-base-dir!]]
-        clojure.test
-        )
-  (:require [clojure.string :as str])
+  (:require
+    [misaki.test.compiler.default.common :refer :all]
+    [misaki.compiler.default.config      :refer :all]
+    [misaki.compiler.default.util.code   :refer :all]
+    [misaki.tester                       :refer [set-base-dir!]]
+    [clojure [test   :refer :all]
+             [string :as str]])
   (:import [java.io StringReader]))
 
 (set-base-dir! "test/files/compiler/default/util/code/")

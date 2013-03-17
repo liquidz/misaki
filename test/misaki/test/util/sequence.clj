@@ -1,8 +1,9 @@
 (ns misaki.test.util.sequence
-  (:use [misaki.util sequence]
-        [clj-time.core :only [date-time]]
-        clojure.test)
-  (:require [clojure.java.io :as io]))
+  (:require
+    [misaki.util.sequence :refer :all]
+    [clj-time.core        :refer [date-time]]
+    [clojure.test         :refer :all]
+    [clojure.java.io      :as io]))
 
 (defn- make-dummy-posts []
   (list

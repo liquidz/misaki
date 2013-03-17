@@ -1,12 +1,11 @@
 (ns misaki.test.tester
-  (:use
-    [misaki.config    :only [*base-dir* *config* with-config]]
-    [misaki.util.file :only [path]]
-    misaki.tester
-    clojure.test)
   (:require
-    [clojure.string  :as str]
-    [clojure.java.io :as io]))
+    [misaki [config   :refer [*base-dir* *config* with-config]]
+            [tester   :refer :all]]
+    [misaki.util.file :refer [path]]
+    [clojure [test    :refer :all]
+             [string  :as str]]
+    [clojure.java.io  :as io]))
 
 (def BASE_DIR "test/files/tester/")
 

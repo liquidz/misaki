@@ -1,12 +1,14 @@
 (ns misaki.test.compiler.default.config
-  (:use [misaki.compiler.default config]
-        [misaki.config :only [*config*]]
-        [misaki.util file sequence]
-        [misaki.tester :only [set-base-dir! bind-config]]
-        misaki.test.compiler.default.common
-        [clj-time.core :only [date-time year month day]]
-        clojure.test)
-  (:require [clojure.java.io :as io])
+  (:require
+    [misaki.test.compiler.default.common :refer :all]
+    [misaki.compiler.default.config :refer :all]
+    [misaki [config :refer [*config*]]
+            [tester :refer [set-base-dir! bind-config]]]
+    [misaki.util [file     :refer :all]
+                 [sequence :refer :all]]
+    [clj-time.core   :refer [date-time year month day]]
+    [clojure.test    :refer :all]
+    [clojure.java.io :as io])
   (:import [java.io FileNotFoundException]))
 
 (set-base-dir! "test/files/compiler/default/config/")

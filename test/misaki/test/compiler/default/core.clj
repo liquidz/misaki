@@ -1,17 +1,18 @@
 (ns misaki.test.compiler.default.core
-  (:use [misaki.compiler.default core template config]
-        [misaki.util sequence file]
-        [misaki.config :only [*config*
-                              *page-index*
-                              template-name->file]]
-        [misaki.tester :only [set-base-dir! bind-config test-compile template-file public-file post-file]]
-        misaki.server
-        misaki.test.compiler.default.common
-        [hiccup.core :only [html]]
-        [clj-time.core :only [date-time]])
-  (:use [clojure.test])
   (:require
-    [misaki.core     :as msk]
+    [misaki.test.compiler.default.common :refer :all]
+    [misaki.compiler.default [core       :refer :all]
+                             [template   :refer :all]
+                             [config     :refer :all]]
+    [misaki.util [sequence :refer :all]
+                 [file     :refer :all]]
+    [misaki [config  :refer [*config* *page-index* template-name->file]]
+            [tester  :refer [set-base-dir! bind-config test-compile template-file public-file post-file]]
+            [server  :refer :all]
+            [core    :as msk]]
+    [hiccup.core     :refer [html]]
+    [clj-time.core   :refer [date-time]]
+    [clojure.test    :refer :all]
     [clojure.java.io :as io]))
 
 (set-base-dir! "test/files/compiler/default/core/")

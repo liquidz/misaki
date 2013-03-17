@@ -1,10 +1,11 @@
 (ns misaki.test.config
-  (:use misaki.config
-        [misaki.util.file :only [normalize-path]]
-        [misaki.tester    :only [set-base-dir! deftest* bind-config post-file]]
-        [clj-time.core    :only [date-time year month day]]
-        clojure.test)
-  (:require [clojure.java.io :as io])
+  (:require
+    [misaki [config   :refer :all]
+            [tester   :refer :all]]
+    [misaki.util.file :refer [normalize-path]]
+    [clj-time.core    :refer [date-time year month day]]
+    [clojure.test     :refer :all]
+    [clojure.java.io  :as io])
   (:import [java.io FileNotFoundException]))
 
 (defn dummy0 [] ())

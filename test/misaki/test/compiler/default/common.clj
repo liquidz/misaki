@@ -1,6 +1,7 @@
 (ns misaki.test.compiler.default.common
-  (:use [misaki.config :only [*config*]])
-  (require [misaki.tester :as t]))
+  (:require
+    [misaki [config :refer [*config*]]
+            [tester :as t]]))
 
 (defmacro deftest* [name & body]
   `(t/deftest*

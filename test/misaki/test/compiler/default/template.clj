@@ -1,14 +1,15 @@
 (ns misaki.test.compiler.default.template
-  (:use [misaki.compiler.default template config]
-        [misaki.config :only [*config*]]
-        [hiccup.core :only [html]]
-        [misaki.tester :only [set-base-dir! template-file]]
-        [misaki.util.file :only [path]]
-        misaki.test.compiler.default.common
-        clojure.test)
   (:require
-    [clojure.string :as str]
-    [clojure.java.io :as io]))
+    [misaki.test.compiler.default.common :refer :all]
+    [misaki.compiler.default [template   :refer :all]
+                             [config     :refer :all]]
+    [misaki [config   :refer [*config*]]
+            [tester   :refer [set-base-dir! template-file]]]
+    [misaki.util.file :refer [path]]
+    [hiccup.core      :refer [html]]
+    [clojure [test    :refer :all]
+             [string  :as str]]
+    [clojure.java.io  :as io]))
 
 (set-base-dir! "test/files/compiler/default/template/")
 

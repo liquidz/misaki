@@ -1,9 +1,11 @@
 (ns misaki.test.core
-  (use [misaki core config]
-       [misaki.util.sequence :only [find-first]]
-       misaki.tester
-       clojure.test)
-  (require [clojure.java.io :as io]))
+  (require
+    [misaki [core   :refer :all]
+            [config :refer :all]
+            [tester :refer :all]]
+    [misaki.util.sequence :refer [find-first]]
+    [clojure.test    :refer :all]
+    [clojure.java.io :as io]))
 
 (set-base-dir! "test/files/core/")
 
