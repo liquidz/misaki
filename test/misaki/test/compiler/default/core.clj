@@ -1,19 +1,20 @@
-(ns misaki.test.compiler.core
+(ns misaki.test.compiler.default.core
   (:use [misaki.compiler.default core template config]
         [misaki.util sequence file]
         [misaki.config :only [*config*
                               *page-index*
                               template-name->file]]
-        ;[misaki.config :only [template-name->file]]
-        [misaki.tester :only [bind-config test-compile template-file public-file]]
+        [misaki.tester :only [set-base-dir! bind-config test-compile template-file public-file post-file]]
         misaki.server
-        misaki.test.compiler.common
+        misaki.test.compiler.default.common
         [hiccup.core :only [html]]
         [clj-time.core :only [date-time]])
   (:use [clojure.test])
   (:require
     [misaki.core     :as msk]
     [clojure.java.io :as io]))
+
+(set-base-dir! "test/files/compiler/default/core/")
 
 ;;; -compile
 (deftest* -compile-test
@@ -34,9 +35,9 @@
       (.delete out)))
 
   (testing "tag and prev/next post should be compiled when post file is compiled"
-    (let [in1   (template-file "_posts/2022.02.02-bar.html.clj")
-          in2   (template-file "_posts/2011.01.01-foo.html.clj")
-          in3   (template-file "_posts/2000.01.01-foo.html.clj")
+    (let [in1   (post-file   "2022.02.02-bar.html.clj")
+          in2   (post-file   "2011.01.01-foo.html.clj")
+          in3   (post-file   "2000.01.01-foo.html.clj")
           tag1  (public-file "tag/tag1.html")
           tag2  (public-file "tag/tag2.html")
           tag3  (public-file "tag/tag3.html")

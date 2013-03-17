@@ -1,12 +1,15 @@
-(ns misaki.test.compiler.conv
-  (:use misaki.test.compiler.common
+(ns misaki.test.compiler.default.html.conv
+  (:use misaki.test.compiler.default.common
         [misaki.compiler.default.html conv]
         [misaki.compiler.default.core :only [make-site-data]]
         [misaki.compiler.default.config :only [*site*]]
         [misaki.config :only [*config*]]
         [clj-time.core :only [date-time]]
+        [misaki.tester :only [set-base-dir!]]
         clojure.test)
   (:require [clojure.java.io :as io]))
+
+(set-base-dir! "test/files/compiler/default/html/conv/")
 
 ; =post-title->url
 (deftest* post-title->url-test

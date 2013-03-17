@@ -1,4 +1,4 @@
-(ns misaki.test.string
+(ns misaki.test.util.string
   (:use [misaki.util string]
         clojure.test))
 

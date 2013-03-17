@@ -5,7 +5,7 @@
        clojure.test)
   (require [clojure.java.io :as io]))
 
-(set-base-dir! "test/")
+(set-base-dir! "test/files/core/")
 
 (deftest skip-compile?-test
   (testing "symbol or (symbol? (:status %)) is skip"
@@ -70,7 +70,7 @@
   (testing "default template directory"
     (let [tmpls (get-template-files)]
       (is (find-first #(= "index.html.clj" (.getName %)) tmpls))
-      (is (= 18 (count tmpls)))))
+      (is (= 6 (count tmpls)))))
 
   (testing "find from specified directory"
     (let [tmpls (get-template-files :dir (:post-dir *config*))]
@@ -85,7 +85,7 @@
   (testing "all extensions"
     (bind-config [:compiler {'-extension #(list :*)}]
       (let [tmpls (get-template-files)]
-        (is (= 19 (count tmpls)))
+        (is (= 7 (count tmpls)))
         (is (find-first #(= "favicon.ico" (.getName %)) tmpls)))))
 
   (testing "multiple compiler"
@@ -148,14 +148,14 @@
     (bind-config [:compiler {'-config #(merge {:foo "bar"} %)}]
       (let [c (update-config)]
         (are [x y] (= x y)
-          "test/public/" (:public-dir c)
-          "bar"          (:foo c)))))
+          (base-path "public/") (:public-dir c)
+          "bar"                 (:foo c)))))
 
   (testing "specify compiler"
     (let [c (update-config {'-config #(assoc % :foo "bar")})]
       (are [x y] (= x y)
-        "test/public/" (:public-dir c)
-        "bar"         (:foo c))))
+        (base-path "public/") (:public-dir c)
+        "bar"                 (:foo c))))
 
   (testing "multiple compilers"
     (bind-config [:compiler [{'-config #(assoc % :foo "bar")}
@@ -164,10 +164,10 @@
         (are [x y] (= x y)
           true (sequential? c)
           2    (count c)
-          "test/public/" (:public-dir (first c))
-          "bar"          (:foo (first c))
-          "test/public/" (:public-dir (second c))
-          "baz"          (:bar (second c)))))))
+          (base-path "public/") (:public-dir (first c))
+          "bar"                 (:foo (first c))
+          (base-path "public/") (:public-dir (second c))
+          "baz"                 (:bar (second c)))))))
 
 ;; process-compile-result
 (deftest* process-compile-result-test
@@ -263,5 +263,7 @@
       (is (.exists p3))
       (.delete p1)
       (.delete p2)
-      (.delete p3))))
+      (.delete p3)
+      (.delete (public-file "page2"))
+      (.delete (public-file "page3")))))
 

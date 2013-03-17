@@ -18,6 +18,12 @@
   [base-dir]
   (reset! _test-base-dir_ (normalize-path base-dir)))
 
+; =base-path
+(defn base-path
+  "Combine paths based on _test_base_dir_"
+  [& paths]
+  (apply path @_test-base-dir_ paths))
+
 ; =with-test-base-dir
 (defmacro with-test-base-dir
   "Bind test base directory to `*base-dir*`."
@@ -69,10 +75,10 @@
 (defmacro deftest*
   "Define test macro for using test base directory and config."
   [name & body]
-  `(deftest ~name
-     (with-test-base-dir
-       (with-config
-         ~@body))))
+    `(deftest ~name
+       (with-test-base-dir
+         (with-config
+           ~@body))))
 
 ; =bind-config
 (defmacro bind-config
@@ -90,6 +96,12 @@
   "Return java.io.File in template directory."
   [filename]
   (io/file (path (:template-dir *config*) filename)))
+
+; =post-file
+(defn post-file
+  "Return java.io.File in post directory."
+  [filename]
+  (io/file (path (:post-dir *config*) filename)))
 
 ; =public-file
 (defn public-file

@@ -14,7 +14,9 @@
                  ; cljs compiler
                  [org.clojure/clojurescript "0.0-1586"]]
 
-  :plugins [[codox "0.6.4"]]
+  :plugins [[codox "0.6.4"]
+            [lein-cloverage "1.0.2"]
+            [jonase/eastwood "0.0.2"]]
 
   ;:profiles       {:1.5 {:dependencies [[org.clojure/clojure "1.5.0-RC4"]]}}
   :aliases        {"all" ["with-profile" "dev"]}

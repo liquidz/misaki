@@ -1,8 +1,8 @@
 (ns misaki.test.config
   (:use misaki.config
         [misaki.util.file :only [normalize-path]]
-        [misaki.tester :only [set-base-dir! deftest* bind-config]]
-        [clj-time.core :only [date-time year month day]]
+        [misaki.tester    :only [set-base-dir! deftest* bind-config post-file]]
+        [clj-time.core    :only [date-time year month day]]
         clojure.test)
   (:require [clojure.java.io :as io])
   (:import [java.io FileNotFoundException]))
@@ -13,7 +13,7 @@
 (defn dummy3 ([a] ()) ([a b c] ()))
 (defn dummy4 [a & b] ())
 
-(set-base-dir! "test/")
+(set-base-dir! "test/files/config/")
 
 ; read-config
 (deftest* read-config-test
@@ -22,8 +22,8 @@
       (are [x y] (= x y)
         "public/"   (:public-dir config)
         "template/" (:template-dir config)
-        "_posts/"   (:post-dir config)
-        "_layouts/" (:layout-dir config))))
+        "posts/"    (:post-dir config)
+        "layouts/"  (:layout-dir config))))
 
   (testing "error pattern"
     (binding [*base-dir* "/foo/bar/"]
@@ -132,9 +132,9 @@
       "foo/bar.html" (make-output-filename (io/file "foo/bar.html"))))
 
   (testing "post file"
-    (is (= "2000-11/foo.html"
+    (is (= "2000-11/dummy.html"
            (make-output-filename
-             (io/file "test/template/_posts/2000.11.22-foo.html")))))
+             (post-file "2000.11.22-dummy.html")))))
 
   (testing "index file without pagenation"
     (binding [*config* (assoc *config* :posts-per-page nil
@@ -197,17 +197,17 @@
   (testing "should be added url-base"
     (with-config
       (are [x y] (= x (absolute-path y))
-        "/a.htm" "a.htm"
-        "/bar/a.htm" "bar/a.htm"
-        "/a.htm" "/a.htm"
-        "/bar/a.htm" "/bar/a.htm"
-        "http://localhost/a.htm" "http://localhost/a.htm"
+        "/a.htm"                  "a.htm"
+        "/bar/a.htm"              "bar/a.htm"
+        "/a.htm"                  "/a.htm"
+        "/bar/a.htm"              "/bar/a.htm"
+        "http://localhost/a.htm"  "http://localhost/a.htm"
         "https://localhost/a.htm" "https://localhost/a.htm")
 
       (bind-config [:url-base "/foo/"]
         (are [x y] (= x (absolute-path y))
-          "/foo/a.htm" "a.htm"
-          "/foo/a.htm" "/a.htm"
+          "/foo/a.htm"     "a.htm"
+          "/foo/a.htm"     "/a.htm"
           "/foo/bar/a.htm" "/bar/a.htm"
           "/foo/bar/a.htm" "bar/a.htm"))))
 

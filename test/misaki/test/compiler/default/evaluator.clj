@@ -1,4 +1,4 @@
-(ns misaki.test.compiler.evaluator
+(ns misaki.test.compiler.default.evaluator
   (:use [misaki.compiler.default evaluator template]
         [hiccup.core :only [html]])
   (:use [clojure.test])

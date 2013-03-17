@@ -1,4 +1,4 @@
-(ns misaki.test.compiler.reader
+(ns misaki.test.compiler.default.reader
   (:use
     misaki.compiler.default.reader
     clojure.test)

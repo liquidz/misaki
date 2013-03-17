@@ -1,12 +1,14 @@
 (ns misaki.test.tester
   (:use
-    [misaki.config    :only [*base-dir* *config*]]
+    [misaki.config    :only [*base-dir* *config* with-config]]
     [misaki.util.file :only [path]]
     misaki.tester
     clojure.test)
   (:require
     [clojure.string  :as str]
     [clojure.java.io :as io]))
+
+(def BASE_DIR "test/files/tester/")
 
 ;;; set-base-dir!
 (deftest set-base-dir!-test
@@ -29,7 +31,7 @@
 (deftest get-base-config-test
   (let [last-base-dir @_test-base-dir_]
     (testing "test dir"
-      (set-base-dir! "test")
+      (set-base-dir! BASE_DIR)
       (is (= "default title") (-> (get-base-config) :site :default-title)))
 
     (testing "sample dir"
@@ -47,13 +49,21 @@
     (is (= "hello" (:foo *config*)))))
 
 ;;; template-file
-(deftest* template-file-test
-  (is (.exists (template-file "index.html.clj")))
-  (is (.exists (template-file "_layouts/default.clj"))))
+(deftest template-file-test
+  (set-base-dir! BASE_DIR)
+  (with-test-base-dir
+    (with-config
+      (is (.exists (template-file "index.html.clj")))
+      (is (.exists (template-file "dir/index.html.clj"))))))
 
 ;;; public-file
-(deftest* public-file-test
-  (let [file (io/file (path (:public-dir *config*) "dummy"))]
-    (spit (io/writer file) "hello world")
-    (is (.exists (public-file "dummy")))
-    (.delete file)))
+(deftest public-file-test
+  (set-base-dir! BASE_DIR)
+  (with-test-base-dir
+    (with-config
+      (let [pub  (io/file (:public-dir *config*))
+            file (io/file (path (:public-dir *config*) "dummy"))]
+        (if-not (.exists pub) (.mkdir pub))
+        (spit (io/writer file) "hello world")
+        (is (.exists (public-file "dummy")))
+        (.delete file)))))

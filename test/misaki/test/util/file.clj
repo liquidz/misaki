@@ -1,4 +1,4 @@
-(ns misaki.test.file
+(ns misaki.test.util.file
   (:use [misaki.util file]
         [clj-time.core :only [date-time]]
         clojure.test)

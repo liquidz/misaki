@@ -1,13 +1,15 @@
-(ns misaki.test.compiler.html
-  (:use misaki.test.compiler.common
+(ns misaki.test.compiler.default.html.core
+  (:use misaki.test.compiler.default.common
         misaki.compiler.default.html.core
         [misaki.compiler.default.core   :only [make-site-data]]
         [misaki.compiler.default.config :only [*site*]]
         [misaki.config :only [*config*]]
-        [misaki.tester :only [bind-config]]
+        [misaki.tester :only [set-base-dir! bind-config]]
         [hiccup.core :only [html]])
   (:use [clojure.test])
   (:require [clojure.java.io :as io]))
+
+(set-base-dir! "test/files/compiler/default/html/core/")
 
 ;; heading
 (deftest* heading-test
@@ -271,15 +273,5 @@
   (testing "css with media attribute from url base"
     (are [x y] (= x (html y))
       "<link href=\"/a.css\" media=\"screen\" rel=\"stylesheet\" type=\"text/css\" />" (first (css {:media "screen"} "a.css"))
-      "<link href=\"/a.css\" media=\"screen\" rel=\"stylesheet\" type=\"text/css\" />" (first (css {:media "screen"} "/a.css"))))
-  )
+      "<link href=\"/a.css\" media=\"screen\" rel=\"stylesheet\" type=\"text/css\" />" (first (css {:media "screen"} "/a.css")))))
 
-;(deftest embed-test
-;  (are [x y] (= x y)
-;    "hello "        (embed "hello ??")
-;    "hello "        (embed "hello ??" nil)
-;    "hello world"   (embed "hello ??" "world")
-;    "hello 1"       (embed "hello ??" 1)
-;    "hello 1"       (embed "hello ??" 1 2)
-;    "hello 1 world" (embed "hello ?? ??" 1 "world")
-;    "hello aa bb"   (embed "hello ??" '("aa" "bb"))))

@@ -1,12 +1,16 @@
-(ns misaki.test.compiler.template
+(ns misaki.test.compiler.default.template
   (:use [misaki.compiler.default template config]
         [misaki.config :only [*config*]]
         [hiccup.core :only [html]]
-        misaki.test.compiler.common
+        [misaki.tester :only [set-base-dir! template-file]]
+        [misaki.util.file :only [path]]
+        misaki.test.compiler.default.common
         clojure.test)
   (:require
     [clojure.string :as str]
     [clojure.java.io :as io]))
+
+(set-base-dir! "test/files/compiler/default/template/")
 
 ;;; parse-tag-string
 (deftest parse-tag-string-test
@@ -35,7 +39,7 @@
 
   (testing "Parse template option from File"
     (let [template-dir (:template-dir *config*)
-          file         (io/file (str template-dir "index.html.clj"))
+          file         (template-file "index.html.clj")
           option       (parse-template-option file)]
       (are [x y] (= x y)
         "index"   (:title option)
@@ -75,8 +79,7 @@
 (deftest* load-template-data-test
   (letfn [(del-crln [s] (str/replace s #"[\r\n]" ""))]
     (testing "Single template"
-      (let [layout-dir     (:layout-dir *config*)
-            file           (io/file (str layout-dir "div.clj"))
+      (let [file           (io/file (path (:layout-dir *config*) "div.clj"))
             [data :as res] (load-template-data file)]
         (are [x y] (= x y)
           true (seq? res)
@@ -88,7 +91,7 @@
 
     (testing "Template with layout"
       (let [template-dir  (:template-dir *config*)
-            file (io/file (str template-dir "index.html.clj"))
+            file (template-file "index.html.clj")
             [parent child :as res] (load-template-data file)]
         (are [x y] (= x y)
           true (seq? res)
@@ -106,7 +109,7 @@
 (deftest* load-template-test
   (let [template-dir (:template-dir *config*)]
     (testing "Load single template"
-      (let [f (load-template (io/file (str template-dir "single.html.clj")))]
+      (let [f (load-template (template-file "single.html.clj") #_(io/file (str template-dir "single.html.clj")))]
         (are [x y] (= x y)
           "<h1>single</h1>"
           (html (apply-template f '("")))
@@ -115,7 +118,7 @@
           (html (apply-template f (with-meta '("") {:title "dummy"}))))))
 
     (testing "Load layouted template"
-      (let [f (load-template (io/file (str template-dir "index.html.clj")))]
+      (let [f (load-template (template-file "index.html.clj")#_(io/file (str template-dir "index.html.clj")))]
         (are [x y] (= x y)
           "<head><title>index</title></head><body><h1>index</h1><p>world</p></body>"
           (html (apply-template f '("")))
@@ -124,7 +127,7 @@
           (html (apply-template f (with-meta '("") {:title "dummy"}))))))
 
     (testing "Load layouted template with NOT allow-layout flag"
-      (let [f (load-template (io/file (str template-dir "index.html.clj")) false)]
+      (let [f (load-template (template-file "index.html.clj")#_(io/file (str template-dir "index.html.clj")) false)]
         (are [x y] (= x y)
           "<h1>index</h1><p>world</p>"
           (html (apply-template f '("")))
