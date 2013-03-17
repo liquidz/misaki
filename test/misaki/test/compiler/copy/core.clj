@@ -27,8 +27,7 @@
           to-file   (t/public-file   "foo.txt")]
       (is (t/test-compile from-file))
       (is (.exists to-file))
-      ;(.delete to-file)
-      ))
+      (.delete to-file)))
 
   (testing "bin file copy"
     (let [from-file (t/template-file "favicon.ico")
@@ -42,3 +41,4 @@
           to-file   (t/public-file   "dummy.except")]
       (is (t/test-compile from-file))
       (is (not (.exists to-file))))))
+

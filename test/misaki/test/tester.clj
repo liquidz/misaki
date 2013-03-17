@@ -11,25 +11,52 @@
 (def BASE_DIR "test/files/tester/")
 
 ;;; set-base-dir!
-(deftest set-base-dir!-test
+(deftest set-base-dir!_get-base-dir-test
   (testing "default is blank"
     (is (str/blank? *base-dir*)))
 
-  (let [last-base-dir @_test-base-dir_]
-    (set-base-dir! "foo")
-    (with-test-base-dir
-      (is (= "foo/" *base-dir*)))
+  (testing "set base-dir in single namespae"
+    (let [last-base-dir (get-base-dir)]
+      (set-base-dir! "foo")
+      (with-test-base-dir (is (= "foo/" *base-dir*)))
 
-    (set-base-dir! "foo/")
-    (with-test-base-dir
-      (is (= "foo/" *base-dir*)))
+      (set-base-dir! "foo/")
+      (with-test-base-dir (is (= "foo/" *base-dir*)))
 
-    (set-base-dir! last-base-dir)))
+      (set-base-dir! last-base-dir)))
+
+  (testing "set base-dir in several namespaces"
+    (in-ns 'testns1)
+    (set-base-dir! "testns1-dir")
+    (in-ns 'testns2)
+    (set-base-dir! "testns2-dir")
+
+    (in-ns 'testns1)
+    (is (= "testns1-dir/" (get-base-dir)))
+
+    (in-ns 'testns2)
+    (is (= "testns2-dir/" (get-base-dir)))))
+
+;(deftest set-base-dir!-test
+;  (testing "default is blank"
+;    (is (str/blank? *base-dir*)))
+;
+;  (let [k (keyword (ns-name *ns*))
+;        last-base-dir (get @_test-base-dir_ k)]
+;    (set-base-dir! "foo")
+;    (with-test-base-dir
+;      (is (= "foo/" *base-dir*)))
+;
+;    (set-base-dir! "foo/")
+;    (with-test-base-dir
+;      (is (= "foo/" *base-dir*)))
+;
+;    (set-base-dir! last-base-dir)))
 
 
 ;;; get-base-config
 (deftest get-base-config-test
-  (let [last-base-dir @_test-base-dir_]
+  (let [last-base-dir (get-base-dir)]
     (testing "test dir"
       (set-base-dir! BASE_DIR)
       (is (= "default title") (-> (get-base-config) :site :default-title)))

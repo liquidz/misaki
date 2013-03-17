@@ -2,9 +2,13 @@
   (:use misaki.compiler.default.config
         misaki.compiler.default.util.code
         misaki.test.compiler.default.common
-        clojure.test)
+        [misaki.tester :only [set-base-dir!]]
+        clojure.test
+        )
   (:require [clojure.string :as str])
   (:import [java.io StringReader]))
+
+(set-base-dir! "test/files/compiler/default/util/code/")
 
 (deftest read-until-test
   (testing "normal pattern"

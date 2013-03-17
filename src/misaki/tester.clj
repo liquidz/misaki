@@ -9,26 +9,36 @@
     [clojure.java.io  :as io]))
 
 ;; default base-dir for tester is "test/"
-(def _test-base-dir_ (atom "test/"))
+(def _test-base-dir_ (atom {}))
+
+(defn- ns-key [] (keyword (ns-name *ns*)))
 
 ; =set-base-dir!
 (defn set-base-dir!
   "Set base directory for testing.
-  Default base directory is \"test/\"."
+  Base directory is saved in each namespaces."
   [base-dir]
-  (reset! _test-base-dir_ (normalize-path base-dir)))
+  (swap! _test-base-dir_ assoc (ns-key) (normalize-path base-dir)))
+
+; =get-base-dir
+(defn get-base-dir
+  "Get base directory for testing.
+  Default base directory is \"test/\"."
+  ([] (get-base-dir "test/"))
+  ([default-dir]
+   (get @_test-base-dir_ (ns-key) default-dir)))
 
 ; =base-path
 (defn base-path
   "Combine paths based on _test_base_dir_"
   [& paths]
-  (apply path @_test-base-dir_ paths))
+  (apply path (get-base-dir) paths))
 
 ; =with-test-base-dir
 (defmacro with-test-base-dir
   "Bind test base directory to `*base-dir*`."
   [& body]
-  `(binding [*base-dir* @_test-base-dir_]
+  `(binding [*base-dir* (get-base-dir)]
      ~@body))
 
 ; =get-base-config
@@ -71,11 +81,20 @@
    (with-test-base-dir
      (call-index-compile optional-config file))))
 
+
+; =deftest-with-current-ns
+(defmacro deftest-with-current-ns
+  [name & body]
+  `(let [current-ns# *ns*]
+     (deftest ~name
+       (in-ns (ns-name current-ns#))
+       ~@body)))
+
 ; =deftest*
 (defmacro deftest*
   "Define test macro for using test base directory and config."
   [name & body]
-    `(deftest ~name
+    `(deftest-with-current-ns ~name
        (with-test-base-dir
          (with-config
            ~@body))))
