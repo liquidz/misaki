@@ -37,23 +37,6 @@
     (in-ns 'testns2)
     (is (= "testns2-dir/" (get-base-dir)))))
 
-;(deftest set-base-dir!-test
-;  (testing "default is blank"
-;    (is (str/blank? *base-dir*)))
-;
-;  (let [k (keyword (ns-name *ns*))
-;        last-base-dir (get @_test-base-dir_ k)]
-;    (set-base-dir! "foo")
-;    (with-test-base-dir
-;      (is (= "foo/" *base-dir*)))
-;
-;    (set-base-dir! "foo/")
-;    (with-test-base-dir
-;      (is (= "foo/" *base-dir*)))
-;
-;    (set-base-dir! last-base-dir)))
-
-
 ;;; get-base-config
 (deftest get-base-config-test
   (let [last-base-dir (get-base-dir)]
