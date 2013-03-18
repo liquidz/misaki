@@ -50,7 +50,6 @@
 
     (set-base-dir! last-base-dir)))
 
-
 ;;; bind-config
 (deftest bind-config-test
   (is (nil? (:foo *config*)))

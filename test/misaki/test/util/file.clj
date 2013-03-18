@@ -62,11 +62,19 @@
 
 ;; remove-last-extension
 (deftest remove-last-extension-test
-  (are [x y] (= x (remove-last-extension y))
-    "foo"     "foo.bar"
-    "foo.bar" "foo.bar.baz"
-    "foo"     "foo"
-    ""       ""))
+  (testing "string"
+    (are [x y] (= x (remove-last-extension y))
+      "foo"     "foo.bar"
+      "foo.bar" "foo.bar.baz"
+      "foo"     "foo"
+      ""       ""))
+
+  (testing "file"
+    (are [x y] (= x (remove-last-extension (io/file y)))
+      "foo"     "foo.bar"
+      "foo.bar" "foo.bar.baz"
+      "foo"     "foo"
+      ""       "")))
 
 ;; has-extension?
 (deftest has-extension?-test

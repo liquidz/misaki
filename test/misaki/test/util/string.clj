@@ -24,6 +24,12 @@
   (testing "negative numbers"
     (is (thrown? AssertionError (msec->string -100)))))
 
+;; str-contains?
+(deftest str-contains?-test
+  (are [x y] (= x y)
+    true  (str-contains? "hello" "ll")
+    false (str-contains? "hello" "oo")))
+
 ;;; str-split-last
 (deftest split-last-test
   (testing "no match"

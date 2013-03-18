@@ -252,14 +252,29 @@
 
 ;;; call-index-compile
 (deftest* call-index-compile-test
-  (bind-config [:posts-per-page 1
-                :index-template-regexp #"^pagetest"]
-    (test-index-compile
-      {:index-template-regexp (:index-template-regexp *config*)}
-      (template-file "pagetest.html.clj"))
-    (let [p1   (public-file "pagetest.html")
-          p2   (public-file "page2/pagetest.html")
-          p3   (public-file "page3/pagetest.html")]
+  (testing "call with default config"
+    (bind-config [:posts-per-page 1]
+      (test-index-compile (template-file "index.html.clj")))
+    (let [p1 (public-file "index.html")
+          p2 (public-file "page2/index.html")
+          p3 (public-file "page3/index.html")]
+      (is (.exists p1))
+      (is (.exists p2))
+      (is (.exists p3))
+      (.delete p1)
+      (.delete p2)
+      (.delete p3)
+      (.delete (public-file "page2"))
+      (.delete (public-file "page3"))))
+  (testing "call with optional-config"
+    (bind-config [:posts-per-page 1
+                  :index-template-regexp #"^pagetest"]
+      (test-index-compile
+        {:index-template-regexp (:index-template-regexp *config*)}
+        (template-file "pagetest.html.clj")))
+    (let [p1 (public-file "pagetest.html")
+          p2 (public-file "page2/pagetest.html")
+          p3 (public-file "page3/pagetest.html")]
       (is (.exists p1))
       (is (.exists p2))
       (is (.exists p3))

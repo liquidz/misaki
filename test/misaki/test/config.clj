@@ -42,6 +42,13 @@
         true      (every? #(contains? c %) '(-extension -config -compile))
         "default" (:name c))))
 
+  ;(testing "wrong named compiler(read dummy_default)"
+  ;  (binding [*compiler-namespace-format* "misaki.test.compiler.dummy_{{name}}"]
+  ;    (let [c (load-compiler-publics "different")]
+  ;      (are [x y] (= x y)
+  ;        true      (every? #(contains? c %) '(-extension -config -compile))
+  ;        "default" (:name c)))))
+
   (testing "unknown compiler(read default)"
     (let [c (load-compiler-publics "foo")]
       (are [x y] (= x y)
@@ -81,6 +88,39 @@
 ;;; remove-date-from-name
 (deftest* remove-date-from-name-test
   (is (= "dummy.clj" (remove-date-from-name "2000.11.22-dummy.clj"))))
+
+;;; sort-type->sort-fn
+(deftest* sort-type->sort-fn-test
+  (let [[c b a :as sample-posts] (list (io/file "2011.01.01-ccc.html.clj")
+                                       (io/file "2022.02.02-bbb.html.clj")
+                                       (io/file "2033.03.03-aaa.html.clj"))]
+    (testing "sort by date"
+      (bind-config [:post-sort-type :date]
+        (let [[c* b* a*] ((sort-type->sort-fn) sample-posts)]
+          (is (= c c*)) (is (= b b*)) (is (= a a*)))))
+
+    (testing "sort by date-desc"
+      (bind-config [:post-sort-type :date-desc]
+        (let [[a* b* c*] ((sort-type->sort-fn) sample-posts)]
+          (is (= c c*)) (is (= b b*)) (is (= a a*)))))
+
+    (testing "sort by unknown type => sort by date"
+      (bind-config [:post-sort-type :unknown]
+        (let [[c* b* a*] ((sort-type->sort-fn) sample-posts)]
+          (is (= c c*)) (is (= b b*)) (is (= a a*))))))
+
+  (let [[c b a :as sample-posts] (list (io/file "ccc.html.clj")
+                                       (io/file "bbb.html.clj")
+                                       (io/file "aaa.html.clj"))]
+    (testing "sort by name"
+      (bind-config [:post-sort-type :name]
+        (let [[a* b* c*] ((sort-type->sort-fn) sample-posts)]
+          (is (= c c*)) (is (= b b*)) (is (= a a*)))))
+
+    (testing "sort by name-desc"
+      (bind-config [:post-sort-type :name-desc]
+        (let [[c* b* a*] ((sort-type->sort-fn) sample-posts)]
+          (is (= c c*)) (is (= b b*)) (is (= a a*)))))))
 
 ;;; make-post-output-filename
 (deftest* make-post-output-filename-test

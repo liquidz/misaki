@@ -53,6 +53,10 @@
   "Flag for printing stack trace."
   true)
 
+(def ^:dynamic *compiler-namespace-format*
+  "Namespace format for misaki compiler."
+  "misaki.compiler.{{name}}.core")
+
 ;; ## Config Data Wrapper
 
 ; =read-config
@@ -74,7 +78,7 @@
   {:pre [(or (string? name) (sequential? name))]}
   (if (sequential? name)
     (map load-compiler-publics name)
-    (let [sym (symbol (str "misaki.compiler." name ".core"))]
+    (let [sym (symbol (render *compiler-namespace-format* {:name name}))]
       (try
         (require sym)
         (if-let [target-ns (find-ns sym)]
@@ -176,7 +180,8 @@
     :name       (partial sort-alphabetically #(.getName %))
     :date-desc  (partial sort-by-date :desc get-date-from-file)
     :name-desc  (partial sort-alphabetically :desc #(.getName %))
-    sort-by-date))
+    ; default
+    (partial sort-by-date :inc get-date-from-file)))
 
 ;; ## Filename Generator
 
