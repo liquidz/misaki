@@ -214,7 +214,7 @@
 
 ; =index-compile*
 (defn index-compile*
-  ""
+  "Common function to compile index file(java.io.File) with config."
   ([file] (index-compile* {} file))
   ([optional-config file]
    (if-let [ppp (:posts-per-page *config*)]

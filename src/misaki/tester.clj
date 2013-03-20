@@ -99,6 +99,17 @@
          (with-config
            ~@body))))
 
+; =defcompilertest
+(defmacro defcompilertest
+  "Define test macro for using compiler."
+  [name & body]
+  `(deftest*
+     ~name
+     (with-test-base-dir
+       (let [config# (get-config :merge? true)]
+         (binding [*config* config#]
+           ~@body)))))
+
 ; =bind-config
 (defmacro bind-config
   "Binding config value.

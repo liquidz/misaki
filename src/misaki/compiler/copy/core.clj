@@ -19,7 +19,7 @@
   [config]
   (merge
     {:except-extensions []
-    :detailed-log false}
+     :detailed-log      false}
     config))
 
 (defn -compile

@@ -4,8 +4,8 @@
     [misaki [config :refer [*config-file* *config*]]
             [tester :as t]]
     [misaki.util.file :refer [path]]
-    [clojure.test    :refer :all]
-    [clojure.java.io :as io]))
+    [clojure.test     :refer :all]
+    [clojure.java.io  :as io]))
 
 (t/set-base-dir! "test/files/compiler/copy/core/")
 
@@ -17,6 +17,17 @@
          (binding [*config* config#]
            ~@body)))))
 
+;; -config
+(deftest* copy-config-test
+  (let [config (t/get-config)]
+    (are [x y] (= x y)
+      true (contains? config :except-extensions)
+      true (contains? config :detailed-log)
+
+       [:except] (:except-extensions config)
+       false     (:detailed-log config))))
+
+;; -compile
 (deftest* copy-test
   (let [pub (-> *config* :public-dir io/file)]
     (if-not (.exists pub) (.mkdir pub)))
