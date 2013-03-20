@@ -176,7 +176,7 @@
   (let [filename "bar.txt"]
     (testing "string result"
       (is (process-compile-result "foo" filename))
-      (let [f (io/file (add-public-dir filename))]
+      (let [f (io/file (public-path filename))]
         (is (.exists f))
         (is (= "foo" (slurp f)))
         (.delete f)))
@@ -195,14 +195,14 @@
 
       (is (process-compile-result
             {:status true :filename "a.txt" :body "foo"} ""))
-      (let [f (io/file (add-public-dir "a.txt"))]
+      (let [f (io/file (public-path "a.txt"))]
         (is (.exists f))
         (is (= "foo" (slurp f)))
         (.delete f))
 
       (is (not (process-compile-result
                  {:status false :body "bar"} "b.txt")))
-      (let [f (io/file (add-public-dir "b.txt"))]
+      (let [f (io/file (public-path "b.txt"))]
         (is (.exists f))
         (is (= "bar" (slurp f)))
         (.delete f)))))

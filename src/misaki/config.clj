@@ -279,9 +279,9 @@
       path-str
       (path url-base path-str))))
 
-; =add-public-dir
-(defn add-public-dir
-  "Add public dir to specified path."
+; =public-path
+(defn public-path
+  "Return public path from specified filename."
   [filename]
   {:pre (string? filename)}
   (path (:public-dir *config*) filename))

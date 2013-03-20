@@ -127,7 +127,7 @@
     ; output with default filename
     (string? result)
     (if default-filename
-      (do (write-file (add-public-dir default-filename) result)
+      (do (write-file (public-path default-filename) result)
           true)
       false)
 
@@ -141,7 +141,7 @@
            :or   {status false
                   filename default-filename}} result]
       (if (and filename body)
-        (do (write-file (add-public-dir filename) body)
+        (do (write-file (public-path filename) body)
             status)
         status))
 
