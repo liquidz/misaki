@@ -2,7 +2,7 @@
   "Compiler Testing Utilities"
   (:require
     [misaki.core      :refer [update-config call-compile call-index-compile]]
-    [misaki.config    :refer [*base-dir* *config* make-basic-config-map with-config]]
+    [misaki.config    :refer [*base-dir* *config* make-basic-config-map with-config public-path]]
     [misaki.util.file :refer [normalize-path path]]
     [clojure.test     :refer [deftest]]
     [clojure.string   :as str]
@@ -134,7 +134,6 @@
   (io/file (path (:post-dir *config*) filename)))
 
 ; =public-file
-(defn public-file
+(def public-file
   "Return java.io.File in pulbic directory."
-  [filename]
-  (io/file (path (:public-dir *config*) filename)))
+  (comp io/file public-path))
