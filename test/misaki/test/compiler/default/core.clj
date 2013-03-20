@@ -462,17 +462,6 @@
          (-> "html.test.html.clj" template-name->file file->template-sexp html))))
 
 ;; SERVER
-(deftest* compile-cljs-test
-  (let [{:keys [template-dir public-dir]} *config*]
-    (do-compile (io/file (str template-dir "cljs/hello.cljs")))
-    (let [js-file   (io/file (str public-dir "js/main.js"))
-          core-file (io/file (str public-dir "js/cljs"))]
-      (is (.exists js-file))
-      (is (.exists core-file))
-      (.delete js-file)
-      (.delete core-file)
-      (.. js-file getParentFile delete))))
-
 (deftest* server-test
   (testing "compile with post"
     (let [{:keys [post-dir public-dir tag-out-dir]} *config*]
