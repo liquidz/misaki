@@ -1,11 +1,10 @@
 (ns misaki.test.compiler.default.html.conv
   (:require
-    [misaki.test.compiler.default.common :refer :all]
     [misaki.compiler.default.html.conv   :refer :all]
     [misaki.compiler.default [core       :refer [make-site-data]]
                              [config     :refer [*site*]]]
     [misaki [config  :refer [*config*]]
-            [tester  :refer [set-base-dir!]]]
+            [tester  :refer [set-base-dir! defcompilertest]]]
     [clj-time.core   :refer [date-time]]
     [clojure.test    :refer :all]
     [clojure.java.io :as io]))
@@ -13,7 +12,7 @@
 (set-base-dir! "test/files/compiler/default/html/conv/")
 
 ; =post-title->url
-(deftest* post-title->url-test
+(defcompilertest post-title->url-test
   (binding [*site* (make-site-data (io/file (:tag-layout *config*)))]
     (testing "should match correct title"
       (are [x y] (= x y)

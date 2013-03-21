@@ -1,13 +1,12 @@
 (ns misaki.test.compiler.default.core
   (:require
-    [misaki.test.compiler.default.common :refer :all]
     [misaki.compiler.default [core       :refer :all]
                              [template   :refer :all]
                              [config     :refer :all]]
     [misaki.util [sequence :refer :all]
                  [file     :refer :all]]
     [misaki [config  :refer [*config* *page-index* template-name->file]]
-            [tester  :refer [set-base-dir! bind-config test-compile template-file public-file post-file]]
+            [tester  :refer [set-base-dir! bind-config test-compile template-file public-file post-file defcompilertest]]
             [server  :refer :all]
             [core    :as msk]]
     [hiccup.core     :refer [html]]
@@ -18,7 +17,7 @@
 (set-base-dir! "test/files/compiler/default/core/")
 
 ;;; -compile
-(deftest* -compile-test
+(defcompilertest -compile-test
   (testing "normal template should be compiled"
     (let [in  (template-file "index.html.clj")
           out (public-file "index.html")]
@@ -79,7 +78,7 @@
       (doseq [f [post1 post2]] (.delete f)))))
 
 ;;; generate-post-content
-(deftest* generate-post-content-test
+(defcompilertest generate-post-content-test
   (let [post-dir (:post-dir *config*)
         file1    (io/file (str post-dir "2000.01.01-foo.html.clj"))
         file2    (io/file (str post-dir "2011.01.01-foo.html.clj"))]
@@ -88,7 +87,7 @@
       "<p>foo</p>" (generate-post-content file2))))
 
 ;;; get-post-info
-(deftest* get-post-info-test
+(defcompilertest get-post-info-test
   (let [post-dir (:post-dir *config*)
         file     (io/file (str post-dir "2000.01.01-foo.html.clj"))
         data     (get-post-info file)]
@@ -101,7 +100,7 @@
       "&lt;p&gt;baz&lt;/p&gt;" (force (:lazy-content data)))))
 
 ;;; post-inf-contains-tag?
-(deftest* post-contains-tag?-test
+(defcompilertest post-contains-tag?-test
   (let [post-dir (:post-dir *config*)
         file     (io/file (str post-dir "2011.01.01-foo.html.clj"))
         data     (get-post-info file)]
@@ -112,7 +111,7 @@
     (is (thrown? AssertionError (post-info-contains-tag? data nil)))))
 
 ;;; get-posts
-(deftest* get-posts-test
+(defcompilertest get-posts-test
   (testing "Get all posts"
     (let [posts (sort-by-date (get-posts))]
       (are [x y] (= x y)
@@ -170,7 +169,7 @@
         nil (:next c)))))
 
 ;;; get-all-tags
-(deftest* get-all-tags-test
+(defcompilertest get-all-tags-test
   (testing "normal pattern"
     (let [[t1 t2 _ t3 :as tags] (sort-alphabetically :name (get-all-tags))]
       (are [x y] (= x y)
@@ -186,7 +185,7 @@
       (is (empty? (get-all-tags))))))
 
 ;;; get-tags
-(deftest* get-tags-test
+(defcompilertest get-tags-test
   (let [[t1 t2 t3 :as tags] (get-tags)]
     (are [x y] (= x y)
       3      (count tags)
@@ -216,7 +215,7 @@
         3 (count (get-tags :count-by-name? true))))))
 
 ;;; make-site-data
-(deftest* make-site-data-test
+(defcompilertest make-site-data-test
   (let [post-dir (:post-dir *config*)
         file1    (io/file (str post-dir "2000.01.01-foo.html.clj"))
         file2    (io/file (str post-dir "2011.01.01-foo.html.clj"))
@@ -392,7 +391,7 @@
               "bar" (:title p1))))))))
 
 ;;; file->template-sexp
-(deftest* file->template-sexp-test
+(defcompilertest file->template-sexp-test
   (let [post-dir (:post-dir *config*)
         file1    (template-name->file "index.html.clj")
         file2    (io/file (str post-dir "2011.01.01-foo.html.clj"))
@@ -407,7 +406,7 @@
       (html (file->template-sexp file2)))))
 
 ;;; generate-tag-template-sexp
-(deftest* generate-tag-sexp-test
+(defcompilertest generate-tag-sexp-test
   (let [[t1 t2 t3] (get-tags)]
     (are [x y] (= x y)
       ; tag1
@@ -424,7 +423,7 @@
       (html (generate-tag-template-sexp "tagX")))))
 
 ;;; compile-tag-test
-(deftest* compile-tag-test
+(defcompilertest compile-tag-test
   (let [{:keys [public-dir tag-out-dir]} *config*
         tag-name "tag1"
         res      (compile-tag tag-name)
@@ -434,7 +433,7 @@
     (.delete file)))
 
 ;;; compile-template
-(deftest* compile-template-test
+(defcompilertest compile-template-test
   (let [{:keys [public-dir template-dir]} *config*
         tmpl (io/file (str template-dir "index.html.clj"))
         res  (compile-template tmpl)
@@ -444,12 +443,12 @@
     (.delete file)))
 
 ;;; default site data
-(deftest* default-site-data-test
+(defcompilertest default-site-data-test
   (let [file (template-name->file "site.html.clj")]
     (is (= "<p>default title</p>" (html (file->template-sexp file))))))
 
 ;;; format check
-(deftest* template-format-test
+(defcompilertest template-format-test
   (are [x y] (= x (:format (meta (file->template-sexp (template-name->file y)))))
     "html5" "no_format.html.clj"
     "xhtml" "with_format.html.clj"
@@ -457,12 +456,12 @@
 
 
 ;;; functions in template test
-(deftest* html-function-template-test
+(defcompilertest html-function-template-test
   (is (= "<p class=\"paragraph\"><a href=\"./link.html\">link</a></p>"
          (-> "html.test.html.clj" template-name->file file->template-sexp html))))
 
 ;; SERVER
-(deftest* server-test
+(defcompilertest server-test
   (testing "compile with post"
     (let [{:keys [post-dir public-dir tag-out-dir]} *config*]
       (do-compile (io/file (path post-dir "2011.01.01-foo.html.clj")))

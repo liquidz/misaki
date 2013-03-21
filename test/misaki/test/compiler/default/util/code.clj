@@ -1,9 +1,8 @@
 (ns misaki.test.compiler.default.util.code
   (:require
-    [misaki.test.compiler.default.common :refer :all]
     [misaki.compiler.default.config      :refer :all]
     [misaki.compiler.default.util.code   :refer :all]
-    [misaki.tester                       :refer [set-base-dir!]]
+    [misaki.tester                       :refer [set-base-dir! defcompilertest]]
     [clojure [test   :refer :all]
              [string :as str]])
   (:import [java.io StringReader]))
@@ -26,7 +25,7 @@
       "helloEOT\nE OT")))
 
 
-(deftest* here-text-test
+(defcompilertest here-text-test
   ; y = [:pre {:class "prettyprint"} "body"]
   (are [x y] (= x (nth y 2))
     "hello"

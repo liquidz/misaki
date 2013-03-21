@@ -1,11 +1,10 @@
 (ns misaki.test.compiler.default.html.core
   (:require
-    [misaki.test.compiler.default.common :refer :all]
     [misaki.compiler.default.html.core   :refer :all]
     [misaki.compiler.default [core       :refer [make-site-data]]
                              [config     :refer [*site*]]]
     [misaki [config  :refer [*config*]]
-            [tester  :refer [set-base-dir! bind-config]]]
+            [tester  :refer [set-base-dir! bind-config defcompilertest]]]
     [hiccup.core     :refer [html]]
     [clojure.test    :refer :all]
     [clojure.java.io :as io]))
@@ -13,7 +12,7 @@
 (set-base-dir! "test/files/compiler/default/html/core/")
 
 ;; heading
-(deftest* heading-test
+(defcompilertest heading-test
   (letfn [(remove-id [[tag attr & text]] [tag (dissoc attr :id) (drop-last text) (last text)])]
     (testing "no attributes"
       (are [x y] (= x (html (vec (drop-last (remove-id y)))))
@@ -68,7 +67,7 @@
       (ul inc {:class "foo"} [1 2]))))
 
 ;; img
-(deftest* img-test
+(defcompilertest img-test
   (bind-config [:url-base "/"]
     (testing "without attribute"
       (is (= "<img alt=\"\" src=\"./a.png\" />" (html (img "./a.png"))))
@@ -88,7 +87,7 @@
           "<img alt=\"neko\" src=\"/foo/a.png\" />" (img "neko" "/foo/a.png"))))))
 
 ;; link
-(deftest* link-test
+(defcompilertest link-test
   (testing "without attribute"
     (are [x y] (= x (html y))
       "<a href=\"./a.html\">./a.html</a>" (link "./a.html")
@@ -175,7 +174,7 @@
       "<code class=\"prettyprint foo\">(+ 1 2)</code>"
         (html (code {:class "foo"} (+ 1 2))))))
 
-(deftest* paragraph-test
+(defcompilertest paragraph-test
   (binding [*site* (make-site-data (io/file (:tag-layout *config*)))]
     (testing "normal paragraph"
       (are [x y] (= x (html y))
@@ -228,7 +227,7 @@
         "<p class=\"paragraph\">foo<p class=\"paragraph\">bar</p></p>" (p "foo" (p "bar"))
         "<p class=\"paragraph baz\">foo<p class=\"paragraph\">bar</p></p>" (p {:class "baz"} "foo" (p "bar"))))))
 
-(deftest* js-test
+(defcompilertest js-test
   (testing "basic pattern"
     (are [x y] (= x (html (first y)))
       "<script src=\"./a.js\" type=\"text/javascript\"></script>" (js "./a.js")
@@ -248,7 +247,7 @@
         "<script src=\"/foo/bar/a.js\" type=\"text/javascript\"></script>" (js "/bar/a.js")
         "<script src=\"http://localhost/a.js\" type=\"text/javascript\"></script>" (js "http://localhost/a.js")))))
 
-(deftest* css-test
+(defcompilertest css-test
   (testing "basic pattern"
     (are [x y] (= x (html y))
       "<link href=\"./a.css\" rel=\"stylesheet\" type=\"text/css\" />" (first (css "./a.css"))

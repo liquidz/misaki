@@ -1,10 +1,9 @@
 (ns misaki.test.compiler.default.template
   (:require
-    [misaki.test.compiler.default.common :refer :all]
     [misaki.compiler.default [template   :refer :all]
                              [config     :refer :all]]
     [misaki [config   :refer [*config*]]
-            [tester   :refer [set-base-dir! template-file]]]
+            [tester   :refer [set-base-dir! template-file defcompilertest]]]
     [misaki.util.file :refer [path]]
     [hiccup.core      :refer [html]]
     [clojure [test    :refer :all]
@@ -24,7 +23,7 @@
     '("a" "b") (map :name (parse-tag-string "a  b"))))
 
 ;;; parse-template-option
-(deftest* parse-template-option-test
+(defcompilertest parse-template-option-test
   (testing "Parse template option from String"
     (let [datas [";@layout hello\n;@title wor ld\n@dummy:xxx"
                  "; @layout hello\n;@title wor ld\n@dummy:xxx"
@@ -77,7 +76,7 @@
       "b"      (:b (meta res)))))
 
 ;;; load-template-data
-(deftest* load-template-data-test
+(defcompilertest load-template-data-test
   (letfn [(del-crln [s] (str/replace s #"[\r\n]" ""))]
     (testing "Single template"
       (let [file           (io/file (path (:layout-dir *config*) "div.clj"))
@@ -107,7 +106,7 @@
           "index" (-> child second :title))))))
 
 ;;; load-template
-(deftest* load-template-test
+(defcompilertest load-template-test
   (let [template-dir (:template-dir *config*)]
     (testing "Load single template"
       (let [f (load-template (template-file "single.html.clj") #_(io/file (str template-dir "single.html.clj")))]

@@ -1,9 +1,8 @@
 (ns misaki.test.compiler.default.config
   (:require
-    [misaki.test.compiler.default.common :refer :all]
     [misaki.compiler.default.config :refer :all]
     [misaki [config :refer [*config*]]
-            [tester :refer [set-base-dir! bind-config]]]
+            [tester :refer [set-base-dir! bind-config defcompilertest]]]
     [misaki.util [file     :refer :all]
                  [sequence :refer :all]]
     [clj-time.core   :refer [date-time year month day]]
@@ -20,7 +19,7 @@
     {:file (io/file "a") :title "b" :date (date-time 2011 1 1)}))
 
 ;;; layout-file?
-(deftest* layout-file?-test
+(defcompilertest layout-file?-test
   (testing "normal pattern"
     (are [x y] (= x (layout-file? (io/file y)))
       true  (path (:layout-dir *config*) "default.clj")
@@ -31,7 +30,7 @@
     (is (thrown? AssertionError (layout-file? nil)))))
 
 ; FIXME
-(deftest* sort-type->sort-fn-test
+(defcompilertest sort-type->sort-fn-test
   (testing "title sort"
     (bind-config [:post-sort-type :title]
       (let [[p1 p2 p3] ((sort-type->sort-fn) sample-posts)]
@@ -78,7 +77,7 @@
           "b" p3)))))
 
 ;;; make-template-output-filename
-(deftest* make-template-output-filename-test
+(defcompilertest make-template-output-filename-test
   (testing "simple template"
     (let [tmpl-name "template.test.html.clj"
           file (io/file (path (:template-dir *config*) tmpl-name))
