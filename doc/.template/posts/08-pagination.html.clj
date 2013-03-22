@@ -24,15 +24,15 @@
 CLJ
 
 (h2 "Pagination links")
-(p "If pagination is enabled, `site` variable contains `:next-url` and `:prev-url`.")
+(p "If pagination is enabled, `site` variable contains `:next-page` and `:prev-page`.")
 
 ##CLJ
 ; link to next page
-(if-let [url (:next-url site)]
+(if-let [url (:next-page site)]
   (link "next page" url))
 
 ; link to previous page
-(if-let [url (:prev-url site)]
+(if-let [url (:prev-page site)]
   (link "prev page" urj))
 CLJ
 
