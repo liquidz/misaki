@@ -30,7 +30,7 @@ root/
 (h3 "root/")
 (p "All public static files such as JavaScripts and StyleSheets are here. Compiled tempates are also putted here.")
 
-(h3 "tempalte/")
+(h3 "template/")
 (p "Template root directory.")
 
 (h3 "template/posts/")
