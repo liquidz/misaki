@@ -28,7 +28,7 @@ root/
 
 
 (h3 "root/")
-(p "All public static files such as JavaScripts and StyleSheets are here. Compiled tempates are also putted here.")
+(p "All public static files such as JavaScripts and StyleSheets are here. Compiled templates are also put here.")
 
 (h3 "template/")
 (p "Template root directory.")
