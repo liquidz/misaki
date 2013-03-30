@@ -1,4 +1,4 @@
-![misaki logo](https://github.com/liquidz/misaki/raw/master/samples/blog/public/img/logo.png)
+![misaki logo](https://github.com/liquidz/misaki/raw/master/samples/blog/public/img/logo.svg)
 
 [![Build Status](https://secure.travis-ci.org/liquidz/misaki.png?branch=master)](http://travis-ci.org/liquidz/misaki)
 

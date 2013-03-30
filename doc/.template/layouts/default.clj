@@ -33,7 +33,7 @@
    [:footer {:class "footer"}
     [:p (link (str "@" (:twitter site)) (str "http://twitter.com/" (:twitter site)))
      "&nbsp; 2013"]
-    [:p (link (img "misaki banner" "/img/misaki_banner.png") "https://github.com/liquidz/misaki")]])
+    [:p (link (img "misaki banner" "/img/misaki_banner.svg") "https://github.com/liquidz/misaki")]])
  ; /container
 
  (js ["/js/prettify.js"

@@ -1,8 +1,8 @@
 (ns misaki.test.compiler.default.core
   (:require
-    [misaki.compiler.default [core       :refer :all]
-                             [template   :refer :all]
-                             [config     :refer :all]]
+    [misaki.compiler.default [core     :refer :all]
+                             [template :refer :all]
+                             [config   :refer :all]]
     [misaki.util [sequence :refer :all]
                  [file     :refer :all]]
     [misaki [config  :refer [*config* *page-index* template-name->file]]
