@@ -22,7 +22,8 @@
  :lang "en"
 
  ;; default site data
- :site {:charset    "utf-8"
+ :site {:atom-base  "http://localhost:8080" ; please change "localhost:8080" to your blog domain
+        :charset    "utf-8"
         :site-title "misaki demo page"
         :twitter    "uochan"
         :css        ["http://fonts.googleapis.com/css?family=Josefin+Sans"
