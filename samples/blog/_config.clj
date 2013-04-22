@@ -55,7 +55,7 @@
  :posts-per-page 2
 
  ;; filename format to generate index file with pagination
- ;;   default value: "page{{page}}/{{filename}}"
+ ;;   default value: "page$(page)/$(filename)"
  :page-filename-format "page$(page)/$(filename)"
 
  ;; clojurescript compile options
@@ -79,16 +79,16 @@
 
  ;; notify setting(OPTIONAL)
  :notify-setting {;; title for fixing notification
-                  ;;  default value: "{{filename}}"
+                  ;;  default value: "$(filename)"
                   :fixed-title  "$(filename)"
                   ;; message for fixing notication
                   ;;   default value: "FIXED"
                   :fixed        "FIXED"
                   ;; title for failing notification
-                  ;;   default value: "{{filename}} : {{line}}"
+                  ;;   default value: "$(filename) : $(line)"
                   :failed-title "$(filename) : $(line)"
                   ;; message for failing notification
-                  ;;   default value: {{message}}
+                  ;;   default value: $(message)
                   :failed       "$(message)"}
 
  ;; compiler setting

@@ -20,18 +20,18 @@
   #"(\d{4})[-_](\d{1,2})[-_](\d{1,2})[-_](.+)$")
 (def POST_OUTPUT_NAME_FORMAT
   "Default format to generage post output filename."
-  "{{year}}/{{month}}/{{filename}}")
+  "$(year)/$(month)/$(filename)")
 (def INDEX_TEMPLATE_REGEXP
   "Default regexp to detect index template file."
   #"^index\.")
 (def PAGE_FILENAME_FORMAT
   "Default format to generate page output filename."
-  "page{{page}}/{{filename}}")
+  "page$(page)/$(filename)")
 (def NOTIFY_SETTING
-  {:fixed-title  "{{filename}}"
+  {:fixed-title  "$(filename)"
    :fixed        "FIXED"
-   :failed-title "{{filename}} : {{line}}"
-   :failed       "{{message}}"})
+   :failed-title "$(filename) : $(line)"
+   :failed       "$(message)"})
 
 ;; ## Declarations
 
