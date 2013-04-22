@@ -10,6 +10,7 @@
                  [clj-pretty-error "0.0.6"]
                  [uochan/watchtower "0.1.4"]
                  [de.ubercode.clostache/clostache "1.3.1"]
+                 [cuma "0.0.4"]
                  [clj-gntp "0.0.1"]
                  ; cljs compiler
                  [org.clojure/clojurescript "0.0-1586"]]

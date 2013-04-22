@@ -1,6 +1,9 @@
 (ns misaki.util.string
   "String utility"
-  (:require [clojure.string :as str]))
+  (:require
+    [clojure.string   :as str]
+    [clostache.parser :as clostache]
+    [cuma.core        :as cuma]))
 
 ; =escape-string
 (defn escape-string
@@ -36,3 +39,11 @@
        ls
        [(str/join sep (drop-last ls))
         (last ls)]))))
+
+; =render
+(defn render
+  "Render string with clostache or cuma."
+  [s data]
+  (if (not= -1 (.indexOf s "{{"))
+    (clostache/render s data)
+    (cuma/render      s data)))

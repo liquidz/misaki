@@ -6,7 +6,6 @@
                  [sequence :refer :all]]
     [misaki.config    :refer [*config*] :as cnf]
     [clj-time.core    :refer [date-time year month day]]
-    [clostache.parser :refer [render]]
     [clojure.string   :as str]
     [clojure.java.io  :as io])
   (:import [java.io File FileNotFoundException]))

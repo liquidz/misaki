@@ -2,9 +2,9 @@
   "Notification Manager"
   (:require
     [misaki.config      :refer [*config*]]
+    [misaki.util.string :refer [render]]
     [clj-gntp.core      :refer [growl-notify]]
-    [clojure.java.shell :refer [sh]]
-    [clostache.parser   :refer [render]]))
+    [clojure.java.shell :refer [sh]]))
 
 (def ^:private last-result (atom {}))
 (def ^:private linux? (= "Linux" (System/getProperty "os.name")))

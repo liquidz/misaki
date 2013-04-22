@@ -8,7 +8,7 @@
 ##CLJ
 :index-template-regexp #"^index\.html\.clj$"
 :posts-per-page 2
-:page-filename-format "page{{page}}/{{filename}}"
+:page-filename-format "page$(page)/$(filename)"
 CLJ
 
 

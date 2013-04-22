@@ -6,7 +6,6 @@
                  [sequence :refer :all]]
     [clj-time.core         :refer [date-time year month day]]
     [text-decoration.core  :refer [cyan red bold]]
-    [clostache.parser      :refer [render]]
     [clojure.string        :as str]
     [clojure.java.io       :as io])
   (:import [java.io File FileNotFoundException]))
