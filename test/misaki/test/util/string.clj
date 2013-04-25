@@ -51,5 +51,13 @@
       ["1.2" "3"]       (str-split-last "1a2b3"       #"[a-z]" "."))))
 
 
+;;; render
+(deftest render-test
+  (are [x y] (= x y)
+    "foo"    (render "foo"        {})
+    "foo"    (render "{{x}}"      {:x "foo"})
+    "foo"    (render "$(x)"       {:x "foo"})
+    "{{x}}y" (render "{{x}}$(y)"  {:x "x" :y "y"})
+    "x{{y}}" (render "$(x){{y}}"  {:x "x" :y "y"})))
 
 

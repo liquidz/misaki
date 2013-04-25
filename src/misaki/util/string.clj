@@ -44,6 +44,6 @@
 (defn render
   "Render string with clostache or cuma."
   [s data]
-  (if (not= -1 (.indexOf s "{{"))
-    (clostache/render s data)
-    (cuma/render      s data)))
+  (if (not= -1 (.indexOf s "$("))
+    (cuma/render      s data)
+    (clostache/render s data)))
