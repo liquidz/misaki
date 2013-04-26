@@ -233,7 +233,7 @@
   [#^String output-filename template-sexp]
   {:pre [(string? output-filename) (sequential? template-sexp)]}
   (let [compile-fn (-> template-sexp meta :format get-compile-fn)]
-    (write-file (str (:public-dir *config*) output-filename)
+    (write-file (path (:public-dir *config*) output-filename)
                 (compile-fn template-sexp))
     true))
 
