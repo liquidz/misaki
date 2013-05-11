@@ -95,7 +95,7 @@ TEXT
  ;; post setting
  ;;   default value: #"(\d{4})[-_](\d{1,2})[-_](\d{1,2})[-_](.+)$"
  :post-filename-regexp #"(\d{4})[-_](\d{1,2})[-_](\d{1,2})[-_](.+)$"
- :post-filename-format "{{year}}-{{month}}/{{filename}}"
+ :post-filename-format "$(year)-$(month)/$(filename)"
 
  ;; post sort type (:date :name :title :date-desc :name-desc :title-desc)
  ;;   default value: :date-desc
@@ -122,17 +122,17 @@ TEXT
 
  ;; notify setting(OPTIONAL)
  :notify-setting {;; title for fixing notification
-                  ;;  default value: "{{filename}}"
-                  :fixed-title  "{{filename}}"
+                  ;;  default value: "$(filename)"
+                  :fixed-title  "$(filename)"
                   ;; message for fixing notication
                   ;;   default value: "FIXED"
                   :fixed        "FIXED"
                   ;; title for failing notification
-                  ;;   default value: "{{filename}} : {{line}}"
-                  :failed-title "{{filename}} : {{line}}"
+                  ;;   default value: "$(filename) : $(line)"
+                  :failed-title "$(filename) : $(line)"
                   ;; message for failing notification
-                  ;;   default value: {{message}}
-                  :failed       "{{message}}"}
+                  ;;   default value: $(message)
+                  :failed       "$(message)"}
 
  ;; compiler setting
  ;;   default value: "default"

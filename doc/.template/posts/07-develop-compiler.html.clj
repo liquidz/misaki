@@ -147,17 +147,17 @@ CLJ)})
 ;   (deftest foo-test
 ;     (binding [*base-dir* "test"
 ;               *config* (get-config)]
-;       (is (= "hello") (:template-dir *config*))))
+;       (is (= "hello" (:template-dir *config*)))))
 (deftest* -config-test
   ; get compiler's config which is customized by `-config`
-  (is (= "hello {{name}}" (:message (get-config)))))
+  (is (= "hello" (:message (get-config)))))
 
 (deftest* -compile-test
   (let [in  (template-file "foo.txt")
         out (public-file "foo.txt")]
     ; call `-compile` to test your compling
     (is (test-compile in))
-    (is (= "hello {{name}} world" (str/trim (slurp out))))
+    (is (= "hello world" (str/trim (slurp out))))
 
     (.delete out)))
 CLJ
