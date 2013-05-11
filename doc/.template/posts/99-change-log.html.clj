@@ -31,3 +31,9 @@
      "Fix misaki.util.notify to only support GNTP. [#29](https://github.com/liquidz/misaki/issues/29)"
      "Add pagination method. [#31](https://github.com/liquidz/misaki/issues/31)"
      "Fixed some other bugs."])
+
+(h2 "0.2.6.2 beta")
+(p "2013-05-11")
+(ul ["Fix `set-base-dir!` problem. [#32](https://github.com/liquidz/misaki/issues/33)"
+     "Update atom.xml to use base directory in _config.clj. [#36](https://github.com/liquidz/misaki/issues/36)"
+     "Update to use [cuma](https://github.com/liquidz/cuma) as a template engine instead of [clostache](https://github.com/fhd/clostache)."])
