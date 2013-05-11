@@ -2,10 +2,10 @@
   :description "Jekyll inspired static site generator in Clojure"
   :dependencies [[org.clojure/clojure "1.5.1"]
                  [org.clojure/math.numeric-tower "0.0.2"]
-                 [hiccup "1.0.2"]
+                 [hiccup "1.0.3"]
                  [compojure "1.1.5"]
                  [ring/ring-jetty-adapter "1.1.8"]
-                 [clj-time "0.4.5"]
+                 [clj-time "0.5.0"]
                  [clj-text-decoration "0.0.2"]
                  [clj-pretty-error "0.0.6"]
                  [uochan/watchtower "0.1.4"]
