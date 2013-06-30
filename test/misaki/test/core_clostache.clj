@@ -4,7 +4,7 @@
     [misaki [core   :refer :all]
             [config :refer :all]
             [tester :refer :all]]
-    [clojure.test    :refer :all]))
+    [clojure.test   :refer :all]))
 
 (set-base-dir! "test/files/core_clostache/")
 

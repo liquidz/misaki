@@ -12,6 +12,9 @@
 
 ;; ## Default Value
 
+(def DEFAULT_LAYOUT_DIRECTORY
+  "Default layout directory."
+  "layouts/")
 (def POST_FILENAME_REGEXP
   "Default regexp to parse post filename."
   #"(\d{4})[-_](\d{1,2})[-_](\d{1,2})[-_](.+)$")
@@ -40,12 +43,12 @@
   {:pre  [(map? config)]
    :post [#(map? %)]}
   (let [{:keys [template-dir public-dir url-base detailed-log]} config
-        layout (path template-dir (:layout-dir config))]
+        layout (path template-dir (:layout-dir config DEFAULT_LAYOUT_DIRECTORY))]
     (assoc
       config
       :layout-dir     layout
       :tag-layout     (str layout (:tag-layout config) ".clj")
-      :detailed-log   (:detailed-log config false)
+      :detailed-log   (:detailed-log config true)
       :post-sort-type (:post-sort-type config :date-desc))))
 
 ; =with-config
