@@ -40,13 +40,13 @@
   {:pre  [(map? config)]
    :post [#(map? %)]}
   (let [{:keys [template-dir public-dir url-base detailed-log]} config
-        layout   (path template-dir (:layout-dir config))]
+        layout (path template-dir (:layout-dir config))]
     (assoc
       config
-      :layout-dir layout
-      :tag-layout   (str layout (:tag-layout config) ".clj")
-      :detailed-log (:detailed-log config false)
-      :post-sort-type       (:post-sort-type config :date-desc))))
+      :layout-dir     layout
+      :tag-layout     (str layout (:tag-layout config) ".clj")
+      :detailed-log   (:detailed-log config false)
+      :post-sort-type (:post-sort-type config :date-desc))))
 
 ; =with-config
 (defmacro with-config

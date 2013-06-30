@@ -70,11 +70,12 @@
 (defn get-template-files
   "Get all template files. Find specified directory with `:dir` option."
   [& {:keys [dir] :or {dir (:template-dir *config*)}}]
-  (let [exts (get-watch-file-extensions)]
-    (filter
-      (fn [file]
-        (some #(and (.isFile file) (has-extension? % file)) exts))
-      (find-files dir))))
+  (let [exts (get-watch-file-extensions)
+        has-target-extension? (fn [file] (some #(has-extension? % file) exts))]
+    (->> (find-files dir)
+         (filter #(.isFile %))
+         (filter has-target-extension?)
+         (remove config-file?))))
 
 ; =get-post-files
 (defn get-post-files

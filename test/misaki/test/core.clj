@@ -96,7 +96,13 @@
       (let [tmpls (get-template-files)]
         (is (= 2 (count tmpls)))
         (is (find-first #(= "favicon.ico" (.getName %)) tmpls))
-        (is (find-first #(= "hello.cljs" (.getName %)) tmpls))))))
+        (is (find-first #(= "hello.cljs" (.getName %)) tmpls)))))
+
+  (testing "find directory which contains _config.clj"
+    (let [tmpls (get-template-files :dir "test/files/core")
+          names (set (map #(.getName %) tmpls))]
+      (is (not (contains? names "_config.clj")))))
+  )
 
 
 ;; get-post-files
