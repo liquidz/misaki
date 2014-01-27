@@ -1,7 +1,7 @@
 (ns misaki.filter
   (:require
     [misaki.config :refer [*config*]]
-    [misaki.loader :refer [load-functions-memo]]
+    [misaki.loader :refer [load-functions]]
     [clojure.string :as str]))
 
 (def ^:dynamic *filter-ns-prefix*
@@ -9,14 +9,12 @@
 
 (defn- load-filter
   [filter-name]
-  (load-functions-memo *filter-ns-prefix* filter-name))
+  (load-functions *filter-ns-prefix* filter-name))
 
 (defn- run-filters
   [filter-key edn]
-
   (let [filter-names (-> *config* :filters filter-key)
-        filters (map #(get (load-filter %) '-main nil) filter-names)
-        filters (filter (comp not nil?) filters)]
+        filters (map (comp :run load-filter) filter-names)]
     (reduce
       (fn [res f] (f res))
       edn

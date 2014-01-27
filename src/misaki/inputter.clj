@@ -1,7 +1,7 @@
 (ns misaki.inputter
   (:require
     [misaki.config :refer [*config*]]
-    [misaki.loader :refer [load-functions-memo]])
+    [misaki.loader :refer [load-functions]])
   (:refer-clojure :exclude [empty?])
   )
 
@@ -13,15 +13,13 @@
 
 (defn- load-inputter
   [inputter-name]
-  (load-functions-memo *inputter-ns-prefix* inputter-name))
+  (load-functions *inputter-ns-prefix* inputter-name))
 
 (defn get-inputters
   []
   (let [inputter-names (:inputters *config*)]
     (filter (comp not nil?)
-            (map #(get (load-inputter %) '-main) inputter-names))
-    )
-  )
+            (map (comp :-run load-inputter) inputter-names))))
 
 (defn add!
   [edn]

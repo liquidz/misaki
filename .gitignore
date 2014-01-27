@@ -1,12 +1,16 @@
-/pom.xml
-*jar
-/lib
 /target
 /classes
-/native
-/.lein-failures
 /checkouts
-/.lein-deps-sum
+/lib
+
+pom.xml
+*.jar
+
+.lein-failures
+.lein-repl-history
+.nrepl-port
+.lein-deps-sum
+
 /blog
 /test/public
 /samples/*/public/201*
@@ -16,3 +20,4 @@
 /samples/*/public/index.html
 /doc/public/js/hello.js
 /doc/public/js/cljs
+

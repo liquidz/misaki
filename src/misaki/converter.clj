@@ -1,6 +1,6 @@
 (ns misaki.converter
   (:require
-    [misaki.loader :refer [load-functions-memo]]
+    [misaki.loader :refer [load-functions]]
     [misaki.config :refer :all]
     [clojure.string :as str]))
 
@@ -9,16 +9,15 @@
 
 (defn- load-converters
   [converter-name]
-  (load-functions-memo *converter-ns-prefix* converter-name))
+  (load-functions *converter-ns-prefix* converter-name))
 
 (defn- filter-converters-with-type
   [data-type converters]
   (filter
     (fn [cnv]
-      (if-let [f (get cnv '-types)]
+      (if-let [f (:-types cnv)]
         (some #(= data-type %) (f))))
     converters))
-
 
 (defn run-converters
   [edn]
@@ -28,8 +27,8 @@
 
     (reduce
       (fn [res cnv]
-        (let [config-f (get cnv '-config)
-              main-f   (get cnv '-main)]
+        (let [config-f (:-config cnv)
+              main-f   (:-run    cnv)]
           (if main-f
             (main-f (if config-f (config-f res) res))
             res)))

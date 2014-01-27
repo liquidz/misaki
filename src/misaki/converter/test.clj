@@ -11,7 +11,7 @@
   (assoc edn
          :converter "test"))
 
-(defn -main
+(defn -run
   [edn]
   (assoc edn
          :a (inc (:a edn))))

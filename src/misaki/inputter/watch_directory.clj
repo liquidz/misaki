@@ -20,7 +20,7 @@
     )
   )
 
-(defn -main
+(defn -run
   [config]
   (watcher
     (:watch-directory config)
@@ -28,5 +28,4 @@
     (change-first? false)
     (on-change #(doseq [file %]
                   (-> file file->edn inputter/add!)
-                  )))
-  )
+                  ))))
