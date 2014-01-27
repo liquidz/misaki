@@ -1,9 +1,9 @@
-(ns misaki2.core
+(ns misaki.core
   (:require
-    [misaki2.config :refer [*config* load-config]]
-    [misaki2.filter :refer [run-before-filters run-after-filters]]
-    [misaki2.converter :refer [run-converters]]
-    [misaki2.inputter :as in]
+    [misaki.config :refer [*config* load-config]]
+    [misaki.filter :refer [run-before-filters run-after-filters]]
+    [misaki.converter :refer [run-converters]]
+    [misaki.inputter :as in]
     )
   )
 

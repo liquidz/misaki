@@ -1,4 +1,4 @@
-(ns misaki2.converter.test
+(ns misaki.converter.test
   (:require
     [clojure.string :as str]))
 

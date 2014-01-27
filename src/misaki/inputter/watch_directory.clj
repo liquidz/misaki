@@ -1,6 +1,6 @@
-(ns misaki2.inputter.watch-directory
+(ns misaki.inputter.watch-directory
   (:require
-    [misaki2.inputter :as inputter]
+    [misaki.inputter :as inputter]
     [watchtower.core :refer :all]))
 
 (defn- get-extension

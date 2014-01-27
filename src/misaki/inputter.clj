@@ -1,12 +1,12 @@
-(ns misaki2.inputter
+(ns misaki.inputter
   (:require
-    [misaki2.config :refer [*config*]]
-    [misaki2.loader :refer [load-functions-memo]])
+    [misaki.config :refer [*config*]]
+    [misaki.loader :refer [load-functions-memo]])
   (:refer-clojure :exclude [empty?])
   )
 
 (def ^:dynamic *inputter-ns-prefix*
-  "misaki2.inputter")
+  "misaki.inputter")
 
 (def ^{:private true} queue (ref []))
 

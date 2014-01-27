@@ -1,4 +1,4 @@
-(ns misaki2.loader
+(ns misaki.loader
   (:require [clojure.string :as str])
   (:import [java.io FileNotFoundException])
   )

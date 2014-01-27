@@ -1,10 +1,10 @@
-(ns misaki2.outputter
+(ns misaki.outputter
   (:require
-    [misaki2.config :refer [*config*]]
-    [misaki2.loader :refer [load-functions-memo]]))
+    [misaki.config :refer [*config*]]
+    [misaki.loader :refer [load-functions-memo]]))
 
 (def ^:dynamic *outputter-ns-prefix*
-  "misaki2.outputter")
+  "misaki.outputter")
 
 (defn- load-outputter
   [outputter-name]

@@ -1,4 +1,4 @@
-(ns misaki2.config
+(ns misaki.config
   (:require
     [clojure.tools.reader.edn :as edn]
     [clojure.string :as str]))

@@ -1,11 +1,11 @@
-(ns misaki2.filter
+(ns misaki.filter
   (:require
-    [misaki2.config :refer [*config*]]
-    [misaki2.loader :refer [load-functions-memo]]
+    [misaki.config :refer [*config*]]
+    [misaki.loader :refer [load-functions-memo]]
     [clojure.string :as str]))
 
 (def ^:dynamic *filter-ns-prefix*
-  "misaki2.filter")
+  "misaki.filter")
 
 (defn- load-filter
   [filter-name]

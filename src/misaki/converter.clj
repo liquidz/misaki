@@ -1,11 +1,11 @@
-(ns misaki2.converter
+(ns misaki.converter
   (:require
-    [misaki2.loader :refer [load-functions-memo]]
-    [misaki2.config :refer :all]
+    [misaki.loader :refer [load-functions-memo]]
+    [misaki.config :refer :all]
     [clojure.string :as str]))
 
 (def ^:dynamic *converter-ns-prefix*
-  "misaki2.converter")
+  "misaki.converter")
 
 (defn- load-converters
   [converter-name]

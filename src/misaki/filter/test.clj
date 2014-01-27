@@ -1,4 +1,4 @@
-(ns misaki2.filter.test)
+(ns misaki.filter.test)
 
 (defn -main
   [edn]
