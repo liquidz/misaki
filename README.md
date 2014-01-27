@@ -1,5 +1,7 @@
 # misaki
 
+[![Build Status](https://api.travis-ci.org/liquidz/misaki.png?branch=0.3-no-bc)](http://travis-ci.org/liquidz/misaki)
+
 0.3 no backward compatibility
 
 ## Usage

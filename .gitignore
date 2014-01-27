@@ -11,6 +11,7 @@ pom.xml
 .nrepl-port
 .lein-deps-sum
 
+_config.clj
 /blog
 /test/public
 /samples/*/public/201*
