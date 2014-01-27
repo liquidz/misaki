@@ -20,17 +20,17 @@
 (defn -main
   []
   (binding [*config* (load-config)]
-    (let [inputters (in/get-inputters)]
+    #_(let [inputters (in/get-inputters)]
       (doseq [f inputters]
         (.start (Thread. (partial f *config*)))))
 
-    (while true
+    #_(while true
       (when-not (in/empty?)
         (println "Read:" (in/get!)))
       (Thread/sleep 50))
 
 
-    #_(some-> {:type :txt, :a 1}
+    (some-> {:type :txt, :a 1}
             run-before-filters
             run-converters
             println

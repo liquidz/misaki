@@ -11,19 +11,19 @@
   [converter-name]
   (load-functions *converter-ns-prefix* converter-name))
 
-(defn- filter-converters-with-type
-  [data-type converters]
-  (filter
-    (fn [cnv]
-      (if-let [f (:-types cnv)]
-        (some #(= data-type %) (f))))
-    converters))
+(defn type-matched?
+  [data-type converter]
+  (if-let [conv-types (some-> converter :-types (apply ()))]
+    (if (some #(= :* %) conv-types)
+      true ; always TRUE with star
+      (not (nil? (some #(= data-type %) conv-types))))))
 
 (defn run-converters
   [edn]
   (let [converter-names (:converters *config*)
         converters (map load-converters converter-names)
-        converters (filter-converters-with-type (:type edn) converters)]
+        converters (filter (partial type-matched? (:type edn)) converters)
+        ]
 
     (reduce
       (fn [res cnv]
@@ -34,6 +34,5 @@
             res)))
       edn
       converters)))
-
 
 
