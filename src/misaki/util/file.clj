@@ -1,4 +1,4 @@
-(ns misaki.util.path
+(ns misaki.util.file
   (:require
     [clojure.string :as str]))
 
@@ -14,3 +14,9 @@
 (defn join
   [& s]
   (str/join separator s))
+
+(defn get-last-ext
+  [s]
+  (let [i (.lastIndexOf s ".")]
+    (if (not= -1 i)
+      (subs s (inc i)))))
