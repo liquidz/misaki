@@ -4,10 +4,14 @@
     [misaki.util.file :refer :all]))
 
 
-(fact "path/join should work fine."
+(fact "file/join should work fine."
   (join "a" "b") => (str "a" separator "b"))
 
-(fact "path/get-last-ext should work fine."
+(fact "file/get-last-ext should work fine."
   (get-last-ext "foo.txt")     => "txt"
   (get-last-ext "foo.txt.bar") => "bar"
   (get-last-ext "foo")         => nil)
+
+(fact "file/normalize should work fine."
+  (normalize (str "foo" separator)) => "foo"
+  (normalize (str "foo" separator "foo.txt")) => (str "foo" separator "foo.txt"))

@@ -20,9 +20,7 @@
 (defn -main
   []
   (binding [*config* (load-config)]
-    #_(let [inputters (in/get-inputters)]
-      (doseq [f inputters]
-        (.start (Thread. (partial f *config*)))))
+    (in/start-inputters!)
 
     #_(while true
       (when-not (in/empty?)

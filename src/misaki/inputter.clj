@@ -19,7 +19,7 @@
   []
   (let [inputter-names (:inputters *config*)]
     (filter (comp not nil?)
-            (map (comp :-run load-inputter) inputter-names))))
+            (map (comp :run load-inputter) inputter-names))))
 
 (defn add!
   [edn]
@@ -34,4 +34,10 @@
 (defn empty?
   []
   (clojure.core/empty? @queue))
+
+(defn start-inputters!
+  []
+  (let [inputters (get-inputters)]
+    (doseq [f inputters]
+      (.start (Thread. (partial f *config*))))))
 

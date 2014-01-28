@@ -20,3 +20,10 @@
   (let [i (.lastIndexOf s ".")]
     (if (not= -1 i)
       (subs s (inc i)))))
+
+
+(defn normalize
+  [s]
+  (if (.endsWith s separator)
+    (apply str (drop-last s))
+    s))
