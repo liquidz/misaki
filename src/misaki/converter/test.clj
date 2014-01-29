@@ -2,17 +2,17 @@
   (:require
     [clojure.string :as str]))
 
-(defn -types
+(defn types
   []
   (list :txt))
 
-(defn -config
+(defn config
   [edn]
   (assoc edn
-         :converter "test"))
+         :converter-config "test"))
 
-(defn -run
+(defn run
   [edn]
   (assoc edn
-         :a (inc (:a edn))))
+         :converter-run "test"))
 

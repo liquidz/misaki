@@ -11,7 +11,6 @@
   [file base-dir]
   (let [abs-path (.getAbsolutePath file)
         ]
-    (println "oya:" base-dir)
     {:file    file
      :path    (subs abs-path (inc (count base-dir)))
      :type    (get-extension abs-path)

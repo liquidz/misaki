@@ -24,6 +24,6 @@
 
 (defn normalize
   [s]
-  (if (.endsWith s separator)
+  (if (and (string? s) (.endsWith s separator))
     (apply str (drop-last s))
     s))
