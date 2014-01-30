@@ -7,9 +7,8 @@
 (def ^:dynamic *converter-ns-prefix*
   "misaki.converter")
 
-(defn- load-converters
-  [converter-name]
-  (load-functions *converter-ns-prefix* converter-name))
+(def load-converter (partial load-functions *converter-ns-prefix*))
+
 
 (defn type-matched?
   [data-type converter]
@@ -22,10 +21,15 @@
   [edn]
   (= :skip (:status edn)))
 
+(defn load-converters
+  [converter-names]
+  (->> converter-names
+       (map load-converter)
+       (filter (comp not nil?))))
+
 (defn run-converters
   [edn]
-  (let [converter-names (:converters *config*)
-        converters (map load-converters converter-names)
+  (let [converters (load-converters (:converters *config*))
         converters (filter (partial type-matched? (:type edn)) converters)]
 
     (when-not (empty? converters)
@@ -35,28 +39,9 @@
           (let [cnv      (first cnvs)
                 config-f (:config cnv)
                 run-f    (:run cnv)
-                result   (run-f (if config-f (config-f result) result))
-                ]
-            ;(println cnv)
-            ;(println config-f)
-            ;(println run-f)
-            ;(println (config-f result))
+                result   (run-f (if config-f (config-f result) result))]
             (if-not (skip? result)
               result
-              (recur (rest cnvs) result))
-            )))
-      )
-    )
-
-    ;(reduce
-    ;  (fn [res cnv]
-    ;    (let [config-f (:-config cnv)
-    ;          main-f   (:-run    cnv)]
-    ;      (if main-f
-    ;        (main-f (if config-f (config-f res) res))
-    ;        res)))
-    ;  edn
-    ;  converters))
-  )
+              (recur (rest cnvs) result))))))))
 
 

@@ -6,8 +6,6 @@
     [clojure.java.io :as io]
     ))
 
-(println "path =" (.getPath (io/file "foo/bar.txt")))
-
 (fact ""
   (let [base-dir (file/normalize (.getParent (io/file (.getAbsolutePath (io/file ".")))))]
     (:path (parse-file (io/file "project.clj") base-dir)) => (file/join "project.clj")
