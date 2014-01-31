@@ -1,6 +1,8 @@
 (ns misaki.util.file
   (:require
-    [clojure.string :as str]))
+    [clojure.string :as str]
+    [clojure.java.io :as io]
+    ))
 
 (def os-name
   (.. System getProperties (get "os.name")))
@@ -11,9 +13,16 @@
 (def separator
   (if windows? "\\" "/"))
 
+(defn normalize
+  [s]
+  (if (and (string? s) (.endsWith s separator))
+    (apply str (drop-last s))
+    s))
+
 (defn join
   [& s]
-  (str/join separator s))
+  (->> s (map normalize)
+         (str/join separator)))
 
 (defn get-last-ext
   [s]
@@ -21,9 +30,11 @@
     (if (not= -1 i)
       (subs s (inc i)))))
 
-
-(defn normalize
-  [s]
-  (if (and (string? s) (.endsWith s separator))
-    (apply str (drop-last s))
-    s))
+(defn mkdirs
+  [dir-str]
+  (loop [dirs     (str/split dir-str (re-pattern separator))
+         dir-name "."]
+    (when-let [dir (some->> dirs first (join dir-name))]
+      (.mkdir (io/file dir))
+      (recur (rest dirs)
+             dir))))

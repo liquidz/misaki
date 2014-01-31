@@ -17,6 +17,11 @@
      :content (delay (slurp file))
      }))
 
+(defn get-all
+  [config]
+  ; FIXME
+  [])
+
 (defn run
   [config]
   (let [base-dir (-> config :watch-directory file/normalize)]
