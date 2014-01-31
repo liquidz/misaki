@@ -29,7 +29,7 @@
 (defn run-configures
   [config]
   (let [configure-names (-> config :configures)
-        configures (map (comp :run load-configure) configure-names)]
+        configures (map (comp :-main load-configure) configure-names)]
 
     (reduce
       (fn [res f] (f res))

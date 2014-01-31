@@ -6,11 +6,11 @@
     [misaki.converter :refer :all]))
 
 (def text-conv
-  {:types (fn [] (list :txt))})
+  {:-type (fn [] (list :txt))})
 (def pict-conv
-  {:types (fn [] (list :jpg :gif :png))})
+  {:-type (fn [] (list :jpg :gif :png))})
 (def star-conv
-  {:types (fn [] (list :*))})
+  {:-type (fn [] (list :*))})
 
 
 (facts "type-matched? should work fine."
@@ -29,16 +29,16 @@
 
 
 (def test-converters
-  (list {:types #(list :txt)
-         :run   #(assoc % :x "x")}
-        {:types #(list :clj)
-         :run   #(assoc % :y "y")}))
+  (list {:-type #(list :txt)
+         :-main #(assoc % :x "x")}
+        {:-type #(list :clj)
+         :-main  #(assoc % :y "y")}))
 
 (def star-converters
-  (list {:types #(list :*)
-         :run   #(assoc % :z "z")}
-        {:types #(list :dummy)
-         :run   #(assoc % :unexpected "value")}))
+  (list {:-type #(list :*)
+         :-main #(assoc % :z "z")}
+        {:-type #(list :dummy)
+         :-main #(assoc % :unexpected "value")}))
 
 (fact "run-converters should work fine."
   (stubbing [load-converters test-converters]

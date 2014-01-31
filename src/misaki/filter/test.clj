@@ -1,6 +1,6 @@
 (ns misaki.filter.test)
 
-(defn -run
+(defn -main
   [edn]
   (assoc edn :b 10))
 

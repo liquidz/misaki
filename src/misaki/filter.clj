@@ -14,7 +14,7 @@
 (defn- run-filters
   [filter-key edn]
   (let [filter-names (-> *config* :filters filter-key)
-        filters (map (comp :run load-filter) filter-names)]
+        filters (map (comp :-main load-filter) filter-names)]
     (reduce
       (fn [res f] (f res))
       edn

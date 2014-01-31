@@ -1,5 +1,5 @@
 (ns misaki.outputter.debug-print)
 
-(defn run
+(defn -main
   [edn]
   (println edn))

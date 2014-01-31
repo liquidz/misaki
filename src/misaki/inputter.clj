@@ -16,7 +16,7 @@
   (load-functions *inputter-ns-prefix* inputter-name))
 
 (defn get-inputters
-  ([] (get-inputters :run))
+  ([] (get-inputters :-main))
   ([fn-key]
    (let [inputter-names (:inputters *config*)]
      (filter (comp not nil?)

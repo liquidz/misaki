@@ -10,7 +10,7 @@
     (apply str (drop-last (inc (count ext)) filename))
     filename))
 
-(defn run
+(defn -main
   [edn]
   (assoc edn
          :filename (-> edn :filename delete-last-ext)))

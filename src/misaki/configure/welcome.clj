@@ -1,6 +1,6 @@
 (ns misaki.configure.welcome)
 
-(defn run
+(defn -main
   [conf]
   (println "")
   (println " == Welcome to misaki. ==")

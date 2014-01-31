@@ -12,7 +12,7 @@
 
 (defn type-matched?
   [data-type converter]
-  (if-let [conv-types (some-> converter :types (apply ()))]
+  (if-let [conv-types (some-> converter :-type (apply ()))]
     (if (some #(= :* %) conv-types)
       true ; always TRUE with star
       (not (nil? (some #(= data-type %) conv-types))))))
@@ -37,9 +37,9 @@
         (if (empty? cnvs)
           result
           (let [cnv      (first cnvs)
-                config-f (:config cnv)
-                run-f    (:run cnv)
-                result   (run-f (if config-f (config-f result) result))]
+                config-f (:-config cnv)
+                main-f   (:-main cnv)
+                result   (main-f (if config-f (config-f result) result))]
             (if-not (skip? result)
               result
               (recur (rest cnvs) result))))))))
