@@ -1,4 +1,4 @@
-(ns misaki.configure.welcome)
+(ns misaki.configurator.welcome)
 
 (defn -main
   [conf]

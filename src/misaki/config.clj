@@ -4,20 +4,20 @@
     [clojure.tools.reader.edn :as edn]
     [clojure.string :as str]))
 
-(def ^:dynamic *configure-ns-prefix*
-  "misaki.configure")
+(def ^:dynamic *configurator-ns-prefix*
+  "misaki.configurator")
 (def ^:dynamic *config-filename* "_config.clj")
 (def ^:dynamic *config* {})
 
 (def DEFAULT_CONFIG
-  {:configures []
-   :inputters  [:watch-directory]
-   :outputters [:text :file]
-   :filters    {:after [:delete-last-ext]}})
+  {:configurators []
+   :inputters     [:watch-directory]
+   :outputters    [:text :file]
+   :filters       {:after [:delete-last-ext]}})
 
-(defn- load-configure
-  [configure-name]
-  (load-functions *configure-ns-prefix* configure-name))
+(defn- load-configurator
+  [name]
+  (load-functions *configurator-ns-prefix* name))
 
 (defn load-config
   []
@@ -26,12 +26,12 @@
        edn/read-string
        (merge DEFAULT_CONFIG)))
 
-(defn run-configures
+(defn run-configurators
   [config]
-  (let [configure-names (-> config :configures)
-        configures (map (comp :-main load-configure) configure-names)]
+  (let [configurator-names (-> config :configurators)
+        configurators (map (comp :-main load-configurator) configurator-names)]
 
     (reduce
       (fn [res f] (f res))
       config
-      configures)))
+      configurators)))
