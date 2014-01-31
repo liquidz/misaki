@@ -38,3 +38,8 @@
       (.mkdir (io/file dir))
       (recur (rest dirs)
              dir))))
+
+(defn rm-rf
+  [dir]
+  (doseq [f (-> dir io/file file-seq reverse)]
+    (.delete f)))
