@@ -1,6 +1,6 @@
 (ns misaki.core
   (:require
-    [misaki.config    :refer [*config* load-config run-configures]]
+    [misaki.config    :refer [*config* load-config run-configurators]]
     [misaki.filter    :refer [run-before-filters run-after-filters]]
     [misaki.converter :refer [run-converters]]
     [misaki.outputter :refer [run-outputters]]
@@ -19,7 +19,7 @@
 (defn -main
   []
   (let [conf (load-config)
-        conf (run-configures conf)]
+        conf (run-configurator conf)]
 
     (binding [*config* conf]
       (in/start-inputters!)
