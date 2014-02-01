@@ -18,7 +18,8 @@
   {:configurators []
    :inputters     [:watch-directory]
    :outputters    [:text :file]
-   :filters       {:after [:delete-last-ext]}})
+   :filters       {:after [:delete-last-ext]}
+   :rate          50})
 
 (defn load-configurators
   "Load configurator's public functions."

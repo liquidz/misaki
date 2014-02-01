@@ -1,9 +1,9 @@
 (ns misaki.converter-test
   (:require
-    [midje.sweet  :refer :all]
-    [conjure.core :refer :all]
-    [misaki.config :refer [*config*]]
-    [misaki.converter :refer :all]))
+    [misaki.config    :refer [*config*]]
+    [misaki.converter :refer :all]
+    [midje.sweet      :refer :all]
+    [conjure.core     :refer :all]))
 
 (def text-conv
   {:-type (fn [] (list :txt))})
@@ -11,7 +11,6 @@
   {:-type (fn [] (list :jpg :gif :png))})
 (def star-conv
   {:-type (fn [] (list :*))})
-
 
 (facts "type-matched? should work fine."
   (fact "type equals"
@@ -24,9 +23,12 @@
 
   (fact "stared types"
     (type-matched? :txt star-conv) => true
-    (type-matched? :jpg star-conv) => true
-    ))
+    (type-matched? :jpg star-conv) => true))
 
+(fact "skip? should work fine."
+  (skip? {})              => false
+  (skip? {:status :foo})  => false
+  (skip? {:status :skip}) => true)
 
 (def test-converters
   (list {:-type #(list :txt)
@@ -45,7 +47,5 @@
     (apply-converters {:type :txt}) => {:type :txt :x "x"}
     (apply-converters {:type :clj}) => {:type :clj :y "y"})
   (stubbing [load-converters star-converters]
-            (apply-converters {:a 1}) => {:a 1 :z "z"}
-            (apply-converters {:type :dummy}) => {:type :dummy :z "z"} ; dummy should not be worked
-            )
-  )
+    (apply-converters {:a 1})         => {:a 1 :z "z"}
+    (apply-converters {:type :dummy}) => {:type :dummy :z "z"})) ; dummy should not be worked

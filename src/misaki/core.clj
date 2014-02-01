@@ -1,4 +1,5 @@
 (ns misaki.core
+  "misaki core library."
   (:require
     [misaki.config    :refer [*config* load-config run-configurators]]
     [misaki.filter    :refer [apply-before-filters apply-after-filters]]
@@ -6,6 +7,7 @@
     [misaki.outputter :refer [run-outputters]]
     [misaki.inputter  :as in]))
 
+(def ^{:private true} DEFAULT_CHECK_RATE 50)
 
 (defn run
   [edn]
@@ -19,7 +21,8 @@
 (defn -main
   []
   (let [conf (load-config)
-        conf (run-configurators conf)]
+        conf (run-configurators conf)
+        rate (:rate conf DEFAULT_CHECK_RATE)]
 
     (binding [*config* conf]
       (in/start-inputters!)
@@ -27,5 +30,5 @@
       (while true
         (when-not (in/empty?)
           (run (in/get!)))
-        (Thread/sleep 50)))))
+        (Thread/sleep rate)))))
 

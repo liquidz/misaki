@@ -1,25 +1,30 @@
 (ns misaki.filter
+  "Filtering map data library."
   (:require
     [misaki.config :refer [*config*]]
     [misaki.loader :refer [load-functions]]))
 
-(def ^:dynamic *filter-ns-prefix*
+(def ^{:dynamic true :doc "Filter's namespace prefix."}
+  *filter-ns-prefix*
   "misaki.filter")
 
-(defn- load-filter
-  [filter-name]
-  (load-functions *filter-ns-prefix* filter-name))
+(defn load-filters
+  "Load filter's public functions."
+  [filter-key]
+  (->> *config* :filters filter-key
+       (map (comp :-main (partial load-functions *filter-ns-prefix*)))
+       (filter (comp not nil?))))
 
 (defn apply-filters
+  "Apply filter function to specified map data.
+
+   @filter-key: `:before` or `:after`"
   ([edn] (apply-filters :before edn))
   ([filter-key edn]
-   (let [filter-names (-> *config* :filters filter-key)
-         filters (map (comp :-main load-filter) filter-names)]
-     (reduce
-       (fn [res f] (f res))
-       edn
-       filters))))
+   (reduce #(%2 %1) edn (load-filters filter-key))))
 
-(def apply-before-filters (partial apply-filters :before))
-(def apply-after-filters (partial apply-filters :after))
+(def ^{:doc "Alias to `#(apply-filters :before)`"}
+  apply-before-filters (partial apply-filters :before))
+(def ^{:doc "Alias to `#(apply-filters :after)`"}
+  apply-after-filters (partial apply-filters :after))
 
