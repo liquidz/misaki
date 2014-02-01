@@ -24,7 +24,5 @@
       (-main sample)
       (.exists (io/file (file/join (:public-dir *config*) (:path sample)))) => true
       (slurp (file/join (:public-dir *config*) (:path sample))) => (force (:content sample))
-      (file/rm-rf (:public-dir *config*))
-      ))
-  )
+      (file/rm-rf (:public-dir *config*)))))
 

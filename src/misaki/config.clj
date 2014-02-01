@@ -1,25 +1,35 @@
 (ns misaki.config
+  "Configuration manager library."
   (:require
-    [misaki.loader :refer [load-functions]]
+    [misaki.loader            :refer [load-functions]]
     [clojure.tools.reader.edn :as edn]
-    [clojure.string :as str]))
+    [clojure.string           :as str]))
 
-(def ^:dynamic *configurator-ns-prefix*
+(def ^{:dynamic true :doc "Configurator's namespace prefix."}
+  *configurator-ns-prefix*
   "misaki.configurator")
-(def ^:dynamic *config-filename* "_config.clj")
-(def ^:dynamic *config* {})
+(def ^{:dynamic true :doc "Default configuration filename."}
+  *config-filename* "_config.clj")
+(def ^{:dynamic true :doc "Current configration map."}
+  *config* {})
 
-(def DEFAULT_CONFIG
+(def ^{:doc "Default configuration map."}
+  DEFAULT_CONFIG
   {:configurators []
    :inputters     [:watch-directory]
    :outputters    [:text :file]
    :filters       {:after [:delete-last-ext]}})
 
-(defn- load-configurator
-  [name]
-  (load-functions *configurator-ns-prefix* name))
+(defn load-configurators
+  "Load configurator's public functions."
+  [config]
+  (->> config
+       :configurators
+       (map (comp :-main (partial load-functions *configurator-ns-prefix*)))
+       (filter (comp not nil?))))
 
 (defn load-config
+  "Load misaki's config file from *config-filename*."
   []
   (->> *config-filename*
        slurp
@@ -27,11 +37,6 @@
        (merge DEFAULT_CONFIG)))
 
 (defn run-configurators
+  "Run configurator extension."
   [config]
-  (let [configurator-names (-> config :configurators)
-        configurators (map (comp :-main load-configurator) configurator-names)]
-
-    (reduce
-      (fn [res f] (f res))
-      config
-      configurators)))
+  (reduce #(%2 %1) config (load-configurators)))

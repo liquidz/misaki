@@ -27,7 +27,7 @@
        (map load-converter)
        (filter (comp not nil?))))
 
-(defn run-converters
+(defn apply-converters
   [edn]
   (let [converters (load-converters (:converters *config*))
         converters (filter (partial type-matched? (:type edn)) converters)]

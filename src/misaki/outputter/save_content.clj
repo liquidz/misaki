@@ -1,9 +1,7 @@
 (ns misaki.outputter.save-content
   (:require
     [misaki.config :refer [*config*]]
-    [misaki.util.file :as file]
-    ;[clojure.string :as str]
-    ))
+    [misaki.util.file :as file]))
 
 (def DEFAULT_PUBLIC_DIR ".")
 

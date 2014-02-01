@@ -1,8 +1,8 @@
 (ns misaki.core
   (:require
     [misaki.config    :refer [*config* load-config run-configurators]]
-    [misaki.filter    :refer [run-before-filters run-after-filters]]
-    [misaki.converter :refer [run-converters]]
+    [misaki.filter    :refer [apply-before-filters apply-after-filters]]
+    [misaki.converter :refer [apply-converters]]
     [misaki.outputter :refer [run-outputters]]
     [misaki.inputter  :as in]))
 
@@ -11,9 +11,9 @@
   [edn]
   (binding [*config* (load-config)]
     (some-> edn
-            run-before-filters
-            run-converters
-            run-after-filters
+            apply-before-filters
+            apply-converters
+            apply-after-filters
             run-outputters)))
 
 (defn -main

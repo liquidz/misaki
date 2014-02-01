@@ -40,12 +40,12 @@
         {:-type #(list :dummy)
          :-main #(assoc % :unexpected "value")}))
 
-(fact "run-converters should work fine."
+(fact "apply-converters should work fine."
   (stubbing [load-converters test-converters]
-    (run-converters {:type :txt}) => {:type :txt :x "x"}
-    (run-converters {:type :clj}) => {:type :clj :y "y"})
+    (apply-converters {:type :txt}) => {:type :txt :x "x"}
+    (apply-converters {:type :clj}) => {:type :clj :y "y"})
   (stubbing [load-converters star-converters]
-            (run-converters {:a 1}) => {:a 1 :z "z"}
-            (run-converters {:type :dummy}) => {:type :dummy :z "z"} ; dummy should not be worked
+            (apply-converters {:a 1}) => {:a 1 :z "z"}
+            (apply-converters {:type :dummy}) => {:type :dummy :z "z"} ; dummy should not be worked
             )
   )

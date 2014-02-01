@@ -1,26 +1,30 @@
 (ns misaki.inputter.watch-directory
   (:require
-    [misaki.inputter :as in]
-    [misaki.util.file :as file]
-    [watchtower.core :refer :all]))
+    [clojure.java.io  :as io]
+    [watchtower.core  :refer :all]
+    [misaki.inputter  :as in]
+    [misaki.util.file :as file]))
 
-(def get-extension
+(def ^{:private true}
+  get-extension
   (comp keyword file/get-last-ext))
 
 (defn parse-file
+  "Parse file to hash-map."
   [file base-dir]
-  (let [abs-path (.getAbsolutePath file)
-        ]
+  (let [abs-path (.getAbsolutePath file)]
     {:file    file
      :path    (subs abs-path (inc (count base-dir)))
      :type    (get-extension abs-path)
-     :content (delay (slurp file))
-     }))
+     :content (delay (slurp file))}))
 
 (defn -get-all
   [config]
-  ; FIXME
-  [])
+  []
+  (let [dir (-> config :watch-directory file/normalize)]
+    (->> dir io/file file-seq
+         (filter #(.isFile %))
+         (map #(parse-file % dir)))))
 
 (defn -main
   [config]
