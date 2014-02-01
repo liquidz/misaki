@@ -19,7 +19,7 @@
 (defn -main
   []
   (let [conf (load-config)
-        conf (run-configurator conf)]
+        conf (run-configurators conf)]
 
     (binding [*config* conf]
       (in/start-inputters!)

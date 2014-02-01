@@ -30,6 +30,13 @@
     (if (not= -1 i)
       (subs s (inc i)))))
 
+(defn parent
+  [s]
+  (let [i (.lastIndexOf s separator)]
+    (if (= -1 i)
+      s
+      (subs s 0 i))))
+
 (defn mkdirs
   [dir-str]
   (loop [dirs     (str/split dir-str (re-pattern separator))

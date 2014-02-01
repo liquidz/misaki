@@ -17,7 +17,13 @@
   (normalize (str "foo" separator)) => "foo"
   (normalize (str "foo" separator "foo.txt")) => (str "foo" separator "foo.txt"))
 
-(fact "mkdir should work fine."
+(fact "file/parent should work fine."
+  (parent "foo") => "foo"
+  (parent (join "." "foo")) => "."
+  (parent (join "foo" "bar")) => "foo"
+  (parent (join "foo" "bar" "baz")) => (join "foo" "bar"))
+
+(fact "file/mkdirs should work fine."
   (let [a "a", b "b"
         dir (join a b)]
     (mkdirs a)
