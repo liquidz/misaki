@@ -1,48 +1,50 @@
 (ns misaki.inputter
+  "Input resource manager library."
   (:require
     [misaki.config :refer [*config*]]
     [misaki.loader :refer [load-functions]])
   (:refer-clojure :exclude [empty?])
   )
 
-(def ^:dynamic *inputter-ns-prefix*
+(def ^{:dynamic true :doc "Inputter's namespace prefix."}
+  *inputter-ns-prefix*
   "misaki.inputter")
 
-(def ^{:private true} queue (ref []))
-
-
-(defn- load-inputter
-  [inputter-name]
-  (load-functions *inputter-ns-prefix* inputter-name))
+(def ^{:private true :doc "Input queue."} queue (ref []))
 
 (defn get-inputters
+  "Get inputter's specified public functions."
   ([] (get-inputters :-main))
   ([fn-key]
-   (let [inputter-names (:inputters *config*)]
-     (filter (comp not nil?)
-             (map (comp fn-key load-inputter) inputter-names)))))
+   (->> *config* :inputters
+        (map fn-key (partial load-functions *inputter-ns-prefix*))
+        (filter (comp not nil?)))))
 
 (defn add!
+  "Add input resource to queue."
   [edn]
   (dosync (alter queue conj edn)))
 
 (defn get!
+  "Get input resource from queue."
   []
   (let [edn (first @queue)]
     (dosync (alter queue (comp vec rest)))
     edn))
 
 (defn empty?
+  "Returns true if input queue has no resources."
   []
   (clojure.core/empty? @queue))
 
 (defn get-all
+  "Returns sequence of all input resources."
   []
-  (mapcat #((%)) (get-inputters)))
+  (mapcat (fn [f] (f)) (get-inputters :-get-all)))
 
 (defn start-inputters!
+  "Start inputting with other threads."
   []
-  (let [inputters (get-inputters :get-all)]
-    (doseq [f inputters]
-      (.start (Thread. (partial f *config*))))))
+  (doseq [f (get-inputters)]
+    (.start (Thread. (partial f *config*)))))
 
