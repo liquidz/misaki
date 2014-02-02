@@ -11,14 +11,4 @@ pom.xml
 .nrepl-port
 .lein-deps-sum
 
-_config.clj
-/blog
-/test/public
-/samples/*/public/201*
-/samples/*/public/page[0-9]*
-/samples/*/public/tag
-/samples/*/public/atom.xml
-/samples/*/public/index.html
-/doc/public/js/hello.js
-/doc/public/js/cljs
-
+_*
