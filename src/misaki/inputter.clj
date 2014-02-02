@@ -13,7 +13,9 @@
 (def ^{:private true :doc "Input queue."} queue (ref []))
 
 (defn get-inputters
-  "Get inputter's specified public functions."
+  "Get inputter's specified public functions.
+
+   @fn-key: default value is `:-main`"
   ([] (get-inputters :-main))
   ([fn-key]
    (->> *config* :inputters

@@ -8,7 +8,7 @@
   *filter-ns-prefix*
   "misaki.filter")
 
-(defn load-filters
+(defn get-filters
   "Load filter's public functions."
   [filter-key]
   (->> *config* :filters filter-key
@@ -21,7 +21,7 @@
    @filter-key: `:before` or `:after`"
   ([edn] (apply-filters :before edn))
   ([filter-key edn]
-   (reduce #(%2 %1) edn (load-filters filter-key))))
+   (reduce #(%2 %1) edn (get-filters filter-key))))
 
 (def ^{:doc "Alias to `#(apply-filters :before)`"}
   apply-before-filters (partial apply-filters :before))

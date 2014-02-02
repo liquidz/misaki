@@ -43,9 +43,9 @@
          :-main #(assoc % :unexpected "value")}))
 
 (fact "apply-converters should work fine."
-  (stubbing [load-converters test-converters]
+  (stubbing [get-converters test-converters]
     (apply-converters {:type :txt}) => {:type :txt :x "x"}
     (apply-converters {:type :clj}) => {:type :clj :y "y"})
-  (stubbing [load-converters star-converters]
+  (stubbing [get-converters star-converters]
     (apply-converters {:a 1})         => {:a 1 :z "z"}
     (apply-converters {:type :dummy}) => {:type :dummy :z "z"})) ; dummy should not be worked

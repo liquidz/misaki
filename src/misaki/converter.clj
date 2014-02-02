@@ -21,7 +21,7 @@
   [edn]
   (= :skip (:status edn)))
 
-(defn load-converters
+(defn get-converters
   "Load converter's public functions."
   [converter-names]
   (->> converter-names
@@ -31,7 +31,7 @@
 (defn apply-converters
   "Apply converter functions to specified map data."
   [edn]
-  (let [converters (load-converters (:converters *config*))
+  (let [converters (get-converters (:converters *config*))
         converters (filter (partial type-matched? (:type edn)) converters)]
 
     (when-not (empty? converters)

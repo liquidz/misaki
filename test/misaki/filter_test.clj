@@ -9,7 +9,7 @@
                        #(assoc % :b 2)))
 
 (fact "apply-filters should work fine."
-  (stubbing [load-filters sample-filters]
+  (stubbing [get-filters sample-filters]
     (apply-filters {})     => {:a 1 :b 2}
     (apply-filters {:c 3}) => {:a 1 :b 2 :c 3}))
 
