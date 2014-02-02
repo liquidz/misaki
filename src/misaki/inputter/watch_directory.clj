@@ -1,4 +1,10 @@
 (ns misaki.inputter.watch-directory
+  "Inputter extension for watching specified directory.
+
+   CONFIG
+   {
+     :watch-directory \"foo/bar\"
+   }"
   (:require
     [clojure.java.io  :as io]
     [watchtower.core  :refer :all]
@@ -10,7 +16,7 @@
   (comp keyword file/get-last-ext))
 
 (defn parse-file
-  "Parse file to hash-map."
+  "Parse java.io.File to hash map."
   [file base-dir]
   (let [abs-path (.getAbsolutePath file)]
     {:file    file
@@ -19,14 +25,15 @@
      :content (delay (slurp file))}))
 
 (defn -get-all
+  "Get all resource."
   [config]
-  []
   (let [dir (-> config :watch-directory file/normalize)]
     (->> dir io/file file-seq
          (filter #(.isFile %))
          (map #(parse-file % dir)))))
 
 (defn -main
+  "Watch specified directory, and input modified file data."
   [config]
   (let [base-dir (-> config :watch-directory file/normalize)]
     (watcher

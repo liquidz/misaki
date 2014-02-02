@@ -1,11 +1,13 @@
 (ns misaki.core
   "misaki core library."
   (:require
-    [misaki.config    :refer [*config* load-config run-configurators]]
-    [misaki.filter    :refer [apply-before-filters apply-after-filters]]
-    [misaki.converter :refer [apply-converters]]
-    [misaki.outputter :refer [run-outputters]]
-    [misaki.inputter  :as in]))
+    [misaki.config     :refer [*config* load-config run-configurators]]
+    [misaki.loader     :refer [*development-mode*]]
+    [misaki.filter     :refer [apply-before-filters apply-after-filters]]
+    [misaki.converter  :refer [apply-converters]]
+    [misaki.outputter  :refer [run-outputters]]
+    [misaki.inputter   :as in]
+    [clojure.tools.cli :refer [parse-opts]]))
 
 (def ^{:private true} DEFAULT_CHECK_RATE 50)
 
@@ -18,17 +20,23 @@
             apply-after-filters
             run-outputters)))
 
+(def ^{:private true} cli-options
+  [[nil "--dev" "Run misaki with development mode."
+    :default false]])
+
 (defn -main
-  []
-  (let [conf (load-config)
-        conf (run-configurators conf)
-        rate (:rate conf DEFAULT_CHECK_RATE)]
+  [& args]
+  (let [{:keys [options]} (parse-opts args cli-options)]
+    (binding [*development-mode* (:dev options)]
+      (let [conf (load-config)
+            conf (run-configurators conf)
+            rate (:rate conf DEFAULT_CHECK_RATE)]
 
-    (binding [*config* conf]
-      (in/start-inputters!)
+        (binding [*config* conf]
+          (in/start-inputters!)
 
-      (while true
-        (when-not (in/empty?)
-          (run (in/get!)))
-        (Thread/sleep rate)))))
+          (while true
+            (when-not (in/empty?)
+              (run (in/get!)))
+            (Thread/sleep rate)))))))
 

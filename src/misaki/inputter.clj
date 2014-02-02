@@ -19,7 +19,7 @@
   ([] (get-inputters :-main))
   ([fn-key]
    (->> *config* :inputters
-        (map fn-key (partial load-functions *inputter-ns-prefix*))
+        (map (comp fn-key (partial load-functions *inputter-ns-prefix*)))
         (filter (comp not nil?)))))
 
 (defn add!

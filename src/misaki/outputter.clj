@@ -1,20 +1,23 @@
 (ns misaki.outputter
+  "Output resouce manager library."
   (:require
     [misaki.config :refer [*config*]]
     [misaki.loader :refer [load-functions]]))
 
-(def ^:dynamic *outputter-ns-prefix*
+(def ^{:dynamic true :doc "Outputter's namespace prefix."}
+  *outputter-ns-prefix*
   "misaki.outputter")
 
-(defn- get-outputter
-  [outputter-name]
-  (load-functions *outputter-ns-prefix* outputter-name))
+(defn get-outputters
+  "Get outputter's public functions."
+  []
+  (->> *config* :outputters
+       (map (comp :-main (partial load-functions *outputter-ns-prefix*)))
+       (filter (comp not nil?))))
 
 (defn run-outputters
+  "Pass converted result to outputters."
   [edn]
-  (let [outputter-names (:outputters *config*)
-        outputters (map (comp :-main get-outputter) outputter-names)
-        outputters (filter (comp not nil?) outputters)]
-    (doseq [out outputters]
-      (out edn))))
+  (doseq [out-f (get-outputters)]
+    (out-f edn)))
 

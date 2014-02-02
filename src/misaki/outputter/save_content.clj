@@ -1,11 +1,18 @@
 (ns misaki.outputter.save-content
+  "Outputter extension to save resource content.
+
+   CONFIG
+   {
+     :public-dir \"path/to/public/dir\"
+   }"
   (:require
-    [misaki.config :refer [*config*]]
+    [misaki.config    :refer [*config*]]
     [misaki.util.file :as file]))
 
-(def DEFAULT_PUBLIC_DIR ".")
+(def ^{:private true} DEFAULT_PUBLIC_DIR ".")
 
 (defn -main
+  "Save content as a file."
   [{:keys [path content]}]
   (when (and path content
              (= clojure.lang.Delay (type content)))

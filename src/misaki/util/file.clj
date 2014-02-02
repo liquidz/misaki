@@ -1,36 +1,43 @@
 (ns misaki.util.file
+  "File operation utility."
   (:require
-    [clojure.string :as str]
-    [clojure.java.io :as io]
-    ))
+    [clojure.string  :as str]
+    [clojure.java.io :as io]))
 
-(def os-name
+(def ^{:doc "OS name."}
+  os-name
   (.. System getProperties (get "os.name")))
 
-(def windows?
+(def ^{:doc "True if current environment is Windows."}
+  windows?
   (zero? (.indexOf os-name "Windows")))
 
-(def separator
+(def ^{:doc "Path separator."}
+  separator
   (if windows? "\\" "/"))
 
 (defn normalize
+  "Normalize file path."
   [s]
   (if (and (string? s) (.endsWith s separator))
     (apply str (drop-last s))
     s))
 
 (defn join
+  "Join file paths."
   [& s]
   (->> s (map normalize)
          (str/join separator)))
 
 (defn get-last-ext
+  "Get last extension from file path."
   [s]
   (let [i (.lastIndexOf s ".")]
     (if (not= -1 i)
       (subs s (inc i)))))
 
 (defn parent
+  "Get parent path from file path."
   [s]
   (let [i (.lastIndexOf s separator)]
     (if (= -1 i)
@@ -38,6 +45,7 @@
       (subs s 0 i))))
 
 (defn mkdirs
+  "Make directories recursively."
   [dir-str]
   (loop [dirs     (str/split dir-str (re-pattern separator))
          dir-name "."]
@@ -47,6 +55,7 @@
              dir))))
 
 (defn rm-rf
+  "Remove files recursively."
   [dir]
   (doseq [f (-> dir io/file file-seq reverse)]
     (.delete f)))

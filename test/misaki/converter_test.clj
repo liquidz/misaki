@@ -36,16 +36,39 @@
         {:-type #(list :clj)
          :-main  #(assoc % :y "y")}))
 
+(def first-skip-converters
+  (list {:-type #(list :txt)
+         :-main #(assoc % :status :skip)}
+        {:-type #(list :txt)
+         :-main #(assoc % :x "x")}))
+
+(def all-skip-converters
+  (list {:-type #(list :*)
+         :-main #(assoc % :status :skip)}
+        {:-type #(list :*)
+         :-main #(assoc % :status :skip)}))
+
 (def star-converters
   (list {:-type #(list :*)
          :-main #(assoc % :z "z")}
         {:-type #(list :dummy)
          :-main #(assoc % :unexpected "value")}))
 
-(fact "apply-converters should work fine."
-  (stubbing [get-converters test-converters]
-    (apply-converters {:type :txt}) => {:type :txt :x "x"}
-    (apply-converters {:type :clj}) => {:type :clj :y "y"})
-  (stubbing [get-converters star-converters]
-    (apply-converters {:a 1})         => {:a 1 :z "z"}
-    (apply-converters {:type :dummy}) => {:type :dummy :z "z"})) ; dummy should not be worked
+(facts "apply-converters should work fine."
+  (fact "file type is matched."
+    (stubbing [get-converters test-converters]
+      (apply-converters {:type :txt})   => {:type :txt :x "x"}
+      (apply-converters {:type :clj})   => {:type :clj :y "y"})
+    (stubbing [get-converters star-converters]
+      (apply-converters {:a 1})         => {:a 1 :z "z"}
+      (apply-converters {:type :dummy}) => {:type :dummy :z "z"}) ; dummy should not be worked
+    (stubbing [get-converters first-skip-converters]
+      (apply-converters {:type :txt}) => {:type :txt :x "x"}))
+
+  (fact "file type is not matched."
+    (stubbing [get-converters test-converters]
+      (apply-converters {:type :none}) => nil))
+
+  (fact "all skipped"
+    (stubbing [get-converters all-skip-converters]
+              (apply-converters {:type :txt}) => nil)))

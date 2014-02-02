@@ -1,6 +1,10 @@
 (ns misaki.loader
+  "Loading functions library."
   (:require [clojure.string :as str])
   (:import [java.io FileNotFoundException]))
+
+(def ^{:dynamic true :doc "Flag for development mode."}
+  *development-mode* false)
 
 (defn- make-namespace-symbol
   [ls]
@@ -16,12 +20,14 @@
     {}
     (keys m)))
 
-; =load-functions
 (defn load-functions
+  "Load public functions from specified namespace."
   [& namespace-name]
   (let [namespace-sym (make-namespace-symbol namespace-name)]
     (try
-      (require namespace-sym)
+      (if *development-mode*
+        (require namespace-sym :reload-all)
+        (require namespace-sym))
       (some-> namespace-sym
               find-ns
               ns-publics

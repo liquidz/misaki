@@ -40,4 +40,4 @@
 (defn run-configurators
   "Run configurator extension."
   [config]
-  (reduce #(%2 %1) config (load-configurators)))
+  (reduce #(%2 %1) config (load-configurators config)))

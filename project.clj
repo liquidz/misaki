@@ -4,8 +4,11 @@
   :license      {:name "Eclipse Public License"
                  :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.5.1"]
+                 [org.clojure/tools.cli "0.3.1"]
                  [org.clojure/tools.reader "0.8.3"]
-                 [uochan/watchtower "0.1.4"]]
+                 [uochan/watchtower "0.1.4"]
+                 [compojure "1.1.6"]
+                 [ring/ring-jetty-adapter "1.2.1"]]
 
   :profiles {:dev {:dependencies [[midje "1.6.0" :exclusions [org.clojure/clojure]]
                                   [org.clojars.runa/conjure "2.1.3"]]}}
