@@ -7,6 +7,7 @@
                  [org.clojure/tools.cli "0.3.1"]
                  [org.clojure/tools.reader "0.8.3"]
                  [uochan/watchtower "0.1.4"]
+                 [cuma "0.0.5"]
                  [compojure "1.1.6"]
                  [ring/ring-jetty-adapter "1.2.1"]]
 

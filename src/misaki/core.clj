@@ -26,7 +26,18 @@
 
 (defn -main
   [& args]
-  (let [{:keys [options]} (parse-opts args cli-options)]
+  (let [{:keys [options]} (parse-opts args cli-options)
+        ;user-conf (load-user-config)
+        ]
+
+    ;(-> (merge-config DEFAULT_CONFIG user-conf)
+    ;    :+ :configurators)
+
+    ;(merge-config
+    ;  DEFAULT_CONFIG
+    ;  {:+ {:configurators (-> user-conf :+)}}
+    ;  )
+
     (binding [*development-mode* (:dev options)]
       (let [conf (load-config)
             conf (run-configurators conf)
@@ -37,6 +48,6 @@
 
           (while true
             (when-not (in/empty?)
-              (run (in/get!)))
+              (run (merge conf (in/get!))))
             (Thread/sleep rate)))))))
 
