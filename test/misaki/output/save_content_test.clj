@@ -1,9 +1,9 @@
-(ns misaki.outputter.save-content-test
+(ns misaki.output.save-content-test
   (:require
     [midje.sweet :refer :all]
     [misaki.config :refer [*config*]]
     [misaki.util.file :as file]
-    [misaki.outputter.save-content :refer :all]
+    [misaki.output.save-content :refer :all]
     [clojure.java.io :as io]))
 
 (def ^{:private true} sample
@@ -11,7 +11,7 @@
    :path    "foo/bar/baz.txt"
    :content (delay "hello")})
 
-(facts "save-content outputter should work fine."
+(facts "save-content output extension should work fine."
   (fact "save to current directory"
     (binding [*config* {:public-dir "."}]
       (-main sample)

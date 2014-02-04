@@ -1,4 +1,4 @@
-(ns misaki.outputter.debug-print)
+(ns misaki.output.debug-print)
 
 (defn -main
   [edn]

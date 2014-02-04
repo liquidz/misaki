@@ -24,5 +24,5 @@
                          #(list {:b 2} {:c 3})))
 
 (fact "get-all should work fine."
-  (stubbing [get-inputs sample-inputs]
+  (stubbing [get-input-extensions sample-inputs]
     (get-all) => [{:a 1} {:b 2} {:c 3}]))

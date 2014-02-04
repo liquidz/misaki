@@ -1,5 +1,5 @@
-(ns misaki.outputter.save-content
-  "Outputter extension to save resource content.
+(ns misaki.output.save-content
+  "Output extension to save resource content.
 
    CONFIG
    {

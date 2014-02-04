@@ -1,4 +1,4 @@
-(ns misaki.outputter.copy-file
+(ns misaki.output.copy-file
   "FIXME
 
    CONFIG

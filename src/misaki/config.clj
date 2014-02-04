@@ -16,8 +16,8 @@
 (def ^{:doc "Default configuration map."}
   DEFAULT_CONFIG
   {:configurators []
-   :inputters     [:watch-directory]
-   :outputters    [:text :file]
+   :input     [:watch-directory]
+   :output    [:text :file]
    :filters       {:after [:remove-last-ext]}
    :rate          50}
   #_{:+ {:setup [:welcome]

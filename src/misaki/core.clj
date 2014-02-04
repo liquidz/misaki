@@ -5,7 +5,7 @@
     [misaki.loader     :refer [*development-mode*]]
     [misaki.filter     :refer [apply-before-filters apply-after-filters]]
     [misaki.converter  :refer [apply-converters]]
-    [misaki.outputter  :refer [run-outputters]]
+    [misaki.output     :refer [run-output-extensions]]
     [misaki.input      :as in]
     [clojure.tools.cli :refer [parse-opts]]))
 
@@ -18,7 +18,7 @@
             apply-before-filters
             apply-converters
             apply-after-filters
-            run-outputters)))
+            run-output-extensions)))
 
 (def ^{:private true} cli-options
   [[nil "--dev" "Run misaki with development mode."
@@ -44,7 +44,7 @@
             rate (:rate conf DEFAULT_CHECK_RATE)]
 
         (binding [*config* conf]
-          (in/start-inputs!)
+          (in/start-input-extensions!)
 
           (while true
             (when-not (in/empty?)

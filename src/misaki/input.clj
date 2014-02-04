@@ -3,8 +3,7 @@
   (:require
     [misaki.config :refer [*config*]]
     [misaki.loader :refer [load-functions]])
-  (:refer-clojure :exclude [empty?])
-  )
+  (:refer-clojure  :exclude [empty?]))
 
 (def ^{:dynamic true :doc "Input extension's namespace prefix."}
   *input-ns-prefix*
@@ -12,11 +11,11 @@
 
 (def ^{:private true :doc "Input queue."} queue (ref []))
 
-(defn get-inputs
+(defn get-input-extensions
   "Get input extension's specified public functions.
 
    @fn-key: default value is `:-main`"
-  ([] (get-inputs :-main))
+  ([] (get-input-extensions :-main))
   ([fn-key]
    (->> *config* :input
         (map (comp fn-key (partial load-functions *input-ns-prefix*)))
@@ -42,11 +41,11 @@
 (defn get-all
   "Returns sequence of all input resources."
   []
-  (mapcat (fn [f] (f)) (get-inputs :-get-all)))
+  (mapcat (fn [f] (f)) (get-input-extensions :-get-all)))
 
-(defn start-inputs!
+(defn start-input-extensions!
   "Start inputting with other threads."
   []
-  (doseq [f (get-inputs)]
+  (doseq [f (get-input-extensions)]
     (.start (Thread. (partial f *config*)))))
 
