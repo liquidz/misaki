@@ -6,7 +6,7 @@
     [misaki.filter     :refer [apply-before-filters apply-after-filters]]
     [misaki.converter  :refer [apply-converters]]
     [misaki.outputter  :refer [run-outputters]]
-    [misaki.inputter   :as in]
+    [misaki.input      :as in]
     [clojure.tools.cli :refer [parse-opts]]))
 
 (def ^{:private true} DEFAULT_CHECK_RATE 50)
@@ -44,7 +44,7 @@
             rate (:rate conf DEFAULT_CHECK_RATE)]
 
         (binding [*config* conf]
-          (in/start-inputters!)
+          (in/start-inputs!)
 
           (while true
             (when-not (in/empty?)

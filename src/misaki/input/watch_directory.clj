@@ -1,5 +1,5 @@
-(ns misaki.inputter.watch-directory
-  "Inputter extension for watching specified directory.
+(ns misaki.input.watch-directory
+  "Input extension for watching specified directory.
 
    CONFIG
    {
@@ -8,7 +8,7 @@
   (:require
     [clojure.java.io  :as io]
     [watchtower.core  :refer :all]
-    [misaki.inputter  :as in]
+    [misaki.input     :as in]
     [misaki.util.file :as file]))
 
 (def ^{:private true}

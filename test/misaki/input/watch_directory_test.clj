@@ -1,7 +1,7 @@
-(ns misaki.inputter.watch-directory-test
+(ns misaki.input.watch-directory-test
   (:require
     [misaki.util.file                :as file]
-    [misaki.inputter.watch-directory :refer :all]
+    [misaki.input.watch-directory    :refer :all]
     [midje.sweet                     :refer :all]
     [clojure.java.io                 :as io]))
 

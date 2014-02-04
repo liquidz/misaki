@@ -1,6 +1,6 @@
-(ns misaki.inputter-test
+(ns misaki.input-test
   (:require
-    [misaki.inputter :refer :all]
+    [misaki.input    :refer :all]
     [midje.sweet     :refer :all]
     [conjure.core    :refer :all])
   (:refer-clojure :exclude [empty?]))
@@ -20,9 +20,9 @@
 
 
 (def ^{:private true}
-  sample-inputters (list #(list {:a 1})
+  sample-inputs (list #(list {:a 1})
                          #(list {:b 2} {:c 3})))
 
 (fact "get-all should work fine."
-  (stubbing [get-inputters sample-inputters]
+  (stubbing [get-inputs sample-inputs]
     (get-all) => [{:a 1} {:b 2} {:c 3}]))
