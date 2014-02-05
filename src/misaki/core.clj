@@ -1,7 +1,8 @@
 (ns misaki.core
   "misaki core library."
   (:require
-    [misaki.config     :refer [*config* load-config run-configurators]]
+    [misaki.config     :refer [*config* load-config]]
+    [misaki.setup      :refer [run-setup-extensions]]
     [misaki.loader     :refer [*development-mode*]]
     [misaki.filter     :refer [apply-before-filters apply-after-filters]]
     [misaki.converter  :refer [apply-converters]]
@@ -40,7 +41,7 @@
 
     (binding [*development-mode* (:dev options)]
       (let [conf (load-config)
-            conf (run-configurators conf)
+            conf (run-setup-extensions conf)
             rate (:rate conf DEFAULT_CHECK_RATE)]
 
         (binding [*config* conf]

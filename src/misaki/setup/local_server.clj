@@ -1,5 +1,5 @@
-(ns misaki.configurator.local-server
-  "Configurator extension for running local server."
+(ns misaki.setup.local-server
+  "Setup extension for running local server."
   (:require
     [compojure.core       :refer [routes]]
     [compojure.route      :refer [files]]

@@ -1,8 +1,7 @@
-(ns misaki.configurator.local-server-test
+(ns misaki.setup.local-server-test
   (:require
-    [misaki.configurator.local-server :refer :all]
-    [midje.sweet                      :refer :all]))
-
+    [misaki.setup.local-server :refer :all]
+    [midje.sweet               :refer :all]))
 
 (fact "local-server-conf should work fine."
   (local-server-conf {})

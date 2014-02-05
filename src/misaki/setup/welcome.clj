@@ -1,4 +1,4 @@
-(ns misaki.configurator.welcome
+(ns misaki.setup.welcome
   (:require [misaki.loader :refer [*development-mode*]]))
 
 (defn -main
