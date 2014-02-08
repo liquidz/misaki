@@ -12,18 +12,36 @@
 
 (def ^{:doc "Default configuration map."}
   DEFAULT_CONFIG
-  {:configurators []
-   :input     [:watch-directory]
-   :output    [:text :file]
-   :filters       {:after [:remove-last-ext]}
-   :rate          50}
-  #_{:+ {:setup [:welcome]
-         :input []
-         :output []
-         :filter.before []
-         :filter.after  []
-         :rate 50 }}
-  )
+  {;:configurators []
+   ;:input     [:watch-directory]
+   ;:output    [:text :file]
+   ;:filters       {:after [:remove-last-ext]}
+   ;:rate          50
+
+   :setup  [:welcome]
+   :input  []
+   :output [:print-errors]
+   :route {}
+   :rate   50
+   })
+
+(defn uniq-conj
+  [col1 col2]
+  (let [diff (remove (set col1) col2)]
+    (if (seq diff)
+      (apply conj col1 diff)
+      col1)))
+
+(defn merge-config
+  [base m]
+  (reduce
+    (fn [res [k v]]
+      (update-in res [k]
+                 #(if (sequential? %)
+                    (uniq-conj (or % ()) v)
+                    v)))
+    base
+    m))
 
 (defn load-config
   "Load misaki's config file from *config-filename*."
@@ -31,46 +49,6 @@
   (->> *config-filename*
        slurp
        edn/read-string
-       (merge DEFAULT_CONFIG)))
+       (merge-config DEFAULT_CONFIG)))
 
-;(defn load-user-config
-;  "Load misaki's config file from *config-filename*."
-;  []
-;  (->> *config-filename*
-;       slurp
-;       edn/read-string))
-
-(defn- +config
-  [base m]
-  (update-in
-    base [:+]
-    (fn [+base]
-      (reduce
-        (fn [res [k v]]
-          (update-in
-            res [k]
-            #(if (sequential? %)
-               (if (some (set v) %) % (apply conj (or % ()) v))
-               v)))
-        +base
-        m))))
-
-(defn- -config
-  [base m]
-  (update-in
-    base [:+]
-    (fn [+base]
-      (reduce
-        (fn [res [k v]]
-          (update-in
-            res [k]
-            #(if (sequential? %) (remove (set v) %))))
-        +base
-        m))))
-
-(defn merge-config
-  [base m]
-  (-> base
-      (+config (:+ m))
-      (-config (:- m))))
 

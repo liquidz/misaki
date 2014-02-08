@@ -1,5 +1,8 @@
-(ns misaki.output.debug-print)
+(ns misaki.output.debug-print
+  (:require [text-decoration.core :refer [cyan]]))
 
 (defn -main
-  [edn]
-  (println edn))
+  [m]
+  (-> (str "DEBUG: " m)
+      cyan
+      println))

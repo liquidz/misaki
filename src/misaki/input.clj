@@ -2,7 +2,7 @@
   "Input resource manager library."
   (:require
     [misaki.config :refer [*config*]]
-    [misaki.loader :refer [load-functions]])
+    [misaki.loader :refer [load-ns-functions]])
   (:refer-clojure  :exclude [empty?]))
 
 (def ^{:dynamic true :doc "Input extension's namespace prefix."}
@@ -17,9 +17,11 @@
    @fn-key: default value is `:-main`"
   ([] (get-input-extensions :-main))
   ([fn-key]
-   (->> *config* :input
-        (map (comp fn-key (partial load-functions *input-ns-prefix*)))
-        (filter (comp not nil?)))))
+   (load-ns-functions *input-ns-prefix* (:input *config*) fn-key)
+   ;(->> *config* :input
+   ;     (map (comp fn-key (partial load-functions *input-ns-prefix*)))
+   ;     (filter (comp not nil?)))
+   ))
 
 (defn add!
   "Add input resource to queue."

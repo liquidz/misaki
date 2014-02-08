@@ -1,6 +1,7 @@
 (ns misaki.setup
   "Setup manager library."
   (:require
+    [misaki.config :refer [merge-config]]
     [misaki.loader :refer [load-functions]]))
 
 (def ^{:dynamic true :doc "Setup extension's namespace prefix."}
@@ -18,5 +19,9 @@
 (defn run-setup-extensions
   "Run setup extensions."
   [config]
-  (reduce #(%2 %1) config (get-setup-extensions config)))
+  (reduce
+    (fn [res setup-f]
+      (setup-f res))
+    config
+    (get-setup-extensions config)))
 

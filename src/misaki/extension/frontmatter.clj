@@ -1,5 +1,5 @@
-(ns misaki.filter.frontmatter
-  "Filter extension to get frontmatter."
+(ns misaki.extension.frontmatter
+  "Misaki extension to get frontmatter."
   (:require
     [clojure.string           :as str]
     [clojure.tools.reader.edn :as edn]))

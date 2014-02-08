@@ -1,6 +1,6 @@
-(ns misaki.filter.frontmatter-test
+(ns misaki.extension.frontmatter-test
   (:require
-    [misaki.filter.frontmatter :refer :all]
+    [misaki.extension.frontmatter :refer :all]
     [midje.sweet               :refer :all]
     [clojure.string            :as str]))
 
@@ -46,8 +46,4 @@
       (:key data) => nil
       (:ls data)  => [9 10]
       (-> data :content force str/trim) => "hello\nworld")))
-
-
-
-
 

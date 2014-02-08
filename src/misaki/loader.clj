@@ -35,3 +35,9 @@
       (catch FileNotFoundException e
         []))))
 
+(defn load-ns-functions
+  ([ns-prefix ns-names] (load-ns-functions ns-prefix ns-names identity))
+  ([ns-prefix ns-names key-fn]
+   (->> ns-names
+        (map (comp key-fn (partial load-functions ns-prefix)))
+        (filter (comp not nil?)))))

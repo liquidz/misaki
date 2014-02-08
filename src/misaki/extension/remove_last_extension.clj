@@ -1,5 +1,5 @@
-(ns misaki.filter.remove-last-ext
-  "Filter extension for removing last path extension."
+(ns misaki.extension.remove-last-extension
+  "Misaki extension for removing last path extension."
   (:require
     [misaki.util.file :as file]))
 
