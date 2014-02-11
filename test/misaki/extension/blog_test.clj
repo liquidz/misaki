@@ -84,6 +84,7 @@
         (count (:posts res)) => 2
         (:title res) => "hello"
         (:path res)  => path
+        (:index-url res) => "/"
         (-> res :content force (.indexOf "<title>hello</title>") (not= -1)) => true
         (-> res :content force (.indexOf "hello world") (not= -1)) => true
         ;; TODO

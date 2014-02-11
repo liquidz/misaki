@@ -9,10 +9,11 @@
     [clojure.java.io :as io]
     [clojure.string :as str]))
 
-(def DEFAULT_TEMPLATE_DIR ".")
-(def DEFAULT_URL_BASE     "/")
-(def DEFAULT_POST_DIR     "posts")
-(def DEFAULT_LAYOUT_DIR   "layouts")
+(def DEFAULT_TEMPLATE_DIR   ".")
+(def DEFAULT_URL_BASE       "/")
+(def DEFAULT_POST_DIR       "posts")
+(def DEFAULT_LAYOUT_DIR     "layouts")
+(def DEFAULT_INDEX_FILENAME "")
 
 (defn get-route-without-blog
   []
@@ -98,10 +99,14 @@
   [m]
   (binding [*config* (blog-config m)]
 
-    ;(layout-file? (:file m))
-
     (let [route (get-route-without-blog)
-          m     (assoc m :posts (get-posts))
+          posts (get-posts)
+          m     (assoc m
+                       :posts posts
+                       :index-url (str (get-url-base)
+                                       (or (some-> *config* :blog :index-filename)
+                                           DEFAULT_INDEX_FILENAME))
+                       )
           tmpls (get-template-data m)
           info  (apply merge (reverse (map #(dissoc % :content) tmpls)))
           res   (reduce
