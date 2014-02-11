@@ -89,11 +89,10 @@
         (-> res :content force (.indexOf "hello world") (not= -1)) => true
         ;; TODO
         ;; * prev/next post
-        ;; * index url
         ))
 
     (fact "normal template file"
-      (let [path "index.html";(file/join "foo" "2014-01-01-001122.txt")
+      (let [path "index.html"
             m    (config-for-main (str path ".md"))
             res  (-main (merge *config* m))]
 
@@ -105,9 +104,18 @@
         (-> res :content force (.indexOf "hello world") (not= -1)) => true
         ;; TODO
         ;; * pagination
-        )
-      )
-    )
-  )
+        ))
+
+    (fact "custom url base"
+      (binding [*config* (merge *config* {:local-server {:url-base "/foo"}})]
+        (let [res  (-main (merge *config* (config-for-main "index.html.md")))]
+          (:index-url res) => "/foo/")))
+
+    (fact "custom url base and index filename"
+      (binding [*config* (merge *config* {:local-server {:url-base "/foo"}
+                                          :blog {:index-filename "bar.html"}})]
+        (let [res  (-main (merge *config* (config-for-main "index.html.md")))]
+          (:index-url res) => "/foo/bar.html")))
+    ))
 
 
