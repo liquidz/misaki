@@ -73,6 +73,12 @@
      ;(assoc m :content (delay content))
      )))
 
+(fact "get-neighbors should work fine."
+  (get-neighbors #(= 1 %) [1 2 3]) => [nil 2]
+  (get-neighbors #(= 2 %) [1 2 3]) => [1   3]
+  (get-neighbors #(= 3 %) [1 2 3]) => [2   nil]
+  (get-neighbors #(= 4 %) [1 2 3]) => [nil nil])
+
 (facts "-main should work fine."
   (binding [*config* test-conf]
     (fact "post template file"

@@ -94,6 +94,15 @@
            :post-dir   (file/join dir post-dir-name)
            :layout-dir (file/join dir layout-dir-name))))
 
+(defn get-neighbors
+  [pred ls]
+  (loop [pairs (partition 3 1 (concat [nil] ls [nil]))]
+    (if (seq pairs)
+      (let [[prev cur next] (first pairs)]
+        (if (pred cur)
+          [prev next]
+          (recur (rest pairs))))
+      [nil nil])))
 
 (defn -main
   [m]
