@@ -3,7 +3,7 @@
     [misaki.extension.remove-last-extension :refer :all]
     [midje.sweet                            :refer :all]))
 
-(def _run #(:filename (-main {:filename %})))
+(def _run #(:path (-main {:path %})))
 
 (fact "remove-last-ext should work fine."
   (_run "foo.txt")     => "foo"

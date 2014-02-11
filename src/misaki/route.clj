@@ -35,18 +35,19 @@
 
 (defn apply-route
   ""
-  [data]
-  (let [route (get-route (:type data))]
-    (reduce
-      (fn [res r]
-        (let [[f args] (parse-route r)]
-          (if f
-            (apply f res args)
-            (add-error res (str r " is not found."))
-            )
-          ))
-      data
-      route)))
+  ([data]
+   (apply-route data (get-route (:type data))))
+  ([data route]
+   (when (seq route)
+     (let [data (assoc-in data [:applying-route] route)]
+       (reduce
+         (fn [res r]
+           (let [[f args] (parse-route r)]
+             (if f
+               (apply f res args)
+               (add-error res (str r " is not found.")))))
+         data
+         route)))))
 
 ;(defn- find-first
 ;  [pred col]

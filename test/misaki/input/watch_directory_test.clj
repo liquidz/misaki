@@ -6,9 +6,18 @@
     [clojure.java.io              :as io]))
 
 (fact "parse-file should work fine."
-  (let [base-dir (file/normalize (.getParent (io/file (.getAbsolutePath (io/file ".")))))]
-    (:path (parse-file (io/file "project.clj") base-dir))
-          => (file/join "project.clj")
-    (:path (parse-file (io/file (file/join "foo" "project.clj")) base-dir))
-          => (file/join "foo" "project.clj")))
+  (let [base-dir "."
+        file (io/file "./foo/bar.txt")
+        res (parse-file file base-dir)]
+    (:path res) => "foo/bar.txt"
+    (:file res) => file
+    (:type res) => :txt
+    (contains? res :content) => true)
 
+  (let [base-dir "foo"
+        file (io/file "foo/bar.txt")
+        res (parse-file file base-dir)]
+    (:path res) => "bar.txt"
+    (:file res) => file
+    (:type res) => :txt
+    (contains? res :content) => true))

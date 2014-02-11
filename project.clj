@@ -7,6 +7,7 @@
                  [org.clojure/tools.cli "0.3.1"]
                  [org.clojure/tools.reader "0.8.3"]
                  [uochan/watchtower "0.1.4"]
+                 [clj-time "0.6.0"]
                  [clj-text-decoration "0.0.2"]
                  [cuma "0.0.5"]
                  [compojure "1.1.6"]

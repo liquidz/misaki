@@ -23,6 +23,12 @@
   (parent (join "foo" "bar")) => "foo"
   (parent (join "foo" "bar" "baz")) => (join "foo" "bar"))
 
+(fact "aboslute-path should work fine."
+  (let [here (io/file ".")
+        path (.getAbsolutePath here)]
+    (absolute-path here) => path
+    (absolute-path ".")  => path))
+
 (fact "file/mkdirs should work fine."
   (let [a "a", b "b"
         dir (join a b)]

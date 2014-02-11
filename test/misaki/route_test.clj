@@ -25,12 +25,17 @@
   (fact "no args"
     (binding [*config* {:route {:txt [f-inc f-dbl]}}]
       (stubbing [load-extension identity]
-        (apply-route {:type :txt :i 1}) => {:type :txt :i 4})))
+        (dissoc (apply-route {:type :txt :i 1}) :applying-route) => {:type :txt :i 4})))
 
   (fact "with args"
     (binding [*config* {:route {:txt [[f-inc 3] [f-dbl 5]]}}]
       (stubbing [load-extension identity]
-        (apply-route {:type :txt :i 1}) => {:type :txt :i 20}))))
+        (dissoc (apply-route {:type :txt :i 1}) :applying-route) => {:type :txt :i 20})))
+
+  (fact "no target routes"
+    (binding [*config* {:route {:txt [[f-inc 3] [f-dbl 5]]}}]
+      (apply-route {:type :dummy}) => nil))
+  )
 
 
 

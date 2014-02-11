@@ -18,10 +18,11 @@
 (defn parse-file
   "Parse java.io.File to hash map."
   [file base-dir]
-  (let [abs-path (.getAbsolutePath file)]
+  (let [base-abs (file/absolute-path base-dir)
+        file-abs (file/absolute-path file)]
     {:file    file
-     :path    (subs abs-path (inc (count base-dir)))
-     :type    (get-extension abs-path)
+     :path    (subs file-abs (inc (count base-abs)))
+     :type    (get-extension file-abs)
      :content (delay (slurp file))}))
 
 (defn -get-all

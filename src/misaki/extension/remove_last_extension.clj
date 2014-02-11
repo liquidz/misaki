@@ -11,5 +11,9 @@
     filename))
 
 (defn -main
-  [edn]
-  (assoc edn :filename (-> edn :filename remove-last-ext)))
+  [m]
+  (if (contains? m :path)
+    (assoc m :path (-> m :path remove-last-ext))
+    m
+    )
+  )

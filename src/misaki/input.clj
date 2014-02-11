@@ -17,11 +17,7 @@
    @fn-key: default value is `:-main`"
   ([] (get-input-extensions :-main))
   ([fn-key]
-   (load-ns-functions *input-ns-prefix* (:input *config*) fn-key)
-   ;(->> *config* :input
-   ;     (map (comp fn-key (partial load-functions *input-ns-prefix*)))
-   ;     (filter (comp not nil?)))
-   ))
+   (load-ns-functions *input-ns-prefix* (:input *config*) fn-key)))
 
 (defn add!
   "Add input resource to queue."
@@ -43,7 +39,7 @@
 (defn get-all
   "Returns sequence of all input resources."
   []
-  (mapcat (fn [f] (f)) (get-input-extensions :-get-all)))
+  (mapcat (fn [f] (f *config*)) (get-input-extensions :-get-all)))
 
 (defn start-input-extensions!
   "Start inputting with other threads."

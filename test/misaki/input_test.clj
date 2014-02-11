@@ -20,8 +20,8 @@
 
 
 (def ^{:private true}
-  sample-inputs (list #(list {:a 1})
-                         #(list {:b 2} {:c 3})))
+  sample-inputs (list (fn [_] (list {:a 1}))
+                      (fn [_] (list {:b 2} {:c 3}))))
 
 (fact "get-all should work fine."
   (stubbing [get-input-extensions sample-inputs]

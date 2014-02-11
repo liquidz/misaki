@@ -9,11 +9,11 @@
     [misaki.config    :refer [*config*]]
     [misaki.util.file :as file]))
 
-(defn -mains
-  [edn]
-  (let [ext     (-> edn :path file/get-last-ext keyword)
+(defn -main
+  [m]
+  (let [ext     (-> m :path file/get-last-ext keyword)
         ignores (-> *config* :copy-file (:ignore-extensions []) set)]
     (if (ignores ext)
-      edn
-      (dissoc edn :content))))
+      m
+      (dissoc m :content))))
 

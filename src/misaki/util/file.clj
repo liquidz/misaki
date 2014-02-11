@@ -44,6 +44,16 @@
       s
       (subs s 0 i))))
 
+(defmulti absolute-path
+  "Get absolute path."
+  #(class %))
+(defmethod absolute-path java.io.File
+  [file]
+  (.getAbsolutePath file))
+(defmethod absolute-path String
+  [path]
+  (.getAbsolutePath (io/file path)))
+
 (defn mkdirs
   "Make directories recursively."
   [dir-str]

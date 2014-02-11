@@ -17,13 +17,12 @@
   [edn]
   (some-> edn
           apply-route
-          ;apply-before-filters
-          ;apply-converters
-          ;apply-after-filters
           run-output-extensions))
 
 (def ^{:private true} cli-options
   [[nil "--dev" "Run misaki with development mode."
+    :default false]
+   [nil "--build" "Build all."
     :default false]])
 
 (defn -main
@@ -35,6 +34,11 @@
 
     (binding [*config* conf
               *development-mode* (:dev options)]
+
+      (when (:build options)
+        (doseq [resource (in/get-all)]
+          (build (merge conf resource))))
+
       (in/start-input-extensions!)
 
       (while true

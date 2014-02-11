@@ -1,5 +1,11 @@
 (ns misaki.setup.local-server
-  "Setup extension for running local server."
+  "Setup extension for running local server.
+
+   CONFIG:
+   { :local-server {
+       :url-base \"/\"
+       :port     8080 } }
+   "
   (:require
     [compojure.core     :refer [routes]]
     [compojure.route    :refer [files]]
@@ -20,7 +26,7 @@
 (defn -main
   "Run local server."
   [conf]
-  (let [conf (-> conf :+ local-server-conf)]
+  (let [conf (local-server-conf conf)]
     (.start
       (Thread.
         #(run-jetty
