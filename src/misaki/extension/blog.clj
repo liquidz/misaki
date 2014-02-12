@@ -94,13 +94,13 @@
            :post-dir   (file/join dir post-dir-name)
            :layout-dir (file/join dir layout-dir-name))))
 
-(defn get-neighbors
+(defn neighbors
   [pred ls]
   (loop [pairs (partition 3 1 (concat [nil] ls [nil]))]
     (if (seq pairs)
-      (let [[prev cur next] (first pairs)]
+      (let [[left cur right] (first pairs)]
         (if (pred cur)
-          [prev next]
+          [left right]
           (recur (rest pairs))))
       [nil nil])))
 
@@ -110,12 +110,16 @@
 
     (let [route (get-route-without-blog)
           posts (get-posts)
+          [next prev] (if (post-file? (:file m))
+                        (neighbors #(= (:file m) (:file %)) posts)
+                        ;; TODO: pagination
+                        [nil nil])
           m     (assoc m
+                       :prev prev :next next
                        :posts posts
                        :index-url (str (get-url-base)
                                        (or (some-> *config* :blog :index-filename)
-                                           DEFAULT_INDEX_FILENAME))
-                       )
+                                           DEFAULT_INDEX_FILENAME)))
           tmpls (get-template-data m)
           info  (apply merge (reverse (map #(dissoc % :content) tmpls)))
           res   (reduce

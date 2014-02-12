@@ -35,27 +35,32 @@
 
 (fact "get-post-files should work fine."
   (binding [*config* (blog-config test-conf)]
-    (count (get-post-files)) => 2))
+    (count (get-post-files)) => 3))
 
 (facts "get-posts should work fine."
   (fact "default config"
     (binding [*config* (blog-config test-conf)]
-      (let [[p2 p1 :as posts] (get-posts)]
-        (count posts)            => 2
+      (let [[p3 p2 p1 :as posts] (get-posts)]
+        (count posts)            => 3
         (-> p1 :title) => "foo"
         (-> p2 :title) => "bar"
+        (-> p3 :title) => "baz"
 
         (-> p1 :date)  => (date-time 2014 1 1 0 11 22)
         (-> p2 :date)  => (date-time 2014 1 2 0 11 22)
+        (-> p3 :date)  => (date-time 2014 1 3 0 11 22)
 
         (-> p1 :url) => "/2014-01-01-001122.html"
-        (-> p2 :url) => "/2014-01-02-001122.html")))
+        (-> p2 :url) => "/2014-01-02-001122.html"
+        (-> p3 :url) => "/2014-01-03-001122.html"
+        )))
 
   (fact "custom watch direcotry"
     (binding [*config* (blog-config (merge test-conf {:local-server {:url-base "/foo"}}))]
-      (let [[p2 p1 :as posts] (get-posts)]
+      (let [[p3 p2 p1 :as posts] (get-posts)]
         (-> p1 :url) => "/foo/2014-01-01-001122.html"
         (-> p2 :url) => "/foo/2014-01-02-001122.html"
+        (-> p3 :url) => "/foo/2014-01-03-001122.html"
         ))))
 
 (defn- config-for-main
@@ -73,28 +78,35 @@
      ;(assoc m :content (delay content))
      )))
 
-(fact "get-neighbors should work fine."
-  (get-neighbors #(= 1 %) [1 2 3]) => [nil 2]
-  (get-neighbors #(= 2 %) [1 2 3]) => [1   3]
-  (get-neighbors #(= 3 %) [1 2 3]) => [2   nil]
-  (get-neighbors #(= 4 %) [1 2 3]) => [nil nil])
+(fact "neighbors should work fine."
+  (neighbors #(= 1 %) [1 2 3]) => [nil 2]
+  (neighbors #(= 2 %) [1 2 3]) => [1   3]
+  (neighbors #(= 3 %) [1 2 3]) => [2   nil]
+  (neighbors #(= 4 %) [1 2 3]) => [nil nil]
+  (neighbors #(= 1 %) [])      => [nil nil])
 
 (facts "-main should work fine."
   (binding [*config* test-conf]
     (fact "post template file"
-      (let [path (file/join "foo" "2014-01-01-001122.html")
+      (let [path (file/join "2014-01-02-001122.html")
             m    (config-for-main (file/join DEFAULT_POST_DIR (str path ".md")))
             res  (-main (merge *config* m))]
 
         (contains? res :posts) => true
-        (count (:posts res)) => 2
+        (count (:posts res)) => 3
         (:title res) => "hello"
         (:path res)  => path
         (:index-url res) => "/"
         (-> res :content force (.indexOf "<title>hello</title>") (not= -1)) => true
         (-> res :content force (.indexOf "hello world") (not= -1)) => true
+
         ;; TODO
         ;; * prev/next post
+        (-> res :prev :title) => "foo"
+        (-> res :prev :url) => "/2014-01-01-001122.html"
+
+        (-> res :next :title) => "baz"
+        (-> res :next :url) => "/2014-01-03-001122.html"
         ))
 
     (fact "normal template file"
@@ -103,7 +115,7 @@
             res  (-main (merge *config* m))]
 
         (contains? res :posts) => true
-        (count (:posts res)) => 2
+        (count (:posts res)) => 3
         (:title res) => "hello"
         (:path res)  => path
         (-> res :content force (.indexOf "<title>hello</title>") (not= -1)) => true
