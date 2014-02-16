@@ -40,4 +40,3 @@
         (slurp (pub-file s))   => (force (:content s))
         (file/rm-rf (::first s))
         (.exists (pub-file s)) => false)))))
-

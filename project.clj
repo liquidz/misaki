@@ -16,6 +16,9 @@
   :profiles {:dev {:dependencies [[midje "1.6.0" :exclusions [org.clojure/clojure]]
                                   [org.clojars.runa/conjure "2.1.3"]]}}
   :plugins [[lein-midje "3.1.3"]
+            [lein-kibit "0.0.8"]
+            [lein-bikeshed "0.1.6"]
+            [jonase/eastwood "0.1.0"]
             [codox "0.6.6"]]
 
 

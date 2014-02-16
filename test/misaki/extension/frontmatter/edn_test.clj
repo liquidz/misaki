@@ -1,8 +1,8 @@
-(ns misaki.extension.frontmatter-test
+(ns misaki.extension.frontmatter.edn-test
   (:require
-    [misaki.extension.frontmatter :refer :all]
-    [midje.sweet               :refer :all]
-    [clojure.string            :as str]))
+    [misaki.extension.frontmatter.edn :refer :all]
+    [midje.sweet                      :refer :all]
+    [clojure.string                   :as str]))
 
 (def ^{:private true} valid-text
   [";; :key \"value\""
@@ -32,7 +32,9 @@
 
 (facts "-main should work fine."
   (fact "valid text"
-    (let [data {:foo "bar" :ls [9 10] :content (delay (str/join "\n" valid-text))}
+    (let [data {:foo     "bar"
+                :ls      [9 10]
+                :content (delay (str/join "\n" valid-text))}
           data (-main data)]
       (:foo data) => "bar"
       (:key data) => "value"
@@ -40,10 +42,11 @@
       (-> data :content force str/trim) => "hello"))
 
   (fact "invalid text"
-    (let [data {:foo "bar" :ls [9 10] :content (delay (str/join "\n" invalid-text))}
+    (let [data {:foo     "bar"
+                :ls      [9 10]
+                :content (delay (str/join "\n" invalid-text))}
           data (-main data)]
       (:foo data) => "bar"
       (:key data) => nil
       (:ls data)  => [9 10]
       (-> data :content force str/trim) => "hello\nworld")))
-

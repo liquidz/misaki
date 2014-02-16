@@ -21,21 +21,21 @@
     (get-route :txt) => [:a]
     (get-route :xxx) => [:b]))
 
+(defn- test-apply-route
+  [m]
+  (dissoc (apply-route m) :applying-route))
+
 (facts "apply-route should work fine."
   (fact "no args"
     (binding [*config* {:route {:txt [f-inc f-dbl]}}]
       (stubbing [load-extension identity]
-        (dissoc (apply-route {:type :txt :i 1}) :applying-route) => {:type :txt :i 4})))
+        (test-apply-route {:type :txt :i 1}) => {:type :txt :i 4})))
 
   (fact "with args"
     (binding [*config* {:route {:txt [[f-inc 3] [f-dbl 5]]}}]
       (stubbing [load-extension identity]
-        (dissoc (apply-route {:type :txt :i 1}) :applying-route) => {:type :txt :i 20})))
+        (test-apply-route {:type :txt :i 1}) => {:type :txt :i 20})))
 
   (fact "no target routes"
     (binding [*config* {:route {:txt [[f-inc 3] [f-dbl 5]]}}]
-      (apply-route {:type :dummy}) => nil))
-  )
-
-
-
+      (test-apply-route {:type :dummy}) => nil)))

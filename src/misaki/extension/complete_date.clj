@@ -16,7 +16,7 @@
 (defn -main
   [m]
   (if-let [^java.io.File file (:file m)]
-    (let [fs   (-> m (:date-format DEFAULT_DATE_FORMAT))
+    (let [fs   (:date-format m DEFAULT_DATE_FORMAT)
           fmt  (formatter fs)
           date (try
                  (parse fmt (take-string (.getName file) (count fs)))
@@ -25,4 +25,3 @@
                    nil))]
       (assoc m :date date))
     m))
-

@@ -9,4 +9,3 @@
   (_run "foo.txt")     => "foo"
   (_run "foo.txt.bar") => "foo.txt"
   (_run "foo")         => "foo")
-

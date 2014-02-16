@@ -6,13 +6,6 @@
 (def ^{:dynamic true :doc "Flag for development mode."}
   *development-mode* false)
 
-(defn- make-namespace-symbol
-  [ls]
-  (->> ls
-       (map name)
-       (str/join ".")
-       symbol))
-
 (defn- sym-map->key-map
   [m]
   (reduce
@@ -20,24 +13,26 @@
     {}
     (keys m)))
 
-(defn load-functions
-  "Load public functions from specified namespace."
-  [& namespace-name]
-  (let [namespace-sym (make-namespace-symbol namespace-name)]
-    (try
-      (if *development-mode*
-        (require namespace-sym :reload-all)
-        (require namespace-sym))
-      (some-> namespace-sym
-              find-ns
-              ns-publics
-              sym-map->key-map)
-      (catch FileNotFoundException e
-        []))))
+(defn- ns-sym
+  [& names]
+  (->> names
+       (map name)
+       (str/join ".")
+       symbol))
 
-(defn load-ns-functions
-  ([ns-prefix ns-names] (load-ns-functions ns-prefix ns-names identity))
-  ([ns-prefix ns-names key-fn]
-   (->> ns-names
-        (map (comp key-fn (partial load-functions ns-prefix)))
-        (filter (comp not nil?)))))
+(defn- require-and-get-publics
+  [ns-name-sym]
+  (try
+    (if *development-mode*
+      (require ns-name-sym :reload-all)
+      (require ns-name-sym))
+    (some-> ns-name-sym
+            find-ns
+            ns-publics
+            sym-map->key-map)
+    (catch FileNotFoundException e
+      [])))
+
+(def ^{:doc "Load public functions from specified namespace."}
+  load-functions
+  (comp require-and-get-publics ns-sym))

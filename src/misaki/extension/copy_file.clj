@@ -16,4 +16,3 @@
     (if (ignores ext)
       m
       (dissoc m :content))))
-

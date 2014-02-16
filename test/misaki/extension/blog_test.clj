@@ -1,5 +1,6 @@
 (ns misaki.extension.blog-test
   (:require
+    [misaki.extension.blog.defaults :refer :all]
     [misaki.input.watch-directory :as in]
     [misaki.extension.blog :refer :all]
     [misaki.config :refer [*config*]]
@@ -16,7 +17,7 @@
   "test/files/blog")
 (def ^{:private true} test-conf
   {;:blog {:filter [:complete-date :frontmatter]}
-   :applying-route [:complete-date :frontmatter :remove-last-extension]
+   :applying-route [:complete-date :frontmatter.edn :remove-last-extension]
    :watch-directory watch-dir})
 
 (fact "layout-file should work fine."
@@ -78,13 +79,6 @@
      ;(assoc m :content (delay content))
      )))
 
-(fact "neighbors should work fine."
-  (neighbors #(= 1 %) [1 2 3]) => [nil 2]
-  (neighbors #(= 2 %) [1 2 3]) => [1   3]
-  (neighbors #(= 3 %) [1 2 3]) => [2   nil]
-  (neighbors #(= 4 %) [1 2 3]) => [nil nil]
-  (neighbors #(= 1 %) [])      => [nil nil])
-
 (facts "-main should work fine."
   (binding [*config* test-conf]
     (fact "post template file"
@@ -135,5 +129,3 @@
         (let [res  (-main (merge *config* (config-for-main "index.html.md")))]
           (:index-url res) => "/foo/bar.html")))
     ))
-
-

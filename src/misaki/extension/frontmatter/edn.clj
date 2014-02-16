@@ -1,5 +1,5 @@
-(ns misaki.extension.frontmatter
-  "Misaki extension to get frontmatter."
+(ns misaki.extension.frontmatter.edn
+  "Misaki extension to get edn frontmatter."
   (:require
     [clojure.string           :as str]
     [clojure.tools.reader.edn :as edn]))
@@ -14,8 +14,9 @@
 (defn get-frontmatter-lines
   "Get frontmatter lines from string."
   [s]
-  (->> (str/split-lines s)
-       (take-while #(= 0 (.indexOf % FRONTMATTER_PREFIX)))))
+  (take-while
+    #(zero? (.indexOf % FRONTMATTER_PREFIX))
+    (str/split-lines s)))
 
 (defn parse-frontmatter
   "Parse frontmatter lines to hash map."
@@ -33,4 +34,3 @@
         data    (parse-frontmatter lines)]
     (assoc (merge edn data)
            :content (delay (drop-lines (count lines) content)))))
-

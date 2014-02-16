@@ -1,8 +1,8 @@
 (ns misaki.input
   "Input resource manager library."
   (:require
-    [misaki.config :refer [*config*]]
-    [misaki.loader :refer [load-ns-functions]])
+    [misaki.config :refer [*config* parse-config-args]]
+    [misaki.loader :refer [load-functions]])
   (:refer-clojure  :exclude [empty?]))
 
 (def ^{:dynamic true :doc "Input extension's namespace prefix."}
@@ -11,13 +11,11 @@
 
 (def ^{:private true :doc "Input queue."} queue (ref []))
 
-(defn get-input-extensions
-  "Get input extension's specified public functions.
-
-   @fn-key: default value is `:-main`"
-  ([] (get-input-extensions :-main))
-  ([fn-key]
-   (load-ns-functions *input-ns-prefix* (:input *config*) fn-key)))
+(defn load-input-function
+  ""
+  ([name] (load-input-function name :-main))
+  ([name fn-key]
+   (fn-key (load-functions *input-ns-prefix*  name))))
 
 (defn add!
   "Add input resource to queue."
@@ -39,11 +37,17 @@
 (defn get-all
   "Returns sequence of all input resources."
   []
-  (mapcat (fn [f] (f *config*)) (get-input-extensions :-get-all)))
+  (->> (:input *config*)
+       (map #(let [{name :name, args :args} (parse-config-args %)]
+               (if-let [f (load-input-function name :-get-all)]
+                 (fn [conf] (apply f conf args)))))
+       (filter (comp not nil?))
+       (mapcat #(% *config*))))
 
 (defn start-input-extensions!
   "Start inputting with other threads."
   []
-  (doseq [f (get-input-extensions)]
-    (.start (Thread. (partial f *config*)))))
-
+  (doseq [{name :name, args :args} (map parse-config-args (:input *config*))]
+    (let [f (some-> name load-input-function (partial *config*))]
+      (when f
+        (.start (Thread. #(apply f args)))))))

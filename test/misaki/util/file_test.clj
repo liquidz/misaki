@@ -48,4 +48,3 @@
     (.isDirectory (io/file (apply join dirs))) => true
 
     (rm-rf (first dirs))))
-

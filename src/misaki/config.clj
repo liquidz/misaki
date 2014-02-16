@@ -12,18 +12,11 @@
 
 (def ^{:doc "Default configuration map."}
   DEFAULT_CONFIG
-  {;:configurators []
-   ;:input     [:watch-directory]
-   ;:output    [:text :file]
-   ;:filters       {:after [:remove-last-ext]}
-   ;:rate          50
-
-   :setup  [:welcome]
+  {:setup  [:welcome]
    :input  []
    :output [:print-errors]
-   :route {}
-   :rate   50
-   })
+   :route  {}
+   :rate   50})
 
 (defn uniq-conj
   [col1 col2]
@@ -51,4 +44,8 @@
        edn/read-string
        (merge-config DEFAULT_CONFIG)))
 
-
+(defn parse-config-args
+  [col]
+  (let [[name & args] (if (sequential? col) col [col])]
+    {:name name
+     :args (or args [])}))

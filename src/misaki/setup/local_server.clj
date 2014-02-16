@@ -34,4 +34,3 @@
                           {:root (:public-dir conf)}))
            {:port (-> conf :local-server :port)}))))
   conf)
-

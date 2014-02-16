@@ -23,4 +23,3 @@
       (->> edn :path (file/join public-dir) file/parent file/mkdirs)
       (io/copy (:file edn)
                (io/file (file/join public-dir (:path edn)))))))
-

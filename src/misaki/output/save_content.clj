@@ -29,16 +29,4 @@
   (cond
     (sequential? coll) (doseq [x coll] (-main x))
     (map? coll) (save! coll)
-    :else nil
-    )
-
-  ;(when (and path content
-  ;           (= clojure.lang.Delay (type content)))
-  ;  (let [public-dir (:public-dir *config* DEFAULT_PUBLIC_DIR)
-  ;        path (file/join public-dir path)]
-  ;    ; make directories
-  ;    (-> path file/parent file/mkdirs)
-  ;    ; save file
-  ;    (spit path (force content))))
-  )
-
+    :else nil))

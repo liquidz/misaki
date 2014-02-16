@@ -14,4 +14,3 @@
      => {:public-dir "." :local-server {:url-base "/foo" :port 8080}}
   (local-server-conf {:local-server {:port 80}})
      => {:public-dir "." :local-server {:url-base "/" :port 80}})
-

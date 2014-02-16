@@ -32,17 +32,7 @@
     )
   )
 
-;(facts "merge-config should work fine."
-;  (fact "+config"
-;    (let [m {:+ {:a [:b] :s "s"}}]
-;      (merge-config m {:+ {:a [:c]}}) => {:+ {:a [:b :c] :s "s"}}
-;      (merge-config m {:+ {:a [:b]}}) => {:+ {:a [:b] :s "s"}}
-;      (merge-config m {:+ {:x [:y]}}) => {:+ {:a [:b] :x [:y] :s "s"}}
-;      (merge-config m {:+ {:s "t"}})  => {:+ {:a [:b] :s "t"}}))
-;
-;  (fact "-config"
-;    (let [m {:+ {:a [:b :c] :s "s"}}]
-;      (merge-config m {:- {:a [:b]}})    => {:+ {:a [:c] :s "s"}}
-;      (merge-config m {:- {:a [:b :c]}}) => {:+ {:a [] :s "s"}}
-;      (merge-config m {:- {:a [:x]}})    => {:+ {:a [:b :c] :s "s"}}
-;      (merge-config m {:- {:s nil}})     => {:+ {:a [:b :c] :s nil}})))
+(fact "parse-config-args should work fine."
+  (parse-config-args :foo)       => {:name :foo :args []}
+  (parse-config-args [:foo])     => {:name :foo :args []}
+  (parse-config-args [:foo 1 2]) => {:name :foo :args [1 2]})

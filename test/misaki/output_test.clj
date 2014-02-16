@@ -5,13 +5,20 @@
     [conjure.core  :refer :all]))
 
 (def ^{:private true}
-  sample-data (atom {}))
+  tmp (atom {}))
+
+(defn- add
+  ([m] (add m :a 1))
+  ([m k] (add m k 1))
+  ([m k n] (reset! tmp (assoc (merge @tmp m) k n))))
+
 (def ^{:private true}
-  sample-outputs (list #(reset! sample-data (assoc @sample-data :a %))
-                       #(reset! sample-data (assoc @sample-data :b %))))
+  outputs (list add
+                (list add :b)
+                (list add :c 2)))
 
 (fact "run-output-extensions should work fine."
-  (stubbing [get-output-extensions sample-outputs]
-    @sample-data => {}
-    (run-output-extensions 1)
-    @sample-data => {:a 1 :b 1}))
+  (stubbing [load-output-functions identity]
+    @tmp => {}
+    (run-output-extensions {:output outputs :x 10})
+    (dissoc @tmp :output) => {:a 1 :b 1 :c 2 :x 10}))

@@ -20,7 +20,7 @@
   "Normalize file path."
   [s]
   (if (and (string? s) (.endsWith s separator))
-    (apply str (drop-last s))
+    (str/join (drop-last s))
     s))
 
 (defn join
@@ -46,7 +46,7 @@
 
 (defmulti absolute-path
   "Get absolute path."
-  #(class %))
+  class)
 (defmethod absolute-path java.io.File
   [file]
   (.getAbsolutePath file))

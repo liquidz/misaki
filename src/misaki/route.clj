@@ -21,14 +21,6 @@
       route
       (:* routes []))))
 
-(defn parse-route
-  ""
-  [route]
-  (let [[name & args] (if (sequential? route) route [route])]
-    (list
-      (load-extension name)
-      args)))
-
 (defn add-error
   [data error-message]
   (update-in data [:errors] #(conj (or % ()) error-message)))
@@ -42,17 +34,10 @@
      (let [data (assoc-in data [:applying-route] route)]
        (reduce
          (fn [res r]
-           (let [[f args] (parse-route r)]
+           (let [{name :name, args :args} (parse-config-args r)
+                 f (load-extension name)]
              (if f
                (apply f res args)
                (add-error res (str r " is not found.")))))
          data
          route)))))
-
-;(defn- find-first
-;  [pred col]
-;  (loop [col col]
-;    (if-let [x (first col)]
-;      (if (pred x)
-;        x
-;        (recur (rest col))))))

@@ -13,4 +13,3 @@
     (contains? fns :g) => true
     (contains? fns :x) => false
     (contains? fns :y) => false))
-

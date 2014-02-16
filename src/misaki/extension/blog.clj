@@ -1,19 +1,14 @@
 (ns misaki.extension.blog
   (:require
+    [misaki.extension.blog.defaults :refer :all]
     [misaki.config :refer [*config*]]
-    ;[misaki.route  :refer [load-extension]]
     [misaki.input.watch-directory :as in]
     [misaki.route  :as route]
     [misaki.util.file :as file]
+    [misaki.util.seq  :as seq]
     [cuma.core :refer [render]]
     [clojure.java.io :as io]
     [clojure.string :as str]))
-
-(def DEFAULT_TEMPLATE_DIR   ".")
-(def DEFAULT_URL_BASE       "/")
-(def DEFAULT_POST_DIR       "posts")
-(def DEFAULT_LAYOUT_DIR     "layouts")
-(def DEFAULT_INDEX_FILENAME "")
 
 (defn get-route-without-blog
   []
@@ -22,7 +17,7 @@
 (defn- change-post-path
   [path]
   (let [post-dir (or (-> *config* :blog :post-dir) DEFAULT_POST_DIR)]
-    (apply str (drop (inc (count post-dir)) path))))
+    (str/join (drop (inc (count post-dir)) path))))
 
 (defn layout-file
   ""
@@ -80,7 +75,6 @@
         #(if-let [layout-name (:layout %)]
            (let [file   (layout-file layout-name)
                  layout {:content (delay (slurp file))}]
-             ;(reduce (fn [res f] (f res)) layout ff)
              (route/apply-route layout route)
              ))
         m))))
@@ -94,44 +88,42 @@
            :post-dir   (file/join dir post-dir-name)
            :layout-dir (file/join dir layout-dir-name))))
 
-(defn neighbors
-  [pred ls]
-  (loop [pairs (partition 3 1 (concat [nil] ls [nil]))]
-    (if (seq pairs)
-      (let [[left cur right] (first pairs)]
-        (if (pred cur)
-          [left right]
-          (recur (rest pairs))))
-      [nil nil])))
+(defn render-content
+  [m]
+  (let [tmpls (get-template-data m)
+        info  (apply merge (reverse (map #(dissoc % :content) tmpls)))]
+    (reduce
+      (fn [res tmpl]
+        (assoc res :content (-> tmpl :content force (render res))))
+      info
+      tmpls)))
+
+(defn get-index-url
+  )
+
+(defn template-config
+  [m]
+  (let [posts (get-posts)
+        [next prev] (if (post-file? (:file m))
+                      (seq/neighbors #(= (:file m) (:file %)) posts)
+                      ;; TODO: pagination
+                      [nil nil])]
+    (assoc
+      m
+      :prev prev
+      :next next
+      :posts posts
+      :index-url (str (get-url-base)
+                      (or (some-> *config* :blog :index-filename)
+                          DEFAULT_INDEX_FILENAME))
+      :path    (if (post-file? (:file m))
+                 (change-post-path (:path m))
+                 (:path m))
+      )))
 
 (defn -main
   [m]
   (binding [*config* (blog-config m)]
-
-    (let [route (get-route-without-blog)
-          posts (get-posts)
-          [next prev] (if (post-file? (:file m))
-                        (neighbors #(= (:file m) (:file %)) posts)
-                        ;; TODO: pagination
-                        [nil nil])
-          m     (assoc m
-                       :prev prev :next next
-                       :posts posts
-                       :index-url (str (get-url-base)
-                                       (or (some-> *config* :blog :index-filename)
-                                           DEFAULT_INDEX_FILENAME)))
-          tmpls (get-template-data m)
-          info  (apply merge (reverse (map #(dissoc % :content) tmpls)))
-          res   (reduce
-                  (fn [res tmpl]
-                    (assoc res :content (-> tmpl :content (render res))))
-                  info
-                  (map #(assoc % :content (force (:content %))) tmpls))]
-
-      (assoc m
-             :path    (if (post-file? (:file m))
-                        (change-post-path (:path m))
-                        (:path m))
-             :content (delay (:content res)))
-      )))
-
+    (let [m   (template-config m)
+          res (render-content m)]
+      (assoc m :content (delay (:content res))))))

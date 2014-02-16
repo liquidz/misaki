@@ -1,15 +1,25 @@
 (ns misaki.setup-test
   (:require
-    [conjure.core :refer :all]
-    [midje.sweet  :refer :all]
-    [misaki.setup :refer :all]))
+    [misaki.setup  :refer :all]
+    [conjure.core  :refer :all]
+    [midje.sweet   :refer :all]))
 
-(def sample-extensions
-  (list #(assoc % :a 1)
-        #(assoc % :b 2)))
+(defn- fadd
+  ([m]   (fadd m 1))
+  ([m n] (update-in m [:n] #(+ % n))))
+
+(defn- fmul
+  ([m]   (fmul m 2))
+  ([m n] (update-in m [:n] #(* % n))))
+
+(defn- test-run
+  [m]
+  (dissoc (run-setup-extensions m) :setup))
 
 (fact "run-setup-extensions should work fine."
-  (stubbing [get-setup-extensions sample-extensions]
-    (run-setup-extensions {}) => {:a 1 :b 2}
-    (run-setup-extensions {:c 3}) => {:a 1 :b 2 :c 3}))
-
+  (stubbing [load-setup-function identity]
+    (test-run {:setup [fadd] :n 1})               => {:n 2}
+    (test-run {:setup [fadd fadd] :n 1})          => {:n 3}
+    (test-run {:setup [(list fadd 3)] :n 1})      => {:n 4}
+    (test-run {:setup [fadd fmul] :n 1})          => {:n 4}
+    (test-run {:setup [fadd (list fmul 3)] :n 1}) => {:n 6}))
