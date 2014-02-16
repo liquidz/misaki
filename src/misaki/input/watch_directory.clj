@@ -33,6 +33,10 @@
          (filter #(.isFile %))
          (map #(parse-file % dir)))))
 
+(defn add-to-input
+  [^java.io.File file base-dir]
+  (in/add! (parse-file file base-dir)))
+
 (defn -main
   "Watch specified directory, and input modified file data."
   [config]
@@ -42,4 +46,4 @@
       (rate 50)
       (change-first? false)
       (on-change #(doseq [file %]
-                    (-> file (parse-file base-dir) in/add!))))))
+                    (add-to-input file base-dir))))))

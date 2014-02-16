@@ -1,9 +1,10 @@
 (ns misaki.extension.blog-test
   (:require
     [misaki.extension.blog.defaults :refer :all]
-    [misaki.input.watch-directory :as in]
+    [misaki.input.watch-directory :refer [parse-file]]
     [misaki.extension.blog :refer :all]
     [misaki.config :refer [*config*]]
+    [misaki.input :as in]
     [misaki.util.file :as file]
     [midje.sweet               :refer :all]
     [misaki.route :as route]
@@ -75,7 +76,7 @@
   ([path content]
    (let [base-dir (:watch-directory *config*)
          filename (file/join base-dir path)
-         m (in/parse-file (io/file filename) base-dir)
+         m (parse-file (io/file filename) base-dir)
          m (assoc m :content (delay content))
          ]
      (route/apply-route m (:applying-route *config*)))))
@@ -92,6 +93,17 @@
   (binding [*config* {:local-server {:url-base "/foo"}
                       :blog {:index-filename "index.htm"}}]
     (get-index-url) => "/foo/"))
+
+(fact "build-with-post should work."
+  (in/empty?) => true
+  (build-with-post {:blog {:build-with-post ["foo.txt"]}})
+  (:file (in/get!)) => (io/file "./foo.txt")
+  (in/empty?) => true
+
+  (build-with-post {:blog {:build-with-post ["foo.txt" "bar.txt"]}})
+  (:file (in/get!)) => (io/file "./foo.txt")
+  (:file (in/get!)) => (io/file "./bar.txt")
+  (in/empty?) => true)
 
 (facts "-main should work fine."
   (binding [*config* test-conf]
