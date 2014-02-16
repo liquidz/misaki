@@ -14,8 +14,10 @@
   (get-last-ext "foo")         => nil)
 
 (fact "file/normalize should work fine."
-  (normalize (str "foo" separator)) => "foo"
-  (normalize (str "foo" separator "foo.txt")) => (str "foo" separator "foo.txt"))
+  (normalize (str "foo" separator))
+      => "foo"
+  (normalize (str "foo" separator "foo.txt"))
+      => (str "foo" separator "foo.txt"))
 
 (fact "file/parent should work fine."
   (parent "foo") => "foo"

@@ -14,11 +14,6 @@
   []
   (remove (set [:blog]) (:applying-route *config*)))
 
-(defn- change-post-path
-  [path]
-  (let [post-dir (or (-> *config* :blog :post-dir) DEFAULT_POST_DIR)]
-    (str/join (drop (inc (count post-dir)) path))))
-
 (defn layout-file
   ""
   [layout-name]
@@ -26,19 +21,20 @@
     (io/file (file/join (:layout-dir *config*)
                         (str layout-name layout-extension)))))
 
-(defn post-file?
-  [^java.io.File file]
-  (zero? (.indexOf (file/absolute-path file)
-                   (file/absolute-path (:post-dir *config*)))))
-
 (defn layout-file?
   [^java.io.File file]
   (zero? (.indexOf (file/absolute-path file)
                    (file/absolute-path (:layout-dir *config*)))))
 
+(defn post-file?
+  [^java.io.File file]
+  (zero? (.indexOf (file/absolute-path file)
+                   (file/absolute-path (:post-dir *config*)))))
+
 (defn get-post-files
   []
-  (or (some->> *config* :post-dir io/file file-seq (filter #(.isFile ^java.io.File %)))
+  (or (some->> *config* :post-dir io/file
+               file-seq (filter #(.isFile ^java.io.File %)))
       []))
 
 (defn- get-url-base
@@ -67,7 +63,7 @@
          (map #(assoc-in  % [:url] (post-path->url (:path %)))))))
 
 (defn get-template-data
-  [m]
+  [conf]
   (let [route (get-route-without-blog)]
     (take-while
       (comp not nil?)
@@ -77,7 +73,7 @@
                  layout {:content (delay (slurp file))}]
              (route/apply-route layout route)
              ))
-        m))))
+        conf))))
 
 (defn blog-config
   [conf]
@@ -99,31 +95,33 @@
       tmpls)))
 
 (defn get-index-url
-  )
+  []
+  (let [filename (or (some-> *config* :blog :index-filename)
+                     DEFAULT_INDEX_FILENAME)
+        filename (if-not (#{"index.html" "index.htm"} filename) filename)]
+    (str (get-url-base) filename)))
+
+
+(defn post-config
+  [conf]
+  (let [posts (:posts conf)
+        post-dir (or (-> *config* :blog :post-dir) DEFAULT_POST_DIR)
+        [next prev] (seq/neighbors #(= (:file conf) (:file %)) posts)]
+    (assoc conf
+           :prev prev, :next next
+           :path (str/join (drop (inc (count post-dir)) (:path conf))))))
 
 (defn template-config
-  [m]
-  (let [posts (get-posts)
-        [next prev] (if (post-file? (:file m))
-                      (seq/neighbors #(= (:file m) (:file %)) posts)
-                      ;; TODO: pagination
-                      [nil nil])]
-    (assoc
-      m
-      :prev prev
-      :next next
-      :posts posts
-      :index-url (str (get-url-base)
-                      (or (some-> *config* :blog :index-filename)
-                          DEFAULT_INDEX_FILENAME))
-      :path    (if (post-file? (:file m))
-                 (change-post-path (:path m))
-                 (:path m))
-      )))
+  [conf]
+  (assoc conf
+         :posts     (get-posts)
+         :index-url (get-index-url)))
 
 (defn -main
-  [m]
-  (binding [*config* (blog-config m)]
-    (let [m   (template-config m)
-          res (render-content m)]
-      (assoc m :content (delay (:content res))))))
+  [conf]
+  (binding [*config* (blog-config conf)]
+    (let [file (:file conf)
+          conf (template-config conf)
+          conf (if (post-file? file) (post-config conf) conf)
+          res  (render-content conf)]
+      (assoc conf :content (delay (:content res))))))

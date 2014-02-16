@@ -16,23 +16,25 @@
 (def ^{:private true} watch-dir
   "test/files/blog")
 (def ^{:private true} test-conf
-  {;:blog {:filter [:complete-date :frontmatter]}
-   :applying-route [:complete-date :frontmatter.edn :remove-last-extension]
+  {:applying-route [:complete-date :frontmatter.edn :remove-last-extension]
    :watch-directory watch-dir})
 
 (fact "layout-file should work fine."
   (binding [*config* (blog-config test-conf)]
-    (layout-file "foo") => (io/file (file/join watch-dir "layouts" "foo.html"))))
+    (layout-file "foo")
+       => (io/file (file/join watch-dir "layouts" "foo.html"))))
 
 (fact "post-file? should work fine."
   (binding [*config* (blog-config test-conf)]
-    (post-file? (io/file (file/join (:post-dir *config*) "foo.txt")))   => true
-    (post-file? (io/file (file/join (:layout-dir *config*) "foo.txt"))) => false))
+    (let [test-post-file? #(post-file? (io/file (apply file/join %&)))]
+      (test-post-file? (:post-dir *config*) "foo.txt")   => true
+      (test-post-file? (:layout-dir *config*) "foo.txt") => false)))
 
 (fact "layout-file? should work fine."
   (binding [*config* (blog-config test-conf)]
-    (layout-file? (io/file (file/join (:layout-dir *config*) "foo.txt")))   => true
-    (layout-file? (io/file (file/join (:post-dir *config*) "foo.txt"))) => false))
+    (let [test-layout-file? #(layout-file? (io/file (apply file/join %&)))]
+      (test-layout-file? (:layout-dir *config*) "foo.txt") => true
+      (test-layout-file? (:post-dir *config*) "foo.txt")   => false)))
 
 (fact "get-post-files should work fine."
   (binding [*config* (blog-config test-conf)]
@@ -57,7 +59,8 @@
         )))
 
   (fact "custom watch direcotry"
-    (binding [*config* (blog-config (merge test-conf {:local-server {:url-base "/foo"}}))]
+    (binding [*config* (blog-config
+                         (merge test-conf {:local-server {:url-base "/foo"}}))]
       (let [[p3 p2 p1 :as posts] (get-posts)]
         (-> p1 :url) => "/foo/2014-01-01-001122.html"
         (-> p2 :url) => "/foo/2014-01-02-001122.html"
@@ -75,9 +78,20 @@
          m (in/parse-file (io/file filename) base-dir)
          m (assoc m :content (delay content))
          ]
-     (route/apply-route m (:applying-route *config*))
-     ;(assoc m :content (delay content))
-     )))
+     (route/apply-route m (:applying-route *config*)))))
+
+(fact "get-index-url should work fine."
+  (binding [*config* {:local-server {:url-base "/foo"}}]
+    (get-index-url) => "/foo/")
+  (binding [*config* {:local-server {:url-base "/foo"}
+                      :blog {:index-filename "bar.html"}}]
+    (get-index-url) => "/foo/bar.html")
+  (binding [*config* {:local-server {:url-base "/foo"}
+                      :blog {:index-filename "index.html"}}]
+    (get-index-url) => "/foo/")
+  (binding [*config* {:local-server {:url-base "/foo"}
+                      :blog {:index-filename "index.htm"}}]
+    (get-index-url) => "/foo/"))
 
 (facts "-main should work fine."
   (binding [*config* test-conf]
@@ -90,9 +104,11 @@
         (count (:posts res)) => 3
         (:title res) => "hello"
         (:path res)  => path
-        (:index-url res) => "/"
-        (-> res :content force (.indexOf "<title>hello</title>") (not= -1)) => true
-        (-> res :content force (.indexOf "hello world") (not= -1)) => true
+        (contains? res :index-url) => true
+        (-> res :content force (.indexOf "<title>hello</title>") (not= -1))
+            => true
+        (-> res :content force (.indexOf "hello world") (not= -1))
+            => true
 
         ;; TODO
         ;; * prev/next post
@@ -112,20 +128,11 @@
         (count (:posts res)) => 3
         (:title res) => "hello"
         (:path res)  => path
-        (-> res :content force (.indexOf "<title>hello</title>") (not= -1)) => true
-        (-> res :content force (.indexOf "hello world") (not= -1)) => true
+        (contains? res :index-url) => true
+        (-> res :content force (.indexOf "<title>hello</title>") (not= -1))
+            => true
+        (-> res :content force (.indexOf "hello world") (not= -1))
+            => true
         ;; TODO
         ;; * pagination
-        ))
-
-    (fact "custom url base"
-      (binding [*config* (merge *config* {:local-server {:url-base "/foo"}})]
-        (let [res  (-main (merge *config* (config-for-main "index.html.md")))]
-          (:index-url res) => "/foo/")))
-
-    (fact "custom url base and index filename"
-      (binding [*config* (merge *config* {:local-server {:url-base "/foo"}
-                                          :blog {:index-filename "bar.html"}})]
-        (let [res  (-main (merge *config* (config-for-main "index.html.md")))]
-          (:index-url res) => "/foo/bar.html")))
-    ))
+        ))))
