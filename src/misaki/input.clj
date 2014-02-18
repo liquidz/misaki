@@ -17,6 +17,11 @@
   ([name fn-key]
    (fn-key (load-functions *input-ns-prefix*  name))))
 
+(defn clear!
+  "Clear input queue."
+  []
+  (dosync (ref-set queue [])))
+
 (defn add!
   "Add input resource to queue."
   [edn]

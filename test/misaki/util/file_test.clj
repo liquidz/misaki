@@ -19,6 +19,12 @@
   (normalize (str "foo" separator "foo.txt"))
       => (str "foo" separator "foo.txt"))
 
+(fact "file/get-name should work fine."
+  (get-name "foo")         => "foo"
+  (get-name "foo.bar")     => "foo.bar"
+  (get-name "foo/bar")     => "bar"
+  (get-name "foo/bar.baz") => "bar.baz")
+
 (fact "file/parent should work fine."
   (parent "foo") => "foo"
   (parent (join "." "foo")) => "."

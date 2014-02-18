@@ -31,10 +31,18 @@
 
 (defn get-last-ext
   "Get last extension from file path."
-  [s]
+  [^String s]
   (let [i (.lastIndexOf s ".")]
     (if (not= -1 i)
       (subs s (inc i)))))
+
+(defn get-name
+  ""
+  [^String s]
+  (let [i (.lastIndexOf s separator)]
+    (if (not= -1 i)
+      (subs s (inc i))
+      s)))
 
 (defn parent
   "Get parent path from file path."

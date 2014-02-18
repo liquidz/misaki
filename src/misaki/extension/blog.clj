@@ -14,6 +14,13 @@
   []
   (remove (set [:blog]) (:applying-route *config*)))
 
+
+(defn parse-filename
+  [s]
+  (let [parent (file/parent s)]
+    {:filename  (file/get-name s)
+     :dir (if (= parent s) "" (str parent file/separator))}))
+
 (defn layout-file
   ""
   [layout-name]
@@ -45,7 +52,7 @@
       s
       (str s "/"))))
 
-(defn- post-path->url
+(defn- path->url
   [path]
   (-> path
       (str/replace file/separator "/")
@@ -60,7 +67,7 @@
                  (pos? (.compareTo (.getName f1) (.getName f2)))))
          (map #(in/parse-file % post-dir))
          (map #(route/apply-route % route))
-         (map #(assoc-in  % [:url] (post-path->url (:path %)))))))
+         (map #(assoc-in  % [:url] (path->url (:path %)))))))
 
 (defn- get-template-data
   [conf]
@@ -121,8 +128,37 @@
          :posts     (get-posts)
          :index-url (get-index-url)))
 
+(defn- page-path
+  [{:keys [path] :as conf} page]
+  (if (= 1 page)
+    path
+    (render (-> conf :blog :page-name)
+            (merge (parse-filename path)
+                   {:page page}))))
+
+(defn pagination-config
+  [conf]
+  (if-let [ppp (some-> conf :posts-per-page)]
+    (let [posts      (partition-all ppp (:posts conf))
+          page-total (count posts)
+          ]
+      (map-indexed
+        (fn [i posts]
+          (assoc conf
+                 :posts posts
+                 :page  (inc i)
+                 :page-total page-total
+                 :path  (page-path conf (inc i))
+                 :prev  (if (> i 0) {:page i :url (-> conf (page-path i) path->url)})
+                 :next  (if (< i (dec page-total)) {:page (+ 2 i) :url (-> conf (page-path (+ 2 i)) path->url)})
+                 ))
+        posts)
+      )
+    conf))
+
 ;; TODO
 ;; * pagination
+;; * build prev/next post when some post template is updated
 ;; * user default config
 ;; * tags
 
@@ -134,16 +170,37 @@
           io/file
           (in/add-to-input tmpl-dir)))))
 
+(defn build-prev-next-post
+  [{:keys [prev next] :as conf}]
+  (when-not (:building-prev-next-post conf)
+    (let [tmpl-dir (get-template-dir conf)]
+      (when prev
+        (in/add-to-input (:file prev) tmpl-dir {:building-prev-next-post true}))
+      (when next
+        (in/add-to-input (:file next) tmpl-dir {:building-prev-next-post true})))))
+
 (defn -main
   [conf]
   (binding [*config* (blog-config conf)]
     (let [file  (:file conf)
           post? (post-file? file)
           conf  (template-config conf)
-          conf  (if post? (post-config conf) conf)
-          res   (render-content conf)]
+          conf  (if post?
+                  (post-config conf)
+                  (if (contains? conf :posts-per-page)
+                    (pagination-config conf)
+                    conf))
+          f     #(let [res (render-content %)]
+                   (assoc % :content (delay (:content res))))
+          ]
 
       ;; build with post
-      (when post? (build-with-post conf))
+      (when post?
+        (build-with-post conf)
+        (build-prev-next-post conf)
+        )
       ;; return result
-      (assoc conf :content (delay (:content res))))))
+      (if (sequential? conf)
+        (doall (map f conf))
+        (f conf)
+        ))))

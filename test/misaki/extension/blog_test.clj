@@ -147,4 +147,41 @@
             => true
         ;; TODO
         ;; * pagination
-        ))))
+        ))
+
+    (fact "normal template file with pagination"
+      (binding [*config* (blog-config
+                           (assoc *config* :blog {:page-name "page$(page)/$(filename)"}))]
+        (let [path "index.html"
+              m    (config-for-main (str path ".md"))
+              m    (assoc m :posts-per-page 2)
+              res  (-main (merge *config* m))]
+          (sequential? res) => true
+          (-> res first :page-total)   => 2
+
+          (-> res first :page)         => 1
+          (-> res first :posts count)  => 2
+          (-> res first :path)         => "index.html"
+          (-> res first :next :page)   => 2
+          (-> res first :next :url)    => "/page2/index.html"
+          (-> res first :prev)         => nil
+
+          (-> res second :page)        => 2
+          (-> res second :posts count) => 1
+          (-> res second :path)        => "page2/index.html"
+          (-> res second :next)        => nil
+          (-> res second :prev :page)  => 1
+          (-> res second :prev :url)   => "/index.html"
+          )
+        )
+      )
+    ))
+
+(fact "parse-filename should work fine."
+  (parse-filename "/foo/bar")     => {:filename "bar" :dir "/foo/"}
+  (parse-filename "/foo/bar.baz") => {:filename "bar.baz" :dir "/foo/"}
+  (parse-filename "/bar")         => {:filename "bar" :dir "/"}
+  (parse-filename "/bar.baz")     => {:filename "bar.baz" :dir "/"}
+  (parse-filename "bar")          => {:filename "bar" :dir ""}
+  (parse-filename "bar.baz")      => {:filename "bar.baz" :dir ""}
+  (parse-filename "")             => {:filename "" :dir ""})

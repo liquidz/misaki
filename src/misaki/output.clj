@@ -17,6 +17,10 @@
 (defn run-output-extensions
   "Pass converted result to outputs."
   [m]
-  (doseq [{name :name, args :args} (map parse-config-args (:output m))]
-    (if-let [out-f (load-output-functions name)]
-      (apply out-f m args))))
+  (cond
+    (sequential? m)
+      (doseq [m* m] (run-output-extensions m*))
+    (map? m)
+      (doseq [{name :name, args :args} (map parse-config-args (:output m))]
+        (if-let [out-f (load-output-functions name)]
+          (apply out-f m args)))))

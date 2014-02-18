@@ -6,8 +6,17 @@
     [conjure.core    :refer :all])
   (:refer-clojure :exclude [empty?]))
 
+(fact "clear! shoud work fine."
+  (clear!)
+  (empty?) => true
+  (add! {:a 1})
+  (empty?) => false
+  (clear!)
+  (empty?) => true
+  )
 
 (fact "add! and get! should work fine."
+  (clear!)
   (add! {:a 1}) => [{:a 1}]
   (add! {:b 2}) => [{:a 1} {:b 2}]
   (get!)        => {:a 1}
@@ -15,6 +24,7 @@
   (get!)        => nil)
 
 (fact "empty? should work fine."
+  (clear!)
   (empty?)                    => true
   (do (add! {:a 1}) (empty?)) => false
   (do (get!) (empty?))        => true)

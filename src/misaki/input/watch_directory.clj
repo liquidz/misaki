@@ -34,8 +34,9 @@
          (map #(parse-file % dir)))))
 
 (defn add-to-input
-  [^java.io.File file base-dir]
-  (in/add! (parse-file file base-dir)))
+  ([^java.io.File file base-dir] (add-to-input file base-dir {}))
+  ([^java.io.File file base-dir option]
+   (in/add! (merge option (parse-file file base-dir)))))
 
 (defn -main
   "Watch specified directory, and input modified file data."
