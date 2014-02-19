@@ -6,6 +6,7 @@
     [misaki.loader     :refer [*development-mode*]]
     [misaki.route      :refer [apply-route]]
     [misaki.output     :refer [run-output-extensions]]
+    [misaki.status     :refer [add-status BUILD_ALL_STATUS]]
     [misaki.input      :as in]
     [clojure.tools.cli :refer [parse-opts]]))
 
@@ -27,7 +28,12 @@
   ""
   []
   (doseq [resource (in/get-all)]
-    (build (merge *config* resource))))
+    (-> *config*
+        (add-status BUILD_ALL_STATUS)
+        (merge resource)
+        build)
+    ;(build (merge *config* {:status BUILD_ALL_STATUS} resource))
+    ))
 
 (defn -main
   ""
@@ -38,9 +44,11 @@
 
     (binding [*config* conf
               *development-mode* (:dev options)]
+      ;; build all
       (when (:build options) (build-all))
+      ;; start inputs
       (in/start-input-extensions!)
-
+      ;; wait inputs
       (while true
         (when-not (in/empty?)
           (build (merge conf (in/get!))))

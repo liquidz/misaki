@@ -95,6 +95,7 @@
     (get-index-url) => "/foo/"))
 
 (fact "build-with-post should work."
+  (in/clear!)
   (in/empty?) => true
   (build-with-post {:blog {:build-with-post ["foo.txt"]}})
   (:file (in/get!)) => (io/file "./foo.txt")

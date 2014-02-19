@@ -6,6 +6,7 @@
     [misaki.route  :as route]
     [misaki.util.file :as file]
     [misaki.util.seq  :as seq]
+    [misaki.status :as status]
     [cuma.core :refer [render]]
     [clojure.java.io :as io]
     [clojure.string :as str]))
@@ -164,20 +165,25 @@
 
 (defn build-with-post
   [conf]
-  (let [tmpl-dir (get-template-dir conf)]
-    (doseq [name (or (some-> conf :blog :build-with-post) [])]
-      (-> (file/join (:watch-directory conf DEFAULT_TEMPLATE_DIR) name)
-          io/file
-          (in/add-to-input tmpl-dir)))))
+  (when-not (status/building-all? conf)
+    (let [tmpl-dir (get-template-dir conf)]
+      (doseq [name (or (some-> conf :blog :build-with-post) [])]
+        (-> (file/join (:watch-directory conf DEFAULT_TEMPLATE_DIR) name)
+            io/file
+            (in/add-to-input tmpl-dir))))))
 
 (defn build-prev-next-post
   [{:keys [prev next] :as conf}]
-  (when-not (:building-prev-next-post conf)
+  (when-not (or (status/building-all? conf)
+                ;(:building-prev-next-post conf)
+                (status/status-contains? conf :building-prev-next-post))
     (let [tmpl-dir (get-template-dir conf)]
       (when prev
-        (in/add-to-input (:file prev) tmpl-dir {:building-prev-next-post true}))
+        ;(in/add-to-input (:file prev) tmpl-dir {:building-prev-next-post true}))
+        (in/add-to-input (:file prev) tmpl-dir (status/add-status {} :building-prev-next-post)))
       (when next
-        (in/add-to-input (:file next) tmpl-dir {:building-prev-next-post true})))))
+        ;(in/add-to-input (:file next) tmpl-dir {:building-prev-next-post true})))))
+        (in/add-to-input (:file next) tmpl-dir (status/add-status {} :building-prev-next-post))))))
 
 (defn -main
   [conf]
