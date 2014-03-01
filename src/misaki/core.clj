@@ -17,22 +17,28 @@
    [nil "--build" "Build all."
     :default false]])
 
+(defn- gen-transaction-id [] (gensym "misaki-transaction"))
+(defn- add-transaction-id [m tid] (assoc m :TID tid))
+
 (defn build
   ""
-  [m]
-  (println "DEBUG99:" m)
-  (some-> m
-          apply-route
-          run-output-extensions))
+  ([m]
+   (build m (gen-transaction-id)))
+  ([m tid]
+   (some-> m
+           (add-transaction-id tid)
+           apply-route
+           run-output-extensions)))
 
 (defn build-all
   ""
   []
-  (doseq [resource (in/get-all)]
-    (-> *config*
-        (add-status BUILD_ALL_STATUS)
-        (merge resource)
-        build)))
+  (let [tid (gen-transaction-id)]
+    (doseq [resource (in/get-all)]
+      (-> *config*
+          (add-status BUILD_ALL_STATUS)
+          (merge resource)
+          (build tid)))))
 
 (defn -main
   ""
