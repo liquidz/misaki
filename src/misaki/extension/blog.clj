@@ -2,7 +2,8 @@
   (:require
     [misaki.extension.blog.defaults :refer :all]
     [misaki.config :refer [*config*]]
-    [misaki.input.watch-directory :as in]
+    [misaki.input :as in]
+    [misaki.input.watch-directory :as watch]
     [misaki.route  :as route]
     [misaki.util.file :as file]
     [misaki.util.seq  :as seq]
@@ -66,7 +67,7 @@
     (->> (get-post-files)
          (sort (fn [^java.io.File f1 ^java.io.File f2]
                  (pos? (.compareTo (.getName f1) (.getName f2)))))
-         (map #(in/parse-file % post-dir))
+         (map #(watch/file->resource % post-dir))
          (map #(route/apply-route % route))
          (map #(assoc-in  % [:url] (path->url (:path %)))))))
 
@@ -96,15 +97,25 @@
            :post-dir   (file/join tmpl-dir post-dir-name)
            :layout-dir (file/join tmpl-dir layout-dir-name))))
 
+(defn- html-template?
+  [tmpl]
+  (:html? tmpl false))
+
 (defn render-content
-  [m]
-  (let [tmpls (get-template-data m)
-        info  (apply merge (reverse (map #(dissoc % :content) tmpls)))]
-    (reduce
-      (fn [res tmpl]
-        (assoc res :content (-> tmpl :content force (render res))))
-      info
-      tmpls)))
+  ([m] (render-content m identity))
+  ([m convert-f]
+   (let [tmpls (get-template-data m)
+         info  (dissoc (apply merge (reverse tmpls)) :content)]
+     (reduce
+       (fn [res tmpl]
+         (let [s (-> tmpl :content force (render res))
+               s (if (html-template? tmpl) s (convert-f s))]
+           ;(assoc res :content (-> tmpl :content force (render res) f))
+           (assoc res :content s)
+           )
+         )
+       info
+       tmpls))))
 
 (defn get-index-url
   []
@@ -158,9 +169,8 @@
     conf))
 
 ;; TODO
-;; * pagination
-;; * build prev/next post when some post template is updated
 ;; * user default config
+;; * sort type
 ;; * tags
 
 (defn build-with-post
@@ -170,7 +180,7 @@
       (doseq [name (or (some-> conf :blog :build-with-post) [])]
         (-> (file/join (:watch-directory conf DEFAULT_TEMPLATE_DIR) name)
             io/file
-            (in/add-to-input tmpl-dir))))))
+            (watch/add-to-input tmpl-dir))))))
 
 (defn build-prev-next-post
   [{:keys [prev next] :as conf}]
@@ -179,11 +189,13 @@
                 (status/status-contains? conf :building-prev-next-post))
     (let [tmpl-dir (get-template-dir conf)]
       (when prev
-        ;(in/add-to-input (:file prev) tmpl-dir {:building-prev-next-post true}))
-        (in/add-to-input (:file prev) tmpl-dir (status/add-status {} :building-prev-next-post)))
+        (watch/add-to-input (:file prev) tmpl-dir (status/add-status {} :building-prev-next-post)))
       (when next
-        ;(in/add-to-input (:file next) tmpl-dir {:building-prev-next-post true})))))
-        (in/add-to-input (:file next) tmpl-dir (status/add-status {} :building-prev-next-post))))))
+        (watch/add-to-input (:file next) tmpl-dir (status/add-status {} :building-prev-next-post))))))
+
+(defn build-identically
+  [m]
+  (in/add! (assoc m :type :identity)))
 
 (defn -main
   [conf]
@@ -207,6 +219,9 @@
         )
       ;; return result
       (if (sequential? conf)
-        (doall (map f conf))
+        (let [ls (doall (map f conf))]
+          (doseq [x (rest ls)]
+            (build-identically x))
+          (first ls))
         (f conf)
         ))))

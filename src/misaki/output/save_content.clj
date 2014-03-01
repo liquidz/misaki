@@ -25,10 +25,5 @@
 
 (defn -main
   "Save content as a file."
-  [coll]
-  (save! coll)
-  ;(cond
-  ;  (sequential? coll) (doseq [x coll] (-main x))
-  ;  (map? coll) (save! coll)
-  ;  :else nil)
-  )
+  [m]
+  (save! m))

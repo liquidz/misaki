@@ -1,7 +1,7 @@
 (ns misaki.extension.blog-test
   (:require
     [misaki.extension.blog.defaults :refer :all]
-    [misaki.input.watch-directory :refer [parse-file]]
+    [misaki.input.watch-directory :refer [file->resource]]
     [misaki.extension.blog :refer :all]
     [misaki.config :refer [*config*]]
     [misaki.input :as in]
@@ -76,7 +76,7 @@
   ([path content]
    (let [base-dir (:watch-directory *config*)
          filename (file/join base-dir path)
-         m (parse-file (io/file filename) base-dir)
+         m (file->resource (io/file filename) base-dir)
          m (assoc m :content (delay content))
          ]
      (route/apply-route m (:applying-route *config*)))))
@@ -111,7 +111,8 @@
     (fact "post template file"
       (let [path (file/join "2014-01-02-001122.html")
             m    (config-for-main (file/join DEFAULT_POST_DIR (str path ".md")))
-            res  (-main (merge *config* m))]
+            res  (-main (merge *config* m))
+            ]
 
         (contains? res :posts) => true
         (count (:posts res)) => 3
@@ -130,7 +131,8 @@
 
         (-> res :next :title) => "baz"
         (-> res :next :url) => "/2014-01-03-001122.html"
-        ))
+        )
+      )
 
     (fact "normal template file"
       (let [path "index.html"
@@ -153,30 +155,29 @@
     (fact "normal template file with pagination"
       (binding [*config* (blog-config
                            (assoc *config* :blog {:page-name "page$(page)/$(filename)"}))]
+        (in/clear!)
         (let [path "index.html"
               m    (config-for-main (str path ".md"))
               m    (assoc m :posts-per-page 2)
               res  (-main (merge *config* m))]
-          (sequential? res) => true
-          (-> res first :page-total)   => 2
 
-          (-> res first :page)         => 1
-          (-> res first :posts count)  => 2
-          (-> res first :path)         => "index.html"
-          (-> res first :next :page)   => 2
-          (-> res first :next :url)    => "/page2/index.html"
-          (-> res first :prev)         => nil
+          (-> res :page-total)   => 2
+          (-> res :page)         => 1
+          (-> res :posts count)  => 2
+          (-> res :path)         => "index.html"
+          (-> res :next :page)   => 2
+          (-> res :next :url)    => "/page2/index.html"
+          (-> res :prev)         => nil
 
-          (-> res second :page)        => 2
-          (-> res second :posts count) => 1
-          (-> res second :path)        => "page2/index.html"
-          (-> res second :next)        => nil
-          (-> res second :prev :page)  => 1
-          (-> res second :prev :url)   => "/index.html"
-          )
-        )
-      )
-    ))
+          (in/empty?) => false
+          (let [res (in/get!)]
+            (in/empty?) => true
+            (-> res :page)        => 2
+            (-> res :posts count) => 1
+            (-> res :path)        => "page2/index.html"
+            (-> res :next)        => nil
+            (-> res :prev :page)  => 1
+            (-> res :prev :url)   => "/index.html"))))))
 
 (fact "parse-filename should work fine."
   (parse-filename "/foo/bar")     => {:filename "bar" :dir "/foo/"}

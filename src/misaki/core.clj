@@ -20,6 +20,7 @@
 (defn build
   ""
   [m]
+  (println "DEBUG99:" m)
   (some-> m
           apply-route
           run-output-extensions))
@@ -31,9 +32,7 @@
     (-> *config*
         (add-status BUILD_ALL_STATUS)
         (merge resource)
-        build)
-    ;(build (merge *config* {:status BUILD_ALL_STATUS} resource))
-    ))
+        build)))
 
 (defn -main
   ""

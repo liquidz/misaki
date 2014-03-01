@@ -15,15 +15,15 @@
   get-extension
   (comp keyword file/get-last-ext))
 
-(defn parse-file
-  "Parse java.io.File to hash map."
-  [file base-dir]
+(defn file->resource
+  ""
+  [^java.io.File file base-dir]
   (let [base-abs (file/absolute-path base-dir)
         file-abs (file/absolute-path file)]
-    {:file    file
-     :path    (subs file-abs (inc (count base-abs)))
-     :type    (get-extension file-abs)
-     :content (delay (slurp file))}))
+    { :type    (get-extension file-abs)
+      :file    file
+      :path    (subs file-abs (inc (count base-abs)))
+      :content (delay (slurp file))}))
 
 (defn -get-all
   "Get all resource."
@@ -31,12 +31,12 @@
   (let [dir (-> config :watch-directory file/normalize)]
     (->> dir io/file file-seq
          (filter #(.isFile %))
-         (map #(parse-file % dir)))))
+         (map #(file->resource % dir)))))
 
 (defn add-to-input
   ([^java.io.File file base-dir] (add-to-input file base-dir {}))
   ([^java.io.File file base-dir option]
-   (in/add! (merge option (parse-file file base-dir)))))
+   (in/add! (merge (file->resource file base-dir) option))))
 
 (defn -main
   "Watch specified directory, and input modified file data."

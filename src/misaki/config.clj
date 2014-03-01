@@ -15,7 +15,7 @@
   {:setup  [:welcome]
    :input  []
    :output [:print-errors]
-   :route  {}
+   :route  {:identity [:identity]}
    :rate   50})
 
 (defn uniq-conj
@@ -30,9 +30,13 @@
   (reduce
     (fn [res [k v]]
       (update-in res [k]
-                 #(if (sequential? %)
-                    (uniq-conj (or % ()) v)
-                    v)))
+                 #(cond
+                    (sequential? %)
+                      (uniq-conj (or % ()) v)
+                    (map? %)
+                      (merge % v)
+                    :else
+                      v)))
     base
     m))
 

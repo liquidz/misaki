@@ -1,33 +1,36 @@
 (ns misaki.input-test
   (:require
     [misaki.config :refer [*config*]]
-    [misaki.input    :refer :all]
-    [midje.sweet     :refer :all]
-    [conjure.core    :refer :all])
+    [misaki.input  :refer :all]
+    [midje.sweet   :refer :all]
+    [conjure.core  :refer :all])
   (:refer-clojure :exclude [empty?]))
 
 (fact "clear! shoud work fine."
   (clear!)
   (empty?) => true
-  (add! {:a 1})
+  (add! {:type 1})
   (empty?) => false
   (clear!)
   (empty?) => true
   )
 
 (fact "add! and get! should work fine."
-  (clear!)
-  (add! {:a 1}) => [{:a 1}]
-  (add! {:b 2}) => [{:a 1} {:b 2}]
-  (get!)        => {:a 1}
-  (get!)        => {:b 2}
-  (get!)        => nil)
+  (let [r1 {:type 1}
+        r2 {:type 2}]
+    (clear!)
+    (add! r1) => [r1]
+    (add! r2) => [r1 r2]
+    (get!)    => r1
+    (get!)    => r2
+    (get!)    => nil)
+    )
 
 (fact "empty? should work fine."
   (clear!)
-  (empty?)                    => true
-  (do (add! {:a 1}) (empty?)) => false
-  (do (get!) (empty?))        => true)
+  (empty?)                               => true
+  (do (add! {:type 1}) (empty?)) => false
+  (do (get!) (empty?))                   => true)
 
 
 (defn- a-list

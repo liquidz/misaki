@@ -28,16 +28,4 @@
         (.exists (pub-file s)) => true
         (slurp (pub-file s))   => (force (:content s))
         (file/rm-rf (:public-dir *config*))
-        (.exists (pub-file s)) => false)))
-
-  ;(fact "save multiple files"
-  ;  (binding [*config* {:public-dir "."}]
-  ;  (let [s (list {::first "foo.txt" :path "foo.txt" :content (delay "hello")}
-  ;                {::first "bar.txt" :path "bar.txt" :content (delay "world")})]
-  ;    (-main s)
-  ;    (doseq [s s]
-  ;      (.exists (pub-file s)) => true
-  ;      (slurp (pub-file s))   => (force (:content s))
-  ;      (file/rm-rf (::first s))
-  ;      (.exists (pub-file s)) => false))))
-  )
+        (.exists (pub-file s)) => false))))

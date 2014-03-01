@@ -24,15 +24,15 @@
 
 (defn add!
   "Add input resource to queue."
-  [edn]
-  (dosync (alter queue conj edn)))
+  [rsc]
+  (dosync (alter queue conj rsc)))
 
 (defn get!
   "Get input resource from queue."
   []
-  (let [edn (first @queue)]
+  (let [rsc (first @queue)]
     (dosync (alter queue (comp vec rest)))
-    edn))
+    rsc))
 
 (defn empty?
   "Returns true if input queue has no resources."
