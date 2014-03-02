@@ -15,7 +15,11 @@
 
 (defn get-route-without-blog
   []
-  (take-while (partial not= :blog) (:applying-route *config*)))
+  (take-while
+    ;(partial not= :blog)
+    #(let [^String s (name %)]
+       (false? (.startsWith s "blog")))
+    (:applying-route *config*)))
 
 
 (defn parse-filename
@@ -118,9 +122,11 @@
      (reduce
        (fn [res tmpl]
          (let [s (-> tmpl :content force (render res))
-               s (if (html-template? tmpl) s (convert-f s))]
+               ;s (if (html-template? tmpl) s (convert-f s))]
+               s2 (if (html-template? tmpl) s (convert-f s))]
            ;(assoc res :content (-> tmpl :content force (render res) f))
-           (assoc res :content s)
+           (println "DEBUG:" s)
+           (assoc res :content s2)
            )
          )
        info
