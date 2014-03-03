@@ -1,8 +1,7 @@
 (ns misaki.extension.build-all
   (:require
     [misaki.core   :refer [build-all]]
-    [misaki.status :refer [building-all?]]
-    ))
+    [misaki.status :refer [building-all?]]))
 
 (defn -main
   [m]
