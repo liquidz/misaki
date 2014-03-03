@@ -122,13 +122,8 @@
      (reduce
        (fn [res tmpl]
          (let [s (-> tmpl :content force (render res))
-               ;s (if (html-template? tmpl) s (convert-f s))]
-               s2 (if (html-template? tmpl) s (convert-f s))]
-           ;(assoc res :content (-> tmpl :content force (render res) f))
-           (println "DEBUG:" s)
-           (assoc res :content s2)
-           )
-         )
+               s (if (html-template? tmpl) s (convert-f s))]
+           (assoc res :content s)))
        info
        tmpls))))
 
