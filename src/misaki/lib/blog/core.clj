@@ -31,9 +31,7 @@
 (defn layout-file
   ""
   [layout-name]
-  (let [layout-extension (or (some-> *config* :blog :layout) ".html")]
-    (io/file (file/join (:layout-dir *config*)
-                        (str layout-name layout-extension)))))
+  (io/file (file/join (:layout-dir *config*) layout-name)))
 
 (defn layout-file?
   [^java.io.File file]

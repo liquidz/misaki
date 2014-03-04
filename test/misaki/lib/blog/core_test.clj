@@ -22,7 +22,7 @@
 
 (fact "layout-file should work fine."
   (binding [*config* (blog-config test-conf)]
-    (layout-file "foo")
+    (layout-file "foo.html")
        => (io/file (file/join watch-dir "layouts" "foo.html"))))
 
 (fact "post-file? should work fine."
@@ -87,7 +87,7 @@
   ([path]
    (config-for-main
      path
-     ";; :layout \"default\"\n;; :title \"hello\"\n\n$(title) world"))
+     ";; :layout \"default.html\"\n;; :title \"hello\"\n\n$(title) world"))
   ([path content]
    (let [base-dir (:watch-directory *config*)
          filename (file/join base-dir path)
@@ -138,16 +138,12 @@
           => true
           (-> res :content force (.indexOf "hello world") (not= -1))
           => true
-
-          ;; TODO
-          ;; * prev/next post
+          ;; prev / next
           (-> res :prev :title) => "foo"
           (-> res :prev :url) => "/2014-01-01-001122.html"
 
           (-> res :next :title) => "baz"
-          (-> res :next :url) => "/2014-01-03-001122.html"
-          )
-        )
+          (-> res :next :url) => "/2014-01-03-001122.html"))
 
       (fact "normal template file"
         (let [path "index.html"
