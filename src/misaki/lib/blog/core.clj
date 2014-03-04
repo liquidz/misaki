@@ -8,15 +8,16 @@
     [misaki.util.file :as file]
     [misaki.util.seq  :as seq]
     [misaki.status    :as status]
+    [misaki.core      :refer [build-all]]
     [cuma.core        :refer [render]]
     [clojure.java.io  :as io]
     [clojure.string   :as str]))
 
 
 (defn get-route-without-blog
+  ""
   []
   (take-while
-    ;(partial not= :blog)
     #(let [^String s (name %)]
        (false? (.startsWith s "blog")))
     (:applying-route *config*)))
@@ -224,17 +225,20 @@
                       (assoc % :content (delay (:content res))))
              ]
 
-         ;; build with post
-         (when post?
-           (build-with-post conf)
-           (build-prev-next-post conf))
+         (if (and (layout-file? file) (not (status/building-all? conf)))
+           ;; build all
+           (build-all)
+           (do
+             ;; build with post
+             (when post?
+               (build-with-post conf)
+               (build-prev-next-post conf))
 
-         ;; return result
-         (if (sequential? conf)
-           (let [ls (doall (map f conf))]
-             (doseq [x (rest ls)]
-               (build-identically x))
-             (first ls))
-           (f conf))))
-     )
-   ))
+             ;; return result
+             (if (sequential? conf)
+               (let [ls (doall (map f conf))]
+                 (doseq [x (rest ls)]
+                   (build-identically x))
+                 (first ls))
+               (f conf))))
+         )))))

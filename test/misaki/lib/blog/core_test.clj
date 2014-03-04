@@ -7,7 +7,9 @@
     [misaki.input     :as in]
     [misaki.util.file :as file]
     [misaki.route     :as route]
+    [misaki.core      :refer [build-all]]
     [cuma.core        :refer [render]]
+    [conjure.core     :refer :all]
     [midje.sweet      :refer :all]
     [clj-time.core    :refer [date-time]]
     [clojure.string   :as str]
@@ -159,8 +161,6 @@
           => true
           (-> res :content force (.indexOf "hello world") (not= -1))
           => true
-          ;; TODO
-          ;; * pagination
           ))
 
       (fact "normal template file with pagination"
@@ -188,7 +188,16 @@
               (-> res :path)        => "page2/index.html"
               (-> res :next)        => nil
               (-> res :prev :page)  => 1
-              (-> res :prev :url)   => "/index.html"))))))
+              (-> res :prev :url)   => "/index.html"))))
+
+      (fact "layout template file"
+        (let [res "run build all"
+              m   (config-for-main (file/join DEFAULT_LAYOUT_DIR "default.html"))]
+          (stubbing [build-all res]
+            (-main (merge *config* m)) => res
+            )))
+      )
+    )
   )
 
 (fact "parse-filename should work fine."
