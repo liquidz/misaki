@@ -12,6 +12,12 @@
   [x]
   (= java.io.File (class x)))
 
+; =normalize-slashes
+(defn normalize-slashes
+  "Replace backslashes to forward slashes."
+  [path]
+  (str/replace path #"[\\]+" "/"))
+
 ; =normalize-path
 (defn normalize-path
   "Normalize file path.
@@ -29,6 +35,16 @@
       symbol?  (keyword ext)
       string?  (keyword (last (str/split ext #"\*\.")))
       nil)))
+
+(defn file-path
+  "Get the path of a file and normalize its slashes."
+  [#^File file]
+  (normalize-slashes (.getPath file)))
+
+(defn file-abspath
+  "Get the absolute path of a file and normalize its slashes."
+  [#^File file]
+  (normalize-slashes (.getAbsolutePath file)))
 
 ; =path
 (defn path

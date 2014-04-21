@@ -136,7 +136,7 @@
   "Check whether file is post file or not."
   [#^File file]
   {:pre [(file? file)]}
-  (and (:post-dir *config*) (str-contains? (.getAbsolutePath file)
+  (and (:post-dir *config*) (str-contains? (file-abspath file)
                                            (:post-dir *config*))))
 
 ; =index-file?
@@ -208,7 +208,7 @@
 (defn- make-regular-output-filename
   "Make regular output filename from java.io.File."
   [#^File file]
-  (let [path (.getPath file)
+  (let [path (file-path file)
         len  (count (:template-dir *config*))]
     (if (.startsWith path (:template-dir *config*))
       (.substring path len)
