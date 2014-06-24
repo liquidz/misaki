@@ -74,4 +74,4 @@ rm -rf cljs
 SH
 
 
-(js "../js/hello.js")
+(js "/js/hello.js")
