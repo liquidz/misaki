@@ -10,7 +10,7 @@
  (for [post (:posts site)]
    [:entry
     [:title   (:title post)]
-    [:link    (str (:atom-base site) (:url post))]
+    [:link    {:href (str (:atom-base site) (:url post))}]
     [:updated (date->xml-schema (:date post))]
     [:id      (str (:atom-base site) (:url post))]
     [:content {:type "html"}
