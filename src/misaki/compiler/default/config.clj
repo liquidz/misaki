@@ -61,7 +61,7 @@
   "Check whether file is layout file or not."
   [#^File file]
   {:pre [(file? file)]}
-  (str-contains? (.getAbsolutePath file) (:layout-dir *config*)))
+  (str-contains? (file-abspath file) (:layout-dir *config*)))
 
 ;; ## Converter
 
